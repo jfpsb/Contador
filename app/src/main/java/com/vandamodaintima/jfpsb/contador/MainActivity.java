@@ -1,17 +1,17 @@
 package com.vandamodaintima.jfpsb.contador;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -38,20 +38,35 @@ public class MainActivity extends Activity {
 
                 switch (i) {
                     case 0:
+                        fragmentClass = TelaContador.class;
+                        break;
+                    case 1:
                         fragmentClass = TelaProduto.class;
+                        break;
+                    case 2:
+                        fragmentClass = TelaFornecedor.class;
+                        break;
+                    case 3:
+                        fragmentClass = TelaLoja.class;
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this, "Opção inválida", Toast.LENGTH_SHORT).show();
+                        break;
                 }
 
                 try {
                     fragment = (Fragment) fragmentClass.newInstance();
+
+                    // Insert the fragment by replacing any existing fragment
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } catch (NullPointerException npe) {
+                    Toast.makeText(MainActivity.this, "Opção Inválida Foi Selecionada", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                // Insert the fragment by replacing any existing fragment
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-                mDrawerLayout.closeDrawer(mDrawerList);
             }
         });
     }
