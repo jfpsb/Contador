@@ -2,7 +2,7 @@ package com.vandamodaintima.jfpsb.contador;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.List;
  * Created by jfpsb on 05/02/2018.
  */
 
-public class MyAdapter extends FragmentPagerAdapter {
+public class MyPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mFragmentTitles = new ArrayList<>();
 
-    public MyAdapter(FragmentManager fm) {
+    public MyPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

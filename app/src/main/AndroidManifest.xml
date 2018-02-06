@@ -15,6 +15,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tela.TelaContador"
+            android:label="Gerenciar Contagens"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.TelaProduto"
+            android:label="Gerenciar Produtos"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.TelaFornecedor"
+            android:label="Gerenciar Fornecedores"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.TelaLoja"
+            android:label="Gerenciar Lojas"
+            android:theme="@style/TabAppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

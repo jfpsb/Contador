@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador;
+package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
 import android.os.Bundle;
@@ -7,14 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.vandamodaintima.jfpsb.contador.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastroFornecedor extends Fragment {
+public class CadastrarLoja extends Fragment {
 
 
-    public CadastroFornecedor() {
+    public CadastrarLoja() {
         // Required empty public constructor
     }
 
@@ -23,7 +24,7 @@ public class CadastroFornecedor extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cadastro_fornecedor, container, false);
+        return inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
     }
 
 }
