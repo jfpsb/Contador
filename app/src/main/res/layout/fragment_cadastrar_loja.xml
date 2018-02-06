@@ -4,10 +4,14 @@
     android:layout_height="match_parent"
     tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarLoja">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Cadastrar Loja" />
+        android:layout_height="match_parent" android:stretchColumns="1" android:layout_margin="7dip">
+        <TableRow>
+            <TextView android:text="Nome: " android:textSize="20dp" />
+            <EditText android:id="@+id/txtNome" />
+        </TableRow>
+        <Button android:id="@+id/btnCadastrar" android:text="Cadastrar" android:textSize="24dp" android:layout_margin="15dip" />
+    </TableLayout>
 
 </FrameLayout>
