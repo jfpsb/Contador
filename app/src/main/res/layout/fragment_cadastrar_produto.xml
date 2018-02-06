@@ -1,33 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto">
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:stretchColumns="1"
-        android:layout_margin="7dip">
-        <TableRow android:layout_margin="5dip" >
-            <TextView
-                android:text="Código De Barra: "
-                android:textSize="20dp"/>
-            <EditText android:id="@+id/txtCodBarra" />
-        </TableRow>
-        <TableRow android:layout_margin="5dip">
-            <TextView android:text="Fornecedor: " android:textSize="20dp" />
-            <Spinner android:id="@+id/spinnerFornecedores" />
-        </TableRow>
-        <TableRow android:layout_margin="5dip">
-            <TextView android:text="Descrição: " android:textSize="20dp"/>
-            <EditText android:id="@+id/txtDescricao"/>
-        </TableRow>
-        <TableRow>
-            <TextView android:text="Preço: " android:textSize="20dp" />
-            <EditText android:id="@+id/txtPreco" android:inputType="number" />
-        </TableRow>
-        <Button android:id="@+id/btnCadastrar" android:text="Cadastrar" android:textSize="24dp" android:layout_margin="15dip" />
-    </TableLayout>
-
-</FrameLayout>
+    android:stretchColumns="1"
+    android:layout_margin="7dip">
+    <TableRow android:layout_margin="5dip" >
+        <TextView
+            android:text="Código De Barra: "
+            android:textSize="20dp"/>
+        <EditText android:id="@+id/txtCodBarra" />
+    </TableRow>
+    <TableRow android:layout_margin="5dip">
+        <TextView android:text="Fornecedor: " android:textSize="20dp" />
+        <Spinner android:id="@+id/spinnerFornecedores" />
+    </TableRow>
+    <TableRow android:layout_margin="5dip">
+        <TextView android:text="Descrição: " android:textSize="20dp"/>
+        <EditText android:id="@+id/txtDescricao"/>
+    </TableRow>
+    <TableRow android:layout_margin="5dip">
+        <TextView android:text="Preço: " android:textSize="20dp" />
+        <EditText android:id="@+id/txtPreco" android:inputType="number" />
+    </TableRow>
+    <Button android:id="@+id/btnCadastrar" android:text="Cadastrar" android:textSize="24dp" android:layout_margin="15dip" />
+</TableLayout>

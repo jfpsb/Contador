@@ -5,6 +5,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ViewStub;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
@@ -21,9 +26,13 @@ public class TelaProduto extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela_produto);
+        setContentView(R.layout.activity_tela);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ViewStub stub = findViewById(R.id.layoutStub);
+        stub.setLayoutResource(R.layout.content_tela_produto);
+        stub.inflate();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

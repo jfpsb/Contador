@@ -1,14 +1,8 @@
 <resources>
     <string name="app_name">Contador</string>
-    <string name="title_activity_tela_produto">TelaProduto</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_cadastro_produto">CadastroProduto</string>
-    <string name="title_activity_pesquisa_produto">PesquisaProduto</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_tela_contador">TelaContador</string>
-    <string name="title_activity_tela_fornecedor">TelaFornecedor</string>
-    <string name="title_activity_tela_loja">TelaLoja</string>
+    <string name="data_hint">1999-01-01</string>
+    <string name="hintRadioButtonCodBarra">Digite o Código De Barra do Produto</string>
+    <string name="hintRadioButtonNomeFornecedor">Digite o Fornecedor do Produto</string>
+    <string name="hintRadioButtonDescricao">"Digite uma da descrição do produto"</string>
+    <string name="txtPesquisaFornecedor">CNPJ ou nome de fornecedor</string>
 </resources>

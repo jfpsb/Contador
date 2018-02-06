@@ -1,13 +1,54 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto">
+    android:orientation="vertical"
+    android:layout_margin="7dip"
+    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto" >
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Pesquisar Produto" />
+        android:layout_height="wrap_content"
+        android:text="Pesquisar Por:"
+        android:textSize="20dp" />
 
-</FrameLayout>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroupOpcao"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbCodBarra"
+            android:text="Cod. Barra"
+            android:checked="true"
+            android:textSize="14dp"
+            android:layout_margin="5dip" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbFornecedor"
+            android:text="Fornecedor"
+            android:textSize="14dp"
+            android:layout_margin="5dip" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbDescricao"
+            android:text="Descrição"
+            android:textSize="14dp"
+            android:layout_margin="5dip" />
+
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtPesquisaProduto"
+        android:hint="@string/hintRadioButtonCodBarra"/>
+
+</LinearLayout>
