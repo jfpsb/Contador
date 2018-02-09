@@ -25,9 +25,7 @@ public class DAOLoja {
 
         contentValues.put("nome", loja.getNome());
 
-        long id = conn.insert(TABELA, "", contentValues);
-
-        return id;
+        return conn.insert(TABELA, "", contentValues);
     }
 
     public Loja selectLoja(int id) {
@@ -49,10 +47,25 @@ public class DAOLoja {
 
     public Cursor selectLojas() {
         try {
-            return conn.query(TABELA, null, null, null, null, null, null);
+            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, null, null, null, null, null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
             return null;
         }
+    }
+
+    public Cursor selectLojas(String nome) {
+        try {
+            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, "nome LIKE ?", new String[] { "%" + nome + "%"}, null, null, null);
+        } catch(SQLException e) {
+            Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
+            return null;
+        }
+    }
+
+    public int deletar(int id) {
+        int result = conn.delete(TABELA, "idloja = " + String.valueOf(id), null);
+        Log.i("Contador", "Deletando loja com id " + id);
+        return result;
     }
 }

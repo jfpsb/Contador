@@ -6,17 +6,50 @@
     android:layout_margin="7dip"
     tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarLoja">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Digite o nome:"
-        android:textSize="20dp"/>
+        android:textSize="24dp"
+        android:textColor="#000000"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtNome" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lojas Cadastradas:"
+        android:textSize="24dp"
+        android:layout_marginTop="5dip"
+        android:textColor="#000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID da Loja"
+            android:textSize="20dp"
+            android:textColor="#000000" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewLoja"
+        android:layout_margin="10dip" >
+    </ListView>
 
 
 

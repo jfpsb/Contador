@@ -1,10 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
+import java.io.Serializable;
+
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Loja {
+public class Loja implements Serializable {
     private int idloja;
     private String nome;
 

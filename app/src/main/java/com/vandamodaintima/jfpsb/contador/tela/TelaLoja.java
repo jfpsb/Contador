@@ -6,7 +6,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.style.BulletSpan;
 import android.view.ViewStub;
+import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
@@ -35,6 +37,8 @@ public class TelaLoja extends AppCompatActivity {
         stub.setLayoutResource(R.layout.content_tela_loja);
         stub.inflate();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -59,8 +63,9 @@ public class TelaLoja extends AppCompatActivity {
         telaPesquisarLoja = new PesquisarLoja();
 
         telaCadastrarLoja.setConn(conn);
+        telaPesquisarLoja.setConn(conn);
 
-        adapter.addFragment(new PesquisarLoja(), "Pesquisar");
+        adapter.addFragment(telaPesquisarLoja, "Pesquisar");
         adapter.addFragment(telaCadastrarLoja, "Cadastrar");
 
         viewPager.setAdapter(adapter);

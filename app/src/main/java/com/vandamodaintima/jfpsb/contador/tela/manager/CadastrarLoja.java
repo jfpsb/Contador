@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,9 +36,8 @@ public class CadastrarLoja extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
+        final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
 
-        conn = new ConexaoBanco(viewInflate.getContext());
         daoLoja = new DAOLoja(conn.conexao());
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
@@ -50,13 +50,23 @@ public class CadastrarLoja extends Fragment {
 
                 loja.setNome(txtNome.getText().toString());
 
-                long id = daoLoja.inserir(loja);
+                try {
+                    if(loja.getNome().isEmpty())
+                        throw new Exception("O campo de nome está vazio");
 
-                if(id != -1) {
-                    Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(view.getContext(), "Erro ao inserir loja!", Toast.LENGTH_SHORT).show();
+                    long id = daoLoja.inserir(loja);
+
+                    if (id != -1) {
+                        Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
+
+                        PesquisarLoja.populaListView();
+
+                        txtNome.setText("");
+                    } else {
+                        Toast.makeText(view.getContext(), "Erro ao inserir loja!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(view.getContext(), "O nome da loja não pode ser vazio!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
