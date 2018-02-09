@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.banco;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Created by jfpsb on 08/02/2018.
@@ -15,11 +16,11 @@ public class ConexaoBanco {
     private SQLiteHelper sqLiteHelper;
 
     private static final String[] SCRIPT_BANCO = new String[] {
-            "CREATE TABLE  loja (idloja INT PRIMARY KEY NOT NULL AUTO_INCREMENT, nome TEXT NOT NULL UNIQUE);",
-            "CREATE TABLE contagem` (idcontagem INT PRIMARY KEY NOT NULL AUTO_INCREMENT, loja INT REFERENCES loja(idloja), datainicio DATETIME NOT NULL, datafinal DATETIME NULL);",
+            "CREATE TABLE  loja (idloja INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL UNIQUE);",
+            "CREATE TABLE contagem (idcontagem INTEGER PRIMARY KEY AUTOINCREMENT, loja INT REFERENCES loja(idloja), datainicio DATE NOT NULL, datafinal DATE NULL);",
             "CREATE TABLE fornecedor (cnpj text primary key NOT NULL, nome text NOT NULL);",
-            "CREATE TABLE produto (cod_barra INT primary key NOT NULL, fornecedor text references fornecedor(cnpj), descricao text not NULL, preco DOUBLE not NULL);",
-            "CREATE TABLE contagem_produto(contagem INT references contagem(idcontagem), produto INT references produto(cod_barra), quant INT default 0, PRIMARY KEY (contagem, produto);"
+            "CREATE TABLE produto (cod_barra INTEGER primary key NOT NULL, fornecedor text references fornecedor(cnpj), descricao text not NULL, preco DOUBLE not NULL);",
+            "CREATE TABLE contagem_produto(contagem INTEGER references contagem(idcontagem), produto INTEGER references produto(cod_barra), quant INTEGER default 0, PRIMARY KEY (contagem, produto));"
     };
 
     public ConexaoBanco(Context context) {
