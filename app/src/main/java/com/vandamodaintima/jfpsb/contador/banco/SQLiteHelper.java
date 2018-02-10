@@ -12,9 +12,9 @@ import android.util.Log;
 public class SQLiteHelper extends SQLiteOpenHelper {
     private static final String CATEGORIA = "Contador";
     private String[] scriptSQLCreate;
-    private String scriptDeleteDB;
+    private String[] scriptDeleteDB;
 
-    public SQLiteHelper(Context context, String nomeBanco, int versaoBanco, String[] scriptSQLCreate, String scriptDeleteDB) {
+    public SQLiteHelper(Context context, String nomeBanco, int versaoBanco, String[] scriptSQLCreate, String[] scriptDeleteDB) {
         super(context, nomeBanco, null, versaoBanco);
         this.scriptSQLCreate = scriptSQLCreate;
         this.scriptDeleteDB = scriptDeleteDB;
@@ -35,7 +35,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         Log.w(CATEGORIA, "Atualizando da versão " + i + " para versão " + i1);
-        Log.i(CATEGORIA, scriptDeleteDB);
+        for(int p = 0; p < scriptDeleteDB.length; p++) {
+            Log.i(CATEGORIA, scriptDeleteDB[p]);
+            sqLiteDatabase.execSQL(scriptDeleteDB[p]);
+        }
+
         onCreate(sqLiteDatabase);
     }
 }

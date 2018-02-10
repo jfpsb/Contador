@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pesquisar Por:"
-        android:textSize="20dp" />
+        android:textSize="22dp"
+        android:textColor="#000000"/>
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -24,7 +25,7 @@
             android:id="@+id/rbCodBarra"
             android:text="Cod. Barra"
             android:checked="true"
-            android:textSize="14dp"
+            android:textSize="16dp"
             android:layout_margin="5dip" />
 
         <RadioButton
@@ -32,7 +33,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rbFornecedor"
             android:text="Fornecedor"
-            android:textSize="14dp"
+            android:textSize="16dp"
             android:layout_margin="5dip" />
 
         <RadioButton
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/rbDescricao"
             android:text="Descrição"
-            android:textSize="14dp"
+            android:textSize="16dp"
             android:layout_margin="5dip" />
 
     </RadioGroup>
@@ -50,5 +51,54 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtPesquisaProduto"
         android:hint="@string/hintRadioButtonCodBarra"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22dp"
+        android:text="Produtos Cadastrados:"
+        android:textColor="#000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cod. Barra"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preço"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewLoja"
+        android:layout_margin="10dip">
+    </ListView>
 
 </LinearLayout>

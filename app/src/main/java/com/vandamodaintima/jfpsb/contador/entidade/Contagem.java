@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class Contagem {
     private int idcontagem;
-    private Loja loja;
+    private int loja;
     private Date datainicio;
     private Date datafim;
 
@@ -20,11 +20,11 @@ public class Contagem {
         this.idcontagem = idcontagem;
     }
 
-    public Loja getLoja() {
+    public int getLoja() {
         return loja;
     }
 
-    public void setLoja(Loja loja) {
+    public void setLoja(int idloja) {
         this.loja = loja;
     }
 

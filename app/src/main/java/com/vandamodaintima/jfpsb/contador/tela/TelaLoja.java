@@ -98,7 +98,9 @@ public class TelaLoja extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        conn.fechar();
+        if(conn != null)
+            conn.fechar();
+
         super.onDestroy();
     }
 

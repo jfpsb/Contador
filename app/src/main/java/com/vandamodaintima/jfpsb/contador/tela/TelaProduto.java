@@ -6,11 +6,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
@@ -22,6 +24,9 @@ public class TelaProduto extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ConexaoBanco conn;
+    private CadastrarProduto cadastrarProduto;
+    private PesquisarProduto pesquisarProduto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +39,15 @@ public class TelaProduto extends AppCompatActivity {
         stub.setLayoutResource(R.layout.content_tela_produto);
         stub.inflate();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
+
+        conn = new ConexaoBanco(this.getApplicationContext());
 
         //PesquisaTab
         TabLayout.Tab pesquisaTab = tabLayout.newTab();
@@ -52,8 +61,14 @@ public class TelaProduto extends AppCompatActivity {
 
         MyPagerAdapter adapter = new MyPagerAdapter (getSupportFragmentManager());
 
-        adapter.addFragment(new PesquisarProduto(), "Pesquisar");
-        adapter.addFragment(new CadastrarProduto(), "Cadastrar");
+        cadastrarProduto = new CadastrarProduto();
+        pesquisarProduto = new PesquisarProduto();
+
+        cadastrarProduto.setConn(conn);
+        pesquisarProduto.setConn(conn);
+
+        adapter.addFragment(pesquisarProduto, "Pesquisar");
+        adapter.addFragment(cadastrarProduto, "Cadastrar");
 
         viewPager.setAdapter(adapter);
 
@@ -81,5 +96,13 @@ public class TelaProduto extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        if(conn != null)
+            conn.fechar();
+
+        super.onDestroy();
     }
 }

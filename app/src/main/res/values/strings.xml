@@ -3,6 +3,6 @@
     <string name="data_hint">1999-01-01</string>
     <string name="hintRadioButtonCodBarra">Digite o Código De Barra do Produto</string>
     <string name="hintRadioButtonNomeFornecedor">Digite o Fornecedor do Produto</string>
-    <string name="hintRadioButtonDescricao">"Digite uma da descrição do produto"</string>
+    <string name="hintRadioButtonDescricao">"Digite uma descrição do produto"</string>
     <string name="txtPesquisaFornecedor">CNPJ ou nome de fornecedor</string>
 </resources>

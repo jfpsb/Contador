@@ -6,7 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewStub;
+import android.view.WindowManager;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarFornecedor;
@@ -16,6 +18,9 @@ public class TelaFornecedor extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private ConexaoBanco conn;
+    private CadastrarFornecedor cadastrarFornecedor;
+    private PesquisarFornecedor pesquisarFornecedor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,15 @@ public class TelaFornecedor extends AppCompatActivity {
         stub.setLayoutResource(R.layout.content_tela_fornecedor);
         stub.inflate();
 
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
+
+        conn = new ConexaoBanco(this.getApplicationContext());
 
         //PesquisaTab
         TabLayout.Tab pesquisaTab = tabLayout.newTab();
@@ -46,8 +55,14 @@ public class TelaFornecedor extends AppCompatActivity {
 
         MyPagerAdapter adapter = new MyPagerAdapter (getSupportFragmentManager());
 
-        adapter.addFragment(new PesquisarFornecedor(), "Pesquisar");
-        adapter.addFragment(new CadastrarFornecedor(), "Cadastrar");
+        cadastrarFornecedor = new CadastrarFornecedor();
+        pesquisarFornecedor = new PesquisarFornecedor();
+
+        cadastrarFornecedor.setConn(conn);
+        pesquisarFornecedor.setConn(conn);
+
+        adapter.addFragment(pesquisarFornecedor, "Pesquisar");
+        adapter.addFragment(cadastrarFornecedor, "Cadastrar");
 
         viewPager.setAdapter(adapter);
 
@@ -77,4 +92,11 @@ public class TelaFornecedor extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onDestroy() {
+        if(conn != null)
+            conn.fechar();
+
+        super.onDestroy();
+    }
 }

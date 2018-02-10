@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,8 @@ import android.widget.TextView;
  * Created by jfpsb on 09/02/2018.
  */
 
-public class LojaCursorAdapter extends CursorAdapter {
-    public LojaCursorAdapter(Context context, Cursor c) {
+public class FornecedorCursorAdapter extends CursorAdapter {
+    public FornecedorCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 
@@ -25,13 +24,13 @@ public class LojaCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView labelIdLoja = view.findViewById(R.id.labelId);
-        TextView labelNomeLoja = view.findViewById(R.id.labelNome);
+        TextView labelCnpj = view.findViewById(R.id.labelId);
+        TextView labelNome = view.findViewById(R.id.labelNome);
 
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
 
-        labelIdLoja.setText(String.valueOf(id));
-        labelNomeLoja.setText(nome);
+        labelCnpj.setText(id);
+        labelNome.setText(nome);
     }
 }

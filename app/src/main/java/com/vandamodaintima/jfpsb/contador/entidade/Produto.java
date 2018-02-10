@@ -6,7 +6,7 @@ package com.vandamodaintima.jfpsb.contador.entidade;
 
 public class Produto {
     private int cod_barra;
-    private Fornecedor fornecedor;
+    private String fornecedor;
     private String descricao;
     private Double preco;
 
@@ -18,11 +18,11 @@ public class Produto {
         this.cod_barra = cod_barra;
     }
 
-    public Fornecedor getFornecedor() {
+    public String getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
+    public void setFornecedor(String fornecedor) {
         this.fornecedor = fornecedor;
     }
 
@@ -40,5 +40,9 @@ public class Produto {
 
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    public static String[] getProdutoColunas() {
+        return new String[] {"cod_barra as _id", "fornecedor", "descricao", "preco"};
     }
 }
