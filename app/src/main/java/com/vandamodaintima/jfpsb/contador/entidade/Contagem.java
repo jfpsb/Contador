@@ -9,8 +9,8 @@ import java.util.Date;
 public class Contagem {
     private int idcontagem;
     private int loja;
-    private Date datainicio;
-    private Date datafim;
+    private String datainicio;
+    private String datafim;
 
     public int getIdcontagem() {
         return idcontagem;
@@ -28,19 +28,19 @@ public class Contagem {
         this.loja = loja;
     }
 
-    public Date getDatainicio() {
+    public String getDatainicio() {
         return datainicio;
     }
 
-    public void setDatainicio(Date datainicio) {
+    public void setDatainicio(String datainicio) {
         this.datainicio = datainicio;
     }
 
-    public Date getDatafim() {
+    public String getDatafim() {
         return datafim;
     }
 
-    public void setDatafim(Date datafim) {
+    public void setDatafim(String datafim) {
         this.datafim = datafim;
     }
 }

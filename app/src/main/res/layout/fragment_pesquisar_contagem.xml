@@ -29,12 +29,19 @@
         <EditText android:id="@+id/txtDataFinal" android:hint="@string/data_hint" android:layout_width="wrap_content" android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <Button android:id="@+id/btnCadastrar"
+    <Button android:id="@+id/btnPesquisar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pesquisar"
         android:textSize="24dp"
         android:layout_margin="15dip"
         android:layout_gravity="center"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewLoja"
+        android:layout_margin="10dip" >
+    </ListView>
 
 </LinearLayout>

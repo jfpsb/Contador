@@ -19,6 +19,8 @@ public class TelaContador extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ConexaoBanco conn;
+    private CadastrarContagem cadastrarContagem;
+    private PesquisarContagem pesquisarContagem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class TelaContador extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
 
+        conn = new ConexaoBanco(getApplicationContext());
+
         //PesquisaTab
         TabLayout.Tab pesquisaTab = tabLayout.newTab();
         pesquisaTab.setText("Pesquisar");
@@ -52,8 +56,14 @@ public class TelaContador extends AppCompatActivity {
 
         MyPagerAdapter adapter = new MyPagerAdapter (getSupportFragmentManager());
 
-        adapter.addFragment(new PesquisarContagem(), "Pesquisar");
-        adapter.addFragment(new CadastrarContagem(), "Cadastrar");
+        cadastrarContagem = new CadastrarContagem();
+        pesquisarContagem = new PesquisarContagem();
+
+        cadastrarContagem.setConn(conn);
+        pesquisarContagem.setConn(conn);
+
+        adapter.addFragment(pesquisarContagem, "Pesquisar");
+        adapter.addFragment(cadastrarContagem, "Cadastrar");
 
         viewPager.setAdapter(adapter);
 
