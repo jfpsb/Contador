@@ -24,7 +24,7 @@ public class Contagem {
         return loja;
     }
 
-    public void setLoja(int idloja) {
+    public void setLoja(int loja) {
         this.loja = loja;
     }
 

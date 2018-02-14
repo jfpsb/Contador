@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -21,7 +20,6 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 
 /**
  * A simple {@link Fragment} subclass.

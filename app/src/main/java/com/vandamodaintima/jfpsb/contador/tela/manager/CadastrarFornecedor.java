@@ -50,6 +50,9 @@ public class CadastrarFornecedor extends Fragment {
             public void onClick(View view) {
                 Fornecedor fornecedor = new Fornecedor();
 
+                fornecedor.setCnpj(txtCnpj.getText().toString());
+                fornecedor.setNome(txtNome.getText().toString());
+
                 try {
                     if(fornecedor.getCnpj().isEmpty())
                         throw new Exception("Campo de CNPJ não pode ficar vazio!");

@@ -13,24 +13,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Contador"
+        android:textSize="20dp"
         android:id="@+id/btn_contador" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Produto"
+        android:textSize="20dp"
         android:id="@+id/btn_produto" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fornecedor"
+        android:textSize="20dp"
         android:id="@+id/btn_fornecedor" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Loja"
+        android:textSize="20dp"
         android:id="@+id/btn_loja" />
 
 </LinearLayout>

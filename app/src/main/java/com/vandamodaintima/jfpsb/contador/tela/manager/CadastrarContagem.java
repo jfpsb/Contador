@@ -4,6 +4,7 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,11 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -33,8 +38,10 @@ public class CadastrarContagem extends Fragment {
     private DAOLoja daoLoja;
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
+    private SimpleDateFormat dateFormat;
+    private Date dataAtual;
 
-    Loja loja = new Loja();
+    private Loja loja = new Loja();
 
     public CadastrarContagem() {
         // Required empty public constructor
@@ -49,10 +56,14 @@ public class CadastrarContagem extends Fragment {
                              Bundle savedInstanceState) {
         final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
 
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dataAtual = new Date();
+
         daoContagem = new DAOContagem(conn.conexao());
         daoLoja = new DAOLoja(conn.conexao());
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicio);
+        txtDataInicial.setText(dateFormat.format(dataAtual));
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
 
@@ -90,8 +101,11 @@ public class CadastrarContagem extends Fragment {
                 try {
                     String dataInicial = txtDataInicial.getText().toString();
 
-                    if(dataInicial.isEmpty())
+                    if(TestaIO.isStringEmpty(dataInicial))
                         throw new Exception("O campo de data inicial não pode estar vazio!");
+
+                    if(!TestaIO.isValidDate(dataInicial, dateFormat))
+                        throw new Exception("A data digitada é inválida! Formato correto é 'aaaa-mm-dd'");
 
                     contagem.setDatainicio(dataInicial);
                     contagem.setLoja(loja.getIdloja());

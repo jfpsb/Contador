@@ -22,7 +22,12 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +44,8 @@ public class PesquisarContagem extends Fragment {
     private Spinner spinnerLoja;
     private Button btnPesquisar;
     private Loja loja = new Loja();
+    private SimpleDateFormat dateFormat;
+    private Date dataAtual;
 
     public PesquisarContagem() {
         // Required empty public constructor
@@ -53,6 +60,9 @@ public class PesquisarContagem extends Fragment {
                              Bundle savedInstanceState) {
         final View viewInflate =inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
 
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dataAtual = new Date();
+
         daoContagem = new DAOContagem(conn.conexao());
         daoLoja = new DAOLoja(conn.conexao());
 
@@ -66,6 +76,8 @@ public class PesquisarContagem extends Fragment {
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicial);
         txtDataFinal = viewInflate.findViewById(R.id.txtDataFinal);
+        txtDataInicial.setText(dateFormat.format(dataAtual));
+        txtDataFinal.setText(dateFormat.format(dataAtual));
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
 
@@ -104,19 +116,23 @@ public class PesquisarContagem extends Fragment {
                     String data_inicial = txtDataInicial.getText().toString();
                     String data_final = txtDataFinal.getText().toString();
 
-                    if(data_inicial.isEmpty())
+                    if(TestaIO.isStringEmpty(data_inicial))
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
-                    if(data_final.isEmpty())
+                    if(!TestaIO.isValidDate(data_inicial, dateFormat))
+                        throw new Exception("A data inicial digitada é inválida!");
+
+                    if(TestaIO.isStringEmpty(data_final))
                         throw new Exception("Campo de data final não pode estar vazio!");
 
-                    //TODO: Testar formato digitado
+                    if(!TestaIO.isValidDate(data_final, dateFormat))
+                        throw new Exception("A data final digitada é inválida!");
 
                     contagem.setDatainicio(data_inicial);
                     contagem.setDatafim(data_final);
                     contagem.setLoja(loja.getIdloja());
 
-                    populaListView(contagem);
+                    populaListView(contagem, viewInflate);
                 }catch (Exception e) {
                     Toast.makeText(viewInflate.getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -135,9 +151,8 @@ public class PesquisarContagem extends Fragment {
         contagemCursorAdapter.changeCursor(cursor);
     }
 
-    public static void populaListView(Contagem contagem) {
-        Cursor cursor = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), String.valueOf(contagem.getLoja()));
+    public static void populaListView(Contagem contagem, View v) {
+        Cursor cursor = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), Integer.toString(contagem.getLoja()));
         contagemCursorAdapter.changeCursor(cursor);
     }
-
 }

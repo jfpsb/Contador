@@ -13,6 +13,7 @@
         android:textSize="18dp"
         android:textColor="#000000"
         android:minHeight="50dp"
+        android:textAlignment="center"
         android:padding="10dp"/>
 
     <TextView
@@ -23,6 +24,8 @@
         android:textSize="18dp"
         android:textColor="#000000"
         android:minHeight="50dp"
+        android:textAlignment="center"
         android:padding="10dp"/>
+
 
 </LinearLayout>

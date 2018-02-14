@@ -64,7 +64,7 @@ public class DAOContagem {
 
     public Cursor selectContagens(String data1, String data2, String loja) {
         try {
-            return conn.query(TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, "datainicio > ? AND datafinal < ? AND loja = ?", new String[] { data1, data2, loja }, null, null, null);
+            return conn.query(TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, "datainicio BETWEEN ? AND ? AND loja = ?", new String[] { data1, data2, loja }, null, null, null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagens: " + e.toString());
             return null;
