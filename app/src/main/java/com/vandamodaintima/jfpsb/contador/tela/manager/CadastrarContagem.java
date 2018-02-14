@@ -23,6 +23,8 @@ import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
+import junit.framework.Test;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +40,6 @@ public class CadastrarContagem extends Fragment {
     private DAOLoja daoLoja;
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
-    private SimpleDateFormat dateFormat;
     private Date dataAtual;
 
     private Loja loja = new Loja();
@@ -56,14 +57,13 @@ public class CadastrarContagem extends Fragment {
                              Bundle savedInstanceState) {
         final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
 
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dataAtual = new Date();
 
         daoContagem = new DAOContagem(conn.conexao());
         daoLoja = new DAOLoja(conn.conexao());
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicio);
-        txtDataInicial.setText(dateFormat.format(dataAtual));
+        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
 
@@ -104,7 +104,7 @@ public class CadastrarContagem extends Fragment {
                     if(TestaIO.isStringEmpty(dataInicial))
                         throw new Exception("O campo de data inicial não pode estar vazio!");
 
-                    if(!TestaIO.isValidDate(dataInicial, dateFormat))
+                    if(!TestaIO.isValidDate(dataInicial))
                         throw new Exception("A data digitada é inválida! Formato correto é 'aaaa-mm-dd'");
 
                     contagem.setDatainicio(dataInicial);

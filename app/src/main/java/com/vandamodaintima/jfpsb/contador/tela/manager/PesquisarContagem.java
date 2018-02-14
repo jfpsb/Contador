@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,8 +44,8 @@ public class PesquisarContagem extends Fragment {
     private EditText txtDataFinal;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
+    private Button btnPesquisarTodos;
     private Loja loja = new Loja();
-    private SimpleDateFormat dateFormat;
     private Date dataAtual;
 
     public PesquisarContagem() {
@@ -60,7 +61,6 @@ public class PesquisarContagem extends Fragment {
                              Bundle savedInstanceState) {
         final View viewInflate =inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
 
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dataAtual = new Date();
 
         daoContagem = new DAOContagem(conn.conexao());
@@ -76,8 +76,8 @@ public class PesquisarContagem extends Fragment {
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicial);
         txtDataFinal = viewInflate.findViewById(R.id.txtDataFinal);
-        txtDataInicial.setText(dateFormat.format(dataAtual));
-        txtDataFinal.setText(dateFormat.format(dataAtual));
+        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
+        txtDataFinal.setText(TestaIO.dateFormat.format(dataAtual));
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
 
@@ -119,23 +119,67 @@ public class PesquisarContagem extends Fragment {
                     if(TestaIO.isStringEmpty(data_inicial))
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
-                    if(!TestaIO.isValidDate(data_inicial, dateFormat))
+                    if(!TestaIO.isValidDate(data_inicial))
                         throw new Exception("A data inicial digitada é inválida!");
 
                     if(TestaIO.isStringEmpty(data_final))
                         throw new Exception("Campo de data final não pode estar vazio!");
 
-                    if(!TestaIO.isValidDate(data_final, dateFormat))
+                    if(!TestaIO.isValidDate(data_final))
                         throw new Exception("A data final digitada é inválida!");
 
                     contagem.setDatainicio(data_inicial);
                     contagem.setDatafim(data_final);
                     contagem.setLoja(loja.getIdloja());
 
+                    Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + loja.getNome() + " no intervalo " + contagem.getDatainicio() + " a " + contagem.getDatafim(), Toast.LENGTH_SHORT).show();
+
                     populaListView(contagem, viewInflate);
                 }catch (Exception e) {
                     Toast.makeText(viewInflate.getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        btnPesquisarTodos = viewInflate.findViewById(R.id.btnPesquisarTodos);
+
+        btnPesquisarTodos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                populaListView();
+                Toast.makeText(viewInflate.getContext(), "Pesquisando todos as contagens em todas as lojas", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+                cursor.moveToPosition(i);
+
+                Contagem contagem = new Contagem();
+
+                String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+                String idloja = cursor.getString(cursor.getColumnIndexOrThrow("loja"));
+                String nomeLoja = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+                String dataInicio = cursor.getString(cursor.getColumnIndexOrThrow("datainicio"));
+                String dataFinal = cursor.getString(cursor.getColumnIndexOrThrow("datafinal"));
+
+                contagem.setIdcontagem(Integer.parseInt(id));
+                contagem.setLoja(Integer.parseInt(idloja));
+                contagem.setDatainicio(dataInicio);
+                contagem.setDatafim(dataFinal);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("contagem", contagem);
+                bundle.putString("lojaNome", nomeLoja);
+
+                Intent alterarContagem = new Intent(viewInflate.getContext(), AlterarDeletarContagem.class);
+                alterarContagem.putExtras(bundle);
+
+                startActivity(alterarContagem);
             }
         });
 

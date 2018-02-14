@@ -55,7 +55,7 @@ public class DAOContagem {
 
     public Cursor selectContagens() {
         try {
-            return conn.query(TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, null, null, null, null, null);
+            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja", null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagens: " + e.toString());
             return null;
@@ -64,7 +64,7 @@ public class DAOContagem {
 
     public Cursor selectContagens(String data1, String data2, String loja) {
         try {
-            return conn.query(TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, "datainicio BETWEEN ? AND ? AND loja = ?", new String[] { data1, data2, loja }, null, null, null);
+            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja AND datainicio BETWEEN ? AND ? AND loja = ?", new String[] { data1, data2, loja });
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagens: " + e.toString());
             return null;
@@ -75,5 +75,26 @@ public class DAOContagem {
         int result = conn.delete(TABELA, "idcontagem = " + String.valueOf(id), null);
         Log.i("Contador", "Deletando contagem com id " + id);
         return result;
+    }
+
+    public int atualizar(Contagem contagem) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("idcontagem", contagem.getIdcontagem());
+        contentValues.put("loja", contagem.getLoja());
+        contentValues.put("datainicio", contagem.getDatainicio());
+        contentValues.put("datafinal", contagem.getDatafim());
+
+        return conn.update(TABELA, contentValues, "idcontagem = ?", new String[] { String.valueOf(contagem.getIdcontagem()) });
+    }
+
+    public int atualizarSemDataFinal(Contagem contagem) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("idcontagem", contagem.getIdcontagem());
+        contentValues.put("loja", contagem.getLoja());
+        contentValues.put("datainicio", contagem.getDatainicio());
+
+        return conn.update(TABELA, contentValues, "idcontagem = ?", new String[] { String.valueOf(contagem.getIdcontagem()) });
     }
 }

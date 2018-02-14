@@ -122,8 +122,6 @@ public class CadastrarProduto extends Fragment {
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao inserir produto!", Toast.LENGTH_SHORT).show();
                     }
-
-
                 } catch (NumberFormatException nfe) {
                     Toast.makeText(viewInflate.getContext(), "O valor digitado no campo preço não é um número válido!", Toast.LENGTH_SHORT).show();
 

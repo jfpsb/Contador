@@ -1,12 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Contagem {
+public class Contagem implements Serializable {
     private int idcontagem;
     private int loja;
     private String datainicio;

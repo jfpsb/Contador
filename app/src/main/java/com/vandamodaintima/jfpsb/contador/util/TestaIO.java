@@ -8,9 +8,14 @@ import java.text.SimpleDateFormat;
  */
 
 public class TestaIO {
-    public static boolean isValidDate(String date, SimpleDateFormat dateFormat) {
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static boolean isValidDate(String date) {
         dateFormat.setLenient(false);
         try {
+            if(date.isEmpty())
+                return true;
+
             dateFormat.parse(date.trim());
         } catch (ParseException pe) {
             return false;
