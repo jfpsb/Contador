@@ -123,22 +123,18 @@ public class AlterarDeletarContagem extends AppCompatActivity {
                     if(checkBoxDataFinal.isChecked() && !TestaIO.isValidDate(data_final))
                         throw new Exception("O campo de data final está com um valor inválido!");
 
-                    Contagem c = new Contagem();
-
-                    c.setIdcontagem(contagem.getIdcontagem());
-                    c.setDatainicio(contagem.getDatainicio());
-                    c.setDatafim(data_final);
-                    c.setLoja(loja.getIdloja());
+                    contagem.setDatafim(data_final);
+                    contagem.setLoja(loja.getIdloja());
 
                     int result;
 
                     if(checkBoxDataFinal.isChecked())
-                        result = daoContagem.atualizar(c);
+                        result = daoContagem.atualizar(contagem);
                     else
                         result = daoContagem.atualizarSemDataFinal(contagem);
 
                     if(result != -1) {
-                        Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + c.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
 
                         PesquisarContagem.populaListView();
                     }

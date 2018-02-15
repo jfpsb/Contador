@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,7 +42,7 @@ public class PesquisarFornecedor extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
+        final View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
         daoFornecedor = new DAOFornecedor(conn.conexao());
 
@@ -84,7 +85,15 @@ public class PesquisarFornecedor extends Fragment {
                 fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
-                //TODO: Criar tela de alterar e deletar loja
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("fornecedor", fornecedor);
+
+                Intent alterarFornecedor = new Intent(viewInflate.getContext(), AlterarDeletarFornecedor.class);
+
+                alterarFornecedor.putExtras(bundle);
+
+                startActivity(alterarFornecedor);
             }
         });
 

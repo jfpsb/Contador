@@ -68,4 +68,13 @@ public class DAOLoja {
         Log.i("Contador", "Deletando loja com id " + id);
         return result;
     }
+
+    public int atualizar(Loja loja) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("idloja", loja.getIdloja());
+        contentValues.put("nome", loja.getNome());
+
+        return conn.update(TABELA, contentValues, "idloja = ?", new String[] {String.valueOf(loja.getIdloja())});
+    }
 }

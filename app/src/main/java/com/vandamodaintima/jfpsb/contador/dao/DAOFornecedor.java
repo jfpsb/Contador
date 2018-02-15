@@ -55,9 +55,9 @@ public class DAOFornecedor {
         }
     }
 
-    public Cursor selectFornecedores(String cnpj) {
+    public Cursor selectFornecedores(String termo) {
         try {
-            return conn.query(TABELA, new String[] {"cnpj _id", "nome"}, "nome LIKE ?", new String[] { "%" + cnpj + "%"}, null, null, null);
+            return conn.query(TABELA, new String[] {"cnpj _id", "nome"}, "nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar fornecedores: " + e.toString());
             return null;
@@ -68,5 +68,14 @@ public class DAOFornecedor {
         int result = conn.delete(TABELA, "cnpj = ?", new String[] { id });
         Log.i("Contador", "Deletando fornecedor com cnpj " + id);
         return result;
+    }
+
+    public int atualizar(Fornecedor fornecedor) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("cnpj", fornecedor.getCnpj());
+        contentValues.put("nome", fornecedor.getNome());
+
+        return conn.update(TABELA, contentValues, "cnpj = ?", new String[] {fornecedor.getCnpj()});
     }
 }

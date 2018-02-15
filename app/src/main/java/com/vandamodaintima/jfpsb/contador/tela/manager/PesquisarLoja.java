@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,15 @@ public class PesquisarLoja extends Fragment {
                 loja.setIdloja(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
-                //TODO: Criar tela de alterar e deletar loja
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("loja", loja);
+
+                Intent alterarLoja = new Intent(viewInflate.getContext(), AlterarDeletarLoja.class);
+
+                alterarLoja.putExtras(bundle);
+
+                startActivity(alterarLoja);
             }
         });
 

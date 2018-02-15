@@ -8,12 +8,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" android:stretchColumns="1" android:shrinkColumns="0" android:layout_margin="7dip" >
         <TableRow>
-            <TextView android:text="CNPJ: " android:textSize="20dp" />
-            <EditText android:id="@+id/txtCnpj" />
+            <TextView
+                android:text="CNPJ:"
+                android:textSize="20dp"
+                android:textColor="#000000"/>
+
+            <EditText
+                android:id="@+id/txtCnpj"
+                android:textColor="#000000"/>
         </TableRow>
         <TableRow>
-            <TextView android:text="Nome: " android:textSize="20dp" />
-            <EditText android:id="@+id/txtNome" />
+            <TextView
+                android:text="Nome:"
+                android:textSize="20dp"
+                android:textColor="#000000"/>
+
+            <EditText
+                android:id="@+id/txtNome"
+                android:textColor="#000000"/>
         </TableRow>
         <Button android:id="@+id/btnCadastrar" android:text="Cadastrar" android:textSize="24dp" android:layout_margin="15dip" />
     </TableLayout>
