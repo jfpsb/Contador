@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,7 @@ public class PesquisarProduto extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
+        final View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
         daoProduto = new DAOProduto(conn.conexao());
 
@@ -119,8 +120,19 @@ public class PesquisarProduto extends Fragment {
                 produto.setCod_barra(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
 
-                //TODO: Criar tela de alterar e deletar loja
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("produto", produto);
+                bundle.putString("fornecedor", nomeFornecedor);
+
+                Intent alterarProduto = new Intent(viewInflate.getContext(), AlterarDeletarProduto.class);
+
+                alterarProduto.putExtras(bundle);
+
+                startActivity(alterarProduto);
             }
         });
 

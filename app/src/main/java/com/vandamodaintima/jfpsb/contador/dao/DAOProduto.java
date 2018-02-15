@@ -53,7 +53,7 @@ public class DAOProduto {
 
     public Cursor selectProdutos() {
         try {
-            return conn.query(TABELA, Produto.getProdutoColunas(), null, null, null, null, null);
+            return conn.rawQuery("SELECT cod_barra as _id, cnpj, nome, descricao, preco FROM produto, fornecedor WHERE cnpj = fornecedor", null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
             return null;
@@ -91,5 +91,16 @@ public class DAOProduto {
         int result = conn.delete(TABELA, "cod_barra = " + String.valueOf(id), null);
         Log.i("Contador", "Deletando produto com código de barra " + id);
         return result;
+    }
+
+    public int atualizar(Produto produto) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("cod_barra", produto.getCod_barra());
+        contentValues.put("descricao", produto.getDescricao());
+        contentValues.put("fornecedor", produto.getFornecedor());
+        contentValues.put("preco", produto.getPreco());
+
+        return conn.update(TABELA, contentValues, "cod_barra = ?", new String[] {String.valueOf(produto.getCod_barra())});
     }
 }

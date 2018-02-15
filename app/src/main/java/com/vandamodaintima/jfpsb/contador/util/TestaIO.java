@@ -23,6 +23,16 @@ public class TestaIO {
         return true;
     }
 
+    public static boolean isValidDouble(String num) {
+        try {
+            Double.parseDouble(num);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean isStringEmpty(String string) {
         if(string.isEmpty())
             return  true;
