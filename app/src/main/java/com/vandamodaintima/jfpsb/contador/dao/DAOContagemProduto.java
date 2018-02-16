@@ -33,7 +33,7 @@ public class DAOContagemProduto {
     }
 
     public Contagem_Produto selectContagemProduto(int contagem, int produto) {
-        Cursor c = conn.rawQuery("SELECT id as _id, contagem, produto, quant FROM contagem, produto WHERE produto = cod_barra AND contagem = ? AND produto = ?", new String[] {String.valueOf(contagem), String.valueOf(produto)});
+        Cursor c = conn.rawQuery("SELECT id as _id, contagem, produto, descricao, quant FROM contagem_produto, produto WHERE produto = cod_barra AND contagem = ? AND produto = ?", new String[] {String.valueOf(contagem), String.valueOf(produto)});
 
         if(c.getCount() > 0) {
             c.moveToFirst();
@@ -53,7 +53,16 @@ public class DAOContagemProduto {
 
     public Cursor selectContagemProdutos() {
         try {
-            return conn.rawQuery("SELECT id as _id, contagem, produto, descricao, SUM(quant) FROM contagem, produto WHERE produto = cod_barra GROUP BY produto", null);
+            return conn.rawQuery("SELECT id as _id, contagem, produto, fornecedor, descricao, SUM(quant) as quant FROM contagem_produto, produto WHERE produto = cod_barra GROUP BY produto", null);
+        } catch(SQLException e) {
+            Log.e("Contador", "Erro ao buscar contagem de produtos: " + e.toString());
+            return null;
+        }
+    }
+
+    public Cursor selectContagemProdutos(int contagem) {
+        try {
+            return conn.rawQuery("SELECT id as _id, contagem, produto, descricao, fornecedor, SUM(quant) as quant FROM contagem_produto, produto WHERE produto = cod_barra AND contagem = ? GROUP BY contagem, produto", new String[] { String.valueOf(contagem) });
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagem de produtos: " + e.toString());
             return null;

@@ -21,6 +21,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +34,7 @@ public class PesquisarProduto extends Fragment {
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
-    private View viewInflate;
+    private static View viewInflate;
 
     public PesquisarProduto() {
         // Required empty public constructor
@@ -68,6 +69,7 @@ public class PesquisarProduto extends Fragment {
      */
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
+        Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoProduto.selectProdutos();
         produtoCursorAdapter.changeCursor(cursor);
     }
@@ -78,12 +80,21 @@ public class PesquisarProduto extends Fragment {
 
         switch(TIPO_PESQUISA) {
             case 1:
+                if(!TestaIO.isStringEmpty(termo))
+                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando código de barras com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
+
                 cursor = daoProduto.selectProdutosCodBarra(termo);
                 break;
             case 2:
+                if(!TestaIO.isStringEmpty(termo))
+                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando descrição com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
+
                 cursor = daoProduto.selectProdutosDescricao(termo);
                 break;
             case 3:
+                if(!TestaIO.isStringEmpty(termo))
+                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando nome de fornecedor com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
+
                 cursor = daoProduto.selectProdutosFornecedor(termo);
                 break;
         }

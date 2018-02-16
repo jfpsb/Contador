@@ -50,18 +50,18 @@ public class CadastrarFornecedor extends Fragment {
             public void onClick(View view) {
                 Fornecedor fornecedor = new Fornecedor();
 
-                fornecedor.setCnpj(txtCnpj.getText().toString());
-                fornecedor.setNome(txtNome.getText().toString());
-
                 try {
-                    if(fornecedor.getCnpj().isEmpty())
+                    String cnpj = txtCnpj.getText().toString();
+                    String nome = txtNome.getText().toString();
+
+                    if(cnpj.isEmpty())
                         throw new Exception("Campo de CNPJ não pode ficar vazio!");
 
-                    if(fornecedor.getNome().isEmpty())
+                    if(nome.isEmpty())
                         throw new Exception("Campo de nome não pode ficar vazio!");
 
-                    fornecedor.setCnpj(txtCnpj.getText().toString());
-                    fornecedor.setNome(txtNome.getText().toString());
+                    fornecedor.setCnpj(cnpj);
+                    fornecedor.setNome(nome.toUpperCase());
 
                     long id = daoFornecedor.inserir(fornecedor);
 
@@ -72,7 +72,8 @@ public class CadastrarFornecedor extends Fragment {
 
                         txtCnpj.setText("");
                         txtNome.setText("");
-                    }else {
+                    }
+                    else {
                         Toast.makeText(view.getContext(), "Erro ao inserir fornecedor!", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +32,7 @@ public class PesquisarLoja extends Fragment {
     private ListView listView;
     private static LojaCursorAdapter lojaCursorAdapter;
     private EditText txtNome;
+    private static View viewInflate;
 
     public PesquisarLoja() {
         // Required empty public constructor
@@ -42,7 +45,7 @@ public class PesquisarLoja extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
+        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 
         daoLoja = new DAOLoja(conn.conexao());
 
@@ -105,12 +108,16 @@ public class PesquisarLoja extends Fragment {
      */
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
+        Toast.makeText(viewInflate.getContext(), "Pesquisando todas as lojas", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoLoja.selectLojas();
         lojaCursorAdapter.changeCursor(cursor);
     }
 
     public static void populaListView(String nome) {
         // Switch to new cursor and update contents of ListView
+        if(!TestaIO.isStringEmpty(nome))
+            Toast.makeText(viewInflate.getContext(), "Pesquisando lojas com a chave '" + nome + "'", Toast.LENGTH_SHORT).show();
+
         Cursor cursor = daoLoja.selectLojas(nome);
         lojaCursorAdapter.changeCursor(cursor);
     }

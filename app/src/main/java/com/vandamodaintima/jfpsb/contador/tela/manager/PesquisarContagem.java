@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class PesquisarContagem extends Fragment {
     private Button btnPesquisarTodos;
     private Loja loja = new Loja();
     private Date dataAtual;
+    private static View viewInflate;
 
     public PesquisarContagem() {
         // Required empty public constructor
@@ -59,7 +61,7 @@ public class PesquisarContagem extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate =inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
+        viewInflate =inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
 
         dataAtual = new Date();
 
@@ -132,9 +134,7 @@ public class PesquisarContagem extends Fragment {
                     contagem.setDatafim(data_final);
                     contagem.setLoja(loja.getIdloja());
 
-                    Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + loja.getNome() + " no intervalo " + contagem.getDatainicio() + " a " + contagem.getDatafim(), Toast.LENGTH_SHORT).show();
-
-                    populaListView(contagem, viewInflate);
+                    populaListView(contagem, loja);
                 }catch (Exception e) {
                     Toast.makeText(viewInflate.getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -147,7 +147,6 @@ public class PesquisarContagem extends Fragment {
             @Override
             public void onClick(View view) {
                 populaListView();
-                Toast.makeText(viewInflate.getContext(), "Pesquisando todos as contagens em todas as lojas", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -191,11 +190,13 @@ public class PesquisarContagem extends Fragment {
      */
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
+        Toast.makeText(viewInflate.getContext(), "Pesquisando todos as contagens em todas as lojas", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoContagem.selectContagens();
         contagemCursorAdapter.changeCursor(cursor);
     }
 
-    public static void populaListView(Contagem contagem, View v) {
+    public static void populaListView(Contagem contagem, Loja loja) {
+        Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + loja.getNome() + " no intervalo " + contagem.getDatainicio() + " a " + contagem.getDatafim(), Toast.LENGTH_SHORT).show();
         Cursor cursor = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), Integer.toString(contagem.getLoja()));
         contagemCursorAdapter.changeCursor(cursor);
     }

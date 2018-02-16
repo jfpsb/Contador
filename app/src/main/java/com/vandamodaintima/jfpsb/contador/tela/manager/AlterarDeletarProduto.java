@@ -150,7 +150,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     if(!TestaIO.isValidDouble(preco))
                         throw new Exception("O valor no campo preço é inválido!");
 
-                    produto.setDescricao(descricao);
+                    produto.setDescricao(descricao.toUpperCase());
                     produto.setPreco(Double.parseDouble(preco));
                     produto.setFornecedor(fornecedor.getCnpj());
 

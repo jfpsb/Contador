@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
@@ -34,6 +35,8 @@ public class TelaProduto extends AppCompatActivity {
         setContentView(R.layout.activity_tela);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ManipulaExcel.getProdutosEmPlanilha(getApplicationContext(), "");
 
         ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.content_tela_produto);

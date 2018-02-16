@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vandamodaintima.jfpsb.contador">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -55,7 +58,10 @@
         <activity
             android:name=".tela.manager.AdicionarContagemProduto"
             android:label="@string/title_activity_adicionar_contagem_produto"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.manager.VisualizarProdutosContagem"
+            android:label="@string/title_activity_visualizar_produtos_contagem"
             android:theme="@style/TabAppTheme.NoActionBar"></activity>
     </application>
-
 </manifest>

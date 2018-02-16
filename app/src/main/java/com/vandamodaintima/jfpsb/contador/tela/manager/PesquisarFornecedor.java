@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,12 +14,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.FornecedorCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 
 /**
@@ -30,6 +33,7 @@ public class PesquisarFornecedor extends Fragment {
     private ListView listView;
     private static FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
+    private static View viewInflate;
 
     public PesquisarFornecedor() {
         // Required empty public constructor
@@ -42,7 +46,7 @@ public class PesquisarFornecedor extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
+        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
         daoFornecedor = new DAOFornecedor(conn.conexao());
 
@@ -105,12 +109,16 @@ public class PesquisarFornecedor extends Fragment {
      */
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
+        Toast.makeText(viewInflate.getContext(), "Pesquisando todos os forncedores", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoFornecedor.selectFornecedores();
         fornecedorCursorAdapter.changeCursor(cursor);
     }
 
     public static void populaListView(String nome) {
         // Switch to new cursor and update contents of ListView
+        if(!TestaIO.isStringEmpty(nome))
+            Toast.makeText(viewInflate.getContext(), "Pesquisando fornecedores usando chave '" + nome + "'", Toast.LENGTH_SHORT).show();
+
         Cursor cursor = daoFornecedor.selectFornecedores(nome);
         fornecedorCursorAdapter.changeCursor(cursor);
     }

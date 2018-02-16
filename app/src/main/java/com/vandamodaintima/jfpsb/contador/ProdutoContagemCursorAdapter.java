@@ -3,39 +3,38 @@ package com.vandamodaintima.jfpsb.contador;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-
 /**
- * Created by jfpsb on 09/02/2018.
+ * Created by jfpsb on 16/02/2018.
  */
 
-public class ProdutoCursorAdapter extends CursorAdapter {
-    public ProdutoCursorAdapter(Context context, Cursor c) {
+public class ProdutoContagemCursorAdapter extends CursorAdapter {
+    public ProdutoContagemCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item_pesquisa_produto, parent,false);
+        return LayoutInflater.from(context).inflate(R.layout.item_produto_contagem, parent,false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView labelCodBarra = view.findViewById(R.id.labelCodBarra);
         TextView labelDescricao = view.findViewById(R.id.labelDescricao);
-        TextView labelPreco = view.findViewById(R.id.labelPreco);
+        TextView labelQuant = view.findViewById(R.id.labelQuant);
 
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        int cod_barra = cursor.getInt(cursor.getColumnIndexOrThrow("produto"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
-        Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
+        int quant = cursor.getInt(cursor.getColumnIndexOrThrow("quant"));
 
-        labelCodBarra.setText(String.valueOf(id));
+        labelCodBarra.setText(String.valueOf(cod_barra));
         labelDescricao.setText(descricao);
-        labelPreco.setText(String.valueOf(preco));
+        labelQuant.setText(String.valueOf(quant));
     }
 }

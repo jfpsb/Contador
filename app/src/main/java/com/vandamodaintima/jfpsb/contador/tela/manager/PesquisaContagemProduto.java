@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowManager;
@@ -33,6 +36,8 @@ public class PesquisaContagemProduto extends AppCompatActivity {
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
     private Contagem contagem;
+    private static Context context;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +65,47 @@ public class PesquisaContagemProduto extends AppCompatActivity {
 
         txtPesquisaProduto = findViewById(R.id.txtPesquisaProduto);
 
+        context = getApplicationContext();
+
         setTxtPesquisaProduto();
 
         setRadioGroup();
 
         setListView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_visualizar_contagem, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.itemVerProdutos:
+                Intent visualizarContagem = new Intent(PesquisaContagemProduto.this, VisualizarProdutosContagem.class);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("contagem", contagem);
+
+                visualizarContagem.putExtras(bundle);
+
+                visualizarContagem.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                startActivity(visualizarContagem);
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setListViewOnItemClickListener() {
@@ -102,6 +143,7 @@ public class PesquisaContagemProduto extends AppCompatActivity {
      */
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
+        Toast.makeText(context, "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoProduto.selectProdutos();
         produtoCursorAdapter.changeCursor(cursor);
     }
@@ -192,9 +234,7 @@ public class PesquisaContagemProduto extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        if(conn != null)
-            conn.fechar();
-
+        conn.fechar();
         super.onDestroy();
     }
 }

@@ -47,11 +47,13 @@ public class CadastrarLoja extends Fragment {
             public void onClick(View view) {
                 Loja loja = new Loja();
 
-                loja.setNome(txtNome.getText().toString());
-
                 try {
-                    if(loja.getNome().isEmpty())
+                    String nome = txtNome.getText().toString();
+
+                    if(nome.isEmpty())
                         throw new Exception("O campo de nome está vazio");
+
+                    loja.setNome(nome.toUpperCase());
 
                     long id = daoLoja.inserir(loja);
 

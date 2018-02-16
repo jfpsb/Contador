@@ -105,7 +105,7 @@ public class CadastrarProduto extends Fragment {
 
                     produto.setCod_barra(Integer.parseInt(cod_barra));
                     produto.setPreco(Double.parseDouble(preco));
-                    produto.setDescricao(descricao);
+                    produto.setDescricao(descricao.toUpperCase());
                     produto.setFornecedor(fornecedor.getCnpj());
 
                     long id = daoProduto.inserir(produto);

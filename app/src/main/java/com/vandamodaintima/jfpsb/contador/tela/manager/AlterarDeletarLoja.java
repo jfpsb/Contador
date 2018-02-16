@@ -85,7 +85,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo nome não pode estar vazio!");
 
-                    loja.setNome(nome);
+                    loja.setNome(nome.toUpperCase());
 
                     int result = daoLoja.atualizar(loja);
 

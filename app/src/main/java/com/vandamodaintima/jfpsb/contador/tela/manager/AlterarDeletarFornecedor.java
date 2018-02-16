@@ -84,7 +84,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo de nome não pode ficar vazio!");
 
-                    fornecedor.setNome(nome);
+                    fornecedor.setNome(nome.toUpperCase());
 
                     int result = daoFornecedor.atualizar(fornecedor);
 
