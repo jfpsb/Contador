@@ -1,10 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="10dip"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto" >
+    android:layout_margin="10dip">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,33 +16,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/radioGroupOpcao"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/rbCodBarra"
             android:text="Cod. Barra"
             android:checked="true"
             android:textSize="16dp"
-            android:layout_margin="5dip" />
+            android:layout_margin="5dip"
+            android:layout_weight="1"/>
 
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/rbFornecedor"
             android:text="Fornecedor"
             android:textSize="16dp"
-            android:layout_margin="5dip" />
+            android:layout_margin="5dip"
+            android:layout_weight="1"/>
 
         <RadioButton
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/rbDescricao"
             android:text="Descrição"
             android:textSize="16dp"
-            android:layout_margin="5dip" />
-
+            android:layout_margin="5dip"
+            android:layout_weight="1"/>
     </RadioGroup>
 
     <EditText

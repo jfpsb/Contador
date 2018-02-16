@@ -146,4 +146,11 @@
             android:id="@+id/btnDeletar"/>
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adicionar Contagem de Produtos"
+        android:textSize="20dp"
+        android:id="@+id/btnAdicionar"/>
+
 </LinearLayout>

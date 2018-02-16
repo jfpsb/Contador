@@ -5,9 +5,18 @@ package com.vandamodaintima.jfpsb.contador.entidade;
  */
 
 public class Contagem_Produto {
+    private int id;
     private int contagem;
     private int produto;
     private int quant;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getContagem() {
         return contagem;

@@ -1,15 +1,15 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,12 +20,11 @@ import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class PesquisarProduto extends Fragment {
+public class PesquisaContagemProduto extends AppCompatActivity {
+
     private RadioGroup radioGroup;
     private EditText txtPesquisaProduto;
     private ConexaoBanco conn;
@@ -33,34 +32,69 @@ public class PesquisarProduto extends Fragment {
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
-    private View viewInflate;
-
-    public PesquisarProduto() {
-        // Required empty public constructor
-    }
-
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
-    }
-
+    private Contagem contagem;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tela);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+
+        ViewStub stub = findViewById(R.id.layoutStub);
+        stub.setLayoutResource(R.layout.fragment_pesquisar_produto);
+        stub.inflate();
+
+        conn = new ConexaoBanco(getApplicationContext());
+
+        contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         daoProduto = new DAOProduto(conn.conexao());
 
-        radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
+        radioGroup = findViewById(R.id.radioGroupOpcao);
 
-        txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
+        txtPesquisaProduto = findViewById(R.id.txtPesquisaProduto);
 
         setTxtPesquisaProduto();
 
         setRadioGroup();
 
-        setListView(viewInflate);
+        setListView();
+    }
 
-        return viewInflate;
+    private void setListViewOnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+                cursor.moveToPosition(i);
+
+                Produto produto = new Produto();
+
+                produto.setCod_barra(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
+                produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("produto", produto);
+                bundle.putSerializable("contagem", contagem);
+                bundle.putString("fornecedor", nomeFornecedor);
+
+                Intent adicionarProduto = new Intent(getApplicationContext(), AdicionarContagemProduto.class);
+
+                adicionarProduto.putExtras(bundle);
+                startActivity(adicionarProduto);
+            }
+        });
     }
 
     /**
@@ -91,46 +125,16 @@ public class PesquisarProduto extends Fragment {
         produtoCursorAdapter.changeCursor(cursor);
     }
 
-    private void setListView(final View viewInflate) {
-        listView = viewInflate.findViewById(R.id.listViewLoja);
+    private void setListView() {
+        listView = findViewById(R.id.listViewLoja);
 
         Cursor cursor = daoProduto.selectProdutos();
 
-        produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(),cursor);
+        produtoCursorAdapter = new ProdutoCursorAdapter(getApplicationContext(),cursor);
 
         listView.setAdapter(produtoCursorAdapter);
 
-        setListViewOnItemClickListener(viewInflate);
-    }
-
-    private void setListViewOnItemClickListener(final View viewInflate) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-                cursor.moveToPosition(i);
-
-                Produto produto = new Produto();
-
-                produto.setCod_barra(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
-                produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
-                produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
-                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
-                String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
-
-                Bundle bundle = new Bundle();
-
-                bundle.putSerializable("produto", produto);
-                bundle.putString("fornecedor", nomeFornecedor);
-
-                Intent alterarProduto = new Intent(viewInflate.getContext(), AlterarDeletarProduto.class);
-
-                alterarProduto.putExtras(bundle);
-
-                startActivity(alterarProduto);
-            }
-        });
+        setListViewOnItemClickListener();
     }
 
     private void setRadioGroup() {
@@ -153,7 +157,7 @@ public class PesquisarProduto extends Fragment {
                         TIPO_PESQUISA = 3;
                         break;
                     default:
-                        Toast.makeText(getActivity(), "Aconteceu algo de errado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Aconteceu algo de errado", Toast.LENGTH_SHORT).show();
                         TIPO_PESQUISA = 1;
                         break;
                 }
@@ -178,5 +182,19 @@ public class PesquisarProduto extends Fragment {
                 populaListView(txtPesquisaProduto.getText().toString());
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        if(conn != null)
+            conn.fechar();
+
+        super.onDestroy();
     }
 }

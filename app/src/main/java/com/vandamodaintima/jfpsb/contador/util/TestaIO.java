@@ -33,6 +33,16 @@ public class TestaIO {
         return true;
     }
 
+    public static boolean isValidInt(String num) {
+        try {
+            Integer.parseInt(num);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean isStringEmpty(String string) {
         if(string.isEmpty())
             return  true;

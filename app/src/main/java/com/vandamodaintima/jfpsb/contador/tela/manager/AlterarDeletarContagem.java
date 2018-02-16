@@ -2,10 +2,12 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SimpleCursorAdapter;
@@ -31,6 +33,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     private Spinner spinnerLoja;
     private Loja loja = new Loja();
     private CheckBox checkBoxDataFinal;
+    private Button btnAdicionar;
 
     private DAOLoja daoLoja;
     private DAOContagem daoContagem;
@@ -52,6 +55,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
         checkBoxDataFinal = findViewById(R.id.checkBoxDataFinal);
+        btnAdicionar = findViewById(R.id.btnAdicionar);
 
         txtIDContagem.setText(String.valueOf(contagem.getIdcontagem()));
         txtDataFinal.setText(contagem.getDatafim());
@@ -72,6 +76,8 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         setBtnDeletar();
 
         setCheckBoxDataFinal();
+
+        setBtnAdicionar();
     }
 
     @Override
@@ -193,6 +199,23 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                 else {
                     txtDataFinal.setEnabled(false);
                 }
+            }
+        });
+    }
+
+    private void setBtnAdicionar() {
+        btnAdicionar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pesquisaContagemProduto = new Intent(AlterarDeletarContagem.this, PesquisaContagemProduto.class);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("contagem",contagem);
+
+                pesquisaContagemProduto.putExtras(bundle);
+
+                startActivity(pesquisaContagemProduto);
             }
         });
     }
