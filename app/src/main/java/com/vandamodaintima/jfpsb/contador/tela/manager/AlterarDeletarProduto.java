@@ -17,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarProduto extends AlterarDeletarEntidade {
@@ -56,7 +57,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
         txtDescricao.setText(produto.getDescricao());
         txtPreco.setText(String.valueOf(produto.getPreco()));
-        txtFornecedorAtual.setText(nomeFornecedor);
+
+        if(nomeFornecedor != null) {
+            txtFornecedorAtual.setText(nomeFornecedor);
+        }
+        else{
+            txtFornecedorAtual.setText("Sem Fornecedor");
+        }
 
         setAlertBuilder(produto.getCod_barra());
 
@@ -79,7 +86,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoProduto.deletar((int) cod_barra);
+                daoProduto.deletar(String.valueOf(cod_barra));
 
                 PesquisarProduto.populaListView();
 
@@ -98,31 +105,44 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private void setSpinnerFornecedor() {
         Cursor spinnerCursor = daoFornecedor.selectFornecedores();
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor, new String[] {"nome"}, new int[] {android.R.id.text1}, 0);
+        // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
+        Cursor spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[] { "_id", "nome" });
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[] {"nome"}, new int[] {android.R.id.text1}, 0);
         simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerFornecedor.setAdapter(simpleCursorAdapter);
 
-        for(int i = 0; i < spinnerCursor.getCount(); i++) {
-            spinnerCursor.moveToPosition(i);
+        if(produto.getFornecedor() != null) {
+            for (int i = 0; i < spinnerCursor2.getCount(); i++) {
+                spinnerCursor2.moveToPosition(i);
 
-            String id = spinnerCursor.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
+                String id = spinnerCursor2.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
 
-            if(produto.getFornecedor().equals(id)) {
-                spinnerFornecedor.setSelection(i);
-                break;
+                if (produto.getFornecedor().equals(id)) {
+                    spinnerFornecedor.setSelection(i);
+                    break;
+                }
             }
+        }
+        else {
+            spinnerFornecedor.setSelection(0);
         }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor c = (Cursor) adapterView.getItemAtPosition(i);
+                if(i != 0) {
+                    Cursor c = (Cursor) adapterView.getItemAtPosition(i);
 
-                c.moveToPosition(i);
+                    c.moveToPosition(i);
 
-                fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
-                fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+                    fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
+                    fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+                }
+                else {
+                    fornecedor.setCnpj(null);
+                }
             }
 
             @Override

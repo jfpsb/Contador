@@ -3,10 +3,12 @@ package com.vandamodaintima.jfpsb.contador.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * Created by jfpsb on 08/02/2018.
@@ -20,12 +22,26 @@ public class DAOLoja {
         this.conn = conn;
     }
 
-    public long inserir(Loja loja) {
+    public long[] inserir(Loja loja) {
+        long[] result = new long[2];
+
+        try {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("nome", loja.getNome());
 
-        return conn.insert(TABELA, "", contentValues);
+        result[0] = conn.insertOrThrow(TABELA, "", contentValues);
+        } catch (SQLiteConstraintException sce) {
+            Log.i("Contador", sce.getMessage());
+            result[0] = -1;
+            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
+        } catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+            result[0] = -1;
+            result[1] = -1;
+        }
+
+        return result;
     }
 
     public Loja selectLoja(int id) {
@@ -67,6 +83,7 @@ public class DAOLoja {
         int result = conn.delete(TABELA, "idloja = " + String.valueOf(id), null);
         Log.i("Contador", "Deletando loja com id " + id);
         return result;
+        //TODO; Colocar para tratar erro de chave estrangeira
     }
 
     public int atualizar(Loja loja) {

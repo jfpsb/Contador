@@ -62,6 +62,15 @@
         <activity
             android:name=".tela.manager.VisualizarProdutosContagem"
             android:label="@string/title_activity_visualizar_produtos_contagem"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.manager.AdicionarFornecedor"
+            android:label="@string/title_activity_adicionar_fornecedor"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity
+            android:name=".tela.ActivityBase"
+            android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

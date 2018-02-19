@@ -1,29 +1,27 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem_Produto;
+import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
-public class AdicionarContagemProduto extends AppCompatActivity {
+public class AdicionarContagemProduto extends ActivityBase {
 
-    private ConexaoBanco conn;
     DAOProduto daoProduto;
     DAOContagemProduto daoContagemProduto;
     private EditText txtCodBarra;
@@ -32,24 +30,22 @@ public class AdicionarContagemProduto extends AppCompatActivity {
     private EditText txtQuantidade;
     private EditText txtDescricao;
     private Button btnAdicionar;
+    private Button btnAddFornecedor;
+    private Button btnLimparFornecedor;
 
+    private Fornecedor fornecedor = new Fornecedor();
     private Produto produto;
     private Contagem contagem;
     private Contagem_Produto contagem_produto = new Contagem_Produto();
+    private Boolean addFornecedorFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
 
         ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.content_adicionar_contagem_produto);
         stub.inflate();
-
-        conn = new ConexaoBanco(getApplicationContext());
 
         daoContagemProduto = new DAOContagemProduto(conn.conexao());
         daoProduto = new DAOProduto(conn.conexao());
@@ -58,36 +54,31 @@ public class AdicionarContagemProduto extends AppCompatActivity {
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
         String nomeFornecedor = getIntent().getExtras().getString("fornecedor");
 
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtPreco = findViewById(R.id.txtPreco);
         txtQuantidade = findViewById(R.id.txtQuantidade);
         txtDescricao = findViewById(R.id.txtDescricao);
         btnAdicionar = findViewById(R.id.btnAdicionar);
+        btnAddFornecedor = findViewById(R.id.btnAddFornecedor);
+        btnLimparFornecedor = findViewById(R.id.btnLimparFornecedor);
 
         txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
-        txtFornecedor.setText(nomeFornecedor);
+
+        if(nomeFornecedor != null) {
+            txtFornecedor.setText(nomeFornecedor);
+        } else {
+            txtFornecedor.setText("Não Possui");
+        }
+
         txtPreco.setText(String.valueOf(produto.getPreco()));
         txtDescricao.setText(produto.getDescricao());
 
         setBtnAdicionar();
-    }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+        setBtnAddFornecedor();
 
-    @Override
-    public void onDestroy() {
-        conn.fechar();
-        super.onDestroy();
+        setBtnLimparFornecedor();
     }
 
     private void setBtnAdicionar() {
@@ -107,20 +98,85 @@ public class AdicionarContagemProduto extends AppCompatActivity {
                     contagem_produto.setProduto(produto.getCod_barra());
                     contagem_produto.setQuant(Integer.parseInt(quant));
 
-                    long result = daoContagemProduto.inserir(contagem_produto);
+                    long result[] = daoContagemProduto.inserir(contagem_produto);
 
-                    if(result != -1) {
+                    if(result[0] != -1) {
                         Toast.makeText(AdicionarContagemProduto.this, "Contagem de produto inserida com sucesso!", Toast.LENGTH_SHORT).show();
+
+                        if(addFornecedorFlag) {
+
+                            produto.setFornecedor(fornecedor.getCnpj());
+
+                            long resultProduto = daoProduto.atualizar(produto);
+
+                            if(resultProduto != -1) {
+                                Toast.makeText(AdicionarContagemProduto.this, "Fornecedor de produto atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(AdicionarContagemProduto.this, "Houve um erro ao atualizar fornecedor de produto", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
                         finish();
                     }
                     else {
-                        Toast.makeText(AdicionarContagemProduto.this, "Erro ao inserir contagem de produto!", Toast.LENGTH_SHORT).show();
+                        TratamentoMensagensSQLite.trataErroEmInsert(getApplicationContext(), result[1]);
                     }
                 }catch (Exception e) {
                     Toast.makeText(AdicionarContagemProduto.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void setBtnAddFornecedor() {
+        btnAddFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addFornecedor = new Intent(AdicionarContagemProduto.this, AdicionarFornecedor.class);
+
+                startActivityForResult(addFornecedor, 1);
+            }
+        });
+    }
+
+    private void setBtnLimparFornecedor() {
+        btnLimparFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fornecedor.getCnpj() != null) {
+                    fornecedor.setCnpj(null);
+                    fornecedor.setNome(null);
+
+                    txtFornecedor.setText("Removido Pelo Usuário");
+
+                    addFornecedorFlag = true;
+
+                    Toast.makeText(AdicionarContagemProduto.this, "O fornecedor foi removido manualmente pelo usuário", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AdicionarContagemProduto.this, "O produto já não possui fornecedor. Adicione no botão acima", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+
+                txtFornecedor.setText(fornecedor.getNome());
+
+                addFornecedorFlag = true;
+            }
+
+            if(resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "O fornecedor não foi escolhido", Toast.LENGTH_SHORT).show();
+
+                fornecedor.setCnpj(null);
+
+                addFornecedorFlag = false;
+            }
+        }
     }
 }

@@ -3,12 +3,14 @@ package com.vandamodaintima.jfpsb.contador.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem_Produto;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * Created by jfpsb on 09/02/2018.
@@ -22,14 +24,28 @@ public class DAOContagemProduto {
         this.conn = conn;
     }
 
-    public long inserir(Contagem_Produto contagem_produto) {
+    public long[] inserir(Contagem_Produto contagem_produto) {
+        long[] result = new long[2];
+
+        try {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("contagem", contagem_produto.getContagem());
         contentValues.put("produto", contagem_produto.getProduto());
         contentValues.put("quant", contagem_produto.getQuant());
 
-        return conn.insert(TABELA, "", contentValues);
+        result[0] = conn.insertOrThrow(TABELA, "", contentValues);
+        } catch (SQLiteConstraintException sce) {
+            Log.i("Contador", sce.getMessage());
+            result[0] = -1;
+            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
+        } catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+            result[0] = -1;
+            result[1] = -1;
+        }
+
+        return result;
     }
 
     public Contagem_Produto selectContagemProduto(int contagem, int produto) {
@@ -42,7 +58,7 @@ public class DAOContagemProduto {
 
             contagem_produto.setId(c.getInt(0));
             contagem_produto.setContagem(c.getInt(1));
-            contagem_produto.setProduto(c.getInt(2));
+            contagem_produto.setProduto(c.getString(2));
             contagem_produto.setQuant(c.getInt(3));
 
             return contagem_produto;

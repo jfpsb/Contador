@@ -72,6 +72,27 @@
         </TableRow>
 
         <TableRow android:weightSum="3">
+            <TextView android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Remover Fornecedor Deste Produto"
+                android:textColor="#000"
+                android:textSize="14dp"
+                android:layout_gravity="center"
+                android:textAlignment="center"/>
+
+            <Button
+                android:id="@+id/btnLimparFornecedor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Limpar Fornecedor"
+                android:textSize="10dp"
+                android:layout_weight="1"/>
+
+        </TableRow>
+
+        <TableRow android:weightSum="3">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

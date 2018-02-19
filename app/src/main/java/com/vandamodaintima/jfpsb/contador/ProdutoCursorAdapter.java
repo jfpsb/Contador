@@ -30,11 +30,11 @@ public class ProdutoCursorAdapter extends CursorAdapter {
         TextView labelDescricao = view.findViewById(R.id.labelDescricao);
         TextView labelPreco = view.findViewById(R.id.labelPreco);
 
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
 
-        labelCodBarra.setText(String.valueOf(id));
+        labelCodBarra.setText(id);
         labelDescricao.setText(descricao);
         labelPreco.setText(String.valueOf(preco));
     }

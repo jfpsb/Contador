@@ -14,6 +14,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,16 +56,16 @@ public class CadastrarLoja extends Fragment {
 
                     loja.setNome(nome.toUpperCase());
 
-                    long id = daoLoja.inserir(loja);
+                    long result[] = daoLoja.inserir(loja);
 
-                    if (id != -1) {
+                    if (result[0] != -1) {
                         Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         PesquisarLoja.populaListView();
 
                         txtNome.setText("");
                     } else {
-                        Toast.makeText(view.getContext(), "Erro ao inserir loja!", Toast.LENGTH_SHORT).show();
+                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
                     }
                 } catch (Exception e) {
                     Toast.makeText(view.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

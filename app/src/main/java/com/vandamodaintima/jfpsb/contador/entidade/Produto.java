@@ -7,16 +7,16 @@ import java.io.Serializable;
  */
 
 public class Produto implements Serializable {
-    private int cod_barra;
+    private String cod_barra;
     private String fornecedor;
     private String descricao;
     private Double preco;
 
-    public int getCod_barra() {
+    public String getCod_barra() {
         return cod_barra;
     }
 
-    public void setCod_barra(int cod_barra) {
+    public void setCod_barra(String cod_barra) {
         this.cod_barra = cod_barra;
     }
 

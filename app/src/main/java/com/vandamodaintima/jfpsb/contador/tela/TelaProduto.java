@@ -1,68 +1,27 @@
 package com.vandamodaintima.jfpsb.contador.tela;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewStub;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
-import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
-import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarFornecedor;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto;
 
-public class TelaProduto extends AppCompatActivity {
+public class TelaProduto extends ActivityBase {
 
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
-    private ConexaoBanco conn;
     private CadastrarProduto cadastrarProduto;
     private PesquisarProduto pesquisarProduto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ManipulaExcel.getProdutosEmPlanilha(getApplicationContext(), "");
 
         ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.content_tela_produto);
         stub.inflate();
-
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        viewPager = findViewById(R.id.viewPager);
-        tabLayout = findViewById(R.id.tabLayout);
-
-        conn = new ConexaoBanco(this.getApplicationContext());
-
-        //PesquisaTab
-        TabLayout.Tab pesquisaTab = tabLayout.newTab();
-        pesquisaTab.setText("Pesquisar");
-        tabLayout.addTab(pesquisaTab);
-
-        //CadastraTab
-        TabLayout.Tab cadastraTab = tabLayout.newTab();
-        cadastraTab.setText("Cadastrar");
-        tabLayout.addTab(cadastraTab);
-
-        MyPagerAdapter adapter = new MyPagerAdapter (getSupportFragmentManager());
 
         cadastrarProduto = new CadastrarProduto();
         pesquisarProduto = new PesquisarProduto();
@@ -70,42 +29,28 @@ public class TelaProduto extends AppCompatActivity {
         cadastrarProduto.setConn(conn);
         pesquisarProduto.setConn(conn);
 
-        adapter.addFragment(pesquisarProduto, "Pesquisar");
-        adapter.addFragment(cadastrarProduto, "Cadastrar");
-
-        viewPager.setAdapter(adapter);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_cadastrar_produto_batch, menu);
+
         return true;
     }
 
     @Override
-    public void onDestroy() {
-        if(conn != null)
-            conn.fechar();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-        super.onDestroy();
+        switch (id) {
+            case R.id.itemCadastrarProdutosBatch:
+                ManipulaExcel.adicionaProdutosDePlanilhaParaBD(getApplicationContext(), conn);
+                //TODO: Colocar tela de progresso nesse cadastro
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

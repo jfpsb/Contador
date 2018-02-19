@@ -3,15 +3,14 @@ package com.vandamodaintima.jfpsb.contador.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by jfpsb on 08/02/2018.
@@ -25,13 +24,27 @@ public class DAOContagem {
         this.conn = conn;
     }
 
-    public long inserir(Contagem contagem) {
-        ContentValues contentValues = new ContentValues();
+    public long[] inserir(Contagem contagem) {
+        long[] result = new long[2];
 
-        contentValues.put("loja", contagem.getLoja());
-        contentValues.put("datainicio", contagem.getDatainicio());
+        try {
+            ContentValues contentValues = new ContentValues();
 
-        return conn.insert(TABELA, "", contentValues);
+            contentValues.put("loja", contagem.getLoja());
+            contentValues.put("datainicio", contagem.getDatainicio());
+
+            result[0] = conn.insertOrThrow(TABELA, "", contentValues);
+        } catch (SQLiteConstraintException sce) {
+            Log.i("Contador", sce.getMessage());
+            result[0] = -1;
+            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
+        } catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+            result[0] = -1;
+            result[1] = -1;
+        }
+
+        return result;
     }
 
     public Contagem selectContagem(int id) throws ParseException {

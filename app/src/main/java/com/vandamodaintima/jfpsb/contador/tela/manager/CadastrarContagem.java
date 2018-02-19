@@ -20,7 +20,9 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 import java.util.Date;
 
@@ -35,6 +37,7 @@ public class CadastrarContagem extends Fragment {
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
     private Date dataAtual;
+    private static View viewInflate;
 
     private Loja loja = new Loja();
 
@@ -49,7 +52,7 @@ public class CadastrarContagem extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
+        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
 
         dataAtual = new Date();
 
@@ -61,32 +64,16 @@ public class CadastrarContagem extends Fragment {
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
 
-        Cursor cursorSpinner = daoLoja.selectLojas();
-
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner, new String[] {"nome"}, new int[] {android.R.id.text1},0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerLoja.setAdapter(simpleCursorAdapter);
-
-        spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-                cursor.moveToPosition(i);
-
-                loja.setIdloja(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
-                loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
 
+        setBtnCadastrar();
+
+        setSpinnerLoja();
+
+        return viewInflate;
+    }
+
+    private void setBtnCadastrar() {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,17 +91,17 @@ public class CadastrarContagem extends Fragment {
                     contagem.setDatainicio(dataInicial);
                     contagem.setLoja(loja.getIdloja());
 
-                    long id = daoContagem.inserir(contagem);
+                    long result[] = daoContagem.inserir(contagem);
 
-                    if(id != -1) {
+                    if(result[0] != -1) {
                         Toast.makeText(viewInflate.getContext(), "Contagem inserida com data incial " + contagem.getDatainicio(), Toast.LENGTH_SHORT).show();
 
                         PesquisarContagem.populaListView();
 
-                        txtDataInicial.setText("");
+                        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
                     }
                     else {
-                        Toast.makeText(viewInflate.getContext(), "Erro ao inserir contagem!", Toast.LENGTH_SHORT).show();
+                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
                     }
 
                 }catch (Exception e) {
@@ -122,8 +109,37 @@ public class CadastrarContagem extends Fragment {
                 }
             }
         });
-
-        return viewInflate;
     }
 
+    private void setSpinnerLoja() {
+        Cursor cursorSpinner = daoLoja.selectLojas();
+
+        Cursor cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{ "_id", "nome" });
+
+        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[] {"nome"}, new int[] {android.R.id.text1},0);
+        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerLoja.setAdapter(simpleCursorAdapter);
+
+        spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i != 0) {
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+                    cursor.moveToPosition(i);
+
+                    loja.setIdloja(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                    loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                } else {
+                    loja.setIdloja(-1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
 }

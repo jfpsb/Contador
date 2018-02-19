@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
@@ -25,12 +26,13 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
-public class PesquisaContagemProduto extends AppCompatActivity {
+public class PesquisaContagemProduto extends ActivityBase {
 
     private RadioGroup radioGroup;
     private EditText txtPesquisaProduto;
-    private ConexaoBanco conn;
+    private static TextView txtQuantProdutosCadastrados;
     private static DAOProduto daoProduto;
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
@@ -41,29 +43,19 @@ public class PesquisaContagemProduto extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tela);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
 
         ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.fragment_pesquisar_produto);
         stub.inflate();
 
-        conn = new ConexaoBanco(getApplicationContext());
-
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
-
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         daoProduto = new DAOProduto(conn.conexao());
 
         radioGroup = findViewById(R.id.radioGroupOpcao);
 
         txtPesquisaProduto = findViewById(R.id.txtPesquisaProduto);
+        txtQuantProdutosCadastrados = findViewById(R.id.txtQuantProdutosCadastrados);
 
         context = getApplicationContext();
 
@@ -97,8 +89,6 @@ public class PesquisaContagemProduto extends AppCompatActivity {
 
                 visualizarContagem.putExtras(bundle);
 
-                visualizarContagem.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
                 startActivity(visualizarContagem);
 
                 return true;
@@ -118,10 +108,10 @@ public class PesquisaContagemProduto extends AppCompatActivity {
 
                 Produto produto = new Produto();
 
-                produto.setCod_barra(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                produto.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
-                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor")));
                 String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
 
                 Bundle bundle = new Bundle();
@@ -145,6 +135,9 @@ public class PesquisaContagemProduto extends AppCompatActivity {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(context, "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
         Cursor cursor = daoProduto.selectProdutos();
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
         produtoCursorAdapter.changeCursor(cursor);
     }
 
@@ -164,6 +157,8 @@ public class PesquisaContagemProduto extends AppCompatActivity {
                 break;
         }
 
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
         produtoCursorAdapter.changeCursor(cursor);
     }
 
@@ -171,6 +166,8 @@ public class PesquisaContagemProduto extends AppCompatActivity {
         listView = findViewById(R.id.listViewLoja);
 
         Cursor cursor = daoProduto.selectProdutos();
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
 
         produtoCursorAdapter = new ProdutoCursorAdapter(getApplicationContext(),cursor);
 
@@ -224,17 +221,5 @@ public class PesquisaContagemProduto extends AppCompatActivity {
                 populaListView(txtPesquisaProduto.getText().toString());
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onDestroy() {
-        conn.fechar();
-        super.onDestroy();
     }
 }

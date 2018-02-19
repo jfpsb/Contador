@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
@@ -35,6 +37,7 @@ public class PesquisarProduto extends Fragment {
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
     private static View viewInflate;
+    private static TextView txtQuantProdutosCadastrados;
 
     public PesquisarProduto() {
         // Required empty public constructor
@@ -54,6 +57,7 @@ public class PesquisarProduto extends Fragment {
         radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
 
         txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
+        txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
 
         setTxtPesquisaProduto();
 
@@ -70,7 +74,11 @@ public class PesquisarProduto extends Fragment {
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
+
         Cursor cursor = daoProduto.selectProdutos();
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
         produtoCursorAdapter.changeCursor(cursor);
     }
 
@@ -80,24 +88,17 @@ public class PesquisarProduto extends Fragment {
 
         switch(TIPO_PESQUISA) {
             case 1:
-                if(!TestaIO.isStringEmpty(termo))
-                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando código de barras com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
-
                 cursor = daoProduto.selectProdutosCodBarra(termo);
                 break;
             case 2:
-                if(!TestaIO.isStringEmpty(termo))
-                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando descrição com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
-
                 cursor = daoProduto.selectProdutosDescricao(termo);
                 break;
             case 3:
-                if(!TestaIO.isStringEmpty(termo))
-                    Toast.makeText(viewInflate.getContext(), "Pesquisando produto usando nome de fornecedor com chave '" + termo + "'", Toast.LENGTH_SHORT).show();
-
                 cursor = daoProduto.selectProdutosFornecedor(termo);
                 break;
         }
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
 
         produtoCursorAdapter.changeCursor(cursor);
     }
@@ -106,6 +107,8 @@ public class PesquisarProduto extends Fragment {
         listView = viewInflate.findViewById(R.id.listViewLoja);
 
         Cursor cursor = daoProduto.selectProdutos();
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
 
         produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(),cursor);
 
@@ -124,10 +127,10 @@ public class PesquisarProduto extends Fragment {
 
                 Produto produto = new Produto();
 
-                produto.setCod_barra(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                produto.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
-                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor")));
                 String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
 
                 Bundle bundle = new Bundle();

@@ -7,7 +7,7 @@ package com.vandamodaintima.jfpsb.contador.entidade;
 public class Contagem_Produto {
     private int id;
     private int contagem;
-    private int produto;
+    private String produto;
     private int quant;
 
     public int getId() {
@@ -26,11 +26,11 @@ public class Contagem_Produto {
         this.contagem = contagem;
     }
 
-    public int getProduto() {
+    public String getProduto() {
         return produto;
     }
 
-    public void setProduto(int produto) {
+    public void setProduto(String produto) {
         this.produto = produto;
     }
 

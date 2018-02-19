@@ -7,19 +7,20 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by jfpsb on 08/02/2018.
  */
 
+//TODO: Descobrir da onde vem esse memory leak (fechar cursores? Fechar conns em fragments?)
 public class ConexaoBanco{
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem";
-    private static final int VERSAO_BANCO = 6;
-    private static final String[] DELETE_DATABASE = new String[] {"DROP TABLE IF EXISTS loja", "DROP TABLE IF EXISTS produto", "DROP TABLE IF EXISTS fornecedor", "DROP TABLE IF EXISTS contagem", "DROP TABLE IF EXISTS contagem_produto"};
+    private static final int VERSAO_BANCO = 13;
+    private static final String[] DELETE_DATABASE = new String[] {"DROP TABLE IF EXISTS produto", "DROP TABLE IF EXISTS contagem_produto", "DROP TABLE IF EXISTS contagem", "DROP TABLE IF EXISTS fornecedor", "DROP TABLE IF EXISTS loja"};
     private SQLiteHelper sqLiteHelper;
 
     private static final String[] SCRIPT_BANCO = new String[] {
             "CREATE TABLE loja (idloja INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL UNIQUE);",
-            "CREATE TABLE contagem (idcontagem INTEGER PRIMARY KEY AUTOINCREMENT, loja INTEGER REFERENCES loja(idloja), datainicio DATE NOT NULL, datafinal DATE NULL);",
+            "CREATE TABLE contagem (idcontagem INTEGER PRIMARY KEY AUTOINCREMENT, loja INTEGER REFERENCES loja(idloja) NOT NULL, datainicio DATE NOT NULL, datafinal DATE NULL);",
             "CREATE TABLE fornecedor (cnpj TEXT PRIMARY KEY NOT NULL, nome TEXT NOT NULL UNIQUE);",
-            "CREATE TABLE produto (cod_barra INTEGER PRIMARY KEY NOT NULL, fornecedor TEXT references fornecedor(cnpj) NULL, descricao TEXT NOT NULL, preco DOUBLE NOT NULL);",
-            "CREATE TABLE contagem_produto(id INTEGER PRIMARY KEY AUTOINCREMENT, contagem INTEGER REFERENCES contagem(idcontagem), produto INTEGER REFERENCES produto(cod_barra), quant INTEGER DEFAULT 0); "
+            "CREATE TABLE produto (cod_barra TEXT PRIMARY KEY NOT NULL, fornecedor TEXT REFERENCES fornecedor(cnpj) ON DELETE SET NULL, descricao TEXT NOT NULL, preco DOUBLE NOT NULL);",
+            "CREATE TABLE contagem_produto(id INTEGER PRIMARY KEY AUTOINCREMENT, contagem INTEGER REFERENCES contagem(idcontagem) NOT NULL, produto INTEGER REFERENCES produto(cod_barra) NOT NULL, quant INTEGER DEFAULT 0); "
     };
 
     public ConexaoBanco(Context context) {
