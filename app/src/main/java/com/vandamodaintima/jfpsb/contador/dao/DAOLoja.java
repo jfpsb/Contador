@@ -63,7 +63,7 @@ public class DAOLoja {
 
     public Cursor selectLojas() {
         try {
-            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, null, null, null, null, null);
+            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, null, null, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
             return null;
@@ -72,7 +72,7 @@ public class DAOLoja {
 
     public Cursor selectLojas(String nome) {
         try {
-            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, "nome LIKE ?", new String[] { "%" + nome + "%"}, null, null, null);
+            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, "nome LIKE ?", new String[] { "%" + nome + "%"}, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
             return null;

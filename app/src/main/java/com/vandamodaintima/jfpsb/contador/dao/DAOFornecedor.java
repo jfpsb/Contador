@@ -63,7 +63,7 @@ public class DAOFornecedor {
 
     public Cursor selectFornecedores() {
         try {
-            return conn.query(TABELA, new String[] {"cnpj as _id", "nome"}, null, null, null, null, null);
+            return conn.query(TABELA, new String[] {"cnpj as _id", "nome"}, null, null, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar fornecedores: " + e.toString());
             return null;
@@ -72,7 +72,7 @@ public class DAOFornecedor {
 
     public Cursor selectFornecedores(String termo) {
         try {
-            return conn.query(TABELA, new String[] {"cnpj _id", "nome"}, "nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, null);
+            return conn.query(TABELA, new String[] {"cnpj _id", "nome"}, "nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar fornecedores: " + e.toString());
             return null;

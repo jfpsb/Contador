@@ -48,7 +48,7 @@ public class DAOContagem {
     }
 
     public Contagem selectContagem(int id) throws ParseException {
-        Cursor c = conn.query(true, TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, "idcontagem = " + id, null, null, null, null, null);
+        Cursor c = conn.query(true, TABELA, new String[] {"idcontagem _id", "loja", "datainicio", "datafinal"}, "idcontagem = " + id, null, null, null, "datainicio DESC", null);
 
         if(c.getCount() > 0) {
             c.moveToFirst();
@@ -68,7 +68,7 @@ public class DAOContagem {
 
     public Cursor selectContagens() {
         try {
-            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja", null);
+            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja ORDER BY datainicio DESC", null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagens: " + e.toString());
             return null;
@@ -77,7 +77,7 @@ public class DAOContagem {
 
     public Cursor selectContagens(String data1, String data2, String loja) {
         try {
-            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja AND datainicio BETWEEN ? AND ? AND loja = ?", new String[] { data1, data2, loja });
+            return conn.rawQuery("SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio DESC", new String[] { data1, data2, loja });
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar contagens: " + e.toString());
             return null;

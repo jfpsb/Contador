@@ -87,7 +87,7 @@ public class DAOProduto {
 
     public Cursor selectProdutos() {
         try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE fornecedor = cnpj OR fornecedor IS NULL", null);
+            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE fornecedor = cnpj OR fornecedor IS NULL ORDER BY descricao", null);
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
             return null;
@@ -96,7 +96,7 @@ public class DAOProduto {
 
     public Cursor selectProdutosDescricao(String descricao) {
         try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND descricao LIKE ?", new String[] {"%" + descricao +"%"});
+            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao", new String[] {"%" + descricao +"%"});
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
             return null;
@@ -105,7 +105,7 @@ public class DAOProduto {
 
     public Cursor selectProdutosCodBarra(String cod_barra) {
         try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND cod_barra LIKE ?", new String[] {"%" + cod_barra + "%" });
+            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND cod_barra LIKE ? ORDER BY descricao", new String[] {"%" + cod_barra + "%" });
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
             return null;
@@ -114,7 +114,7 @@ public class DAOProduto {
 
     public Cursor selectProdutosFornecedor(String fornecedor_nome) {
         try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND nome LIKE ?", new String[] {"%"+fornecedor_nome+"%"});
+            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao", new String[] {"%"+fornecedor_nome+"%"});
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
             return null;
