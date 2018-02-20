@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
@@ -46,7 +47,7 @@ public class DAOProduto {
         return result;
     }
 
-    public void inserirVarios(Produto[] produtos) {
+    public void inserirVarios(TelaProduto telaProduto, Produto[] produtos) {
         for(int i = 0; i < produtos.length; i++) {
             Produto produto = produtos[i];
 
@@ -57,7 +58,11 @@ public class DAOProduto {
             contentValues.put("preco", produto.getPreco());
             contentValues.put("fornecedor", produto.getFornecedor());
 
+            Log.i("Contador", produto.getCod_barra());
+
             conn.insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Produto " + (i + 1) + " cadastrado no banco de dados"));
         }
     }
 

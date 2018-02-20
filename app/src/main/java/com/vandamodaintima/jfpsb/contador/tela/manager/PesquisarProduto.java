@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,7 +75,6 @@ public class PesquisarProduto extends FragmentBase {
     /**
      * Popula a lista novamente
      */
-
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
@@ -169,14 +169,17 @@ public class PesquisarProduto extends FragmentBase {
                 switch (selecao) {
                     case (R.id.rbCodBarra):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonCodBarra);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_NUMBER);
                         TIPO_PESQUISA = 1;
                         break;
                     case (R.id.rbDescricao):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonDescricao);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         TIPO_PESQUISA = 2;
                         break;
                     case (R.id.rbFornecedor):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonNomeFornecedor);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         TIPO_PESQUISA = 3;
                         break;
                     default:

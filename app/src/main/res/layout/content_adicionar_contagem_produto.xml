@@ -153,7 +153,8 @@
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="20dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:inputType="number"/>
         </TableRow>
     </TableLayout>
 

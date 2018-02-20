@@ -61,6 +61,8 @@ public class CadastrarProduto extends FragmentBase {
 
         setSpinnerFornecedor();
 
+        setBtnCadastrar();
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

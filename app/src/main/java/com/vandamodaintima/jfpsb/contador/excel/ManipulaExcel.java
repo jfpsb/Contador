@@ -1,12 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.excel;
 
-import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jfpsb on 16/02/2018.
@@ -28,12 +29,13 @@ import java.io.InputStream;
 public class ManipulaExcel {
     private static DAOProduto daoProduto;
 
-    public static void adicionaProdutosDePlanilhaParaBD(Context context, ConexaoBanco conn) {
+    public static void adicionaProdutosDePlanilhaParaBD(final TelaProduto telaProduto, ConexaoBanco conn) {
         Produto[] produtos = null;
 
         daoProduto = new DAOProduto(conn.conexao());
 
         try {
+            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Procurando arquivo 'produtos.xlsx'"));
 
             File file = new File("/data/data/com.vandamodaintima.jfpsb.contador/files/produtos.xlsx");
 
@@ -47,6 +49,8 @@ public class ManipulaExcel {
 
             int rows = xssfSheet.getPhysicalNumberOfRows();
 
+            Log.i("Contador", "LINHAS :::: " + rows);
+
             produtos = new Produto[rows - 1];
 
             Row auxRow = xssfSheet.getRow(0);
@@ -59,10 +63,6 @@ public class ManipulaExcel {
                 Row row = xssfSheet.getRow(i);
 
                 int cells = row.getPhysicalNumberOfCells();
-
-                if(cells != 3) {
-                    throw new Exception("Há um erro na planilha. A quantidade de colunas está errada! Quantidade correta: 3");
-                }
 
                 Produto produto = new Produto();
 
@@ -89,24 +89,45 @@ public class ManipulaExcel {
 
                         produtos[i - 1] = produto;
                     } catch (NullPointerException npe) {
-                        Toast.makeText(context, npe.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(telaProduto.getApplicationContext(), npe.getMessage(), Toast.LENGTH_SHORT).show();
                         Log.i("Contador", npe.getMessage());
                     }
                 }
+
+                telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Produto " + i + " lido de planilha"));
             }
 
-            daoProduto.inserirVarios(produtos);
+            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Tudo lido"));
 
-            Toast.makeText(context, "Produtos contidos em planilha de Excel foram cadastrados com sucesso!", Toast.LENGTH_SHORT).show();
+            daoProduto.inserirVarios(telaProduto, produtos);
 
-            PesquisarProduto.populaListView();
+            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Produtos Cadastrados"));
+
+            telaProduto.runOnUiThread(toastLocal(telaProduto, "Produtos contidos em planilha de Excel foram cadastrados com sucesso!"));
+
+            telaProduto.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    PesquisarProduto.populaListView();
+                }
+            });
+
         }catch (FileNotFoundException fnfe) {
-            Toast.makeText(context, "O arquivo não foi encontrado. O arquivo deve estar na pasta 'files' no diretório do app com nome 'produtos.xlsx'", Toast.LENGTH_SHORT).show();
+            telaProduto.runOnUiThread(toastLocal(telaProduto, "O arquivo não foi encontrado. O arquivo deve estar na pasta 'files' no diretório do app com nome 'produtos.xlsx'"));
             Log.i("Contador", fnfe.getMessage());
         }
         catch (Exception e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            telaProduto.runOnUiThread(toastLocal(telaProduto, e.getMessage()));
             Log.i("Contador", e.getMessage());
         }
+    }
+
+    private static Runnable toastLocal(final TelaProduto telaProduto, final String msg) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(telaProduto, msg, Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 }
