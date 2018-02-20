@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ViewStub;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoContagemCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
@@ -28,18 +29,29 @@ public class VisualizarProdutosContagem extends ActivityBase {
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
-        daoContagemProduto = new DAOContagemProduto(conn.conexao());
+        listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
+
+        setDAOs();
 
         setListView();
     }
 
+    @Override
+    protected void setDAOs() {
+        daoContagemProduto = new DAOContagemProduto(conn.conexao());
+    }
+
     private void setListView() {
-        listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
+        Cursor cursor = null;
 
-        Cursor cursor = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
+        try {
+            cursor = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
 
-        produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(),cursor);
+            produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(), cursor);
 
-        listViewProdutoContagem.setAdapter(produtoContagemCursorAdapter);
+            listViewProdutoContagem.setAdapter(produtoContagemCursorAdapter);
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

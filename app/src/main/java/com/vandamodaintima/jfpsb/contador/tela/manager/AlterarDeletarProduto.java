@@ -67,14 +67,19 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
         setAlertBuilder(produto.getCod_barra());
 
-        daoFornecedor = new DAOFornecedor(conn.conexao());
-        daoProduto = new DAOProduto(conn.conexao());
+        setDAOs();
 
         setSpinnerFornecedor();
 
         setBtnAtualizar();
 
         setBtnDeletar();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoFornecedor = new DAOFornecedor(conn.conexao());
+        daoProduto = new DAOProduto(conn.conexao());
     }
 
     @Override
@@ -103,30 +108,35 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     }
 
     private void setSpinnerFornecedor() {
-        Cursor spinnerCursor = daoFornecedor.selectFornecedores();
+        Cursor spinnerCursor = null, spinnerCursor2 = null;
 
-        // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
-        Cursor spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[] { "_id", "nome" });
+        try {
+            spinnerCursor = daoFornecedor.selectFornecedores();
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[] {"nome"}, new int[] {android.R.id.text1}, 0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
+            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
 
-        spinnerFornecedor.setAdapter(simpleCursorAdapter);
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        if(produto.getFornecedor() != null) {
-            for (int i = 0; i < spinnerCursor2.getCount(); i++) {
-                spinnerCursor2.moveToPosition(i);
+            spinnerFornecedor.setAdapter(simpleCursorAdapter);
 
-                String id = spinnerCursor2.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
+            if (produto.getFornecedor() != null) {
+                for (int i = 0; i < spinnerCursor2.getCount(); i++) {
+                    spinnerCursor2.moveToPosition(i);
 
-                if (produto.getFornecedor().equals(id)) {
-                    spinnerFornecedor.setSelection(i);
-                    break;
+                    String id = spinnerCursor2.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
+
+                    if (produto.getFornecedor().equals(id)) {
+                        spinnerFornecedor.setSelection(i);
+                        break;
+                    }
                 }
+            } else {
+                spinnerFornecedor.setSelection(0);
             }
-        }
-        else {
-            spinnerFornecedor.setSelection(0);
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

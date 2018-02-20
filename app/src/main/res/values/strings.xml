@@ -13,4 +13,7 @@
     <string name="title_activity_visualizar_produtos_contagem">Visualização Da Contagem de Produtos</string>
     <string name="title_activity_adicionar_fornecedor">Adicionar Fornecedor</string>
     <string name="title_activity_base">ActivityBase</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

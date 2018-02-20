@@ -23,28 +23,25 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarProduto extends Fragment {
+public class PesquisarProduto extends FragmentBase {
+
     private RadioGroup radioGroup;
     private EditText txtPesquisaProduto;
-    private ConexaoBanco conn;
     private static DAOProduto daoProduto;
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
-    private static View viewInflate;
     private static TextView txtQuantProdutosCadastrados;
 
     public PesquisarProduto() {
         // Required empty public constructor
-    }
-
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
     }
 
     @Override
@@ -52,12 +49,13 @@ public class PesquisarProduto extends Fragment {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
-        daoProduto = new DAOProduto(conn.conexao());
+        setDAOs();
 
         radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
 
         txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
+        listView = viewInflate.findViewById(R.id.listViewLoja);
 
         setTxtPesquisaProduto();
 
@@ -65,12 +63,18 @@ public class PesquisarProduto extends Fragment {
 
         setListView(viewInflate);
 
-        return viewInflate;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoProduto = new DAOProduto(((ActivityBase) getActivity()).getConn().conexao());
     }
 
     /**
      * Popula a lista novamente
      */
+
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
@@ -86,35 +90,44 @@ public class PesquisarProduto extends Fragment {
         // Switch to new cursor and update contents of ListView
         Cursor cursor = null;
 
-        switch(TIPO_PESQUISA) {
-            case 1:
-                cursor = daoProduto.selectProdutosCodBarra(termo);
-                break;
-            case 2:
-                cursor = daoProduto.selectProdutosDescricao(termo);
-                break;
-            case 3:
-                cursor = daoProduto.selectProdutosFornecedor(termo);
-                break;
+        try {
+
+            switch (TIPO_PESQUISA) {
+                case 1:
+                    cursor = daoProduto.selectProdutosCodBarra(termo);
+                    break;
+                case 2:
+                    cursor = daoProduto.selectProdutosDescricao(termo);
+                    break;
+                case 3:
+                    cursor = daoProduto.selectProdutosFornecedor(termo);
+                    break;
+            }
+
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
+            produtoCursorAdapter.changeCursor(cursor);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
-
-        produtoCursorAdapter.changeCursor(cursor);
     }
 
     private void setListView(final View viewInflate) {
-        listView = viewInflate.findViewById(R.id.listViewLoja);
+        Cursor cursor = null;
 
-        Cursor cursor = daoProduto.selectProdutos();
+        try {
+            cursor = daoProduto.selectProdutos();
 
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
 
-        produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(),cursor);
+            produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursor);
 
-        listView.setAdapter(produtoCursorAdapter);
+            listView.setAdapter(produtoCursorAdapter);
 
-        setListViewOnItemClickListener(viewInflate);
+            setListViewOnItemClickListener(viewInflate);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setListViewOnItemClickListener(final View viewInflate) {

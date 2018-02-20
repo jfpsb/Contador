@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
@@ -50,8 +46,6 @@ public class PesquisaContagemProduto extends ActivityBase {
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
-        daoProduto = new DAOProduto(conn.conexao());
-
         radioGroup = findViewById(R.id.radioGroupOpcao);
 
         txtPesquisaProduto = findViewById(R.id.txtPesquisaProduto);
@@ -59,11 +53,18 @@ public class PesquisaContagemProduto extends ActivityBase {
 
         context = getApplicationContext();
 
+        setDAOs();
+
         setTxtPesquisaProduto();
 
         setRadioGroup();
 
         setListView();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoProduto = new DAOProduto(conn.conexao());
     }
 
     @Override
@@ -134,44 +135,63 @@ public class PesquisaContagemProduto extends ActivityBase {
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(context, "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
-        Cursor cursor = daoProduto.selectProdutos();
 
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+        Cursor cursor = null;
 
-        produtoCursorAdapter.changeCursor(cursor);
+        try {
+            cursor = daoProduto.selectProdutos();
+
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
+            produtoCursorAdapter.changeCursor(cursor);
+        } catch (Exception e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+        } finally {
+            cursor.close();
+        }
     }
 
     public static void populaListView(String termo) {
         // Switch to new cursor and update contents of ListView
         Cursor cursor = null;
 
-        switch(TIPO_PESQUISA) {
-            case 1:
-                cursor = daoProduto.selectProdutosCodBarra(termo);
-                break;
-            case 2:
-                cursor = daoProduto.selectProdutosDescricao(termo);
-                break;
-            case 3:
-                cursor = daoProduto.selectProdutosFornecedor(termo);
-                break;
+        try {
+            switch (TIPO_PESQUISA) {
+                case 1:
+                    cursor = daoProduto.selectProdutosCodBarra(termo);
+                    break;
+                case 2:
+                    cursor = daoProduto.selectProdutosDescricao(termo);
+                    break;
+                case 3:
+                    cursor = daoProduto.selectProdutosFornecedor(termo);
+                    break;
+            }
+
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+
+            produtoCursorAdapter.changeCursor(cursor);
+        } catch (Exception e){
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
-
-        produtoCursorAdapter.changeCursor(cursor);
     }
 
     private void setListView() {
         listView = findViewById(R.id.listViewLoja);
 
-        Cursor cursor = daoProduto.selectProdutos();
+        Cursor cursor = null;
 
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+        try {
+            cursor = daoProduto.selectProdutos();
 
-        produtoCursorAdapter = new ProdutoCursorAdapter(getApplicationContext(),cursor);
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
 
-        listView.setAdapter(produtoCursorAdapter);
+            produtoCursorAdapter = new ProdutoCursorAdapter(getApplicationContext(), cursor);
+
+            listView.setAdapter(produtoCursorAdapter);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         setListViewOnItemClickListener();
     }

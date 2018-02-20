@@ -21,6 +21,7 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarContagem extends AlterarDeletarEntidade {
@@ -66,8 +67,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
         spinnerLoja = findViewById(R.id.spinnerLoja);
 
-        daoLoja = new DAOLoja(conn.conexao());
-        daoContagem = new DAOContagem(conn.conexao());
+        setDAOs();
 
         setSpinnerLoja();
 
@@ -78,6 +78,12 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         setCheckBoxDataFinal();
 
         setBtnAdicionar();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoLoja = new DAOLoja(conn.conexao());
+        daoContagem = new DAOContagem(conn.conexao());
     }
 
     @Override
@@ -106,22 +112,30 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     private void setSpinnerLoja() {
-        Cursor spinnerCursor = daoLoja.selectLojas();
+        Cursor spinnerCursor = null, spinnerCursor2 = null;
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor, new String[] {"nome"}, new int[] {android.R.id.text1}, 0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        try {
+            spinnerCursor = daoLoja.selectLojas();
 
-        spinnerLoja.setAdapter(simpleCursorAdapter);
+            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE A LOJA", new String[]{ "_id", "nome"});
 
-        for(int i = 0; i < spinnerCursor.getCount(); i++) {
-            spinnerCursor.moveToPosition(i);
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            int id = spinnerCursor.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
+            spinnerLoja.setAdapter(simpleCursorAdapter);
 
-            if(id == contagem.getLoja()) {
-                spinnerLoja.setSelection(i);
-                break;
+            for (int i = 0; i < spinnerCursor.getCount(); i++) {
+                spinnerCursor.moveToPosition(i);
+
+                int id = spinnerCursor.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
+
+                if (id == contagem.getLoja()) {
+                    spinnerLoja.setSelection(i);
+                    break;
+                }
             }
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -39,13 +39,18 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+        setDAOs();
 
         setAlertBuilder(fornecedor.getCnpj());
 
         setBtnAtualizar();
 
         setBtnDeletar();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoFornecedor = new DAOFornecedor(conn.conexao());
     }
 
     @Override

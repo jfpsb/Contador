@@ -20,6 +20,8 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
@@ -29,24 +31,19 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastrarContagem extends Fragment {
-    private ConexaoBanco conn;
+public class CadastrarContagem extends FragmentBase {
+
     private Button btnCadastrar;
     private DAOContagem daoContagem;
     private DAOLoja daoLoja;
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
     private Date dataAtual;
-    private static View viewInflate;
 
     private Loja loja = new Loja();
 
     public CadastrarContagem() {
         // Required empty public constructor
-    }
-
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
     }
 
     @Override
@@ -56,8 +53,7 @@ public class CadastrarContagem extends Fragment {
 
         dataAtual = new Date();
 
-        daoContagem = new DAOContagem(conn.conexao());
-        daoLoja = new DAOLoja(conn.conexao());
+        setDAOs();
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicio);
         txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
@@ -70,7 +66,13 @@ public class CadastrarContagem extends Fragment {
 
         setSpinnerLoja();
 
-        return viewInflate;
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoContagem = new DAOContagem(((ActivityBase)getActivity()).getConn().conexao());
+        daoLoja = new DAOLoja(((ActivityBase)getActivity()).getConn().conexao());
     }
 
     private void setBtnCadastrar() {

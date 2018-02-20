@@ -23,9 +23,6 @@ public class TelaFornecedor extends ActivityBase {
         cadastrarFornecedor = new CadastrarFornecedor();
         pesquisarFornecedor = new PesquisarFornecedor();
 
-        cadastrarFornecedor.setConn(conn);
-        pesquisarFornecedor.setConn(conn);
-
         setViewPagerTabLayout(pesquisarFornecedor, cadastrarFornecedor);
     }
 }

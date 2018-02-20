@@ -23,9 +23,6 @@ public class TelaLoja extends ActivityBase {
         telaCadastrarLoja = new CadastrarLoja();
         telaPesquisarLoja = new PesquisarLoja();
 
-        telaCadastrarLoja.setConn(conn);
-        telaPesquisarLoja.setConn(conn);
-
         setViewPagerTabLayout(telaPesquisarLoja, telaCadastrarLoja);
     }
 }

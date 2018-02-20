@@ -14,14 +14,15 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastrarLoja extends Fragment {
+public class CadastrarLoja extends FragmentBase {
     private Button btnCadastrar;
-    private ConexaoBanco conn;
     private DAOLoja daoLoja;
     private EditText txtNome;
 
@@ -29,20 +30,22 @@ public class CadastrarLoja extends Fragment {
         // Required empty public constructor
     }
 
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
-
-        daoLoja = new DAOLoja(conn.conexao());
+        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
+        setDAOs();
+
+        setBtnCadastrar();
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void setBtnCadastrar() {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +75,10 @@ public class CadastrarLoja extends Fragment {
                 }
             }
         });
+    }
 
-        return viewInflate;
+    @Override
+    protected void setDAOs() {
+        daoLoja = new DAOLoja(((ActivityBase)getActivity()).getConn().conexao());
     }
 }

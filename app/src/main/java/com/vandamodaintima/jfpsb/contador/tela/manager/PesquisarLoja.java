@@ -21,25 +21,24 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+
+import java.security.spec.ECField;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarLoja extends Fragment {
-    private ConexaoBanco conn;
+public class PesquisarLoja extends FragmentBase {
+
     private static DAOLoja daoLoja;
     private ListView listView;
     private static LojaCursorAdapter lojaCursorAdapter;
     private EditText txtNome;
-    private static View viewInflate;
 
     public PesquisarLoja() {
         // Required empty public constructor
-    }
-
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
     }
 
     @Override
@@ -47,18 +46,23 @@ public class PesquisarLoja extends Fragment {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 
-        daoLoja = new DAOLoja(conn.conexao());
-
-        Cursor cursor = daoLoja.selectLojas();
+        setDAOs();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
-
-        lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursor);
-
-        listView.setAdapter(lojaCursorAdapter);
-
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
+        setTxtNome();
+        setListView();
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoLoja = new DAOLoja(((ActivityBase) getActivity()).getConn().conexao());
+    }
+
+    private void setTxtNome() {
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -75,6 +79,20 @@ public class PesquisarLoja extends Fragment {
                 populaListView(txtNome.getText().toString());
             }
         });
+    }
+
+    private void setListView() {
+        Cursor cursor = null;
+
+        try {
+            cursor = daoLoja.selectLojas();
+
+            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursor);
+
+            listView.setAdapter(lojaCursorAdapter);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -99,27 +117,34 @@ public class PesquisarLoja extends Fragment {
                 startActivity(alterarLoja);
             }
         });
-
-        return viewInflate;
     }
 
     /**
      * Popula a lista novamente
      */
+
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todas as lojas", Toast.LENGTH_SHORT).show();
-        Cursor cursor = daoLoja.selectLojas();
-        lojaCursorAdapter.changeCursor(cursor);
+
+        Cursor cursor = null;
+
+        try {
+            cursor = daoLoja.selectLojas();
+            lojaCursorAdapter.changeCursor(cursor);
+        }catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static void populaListView(String nome) {
-        // Switch to new cursor and update contents of ListView
-        if(!TestaIO.isStringEmpty(nome))
-            Toast.makeText(viewInflate.getContext(), "Pesquisando lojas com a chave '" + nome + "'", Toast.LENGTH_SHORT).show();
+        Cursor cursor = null;
 
-        Cursor cursor = daoLoja.selectLojas(nome);
-        lojaCursorAdapter.changeCursor(cursor);
+        try {
+            cursor = daoLoja.selectLojas(nome);
+            lojaCursorAdapter.changeCursor(cursor);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
-
 }

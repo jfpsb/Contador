@@ -19,8 +19,6 @@ public class AlterarDeletarEntidade extends ActivityBase {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-        conn = new ConexaoBanco(getApplicationContext());
     }
 
     protected void setBtnAtualizar() {

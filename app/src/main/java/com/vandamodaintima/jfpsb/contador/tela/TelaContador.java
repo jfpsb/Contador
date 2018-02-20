@@ -23,9 +23,6 @@ public class TelaContador extends ActivityBase {
         cadastrarContagem = new CadastrarContagem();
         pesquisarContagem = new PesquisarContagem();
 
-        cadastrarContagem.setConn(conn);
-        pesquisarContagem.setConn(conn);
-
         setViewPagerTabLayout(pesquisarContagem, cadastrarContagem);
     }
 }

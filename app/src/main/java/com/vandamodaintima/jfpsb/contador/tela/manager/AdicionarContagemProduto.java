@@ -47,8 +47,7 @@ public class AdicionarContagemProduto extends ActivityBase {
         stub.setLayoutResource(R.layout.content_adicionar_contagem_produto);
         stub.inflate();
 
-        daoContagemProduto = new DAOContagemProduto(conn.conexao());
-        daoProduto = new DAOProduto(conn.conexao());
+        setDAOs();
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
@@ -79,6 +78,12 @@ public class AdicionarContagemProduto extends ActivityBase {
         setBtnAddFornecedor();
 
         setBtnLimparFornecedor();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoContagemProduto = new DAOContagemProduto(conn.conexao());
+        daoProduto = new DAOProduto(conn.conexao());
     }
 
     private void setBtnAdicionar() {

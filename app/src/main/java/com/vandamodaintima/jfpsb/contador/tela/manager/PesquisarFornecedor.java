@@ -21,26 +21,23 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarFornecedor extends Fragment {
-    private ConexaoBanco conn;
+public class PesquisarFornecedor extends FragmentBase {
+
     private static DAOFornecedor daoFornecedor;
     private ListView listView;
     private static FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
-    private static View viewInflate;
 
     public PesquisarFornecedor() {
         // Required empty public constructor
-    }
-
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
     }
 
     @Override
@@ -48,18 +45,24 @@ public class PesquisarFornecedor extends Fragment {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
-        daoFornecedor = new DAOFornecedor(conn.conexao());
-
-        Cursor cursor = daoFornecedor.selectFornecedores();
+        setDAOs();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
 
-        fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursor);
-
-        listView.setAdapter(fornecedorCursorAdapter);
-
         txtPesquisaFornecedor = viewInflate.findViewById(R.id.txtPesquisaFornecedor);
 
+        setTxtPesquisaFornecedor();
+        setListView();
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoFornecedor = new DAOFornecedor(((ActivityBase) getActivity()).getConn().conexao());
+    }
+
+    private void setTxtPesquisaFornecedor() {
         txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -76,6 +79,20 @@ public class PesquisarFornecedor extends Fragment {
                 populaListView(txtPesquisaFornecedor.getText().toString());
             }
         });
+    }
+
+    private void setListView() {
+        Cursor cursor = null;
+
+        try {
+            cursor = daoFornecedor.selectFornecedores();
+
+            fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursor);
+
+            listView.setAdapter(fornecedorCursorAdapter);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,27 +117,34 @@ public class PesquisarFornecedor extends Fragment {
                 startActivity(alterarFornecedor);
             }
         });
-
-        return viewInflate;
     }
 
     /**
      * Popula a lista novamente
      */
+
     public static void populaListView() {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos os forncedores", Toast.LENGTH_SHORT).show();
-        Cursor cursor = daoFornecedor.selectFornecedores();
-        fornecedorCursorAdapter.changeCursor(cursor);
+
+        Cursor cursor = null;
+
+        try {
+            cursor = daoFornecedor.selectFornecedores();
+            fornecedorCursorAdapter.changeCursor(cursor);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static void populaListView(String nome) {
-        // Switch to new cursor and update contents of ListView
-        if(!TestaIO.isStringEmpty(nome))
-            Toast.makeText(viewInflate.getContext(), "Pesquisando fornecedores usando chave '" + nome + "'", Toast.LENGTH_SHORT).show();
+        Cursor cursor = null;
 
-        Cursor cursor = daoFornecedor.selectFornecedores(nome);
-        fornecedorCursorAdapter.changeCursor(cursor);
+        try {
+            cursor = daoFornecedor.selectFornecedores(nome);
+            fornecedorCursorAdapter.changeCursor(cursor);
+        } catch (Exception e) {
+            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
-
 }

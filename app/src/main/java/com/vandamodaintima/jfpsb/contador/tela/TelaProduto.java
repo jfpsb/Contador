@@ -26,9 +26,6 @@ public class TelaProduto extends ActivityBase {
         cadastrarProduto = new CadastrarProduto();
         pesquisarProduto = new PesquisarProduto();
 
-        cadastrarProduto.setConn(conn);
-        pesquisarProduto.setConn(conn);
-
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
     }
 

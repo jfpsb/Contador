@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
@@ -32,6 +33,8 @@ public class ActivityBase extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         conn = new ConexaoBanco(getApplicationContext());
+
+        setDAOs();
     }
 
     protected void setViewPagerTabLayout(Fragment telaPesquisar, Fragment telaCadastrar) {
@@ -75,6 +78,14 @@ public class ActivityBase extends AppCompatActivity {
         });
     }
 
+    protected void setDAOs() {
+
+    }
+
+    public ConexaoBanco getConn() {
+        return conn;
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -84,30 +95,41 @@ public class ActivityBase extends AppCompatActivity {
     @Override
     public void onDestroy() {
         conn.fechar();
+        Log.i("Contador", "ONDESTROY -> " + this.getComponentName().toShortString());
         super.onDestroy();
     }
 
     @Override
     protected void onRestart() {
-        conn = new ConexaoBanco(getApplicationContext());
+        if(!conn.conexao().isOpen()) {
+            conn = new ConexaoBanco(getApplicationContext());
+            setDAOs();
+        }
+        Log.i("Contador", "ONRESTART -> " + this.getComponentName().toShortString());
         super.onRestart();
     }
 
     @Override
     protected void onResume() {
-        conn = new ConexaoBanco(getApplicationContext());
+        if(!conn.conexao().isOpen()) {
+            conn = new ConexaoBanco(getApplicationContext());
+            setDAOs();
+        }
+        Log.i("Contador", "ONRESUME -> " + this.getComponentName().toShortString());
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        conn.fechar();
+//        conn.fechar();
+        Log.i("Contador", "ONSTOP -> " + this.getComponentName().toShortString());
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-        conn.fechar();
+//        conn.fechar();
+        Log.i("Contador", "ONPAUSE -> " + this.getComponentName().toShortString());
         super.onPause();
     }
 }

@@ -20,6 +20,8 @@ import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
@@ -27,7 +29,7 @@ import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastrarProduto extends Fragment {
+public class CadastrarProduto extends FragmentBase {
 
     private Button btnCadastrar;
     private EditText txtCodBarra;
@@ -35,7 +37,6 @@ public class CadastrarProduto extends Fragment {
     private EditText txtDescricao;
     private EditText txtPreco;
 
-    private ConexaoBanco conn;
     private DAOProduto daoProduto;
     private DAOFornecedor daoFornecedor;
 
@@ -45,17 +46,10 @@ public class CadastrarProduto extends Fragment {
         // Required empty public constructor
     }
 
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
-
-        daoProduto = new DAOProduto(conn.conexao());
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCodBarra = viewInflate.findViewById(R.id.txtCodBarra);
@@ -63,14 +57,34 @@ public class CadastrarProduto extends Fragment {
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         spinnerFornecedor = viewInflate.findViewById(R.id.spinnerFornecedores);
 
-        Cursor cursor = daoFornecedor.selectFornecedores();
+        setDAOs();
 
-        Cursor cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[] {"_id", "nome"});
+        setSpinnerFornecedor();
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[] {"nome"}, new int[] {android.R.id.text1},0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
-        spinnerFornecedor.setAdapter(simpleCursorAdapter);
+    @Override
+    protected void setDAOs() {
+        daoProduto = new DAOProduto(((ActivityBase)getActivity()).getConn().conexao());
+        daoFornecedor = new DAOFornecedor(((ActivityBase)getActivity()).getConn().conexao());
+    }
+
+    private void setSpinnerFornecedor() {
+        Cursor cursor = null, cursor2 = null;
+
+        try {
+            cursor = daoFornecedor.selectFornecedores();
+
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
+
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinnerFornecedor.setAdapter(simpleCursorAdapter);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -93,7 +107,9 @@ public class CadastrarProduto extends Fragment {
 
             }
         });
+    }
 
+    private void setBtnCadastrar() {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,8 +163,6 @@ public class CadastrarProduto extends Fragment {
                 }
             }
         });
-
-        return viewInflate;
     }
 
 }

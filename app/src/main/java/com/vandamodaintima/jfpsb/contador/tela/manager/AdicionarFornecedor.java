@@ -52,7 +52,7 @@ public class AdicionarFornecedor extends ActivityBase {
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
 
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+        setDAOs();
 
         setTextChangedEmCampos();
 
@@ -61,6 +61,11 @@ public class AdicionarFornecedor extends ActivityBase {
         setBtnCadastrar();
 
         setBtnSelecionar();
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoFornecedor = new DAOFornecedor(conn.conexao());
     }
 
     private void setBtnSelecionar() {
@@ -132,51 +137,56 @@ public class AdicionarFornecedor extends ActivityBase {
     }
 
     private void setSpinnerFornecedor() {
-        Cursor cursor = daoFornecedor.selectFornecedores();
+        Cursor cursor = null, cursor2 = null;
 
-        Cursor cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[] {"_id", "nome"});
+        try {
+            cursor = daoFornecedor.selectFornecedores();
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[] {"nome"}, new int[] {android.R.id.text1},0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
 
-        spinnerFornecedor.setAdapter(simpleCursorAdapter);
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                txtNome.removeTextChangedListener(textWatcher);
-                txtCnpj.removeTextChangedListener(textWatcher);
+            spinnerFornecedor.setAdapter(simpleCursorAdapter);
 
-                if(position != 0) {
-                    Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+            onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    txtNome.removeTextChangedListener(textWatcher);
+                    txtCnpj.removeTextChangedListener(textWatcher);
 
-                    cursor.moveToPosition(position);
+                    if (position != 0) {
+                        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                    fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                        cursor.moveToPosition(position);
+
+                        fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                        fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                    } else {
+                        fornecedor.setCnpj(null);
+                    }
+
+                    txtCnpj.setText("");
+                    txtNome.setText("");
+
+                    txtCnpj.addTextChangedListener(textWatcher);
+                    txtNome.addTextChangedListener(textWatcher);
                 }
-                else {
-                    fornecedor.setCnpj(null);
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Toast.makeText(AdicionarFornecedor.this, "Nenhum fornecedor foi escolhido", Toast.LENGTH_SHORT).show();
                 }
+            };
 
-                txtCnpj.setText("");
-                txtNome.setText("");
-
-                txtCnpj.addTextChangedListener(textWatcher);
-                txtNome.addTextChangedListener(textWatcher);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(AdicionarFornecedor.this, "Nenhum fornecedor foi escolhido", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        spinnerFornecedor.setOnItemSelectedListener(onItemSelectedListener);
+            spinnerFornecedor.setOnItemSelectedListener(onItemSelectedListener);
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setTextChangedEmCampos() {
-            textWatcher = new TextWatcher() {
+        textWatcher = new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

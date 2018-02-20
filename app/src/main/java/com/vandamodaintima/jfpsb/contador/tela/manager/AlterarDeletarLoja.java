@@ -28,6 +28,8 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         stub.setLayoutResource(R.layout.content_alterar_deletar_loja);
         stub.inflate();
 
+        setDAOs();
+
         loja = (Loja) getIntent().getExtras().getSerializable("loja");
 
         txtIDLoja = findViewById(R.id.txtIDLoja);
@@ -43,7 +45,10 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         setBtnAtualizar();
 
         setBtnDeletar();
+    }
 
+    @Override
+    protected void setDAOs() {
         daoLoja = new DAOLoja(conn.conexao());
     }
 

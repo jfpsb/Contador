@@ -12,8 +12,12 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
@@ -21,32 +25,39 @@ import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastrarFornecedor extends Fragment {
+public class CadastrarFornecedor extends FragmentBase {
     private Button btnCadastrar;
     private EditText txtCnpj;
     private EditText txtNome;
     private DAOFornecedor daoFornecedor;
-    private ConexaoBanco conn;
 
     public CadastrarFornecedor() {
         // Required empty public constructor
     }
 
-    public void setConn(ConexaoBanco conn) {
-        this.conn = conn;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_fornecedor, container, false);
-
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_fornecedor, container, false);
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
+        setDAOs();
+
+        setBtnCadastrar();
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setDAOs() {
+        daoFornecedor = new DAOFornecedor(((ActivityBase)getActivity()).getConn().conexao());
+        super.setDAOs();
+    }
+
+    private void setBtnCadastrar() {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,8 +94,5 @@ public class CadastrarFornecedor extends Fragment {
                 }
             }
         });
-
-        return viewInflate;
     }
-
 }
