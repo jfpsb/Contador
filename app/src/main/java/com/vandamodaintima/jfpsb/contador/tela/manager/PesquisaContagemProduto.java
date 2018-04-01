@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -205,18 +206,22 @@ public class PesquisaContagemProduto extends ActivityBase {
                 switch (selecao) {
                     case (R.id.rbCodBarra):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonCodBarra);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_NUMBER);
                         TIPO_PESQUISA = 1;
                         break;
                     case (R.id.rbDescricao):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonDescricao);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         TIPO_PESQUISA = 2;
                         break;
                     case (R.id.rbFornecedor):
                         txtPesquisaProduto.setHint(R.string.hintRadioButtonNomeFornecedor);
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         TIPO_PESQUISA = 3;
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "Aconteceu algo de errado", Toast.LENGTH_SHORT).show();
+                        txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_NUMBER);
                         TIPO_PESQUISA = 1;
                         break;
                 }
