@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -71,6 +72,10 @@
             android:name=".tela.ActivityBase"
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar"></activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
     </application>
 
 </manifest>

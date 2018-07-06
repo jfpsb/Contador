@@ -5,11 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class SQLiteHelper extends SQLiteOpenHelper {
+public class SQLiteHelper extends SQLiteAssetHelper {
     private static final String CATEGORIA = "Contador";
     private String[] scriptSQLCreate;
     private String[] scriptDeleteDB;
@@ -20,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         this.scriptDeleteDB = scriptDeleteDB;
     }
 
-    @Override
+    /*@Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.i(CATEGORIA, "Criando bando da aplicação");
         int qntScript = scriptSQLCreate.length;
@@ -47,5 +49,5 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
         db.setForeignKeyConstraintsEnabled(true);
-    }
+    }*/
 }
