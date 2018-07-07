@@ -9,14 +9,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" android:stretchColumns="1" android:shrinkColumns="0" android:layout_margin="7dip" >
         <TableRow>
-            <TextView android:text="Loja: " android:textSize="20dp" />
-            <Spinner android:id="@+id/spinnerLoja" />
+            <TextView
+                android:text="Loja: "
+                android:textSize="20dp"
+                android:textColor="#000000" />
+            <Spinner
+                android:id="@+id/spinnerLoja" />
         </TableRow>
         <TableRow>
-            <TextView android:text="Data de Início: " android:textSize="20dp" />
-            <EditText android:id="@+id/txtDataInicio" android:inputType="date" android:hint="@string/data_hint" />
+            <TextView
+                android:text="Data de Início: "
+                android:textSize="20dp"
+                android:textColor="#000000" />
+            <EditText
+                android:id="@+id/txtDataInicio"
+                android:inputType="date"
+                android:hint="@string/data_hint" />
         </TableRow>
-        <Button android:id="@+id/btnCadastrar" android:text="Cadastrar" android:textSize="24dp" android:layout_margin="15dip" />
+        <Button
+            android:id="@+id/btnCadastrar"
+            android:text="Cadastrar"
+            android:textSize="24dp"
+            android:layout_margin="15dip" />
     </TableLayout>
 
 </FrameLayout>

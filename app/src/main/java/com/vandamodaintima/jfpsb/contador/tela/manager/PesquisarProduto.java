@@ -56,7 +56,7 @@ public class PesquisarProduto extends FragmentBase {
 
         txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
-        listView = viewInflate.findViewById(R.id.listViewLoja);
+        listView = viewInflate.findViewById(R.id.listViewProduto);
 
         setTxtPesquisaProduto();
 
@@ -76,51 +76,54 @@ public class PesquisarProduto extends FragmentBase {
      * Popula a lista novamente
      */
     public static void populaListView() {
-        // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
 
-        Cursor cursor = daoProduto.selectProdutos();
+        if(cursorLista != null)
+            cursorLista.close();
 
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+        cursorLista = daoProduto.selectProdutos();
 
-        produtoCursorAdapter.changeCursor(cursor);
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
+
+        produtoCursorAdapter.changeCursor(cursorLista);
     }
 
     public static void populaListView(String termo) {
-        // Switch to new cursor and update contents of ListView
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
 
             switch (TIPO_PESQUISA) {
                 case 1:
-                    cursor = daoProduto.selectProdutosCodBarra(termo);
+                    cursorLista = daoProduto.selectProdutosCodBarra(termo);
                     break;
                 case 2:
-                    cursor = daoProduto.selectProdutosDescricao(termo);
+                    cursorLista = daoProduto.selectProdutosDescricao(termo);
                     break;
                 case 3:
-                    cursor = daoProduto.selectProdutosFornecedor(termo);
+                    cursorLista = daoProduto.selectProdutosFornecedor(termo);
                     break;
             }
 
-            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 
-            produtoCursorAdapter.changeCursor(cursor);
+            produtoCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setListView(final View viewInflate) {
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoProduto.selectProdutos();
+            cursorLista = daoProduto.selectProdutos();
 
-            txtQuantProdutosCadastrados.setText(String.valueOf(cursor.getCount()));
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 
-            produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursor);
+            produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursorLista);
 
             listView.setAdapter(produtoCursorAdapter);
 

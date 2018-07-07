@@ -82,12 +82,13 @@ public class PesquisarLoja extends FragmentBase {
     }
 
     private void setListView() {
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoLoja.selectLojas();
+            cursorLista = daoLoja.selectLojas();
 
-            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursor);
+            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorLista);
 
             listView.setAdapter(lojaCursorAdapter);
         } catch (Exception e) {
@@ -127,22 +128,24 @@ public class PesquisarLoja extends FragmentBase {
         // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todas as lojas", Toast.LENGTH_SHORT).show();
 
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoLoja.selectLojas();
-            lojaCursorAdapter.changeCursor(cursor);
+            cursorLista = daoLoja.selectLojas();
+            lojaCursorAdapter.changeCursor(cursorLista);
         }catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     public static void populaListView(String nome) {
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoLoja.selectLojas(nome);
-            lojaCursorAdapter.changeCursor(cursor);
+            cursorLista = daoLoja.selectLojas(nome);
+            lojaCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

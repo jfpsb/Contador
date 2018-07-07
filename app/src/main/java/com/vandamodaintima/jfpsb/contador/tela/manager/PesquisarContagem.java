@@ -92,11 +92,13 @@ public class PesquisarContagem extends FragmentBase {
     }
 
     private void setListView() {
-        Cursor cursor = null;
-        try {
-            cursor = daoContagem.selectContagens();
+        if(cursorLista != null)
+            cursorLista.close();
 
-            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), cursor);
+        try {
+            cursorLista = daoContagem.selectContagens();
+
+            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), cursorLista);
 
             listView.setAdapter(contagemCursorAdapter);
 
@@ -152,8 +154,11 @@ public class PesquisarContagem extends FragmentBase {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally {
-            cursorSpinner.close();
-            cursorSpinner2.close();
+            if(cursorSpinner != null)
+                cursorSpinner.close();
+
+            if(cursorSpinner2 != null)
+                cursorSpinner2.close();
         }
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -226,14 +231,14 @@ public class PesquisarContagem extends FragmentBase {
      */
 
     public static void populaListView() {
-        // Switch to new cursor and update contents of ListView
         Toast.makeText(viewInflate.getContext(), "Pesquisando todos as contagens em todas as lojas", Toast.LENGTH_SHORT).show();
 
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoContagem.selectContagens();
-            contagemCursorAdapter.changeCursor(cursor);
+            cursorLista = daoContagem.selectContagens();
+            contagemCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -242,11 +247,12 @@ public class PesquisarContagem extends FragmentBase {
     public static void populaListView(Contagem contagem, Loja loja) {
         Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + loja.getNome() + " no intervalo " + contagem.getDatainicio() + " a " + contagem.getDatafim(), Toast.LENGTH_SHORT).show();
 
-        Cursor cursor = null;
+        if(cursorLista != null)
+            cursorLista.close();
 
         try {
-            cursor = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), Integer.toString(contagem.getLoja()));
-            contagemCursorAdapter.changeCursor(cursor);
+            cursorLista = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), Integer.toString(contagem.getLoja()));
+            contagemCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

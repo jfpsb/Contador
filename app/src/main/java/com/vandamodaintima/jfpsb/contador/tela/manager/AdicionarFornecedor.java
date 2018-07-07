@@ -183,6 +183,13 @@ public class AdicionarFornecedor extends ActivityBase {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        finally {
+            if(cursor != null)
+                cursor.close();
+
+            if(cursor2 != null)
+                cursor2.close();
+        }
     }
 
     private void setTextChangedEmCampos() {

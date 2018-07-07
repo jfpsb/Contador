@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ public class ActivityBase extends AppCompatActivity {
     protected ConexaoBanco conn;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+
+    protected static Cursor cursorLista = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,10 @@ public class ActivityBase extends AppCompatActivity {
     public void onDestroy() {
         conn.fechar();
         Log.i("Contador", "ONDESTROY -> " + this.getComponentName().toShortString());
+
+        if(cursorLista != null)
+            cursorLista.close();
+
         super.onDestroy();
     }
 
@@ -121,14 +128,12 @@ public class ActivityBase extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-//        conn.fechar();
         Log.i("Contador", "ONSTOP -> " + this.getComponentName().toShortString());
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-//        conn.fechar();
         Log.i("Contador", "ONPAUSE -> " + this.getComponentName().toShortString());
         super.onPause();
     }

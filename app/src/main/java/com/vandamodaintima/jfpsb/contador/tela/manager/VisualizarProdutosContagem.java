@@ -42,12 +42,10 @@ public class VisualizarProdutosContagem extends ActivityBase {
     }
 
     private void setListView() {
-        Cursor cursor = null;
-
         try {
-            cursor = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
+            cursorLista = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
 
-            produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(), cursor);
+            produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(), cursorLista);
 
             listViewProdutoContagem.setAdapter(produtoContagemCursorAdapter);
         } catch (Exception e) {

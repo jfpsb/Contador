@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 public class FragmentBase extends Fragment {
 
     protected static View viewInflate;
-
+    protected static Cursor cursorLista = null;
 
     public FragmentBase() {
         // Required empty public constructor
@@ -35,5 +36,13 @@ public class FragmentBase extends Fragment {
     public void onResume() {
         setDAOs();
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        if(cursorLista != null)
+            cursorLista.close();
+
+        super.onDestroy();
     }
 }
