@@ -103,7 +103,8 @@ public class PesquisarFornecedor extends FragmentBase {
 
                 Fornecedor fornecedor = new Fornecedor();
 
-                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                fornecedor.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 Bundle bundle = new Bundle();

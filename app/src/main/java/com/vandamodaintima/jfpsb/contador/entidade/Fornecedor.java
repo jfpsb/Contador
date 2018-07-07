@@ -7,8 +7,17 @@ import java.io.Serializable;
  */
 
 public class Fornecedor implements Serializable {
+    private int id;
     private String cnpj;
     private String nome;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCnpj() {
         return cnpj;

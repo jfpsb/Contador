@@ -26,13 +26,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
+                android:text="Id: "
+                android:textColor="#000000"
+                android:textAlignment="center" />
+
+            <EditText android:id="@+id/txtIDFornecedor"
+                android:enabled="false"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"/>
+
+        </TableRow>
+
+        <TableRow android:weightSum="2">
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
                 android:text="CNPJ: "
                 android:textColor="#000000"
-                android:textAlignment="center"
-                android:enabled="false"/>
+                android:textAlignment="center" />
 
             <EditText android:id="@+id/txtCnpj"
-                android:enabled="false"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"

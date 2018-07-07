@@ -17,6 +17,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
     private EditText txtCnpj;
     private EditText txtNome;
+    private EditText txtId;
     private Fornecedor fornecedor;
     private AlertDialog.Builder builder;
     private DAOFornecedor daoFornecedor;
@@ -31,17 +32,19 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
         fornecedor = (Fornecedor) getIntent().getExtras().getSerializable("fornecedor");
 
+        txtId = findViewById(R.id.txtIDFornecedor);
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
+        txtId.setText(Integer.toString(fornecedor.getId()));
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
         setDAOs();
 
-        setAlertBuilder(fornecedor.getCnpj());
+        setAlertBuilder(fornecedor);
 
         setBtnAtualizar();
 
@@ -54,15 +57,18 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilder(final Object idfornecedor) {
+    protected void setAlertBuilder(final Object entidade) {
+
+        final Fornecedor fornecedor = (Fornecedor)entidade;
+
         builder = new AlertDialog.Builder(this);
         builder.setTitle("Deletar Fornecedor");
-        builder.setMessage("Tem certeza que deseja apagar o fornecedor de CNPJ " + idfornecedor + "?");
+        builder.setMessage("Tem certeza que deseja apagar o fornecedor de CNPJ " + fornecedor.getCnpj() + "?");
 
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoFornecedor.deletar((String) idfornecedor);
+                daoFornecedor.deletar(fornecedor);
 
                 PesquisarFornecedor.populaListView();
 
@@ -84,11 +90,16 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 try {
+                    String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
+
+                    if(TestaIO.isStringEmpty(cnpj))
+                        throw new Exception("O campo de cnpj não pode ficar vazio!");
 
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo de nome não pode ficar vazio!");
 
+                    fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome.toUpperCase());
 
                     int result = daoFornecedor.atualizar(fornecedor);

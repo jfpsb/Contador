@@ -45,7 +45,7 @@ public class DAOFornecedor {
     }
 
     public Fornecedor selectFornecedor(int id) {
-        Cursor c = conn.query(true, TABELA, null, "cnpj = " + id, null, null, null, null, null);
+        Cursor c = conn.query(true, TABELA, null, "id = " + id, null, null, null, null, null);
 
         if(c.getCount() > 0) {
             c.moveToFirst();
@@ -63,7 +63,7 @@ public class DAOFornecedor {
 
     public Cursor selectFornecedores() {
         try {
-            return conn.query(TABELA, new String[] {"cnpj as _id", "nome"}, null, null, null, null, "nome");
+            return conn.query(TABELA, new String[] {"id as _id", "cnpj", "nome"}, null, null, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar fornecedores: " + e.toString());
             return null;
@@ -72,25 +72,26 @@ public class DAOFornecedor {
 
     public Cursor selectFornecedores(String termo) {
         try {
-            return conn.query(TABELA, new String[] {"cnpj _id", "nome"}, "nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, "nome");
+            return conn.query(TABELA, new String[] {"id as _id", "cnpj", "nome"}, "nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, "nome");
         } catch(SQLException e) {
             Log.e("Contador", "Erro ao buscar fornecedores: " + e.toString());
             return null;
         }
     }
 
-    public int deletar(String id) {
-        int result = conn.delete(TABELA, "cnpj = ?", new String[] { id });
-        Log.i("Contador", "Deletando fornecedor com cnpj " + id);
+    public int deletar(Fornecedor fornecedor) {
+        int result = conn.delete(TABELA, "id = ?", new String[] { Integer.toString(fornecedor.getId()) });
+        Log.i("Contador", "Deletando fornecedor com cnpj " + fornecedor.getCnpj());
         return result;
     }
 
     public int atualizar(Fornecedor fornecedor) {
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put("id", fornecedor.getId());
         contentValues.put("cnpj", fornecedor.getCnpj());
         contentValues.put("nome", fornecedor.getNome());
 
-        return conn.update(TABELA, contentValues, "cnpj = ?", new String[] {fornecedor.getCnpj()});
+        return conn.update(TABELA, contentValues, "id = ?", new String[] {Integer.toString(fornecedor.getId())});
     }
 }
