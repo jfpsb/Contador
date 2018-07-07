@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.util;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
+import android.util.Log;
 import android.widget.SimpleCursorAdapter;
 
 /**
@@ -20,8 +21,19 @@ public class ManipulaCursor {
     public static Cursor retornaCursorComHintNull(Cursor cursor, String msg, String[] camposEntidade) {
         MatrixCursor matrixCursor = new MatrixCursor(camposEntidade);
         matrixCursor.addRow(new String[] { "-1", msg });
-        Cursor[] cursors = {matrixCursor, cursor};
 
-        return new MergeCursor(cursors);
+        try {
+            while (cursor.moveToNext()) {
+                Object id = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[0]));
+                Object texto = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[1]));
+
+                matrixCursor.addRow(new Object[] {id, texto});
+            }
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return matrixCursor;
     }
 }

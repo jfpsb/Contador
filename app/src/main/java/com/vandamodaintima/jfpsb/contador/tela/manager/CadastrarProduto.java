@@ -87,6 +87,10 @@ public class CadastrarProduto extends FragmentBase {
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        finally {
+            cursor.close();
+            cursor2.close();
+        }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

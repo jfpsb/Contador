@@ -52,8 +52,9 @@ public class DAOFornecedor {
 
             Fornecedor fornecedor = new Fornecedor();
 
-            fornecedor.setCnpj(c.getString(0));
-            fornecedor.setNome(c.getString(1));
+            fornecedor.setId(c.getInt(0));
+            fornecedor.setCnpj(c.getString(1));
+            fornecedor.setNome(c.getString(2));
 
             return fornecedor;
         }

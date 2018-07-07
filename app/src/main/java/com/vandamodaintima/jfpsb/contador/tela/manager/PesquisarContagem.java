@@ -151,6 +151,10 @@ public class PesquisarContagem extends FragmentBase {
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        finally {
+            cursorSpinner.close();
+            cursorSpinner2.close();
+        }
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

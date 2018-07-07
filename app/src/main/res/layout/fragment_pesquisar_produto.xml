@@ -117,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listViewLoja"
-        android:layout_margin="10dip">
+        android:layout_margin="5dip">
     </ListView>
 
 </LinearLayout>

@@ -138,6 +138,10 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        finally {
+            spinnerCursor.close();
+            spinnerCursor2.close();
+        }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

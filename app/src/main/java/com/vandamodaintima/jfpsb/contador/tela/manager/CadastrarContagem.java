@@ -114,14 +114,25 @@ public class CadastrarContagem extends FragmentBase {
     }
 
     private void setSpinnerLoja() {
-        Cursor cursorSpinner = daoLoja.selectLojas();
+        Cursor cursorSpinner = null, cursorSpinner2 = null;
 
-        Cursor cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{ "_id", "nome" });
+        try {
+            cursorSpinner = daoLoja.selectLojas();
 
-        SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[] {"nome"}, new int[] {android.R.id.text1},0);
-        simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome"});
 
-        spinnerLoja.setAdapter(simpleCursorAdapter);
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinnerLoja.setAdapter(simpleCursorAdapter);
+        }
+        catch (Exception e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        finally {
+            cursorSpinner.close();
+            cursorSpinner2.close();
+        }
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
