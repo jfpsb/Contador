@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.excel;
 
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
@@ -28,18 +31,19 @@ import java.util.concurrent.TimeUnit;
 
 public class ManipulaExcel {
     private static DAOProduto daoProduto;
+    private static final String autoridade = "com.android.externalstorage.documents";
 
-    public static void adicionaProdutosDePlanilhaParaBD(final TelaProduto telaProduto, ConexaoBanco conn) {
+    public static void adicionaProdutosDePlanilhaParaBD(final TelaProduto telaProduto, ConexaoBanco conn, Uri filepath) {
         Produto[] produtos = null;
 
         daoProduto = new DAOProduto(conn.conexao());
 
+        InputStream inputStream = null;
+
         try {
-            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Procurando arquivo 'produtos.xlsx'"));
+            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Procurando arquivo"));
 
-            File file = new File("/data/data/com.vandamodaintima.jfpsb.contador/files/produtos.xlsx");
-
-            InputStream inputStream = new FileInputStream(file);
+            inputStream = telaProduto.getContentResolver().openInputStream(filepath);
 
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(inputStream);
 
@@ -55,18 +59,18 @@ public class ManipulaExcel {
 
             Row auxRow = xssfSheet.getRow(0);
 
-            if(auxRow.getPhysicalNumberOfCells() != 3) {
+            if (auxRow.getPhysicalNumberOfCells() != 3) {
                 throw new Exception("Há um erro na planilha. A quantidade de colunas está errada! Quantidade correta: 3");
             }
 
-            for(int i = 1; i < rows; i++) {
+            for (int i = 1; i < rows; i++) {
                 Row row = xssfSheet.getRow(i);
 
                 int cells = row.getPhysicalNumberOfCells();
 
                 Produto produto = new Produto();
 
-                for(int j = 0; j < cells; j++) {
+                for (int j = 0; j < cells; j++) {
                     try {
                         Cell cell = row.getCell(j);
 
@@ -77,7 +81,7 @@ public class ManipulaExcel {
                                 produto.setPreco(cell.getNumericCellValue());
                                 break;
                             case Cell.CELL_TYPE_STRING:
-                                if(cell.getColumnIndex() == 0) {
+                                if (cell.getColumnIndex() == 0) {
                                     produto.setCod_barra(cell.getStringCellValue());
                                 } else if (cell.getColumnIndex() == 1) {
                                     produto.setDescricao(cell.getStringCellValue());
@@ -89,7 +93,7 @@ public class ManipulaExcel {
 
                         produtos[i - 1] = produto;
                     } catch (NullPointerException npe) {
-                        Toast.makeText(telaProduto.getApplicationContext(), npe.getMessage(), Toast.LENGTH_SHORT).show();
+                        telaProduto.runOnUiThread(toastLocal(telaProduto, npe.getMessage()));
                         Log.i("Contador", npe.getMessage());
                     }
                 }
@@ -111,14 +115,22 @@ public class ManipulaExcel {
                     PesquisarProduto.populaListView();
                 }
             });
-
         }catch (FileNotFoundException fnfe) {
-            telaProduto.runOnUiThread(toastLocal(telaProduto, "O arquivo não foi encontrado. O arquivo deve estar na pasta 'files' no diretório do app com nome 'produtos.xlsx'"));
+            telaProduto.runOnUiThread(toastLocal(telaProduto, fnfe.getMessage()));
             Log.i("Contador", fnfe.getMessage());
         }
         catch (Exception e) {
             telaProduto.runOnUiThread(toastLocal(telaProduto, e.getMessage()));
             Log.i("Contador", e.getMessage());
+        }
+        finally {
+            if(inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.i("Contador", "Ao tentar fechar InputStream: " + e.getMessage());
+                }
+            }
         }
     }
 

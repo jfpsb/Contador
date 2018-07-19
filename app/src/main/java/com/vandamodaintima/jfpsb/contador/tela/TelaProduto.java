@@ -1,16 +1,17 @@
 package com.vandamodaintima.jfpsb.contador.tela;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.animation.AlphaAnimation;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 public class TelaProduto extends ActivityBase {
@@ -33,6 +35,8 @@ public class TelaProduto extends ActivityBase {
     private static TextView txtProgressStatus;
 
     String myLog = "Contador";
+
+    private static final int EscolherArquivo = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +68,35 @@ public class TelaProduto extends ActivityBase {
 
         switch (id) {
             case R.id.itemCadastrarProdutosBatch:
-                new Tarefa().execute();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), EscolherArquivo);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EscolherArquivo) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                Log.i("Contador", "Path: " + uri.getPath());
+                Log.i("Contador", "Autoridade:" + uri.getAuthority());
+                Log.i("Contador", "Environment.getExternalStorageDirectory(): " + Environment.getExternalStorageDirectory().getPath());
+                new Tarefa(uri).execute();
+            }
+        }
+    }
+
     private class Tarefa extends AsyncTask<Void, Void,Void> {
 
+        private Uri filepath;
+
+        public Tarefa(Uri filepath) {
+            this.filepath = filepath;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -94,7 +118,7 @@ public class TelaProduto extends ActivityBase {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                ManipulaExcel.adicionaProdutosDePlanilhaParaBD(TelaProduto.this, conn);
+                ManipulaExcel.adicionaProdutosDePlanilhaParaBD(TelaProduto.this, conn, filepath);
                 TimeUnit.SECONDS.sleep(3);
             } catch (Exception e) {
                 Log.i("Contador", e.getMessage());
