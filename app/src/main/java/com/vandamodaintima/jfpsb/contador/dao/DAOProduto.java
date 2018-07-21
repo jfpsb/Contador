@@ -23,8 +23,18 @@ public class DAOProduto {
         this.conn = conn;
     }
 
-    public long[] inserir(Produto produto) {
-        long[] result = new long[2];
+    public long inserir(Produto produto) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("cod_barra", produto.getCod_barra());
+        contentValues.put("descricao", produto.getDescricao());
+        contentValues.put("preco", produto.getPreco());
+        contentValues.put("fornecedor", produto.getFornecedor());
+
+        return conn.insert(TABELA, "", contentValues);
+    }
+
+    public long inserirBulk(Produto produto) {
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -33,36 +43,10 @@ public class DAOProduto {
             contentValues.put("preco", produto.getPreco());
             contentValues.put("fornecedor", produto.getFornecedor());
 
-            result[0] = conn.insertOrThrow(TABELA, "", contentValues);
-        } catch (SQLiteConstraintException sce) {
-            Log.i("Contador", sce.getMessage());
-            result[0] = -1;
-            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
-        } catch (Exception e) {
+            return conn.insertWithOnConflict(TABELA, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+        } catch (SQLException e) {
             Log.i("Contador", e.getMessage());
-            result[0] = -1;
-            result[1] = -1;
-        }
-
-        return result;
-    }
-
-    public void inserirVarios(TelaProduto telaProduto, Produto[] produtos) {
-        for(int i = 0; i < produtos.length; i++) {
-            Produto produto = produtos[i];
-
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("cod_barra", produto.getCod_barra());
-            contentValues.put("descricao", produto.getDescricao());
-            contentValues.put("preco", produto.getPreco());
-            contentValues.put("fornecedor", produto.getFornecedor());
-
-            Log.i("Contador", produto.getCod_barra());
-
-            conn.insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-
-            telaProduto.runOnUiThread(TelaProduto.msgTxtProgressStatus("Produto " + (i + 1) + " cadastrado no banco de dados"));
+            return -1;
         }
     }
 

@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ViewStub;
 import android.widget.ListView;

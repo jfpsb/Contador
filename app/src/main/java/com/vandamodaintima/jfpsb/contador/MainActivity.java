@@ -10,7 +10,6 @@ import com.vandamodaintima.jfpsb.contador.tela.TelaContador;
 import com.vandamodaintima.jfpsb.contador.tela.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
-import com.vandamodaintima.jfpsb.contador.util.ManipulaArquivo;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +54,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
-
-        ManipulaArquivo.colocaArquivoProdutosEmFiles(this);
     }
 }

@@ -68,38 +68,6 @@ public class PesquisaContagemProduto extends ActivityBase {
         daoProduto = new DAOProduto(conn.conexao());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_visualizar_contagem, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.itemVerProdutos:
-                Intent visualizarContagem = new Intent(PesquisaContagemProduto.this, VisualizarProdutosContagem.class);
-
-                Bundle bundle = new Bundle();
-
-                bundle.putSerializable("contagem", contagem);
-
-                visualizarContagem.putExtras(bundle);
-
-                startActivity(visualizarContagem);
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void setListViewOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

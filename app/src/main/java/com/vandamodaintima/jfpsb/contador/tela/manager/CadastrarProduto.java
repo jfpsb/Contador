@@ -146,9 +146,9 @@ public class CadastrarProduto extends FragmentBase {
                     produto.setDescricao(descricao.toUpperCase());
                     produto.setFornecedor(fornecedor.getCnpj());
 
-                    long[] result = daoProduto.inserir(produto);
+                    long result = daoProduto.inserir(produto);
 
-                    if(result[0] != -1) {
+                    if(result != -1) {
                         Toast.makeText(viewInflate.getContext(), "O produto " + produto.getDescricao() + " foi inserido com sucesso!" , Toast.LENGTH_SHORT).show();
 
                         PesquisarProduto.populaListView();
@@ -159,7 +159,7 @@ public class CadastrarProduto extends FragmentBase {
                         spinnerFornecedor.setSelection(0);
                     }
                     else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
+                        Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Este Produto.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (NumberFormatException nfe) {
                     Toast.makeText(viewInflate.getContext(), "O valor digitado no campo preço não é um número válido!", Toast.LENGTH_SHORT).show();

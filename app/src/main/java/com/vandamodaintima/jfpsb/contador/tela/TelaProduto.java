@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +18,6 @@ import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto;
 
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
-
 public class TelaProduto extends ActivityBase {
 
     private CadastrarProduto cadastrarProduto;
@@ -36,7 +31,7 @@ public class TelaProduto extends ActivityBase {
 
     String myLog = "Contador";
 
-    private static final int EscolherArquivo = 1;
+    private static final int ESCOLHER_ARQUIVO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +53,6 @@ public class TelaProduto extends ActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_cadastrar_produto_batch, menu);
-
         return true;
     }
 
@@ -70,7 +64,7 @@ public class TelaProduto extends ActivityBase {
             case R.id.itemCadastrarProdutosBatch:
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), EscolherArquivo);
+                startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -79,23 +73,31 @@ public class TelaProduto extends ActivityBase {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == EscolherArquivo) {
+        if (requestCode == ESCOLHER_ARQUIVO) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                Log.i("Contador", "Path: " + uri.getPath());
-                Log.i("Contador", "Autoridade:" + uri.getAuthority());
-                Log.i("Contador", "Environment.getExternalStorageDirectory(): " + Environment.getExternalStorageDirectory().getPath());
                 new Tarefa(uri).execute();
             }
         }
     }
 
-    private class Tarefa extends AsyncTask<Void, Void,Void> {
+    public class Tarefa extends AsyncTask<Void, String, String> {
+        public class Progresso {
+            private Tarefa tarefa;
 
-        private Uri filepath;
+            public Progresso(Tarefa tarefa) {
+                this.tarefa = tarefa;
+            }
 
-        public Tarefa(Uri filepath) {
-            this.filepath = filepath;
+            public void publish(String mensagem) {
+                tarefa.publishProgress(mensagem);
+            }
+        }
+        private Uri uri;
+        private Progresso progresso = new Progresso(this);
+
+        public Tarefa(Uri uri) {
+            this.uri = uri;
         }
         @Override
         protected void onPreExecute() {
@@ -107,32 +109,35 @@ public class TelaProduto extends ActivityBase {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(800);
-            progressBarHolder.setAnimation(outAnimation);
-            progressBarHolder.setVisibility(View.GONE);
+        protected void onProgressUpdate(String... values) {
+            txtProgressStatus.setText(values[0]);
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                ManipulaExcel.adicionaProdutosDePlanilhaParaBD(TelaProduto.this, conn, filepath);
-                TimeUnit.SECONDS.sleep(3);
-            } catch (Exception e) {
-                Log.i("Contador", e.getMessage());
-            }
-            return null;
-        }
-    }
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            outAnimation = new AlphaAnimation(1f, 0f);
+            outAnimation.setDuration(500);
+            progressBarHolder.setAnimation(outAnimation);
+            progressBarHolder.setVisibility(View.GONE);
 
-    public static Runnable msgTxtProgressStatus(final String msg) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                txtProgressStatus.setText(msg);
+            Toast.makeText(TelaProduto.this, result, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
+
+            int result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
+
+            if(result == 0) {
+                return "Nem Um Produto Foi Cadastrado. Talvez Todos Já Estejam No Banco de Dados.";
             }
-        };
+            else if(result > 0) {
+                return result + " Produtos Cadastrados com Sucesso!";
+            }
+
+            return "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir";
+        }
     }
 }
