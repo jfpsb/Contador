@@ -19,8 +19,13 @@ import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
@@ -148,26 +153,21 @@ public class ManipulaExcel {
         }
     }
 
-    //TODO: Tentar simplificar
+    //TODO: Tentar simplificar. Estilizar planilha
     public boolean ExportaContagem(Contagem contagem, String diretorio) {
         Date dataAtual = new Date();
         ArquivoExcel arquivoExcel = new ArquivoExcel();
-        int rowIndex = 0;
+        int rowIndex = 1; //Inicia após cabeçalho
+        OutputStream outputStream = null;
 
-        Row cabecalho = arquivoExcel.getPlanilha().createRow(rowIndex++);
-        Cell cab1 = cabecalho.createCell(0);
-        cab1.setCellValue("Cód. de Barra");
+        setCabecalho(arquivoExcel);
 
-        Cell cab2 = cabecalho.createCell(1);
-        cab2.setCellValue("Descrição");
-
-        Cell cab3 = cabecalho.createCell(2);
-        cab3.setCellValue("Quantidade");
+        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
         Cursor cursor = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
 
         try {
-            if(cursor.getCount() < 0)
+            if(cursor.getCount() <= 0)
                 throw new Exception("Não Há Produtos Na Contagem");
 
             while (cursor.moveToNext()) {
@@ -181,27 +181,84 @@ public class ManipulaExcel {
 
                 Cell cell3 = row.createCell(2);
                 cell3.setCellValue(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+
+                cell1.setCellStyle(cellStyle);
+                cell2.setCellStyle(cellStyle);
+                cell3.setCellStyle(cellStyle);
             }
 
+            arquivoExcel.getPlanilha().setColumnWidth(0, 23*256);
+            arquivoExcel.getPlanilha().setColumnWidth(1, 65*256);
+            arquivoExcel.getPlanilha().setColumnWidth(2, 18*256);
+
+            //TODO: Remover quando alterar entidades
             Loja loja = daoLoja.selectLoja(contagem.getLoja());
 
             String nomeArquivo = "Contagem - " + loja.getNome() + " - " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 
-            OutputStream outputStream = new FileOutputStream(arquivo.getAbsolutePath());
+            outputStream = new FileOutputStream(arquivo.getAbsolutePath());
 
             arquivoExcel.getPastaTrabalho().write(outputStream);
-
-            outputStream.flush();
-            outputStream.close();
 
             return true;
         }
         catch (Exception e) {
-            Log.i("Contador", ">>>> " + e.getMessage());
+            Log.i("Contador", e.getMessage());
+        }
+        finally {
+            try {
+                if(outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return false;
+    }
+
+    private void setCabecalho(ArquivoExcel arquivoExcel) {
+        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+
+        Font font = arquivoExcel.getPastaTrabalho().createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+
+        cabecalhoStyle.setFont(font);
+        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
+
+        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
+
+        Cell cab1 = cabecalho.createCell(0);
+        cab1.setCellValue("Cód. de Barra");
+
+        Cell cab2 = cabecalho.createCell(1);
+        cab2.setCellValue("Descrição");
+
+        Cell cab3 = cabecalho.createCell(2);
+        cab3.setCellValue("Quantidade");
+
+        cab1.setCellStyle(cabecalhoStyle);
+        cab2.setCellStyle(cabecalhoStyle);
+        cab3.setCellStyle(cabecalhoStyle);
+    }
+
+    private CellStyle CellStylePadrao(ArquivoExcel arquivoExcel) {
+        CellStyle cellStyle = arquivoExcel.getPastaTrabalho().createCellStyle();
+
+        Font font = arquivoExcel.getPastaTrabalho().createFont();
+        font.setFontHeightInPoints((short) 12);
+
+        cellStyle.setFont(font);
+
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+
+        return cellStyle;
     }
 }

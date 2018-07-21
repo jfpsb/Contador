@@ -28,4 +28,6 @@ public class TrataDisplayData {
     public static String getDataEmString(Date date) {
         return FormatoBD.format(date);
     }
+
+    //TODO: fazer método para mostrar data no formato dd-MM-yyyy
 }

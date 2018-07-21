@@ -83,15 +83,10 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         spinnerLoja = findViewById(R.id.spinnerLoja);
 
         setDAOs();
-
         setSpinnerLoja();
-
         setBtnAtualizar();
-
         setBtnDeletar();
-
         setCheckBoxDataFinal();
-
         setBtnAdicionar();
     }
 
@@ -310,8 +305,6 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         if(requestCode == ESCOLHER_DIRETORIO) {
             if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                 String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-
-                Log.i("Contador", diretorio);
 
                 ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
 
