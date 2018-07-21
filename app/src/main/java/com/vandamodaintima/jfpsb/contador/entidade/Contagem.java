@@ -9,9 +9,9 @@ import java.util.Date;
 
 public class Contagem implements Serializable {
     private int idcontagem;
-    private int loja;
-    private String datainicio;
-    private String datafim;
+    private Loja loja;
+    private Date datainicio;
+    private Date datafinal;
 
     public int getIdcontagem() {
         return idcontagem;
@@ -21,27 +21,31 @@ public class Contagem implements Serializable {
         this.idcontagem = idcontagem;
     }
 
-    public int getLoja() {
+    public Loja getLoja() {
         return loja;
     }
 
-    public void setLoja(int loja) {
+    public void setLoja(Loja loja) {
         this.loja = loja;
     }
 
-    public String getDatainicio() {
+    public Date getDatainicio() {
         return datainicio;
     }
 
-    public void setDatainicio(String datainicio) {
+    public void setDatainicio(Date datainicio) {
         this.datainicio = datainicio;
     }
 
-    public String getDatafim() {
-        return datafim;
+    public Date getDatafinal() {
+        return datafinal;
     }
 
-    public void setDatafim(String datafim) {
-        this.datafim = datafim;
+    public void setDatafinal(Date datafinal) {
+        this.datafinal = datafinal;
+    }
+
+    public static String[] getColunas() {
+        return new String[] {"idcontagem as _id", "loja", "datainicio", "datafinal"};
     }
 }

@@ -64,20 +64,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <Button android:id="@+id/btnPesquisar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="Pesquisar"
-            android:textSize="24dp"
-            android:layout_weight="1"/>
-
-        <Button android:id="@+id/btnPesquisarTodos"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Pesquisar Todos"
             android:textSize="24dp"
             android:layout_weight="1"/>
 

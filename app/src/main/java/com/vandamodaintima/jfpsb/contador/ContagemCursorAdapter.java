@@ -24,13 +24,13 @@ public class ContagemCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView labelIdContagem = view.findViewById(R.id.labelIdContagem);
+        TextView labelLojaNome = view.findViewById(R.id.labelLojaNome);
         TextView labelDataInicial = view.findViewById(R.id.labelDataInicial);
 
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        String lojaNome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
         String datainicial = cursor.getString(cursor.getColumnIndexOrThrow("datainicio"));
 
-        labelIdContagem.setText(String.valueOf(id));
+        labelLojaNome.setText(String.valueOf(lojaNome));
         labelDataInicial.setText(datainicial);
     }
 }

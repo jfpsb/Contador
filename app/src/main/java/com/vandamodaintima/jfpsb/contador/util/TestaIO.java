@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
  */
 
 public class TestaIO {
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public static boolean isValidDate(String date) {
         dateFormat.setLenient(false);

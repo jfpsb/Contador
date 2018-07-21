@@ -10,9 +10,20 @@ public class TrataDisplayData {
     private static final SimpleDateFormat FormatoBD = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat FormatoDataDisplay = new SimpleDateFormat("dd/MM/yyyy");
 
-    public static Date getData(String dataEmString) {
+    public static Date getDataDoBD(String dataEmString) {
         try {
             Date data = FormatoBD.parse(dataEmString);
+            return data;
+        }
+        catch (ParseException e) {
+            Log.i("Contador", e.getMessage());
+            return null;
+        }
+    }
+
+    public static Date getDataDisplay(String dataEmString) {
+        try {
+            Date data = FormatoDataDisplay.parse(dataEmString);
             return data;
         }
         catch (ParseException e) {

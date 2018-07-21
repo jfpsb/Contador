@@ -18,12 +18,14 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 import java.util.Date;
@@ -34,11 +36,12 @@ import java.util.Date;
 public class CadastrarContagem extends FragmentBase {
 
     private Button btnCadastrar;
-    private DAOContagem daoContagem;
     private DAOLoja daoLoja;
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
     private Date dataAtual;
+
+    private ContagemManager contagemManager;
 
     private Loja loja = new Loja();
 
@@ -71,7 +74,7 @@ public class CadastrarContagem extends FragmentBase {
 
     @Override
     protected void setDAOs() {
-        daoContagem = new DAOContagem(((ActivityBase)getActivity()).getConn().conexao());
+        contagemManager = new ContagemManager(((ActivityBase)getActivity()).getConn());
         daoLoja = new DAOLoja(((ActivityBase)getActivity()).getConn().conexao());
     }
 
@@ -87,23 +90,17 @@ public class CadastrarContagem extends FragmentBase {
                     if(TestaIO.isStringEmpty(dataInicial))
                         throw new Exception("O campo de data inicial não pode estar vazio!");
 
-                    if(!TestaIO.isValidDate(dataInicial))
-                        throw new Exception("A data digitada é inválida! Formato correto é 'aaaa-mm-dd'");
+                    contagem.setDatainicio(TrataDisplayData.getDataDisplay(dataInicial));
+                    contagem.setLoja(loja);
 
-                    contagem.setDatainicio(dataInicial);
-                    contagem.setLoja(loja.getIdloja());
+                    boolean result = contagemManager.inserir(contagem);
 
-                    long result[] = daoContagem.inserir(contagem);
-
-                    if(result[0] != -1) {
+                    if(result) {
                         Toast.makeText(viewInflate.getContext(), "Contagem inserida com data incial " + contagem.getDatainicio(), Toast.LENGTH_SHORT).show();
-
-                        PesquisarContagem.populaListView();
-
-                        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
+                        txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(dataAtual));
                     }
                     else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
+                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Contagem", Toast.LENGTH_SHORT).show();
                     }
 
                 }catch (Exception e) {

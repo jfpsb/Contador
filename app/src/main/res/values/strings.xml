@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Contador</string>
-    <string name="data_hint">1999-01-01</string>
+    <string name="data_hint">01/01/2000</string>
     <string name="hintRadioButtonCodBarra">Digite o Código De Barra do Produto</string>
     <string name="hintRadioButtonNomeFornecedor">Digite o Fornecedor do Produto</string>
     <string name="hintRadioButtonDescricao">"Digite uma descrição do produto"</string>

@@ -103,9 +103,9 @@ public class AdicionarContagemProduto extends ActivityBase {
                     contagem_produto.setProduto(produto.getCod_barra());
                     contagem_produto.setQuant(Integer.parseInt(quant));
 
-                    long result[] = daoContagemProduto.inserir(contagem_produto);
+                    long result = daoContagemProduto.inserir(contagem_produto);
 
-                    if(result[0] != -1) {
+                    if(result != -1) {
                         Toast.makeText(AdicionarContagemProduto.this, "Contagem de produto inserida com sucesso!", Toast.LENGTH_SHORT).show();
 
                         if(addFornecedorFlag) {
@@ -124,7 +124,7 @@ public class AdicionarContagemProduto extends ActivityBase {
                         finish();
                     }
                     else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(getApplicationContext(), result[1]);
+                        Toast.makeText(AdicionarContagemProduto.this, "Erro ao Inserir Contagem!", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e) {
                     Toast.makeText(AdicionarContagemProduto.this, e.getMessage(), Toast.LENGTH_SHORT).show();

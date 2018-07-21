@@ -42,21 +42,18 @@ import java.util.Date;
 public class ManipulaExcel {
     private static DAOProduto daoProduto;
     private static DAOContagemProduto daoContagemProduto;
-    private static DAOLoja daoLoja;
     private AsyncTask task;
     private int ProdutosCadastrados = 0;
 
     public ManipulaExcel(ConexaoBanco conexao) {
         daoProduto = new DAOProduto(conexao.conexao());
         daoContagemProduto = new DAOContagemProduto(conexao.conexao());
-        daoLoja = new DAOLoja(conexao.conexao());
     }
 
     public ManipulaExcel(AsyncTask task, ConexaoBanco conexao) {
         this.task = task;
         daoProduto = new DAOProduto(conexao.conexao());
         daoContagemProduto = new DAOContagemProduto(conexao.conexao());
-        daoLoja = new DAOLoja(conexao.conexao());
     }
 
     public int ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
@@ -191,10 +188,7 @@ public class ManipulaExcel {
             arquivoExcel.getPlanilha().setColumnWidth(1, 65*256);
             arquivoExcel.getPlanilha().setColumnWidth(2, 18*256);
 
-            //TODO: Remover quando alterar entidades
-            Loja loja = daoLoja.selectLoja(contagem.getLoja());
-
-            String nomeArquivo = "Contagem - " + loja.getNome() + " - " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+            String nomeArquivo = "Contagem - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 

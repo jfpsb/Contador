@@ -1,11 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,28 +19,24 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ContagemCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PesquisarContagem extends FragmentBase {
 
-    private static DAOContagem daoContagem;
+    private static ContagemManager contagemManager;
     private DAOLoja daoLoja;
     private ListView listView;
     private static ContagemCursorAdapter contagemCursorAdapter;
@@ -48,7 +44,6 @@ public class PesquisarContagem extends FragmentBase {
     private EditText txtDataFinal;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
-    private Button btnPesquisarTodos;
     private Loja loja = new Loja();
     private Date dataAtual;
 
@@ -72,14 +67,10 @@ public class PesquisarContagem extends FragmentBase {
         txtDataFinal.setText(TestaIO.dateFormat.format(dataAtual));
 
         spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
-
         btnPesquisar = viewInflate.findViewById(R.id.btnPesquisar);
-
-        btnPesquisarTodos = viewInflate.findViewById(R.id.btnPesquisarTodos);
 
         setListView();
         setBtnPesquisar();
-        setBtnPesquisarTodos();
         setSpinnerLoja();
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -87,7 +78,7 @@ public class PesquisarContagem extends FragmentBase {
 
     @Override
     protected void setDAOs() {
-        daoContagem = new DAOContagem(((ActivityBase) getActivity()).getConn().conexao());
+        contagemManager = new ContagemManager(((ActivityBase) getActivity()).getConn());
         daoLoja = new DAOLoja(((ActivityBase) getActivity()).getConn().conexao());
     }
 
@@ -96,9 +87,9 @@ public class PesquisarContagem extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoContagem.selectContagens();
+            //cursorLista = contagemManager.listarCursor();
 
-            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), cursorLista);
+            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), null);
 
             listView.setAdapter(contagemCursorAdapter);
 
@@ -109,23 +100,11 @@ public class PesquisarContagem extends FragmentBase {
 
                     cursorItem.moveToPosition(i);
 
-                    Contagem contagem = new Contagem();
-
-                    String id = cursorItem.getString(cursorItem.getColumnIndexOrThrow("_id"));
-                    String idloja = cursorItem.getString(cursorItem.getColumnIndexOrThrow("loja"));
-                    String nomeLoja = cursorItem.getString(cursorItem.getColumnIndexOrThrow("nome"));
-                    String dataInicio = cursorItem.getString(cursorItem.getColumnIndexOrThrow("datainicio"));
-                    String dataFinal = cursorItem.getString(cursorItem.getColumnIndexOrThrow("datafinal"));
-
-                    contagem.setIdcontagem(Integer.parseInt(id));
-                    contagem.setLoja(Integer.parseInt(idloja));
-                    contagem.setDatainicio(dataInicio);
-                    contagem.setDatafim(dataFinal);
+                    Contagem contagem = contagemManager.listarPorId(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
 
                     Bundle bundle = new Bundle();
 
                     bundle.putSerializable("contagem", contagem);
-                    bundle.putString("lojaNome", nomeLoja);
 
                     Intent alterarContagem = new Intent(viewInflate.getContext(), AlterarDeletarContagem.class);
                     alterarContagem.putExtras(bundle);
@@ -189,10 +168,10 @@ public class PesquisarContagem extends FragmentBase {
             public void onClick(View view) {
                 Contagem contagem = new Contagem();
 
-                try {
-                    String data_inicial = txtDataInicial.getText().toString();
-                    String data_final = txtDataFinal.getText().toString();
+                String data_inicial = txtDataInicial.getText().toString();
+                String data_final = txtDataFinal.getText().toString();
 
+                try {
                     if(TestaIO.isStringEmpty(data_inicial))
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
@@ -205,55 +184,28 @@ public class PesquisarContagem extends FragmentBase {
                     if(!TestaIO.isValidDate(data_final))
                         throw new Exception("A data final digitada é inválida!");
 
-                    contagem.setDatainicio(data_inicial);
-                    contagem.setDatafim(data_final);
-                    contagem.setLoja(loja.getIdloja());
+                    contagem.setDatainicio(TrataDisplayData.getDataDisplay(data_inicial));
+                    contagem.setDatafinal(TrataDisplayData.getDataDisplay(data_final));
+                    contagem.setLoja(loja);
 
-                    populaListView(contagem, loja);
+                    populaListView(contagem);
+
                 }catch (Exception e) {
+                    Log.i("Contador", e.getMessage());
                     Toast.makeText(viewInflate.getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void setBtnPesquisarTodos() {
-        btnPesquisarTodos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                populaListView();
-            }
-        });
-    }
-
-    /**
-     * Popula a lista novamente
-     */
-
-    public static void populaListView() {
-        Toast.makeText(viewInflate.getContext(), "Pesquisando todos as contagens em todas as lojas", Toast.LENGTH_SHORT).show();
-
-        if(cursorLista != null)
-            cursorLista.close();
-
+    public static void populaListView(Contagem contagem) {
+        Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + contagem.getLoja().getNome() + " no intervalo " +
+                TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()) + " a " + TrataDisplayData.getDataEmStringDisplay(contagem.getDatafinal()), Toast.LENGTH_SHORT).show();
         try {
-            cursorLista = daoContagem.selectContagens();
+            cursorLista = contagemManager.listarPorPeriodoELoja(contagem.getDatainicio(), contagem.getDatafinal(), contagem.getLoja());
             contagemCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
-            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public static void populaListView(Contagem contagem, Loja loja) {
-        Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + loja.getNome() + " no intervalo " + contagem.getDatainicio() + " a " + contagem.getDatafim(), Toast.LENGTH_SHORT).show();
-
-        if(cursorLista != null)
-            cursorLista.close();
-
-        try {
-            cursorLista = daoContagem.selectContagens(contagem.getDatainicio(), contagem.getDatafim(), Integer.toString(contagem.getLoja()));
-            contagemCursorAdapter.changeCursor(cursorLista);
-        } catch (Exception e) {
+            Log.i("Contador", e.getMessage());
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

@@ -24,9 +24,7 @@ public class DAOContagemProduto {
         this.conn = conn;
     }
 
-    public long[] inserir(Contagem_Produto contagem_produto) {
-        long[] result = new long[2];
-
+    public long inserir(Contagem_Produto contagem_produto) {
         try {
         ContentValues contentValues = new ContentValues();
 
@@ -34,18 +32,16 @@ public class DAOContagemProduto {
         contentValues.put("produto", contagem_produto.getProduto());
         contentValues.put("quant", contagem_produto.getQuant());
 
-        result[0] = conn.insertOrThrow(TABELA, "", contentValues);
-        } catch (SQLiteConstraintException sce) {
-            Log.i("Contador", sce.getMessage());
-            result[0] = -1;
-            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
-        } catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-            result[0] = -1;
-            result[1] = -1;
-        }
+        long result = conn.insertOrThrow(TABELA, "", contentValues);
 
         return result;
+        } catch (SQLiteConstraintException sce) {
+            Log.i("Contador", sce.getMessage());
+        } catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return -1;
     }
 
     public Contagem_Produto selectContagemProduto(int contagem, int produto) {

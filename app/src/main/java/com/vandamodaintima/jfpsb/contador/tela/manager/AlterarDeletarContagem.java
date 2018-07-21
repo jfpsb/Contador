@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,16 +24,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
+import java.util.Date;
 
 public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
@@ -49,7 +50,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     private Button btnAdicionar;
 
     private DAOLoja daoLoja;
-    private DAOContagem daoContagem;
+    private ContagemManager contagemManager;
 
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
@@ -74,9 +75,11 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
         txtIDContagem.setText(String.valueOf(contagem.getIdcontagem()));
-        txtDataFinal.setText(contagem.getDatafim());
-        txtDataInicial.setText(contagem.getDatainicio());
-        txtLojaAtual.setText(getIntent().getExtras().getString("lojaNome"));
+        if(contagem.getDatafinal() != null) {
+            txtDataFinal.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatafinal()));
+        }
+        txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()));
+        txtLojaAtual.setText(contagem.getLoja().getNome());
 
         setAlertBuilder(contagem.getIdcontagem());
 
@@ -135,7 +138,8 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     @Override
     protected void setDAOs() {
         daoLoja = new DAOLoja(conn.conexao());
-        daoContagem = new DAOContagem(conn.conexao());
+
+        contagemManager = new ContagemManager(conn);
     }
 
     @Override
@@ -147,9 +151,14 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoContagem.deletar((int) idcontagem);
+                boolean result = contagemManager.deletar((int) idcontagem);
 
-                PesquisarContagem.populaListView();
+                if(result) {
+                    PesquisarContagem.populaListView(contagem);
+                }
+                else {
+                    Toast.makeText(AlterarDeletarContagem.this, "Erro ao Deletar Contagem", Toast.LENGTH_SHORT).show();
+                }
 
                 finish();
             }
@@ -181,7 +190,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
                 int id = spinnerCursor.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
 
-                if (id == contagem.getLoja()) {
+                if (id == contagem.getLoja().getIdloja()) {
                     spinnerLoja.setSelection(i);
                     break;
                 }
@@ -217,25 +226,21 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 try {
-                    String data_final = txtDataFinal.getText().toString();
+                    Date data_final = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
 
-                    if(checkBoxDataFinal.isChecked() && !TestaIO.isValidDate(data_final))
-                        throw new Exception("O campo de data final está com um valor inválido!");
+                    contagem.setDatafinal(data_final);
+                    contagem.setLoja(loja);
 
-                    contagem.setDatafim(data_final);
-                    contagem.setLoja(loja.getIdloja());
-
-                    int result;
+                    boolean result;
 
                     if(checkBoxDataFinal.isChecked())
-                        result = daoContagem.atualizar(contagem);
+                        result = contagemManager.atualizar(contagem, contagem.getIdcontagem());
                     else
-                        result = daoContagem.atualizarSemDataFinal(contagem);
+                        result = contagemManager.atualizarSemDataFinal(contagem, contagem.getIdcontagem());
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
-
-                        PesquisarContagem.populaListView();
+                        PesquisarContagem.populaListView(contagem);
                     }
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarContagem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
