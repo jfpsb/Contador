@@ -20,18 +20,37 @@ public class ManipulaCursor {
      */
     public static Cursor retornaCursorComHintNull(Cursor cursor, String msg, String[] camposEntidade) {
         MatrixCursor matrixCursor = new MatrixCursor(camposEntidade);
-        matrixCursor.addRow(new String[] { "-1", msg });
+
+        String[] placeholder = new String[camposEntidade.length];
+
+        //Atribui ID
+        placeholder[0] = "-1";
+        //Atribui texto que será mostrado
+        placeholder[1] = msg;
+
+        // Coloca outros placeholders se houver
+        for(int i = 2; i < camposEntidade.length - 1; i++) {
+            placeholder[i] = "placeholder";
+        }
+
+        matrixCursor.addRow(placeholder);
 
         try {
             while (cursor.moveToNext()) {
-                Object id = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[0]));
-                Object texto = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[1]));
+                Object[] object = new Object[camposEntidade.length];
 
-                matrixCursor.addRow(new Object[] {id, texto});
+                object[0] = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[0]));
+                object[1] = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[1]));
+
+                for(int i = 2; i < camposEntidade.length - 1; i++) {
+                    object[i] = cursor.getString(cursor.getColumnIndexOrThrow(camposEntidade[i]));
+                }
+
+                matrixCursor.addRow(object);
             }
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return matrixCursor;

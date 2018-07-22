@@ -3,23 +3,25 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
-    private EditText txtIDLoja;
+    private EditText txtCnpj;
     private EditText txtNome;
     private Loja loja;
     private LojaManager lojaManager;
+
+    private String chave; //Chave original do objeto já que ela pode ser alterada
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +35,18 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
         loja = (Loja) getIntent().getExtras().getSerializable("loja");
 
-        txtIDLoja = findViewById(R.id.txtIDLoja);
+        txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
-        txtIDLoja.setText(String.valueOf(loja.getCnpj()));
+        txtCnpj.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
 
+        chave = loja.getCnpj();
+
         setAlertBuilder(loja);
-
         setBtnAtualizar();
-
         setBtnDeletar();
     }
 
@@ -91,24 +93,31 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 try {
+                    String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
+
+                    if(cnpj.isEmpty())
+                        throw new Exception("O campo cnpj não pode estar vazio!");
 
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo nome não pode estar vazio!");
 
+                    loja.setCnpj(cnpj);
                     loja.setNome(nome.toUpperCase());
 
-                    boolean result = lojaManager.atualizar(loja);
+                    boolean result = lojaManager.atualizar(loja, chave);
 
                     if(result) {
-                        Toast.makeText(AlterarDeletarLoja.this, "A loja " + loja.getNome() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AlterarDeletarLoja.this, "A loja Foi Atualizada Com Sucesso!", Toast.LENGTH_SHORT).show();
                         PesquisarLoja.populaListView();
+                        finish();
                     }
                     else {
                         Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(AlterarDeletarLoja.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Contador", e.getMessage(), e);
                 }
             }
         });

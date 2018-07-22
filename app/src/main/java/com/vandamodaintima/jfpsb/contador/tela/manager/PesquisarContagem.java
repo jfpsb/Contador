@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ContagemCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
@@ -88,9 +87,7 @@ public class PesquisarContagem extends FragmentBase {
             cursorLista.close();
 
         try {
-            Cursor c = contagemManager.listarCursor();
-
-            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), c);
+            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), null);
 
             listView.setAdapter(contagemCursorAdapter);
 
@@ -125,7 +122,7 @@ public class PesquisarContagem extends FragmentBase {
         try {
             cursorSpinner = lojaManager.listarCursor();
 
-            cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome"});
+            cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome" });
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -174,6 +171,10 @@ public class PesquisarContagem extends FragmentBase {
                 String data_final = txtDataFinal.getText().toString();
 
                 try {
+                    if(loja.getCnpj().equals("-1")) {
+                        throw new Exception("Loja Inválida");
+                    }
+
                     if(TestaIO.isStringEmpty(data_inicial))
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
@@ -193,18 +194,21 @@ public class PesquisarContagem extends FragmentBase {
                     populaListView(contagem);
 
                 }catch (Exception e) {
-                    Log.i("Contador", e.getMessage());
-                    Toast.makeText(viewInflate.getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Contador", e.getMessage(), e);
+                    Toast.makeText(viewInflate.getContext(), "Erro ao Pesquisar Contagens: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     public static void populaListView(Contagem contagem) {
-        Toast.makeText(viewInflate.getContext(), "Pesquisando contagens na loja " + contagem.getLoja().getNome() + " no intervalo " +
-                TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()) + " a " + TrataDisplayData.getDataEmStringDisplay(contagem.getDatafinal()), Toast.LENGTH_SHORT).show();
         try {
             cursorLista = contagemManager.listarPorPeriodoELoja(contagem.getDatainicio(), contagem.getDatafinal(), contagem.getLoja());
+
+            if(cursorLista.getCount() == 0) {
+                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+            }
+
             contagemCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Log.i("Contador", e.getMessage());

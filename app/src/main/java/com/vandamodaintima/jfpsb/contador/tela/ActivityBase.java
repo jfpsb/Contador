@@ -98,7 +98,6 @@ public class ActivityBase extends AppCompatActivity {
     @Override
     public void onDestroy() {
         conn.fechar();
-        Log.i("Contador", "ONDESTROY -> " + this.getComponentName().toShortString());
 
         if(cursorLista != null)
             cursorLista.close();
@@ -112,7 +111,7 @@ public class ActivityBase extends AppCompatActivity {
             conn = new ConexaoBanco(getApplicationContext());
             setManagers();
         }
-        Log.i("Contador", "ONRESTART -> " + this.getComponentName().toShortString());
+
         super.onRestart();
     }
 
@@ -122,19 +121,17 @@ public class ActivityBase extends AppCompatActivity {
             conn = new ConexaoBanco(getApplicationContext());
             setManagers();
         }
-        Log.i("Contador", "ONRESUME -> " + this.getComponentName().toShortString());
+
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        Log.i("Contador", "ONSTOP -> " + this.getComponentName().toShortString());
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-        Log.i("Contador", "ONPAUSE -> " + this.getComponentName().toShortString());
         super.onPause();
     }
 }

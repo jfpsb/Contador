@@ -114,8 +114,8 @@ public class ManipulaExcel {
                         produto.setFornecedor(null);
 
                         produtos[i - 1] = produto;
-                    } catch (NullPointerException npe) {
-                        Log.i("Contador", npe.getMessage());
+                    } catch (Exception e) {
+                        Log.e("Contador", e.getMessage(), e);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class ManipulaExcel {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    Log.i("Contador", "Ao tentar fechar InputStream: " + e.getMessage());
+                    Log.e("Contador", "Ao tentar fechar InputStream: " + e.getMessage(), e);
                 }
             }
         }
@@ -198,7 +198,7 @@ public class ManipulaExcel {
             return true;
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
         finally {
             try {

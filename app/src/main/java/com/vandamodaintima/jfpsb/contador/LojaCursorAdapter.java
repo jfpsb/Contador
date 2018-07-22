@@ -28,10 +28,10 @@ public class LojaCursorAdapter extends CursorAdapter {
         TextView labelIdLoja = view.findViewById(R.id.labelId);
         TextView labelNomeLoja = view.findViewById(R.id.labelNome);
 
-        int id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
 
-        labelIdLoja.setText(String.valueOf(id));
+        labelIdLoja.setText(String.valueOf(cnpj));
         labelNomeLoja.setText(nome);
     }
 }

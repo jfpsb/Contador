@@ -22,12 +22,19 @@ public class DAOLoja extends DAO<Loja> {
 
     @Override
     public long inserir(Loja objeto) {
-        ContentValues contentValues = new ContentValues();
+        try {
+            ContentValues contentValues = new ContentValues();
 
-        contentValues.put("cnpj", objeto.getCnpj());
-        contentValues.put("nome", objeto.getNome());
+            contentValues.put("cnpj", objeto.getCnpj());
+            contentValues.put("nome", objeto.getNome());
 
-        return conn.insert(TABELA, "", contentValues);
+            return conn.insert(TABELA, "", contentValues);
+        }
+        catch (Exception e) {
+            Log.e("Contador", e.getMessage(), e);
+        }
+
+        return -1;
     }
 
     @Override
@@ -41,7 +48,7 @@ public class DAOLoja extends DAO<Loja> {
             return conn.update(TABELA, contentValues, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -53,7 +60,7 @@ public class DAOLoja extends DAO<Loja> {
             return conn.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(id[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -65,7 +72,7 @@ public class DAOLoja extends DAO<Loja> {
             return conn.query(TABELA, Loja.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return null;

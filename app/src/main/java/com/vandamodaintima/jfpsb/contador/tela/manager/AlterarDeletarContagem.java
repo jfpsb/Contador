@@ -224,7 +224,6 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 try {
-                    Toast.makeText(AlterarDeletarContagem.this, ">>>" + txtDataFinal.getText().toString(), Toast.LENGTH_SHORT).show();
                     Date data_final = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
 
                     contagem.setDatafinal(data_final);
@@ -240,6 +239,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                     if(result) {
                         Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
                         PesquisarContagem.populaListView(contagem);
+                        finish();
                     }
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarContagem.this, e.getMessage(), Toast.LENGTH_SHORT).show();

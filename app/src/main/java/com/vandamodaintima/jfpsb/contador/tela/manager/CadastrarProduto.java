@@ -4,6 +4,7 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class CadastrarProduto extends FragmentBase {
     private ProdutoManager produtoManager;
     private FornecedorManager fornecedorManager;
 
-    private Fornecedor fornecedor = new Fornecedor();
+    private Fornecedor fornecedor;
 
     public CadastrarProduto() {
         // Required empty public constructor
@@ -78,7 +79,7 @@ public class CadastrarProduto extends FragmentBase {
         try {
             cursor = fornecedorManager.listarCursor();
 
-            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome", "cnpj"});
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -100,11 +101,13 @@ public class CadastrarProduto extends FragmentBase {
 
                     cursor.moveToPosition(i);
 
-                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                    fornecedor = new Fornecedor();
+                    fornecedor.setId(cursor.getInt(cursor.getColumnIndex("_id")));
+                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
                     fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 }
                 else {
-                    fornecedor.setCnpj(null);
+                    fornecedor = null;
                 }
             }
 
@@ -129,17 +132,11 @@ public class CadastrarProduto extends FragmentBase {
                     if(TestaIO.isStringEmpty(cod_barra))
                         throw new Exception("Código de barras não pode estar vazio!");
 
-                    if(!TestaIO.isValidInt(cod_barra))
-                        throw new Exception("O código de barras precisa conter somente números!");
-
                     if(TestaIO.isStringEmpty(descricao))
                         throw new Exception("A descrição do produto não pode estar vazia!");
 
                     if(TestaIO.isStringEmpty(preco))
                         throw new Exception("O preço do produto não pode estar vazio!");
-
-                    if(!TestaIO.isValidDouble(preco))
-                        throw new Exception("O valor de preço digitado é inválido");
 
                     produto.setCod_barra(cod_barra);
                     produto.setPreco(Double.parseDouble(preco));
@@ -161,11 +158,10 @@ public class CadastrarProduto extends FragmentBase {
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
                     }
-                } catch (NumberFormatException nfe) {
-                    Toast.makeText(viewInflate.getContext(), "O valor digitado no campo preço não é um número válido!", Toast.LENGTH_SHORT).show();
-
-                } catch (Exception e) {
-                    Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e) {
+                    Log.e("Contador", e.getMessage(), e);
+                    Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto", Toast.LENGTH_SHORT).show();
                 }
             }
         });

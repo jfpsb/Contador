@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
@@ -21,8 +23,8 @@ import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AdicionarContagemProduto extends ActivityBase {
 
-    DAOProduto daoProduto;
-    DAOContagemProduto daoContagemProduto;
+    private ProdutoManager produtoManager;
+    private ContagemProdutoManager contagemProdutoManager;
     private EditText txtCodBarra;
     private EditText txtFornecedor;
     private EditText txtPreco;
@@ -80,8 +82,8 @@ public class AdicionarContagemProduto extends ActivityBase {
 
     @Override
     protected void setManagers() {
-        daoContagemProduto = new DAOContagemProduto(conn.conexao());
-        daoProduto = new DAOProduto(conn.conexao());
+        contagemProdutoManager = new ContagemProdutoManager(conn);
+        produtoManager = new ProdutoManager(conn);
     }
 
     private void setBtnAdicionar() {
@@ -101,18 +103,18 @@ public class AdicionarContagemProduto extends ActivityBase {
                     contagem_produto.setProduto(produto);
                     contagem_produto.setQuant(Integer.parseInt(quant));
 
-                    long result = daoContagemProduto.inserir(contagem_produto);
+                    boolean result = contagemProdutoManager.inserir(contagem_produto);
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(AdicionarContagemProduto.this, "Contagem de produto inserida com sucesso!", Toast.LENGTH_SHORT).show();
 
                         if(addFornecedorFlag) {
 
                             produto.setFornecedor(fornecedor);
 
-                            long resultProduto = daoProduto.atualizar(produto);
+                            boolean resultProduto = produtoManager.atualizar(produto, produto.getCod_barra());
 
-                            if(resultProduto != -1) {
+                            if(resultProduto) {
                                 Toast.makeText(AdicionarContagemProduto.this, "Fornecedor de produto atualizado com sucesso!", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(AdicionarContagemProduto.this, "Houve um erro ao atualizar fornecedor de produto", Toast.LENGTH_SHORT).show();

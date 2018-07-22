@@ -28,7 +28,7 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
 
             return conn.insertOrThrow(TABELA, "", contentValues);
         } catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -47,7 +47,7 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
             return conn.update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -59,7 +59,7 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
             return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(id[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -71,7 +71,7 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
             return conn.query(TABELA, ContagemProduto.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return null;
@@ -83,7 +83,7 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
             return conn.rawQuery(sql, selection);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return null;

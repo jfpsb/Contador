@@ -121,14 +121,15 @@ public class PesquisarLoja extends FragmentBase {
      */
 
     public static void populaListView() {
-        // Switch to new cursor and update contents of ListView
-        Toast.makeText(viewInflate.getContext(), "Pesquisando todas as lojas", Toast.LENGTH_SHORT).show();
-
         if(cursorLista != null)
             cursorLista.close();
 
         try {
             cursorLista = lojaManager.listarCursor();
+
+            if(cursorLista.getCount() == 0)
+                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+
             lojaCursorAdapter.changeCursor(cursorLista);
         }catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -141,6 +142,10 @@ public class PesquisarLoja extends FragmentBase {
 
         try {
             cursorLista = lojaManager.listarPorNome(nome);
+
+            if(cursorLista.getCount() == 0)
+                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+
             lojaCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -30,7 +30,7 @@ public class DAOContagem extends DAO<Contagem>{
 
             return result;
         } catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -49,7 +49,7 @@ public class DAOContagem extends DAO<Contagem>{
             return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -61,7 +61,7 @@ public class DAOContagem extends DAO<Contagem>{
             return conn.delete(TABELA, "idcontagem = ?", new String[]{String.valueOf(id[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -73,7 +73,7 @@ public class DAOContagem extends DAO<Contagem>{
             return conn.query(TABELA, Contagem.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return null;
@@ -90,7 +90,7 @@ public class DAOContagem extends DAO<Contagem>{
             return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chave)});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;

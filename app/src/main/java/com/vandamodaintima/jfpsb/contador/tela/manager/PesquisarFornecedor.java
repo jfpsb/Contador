@@ -124,9 +124,6 @@ public class PesquisarFornecedor extends FragmentBase {
      */
 
     public static void populaListView() {
-        // Switch to new cursor and update contents of ListView
-        Toast.makeText(viewInflate.getContext(), "Pesquisando todos os forncedores", Toast.LENGTH_SHORT).show();
-
         if(cursorLista != null)
             cursorLista.close();
 

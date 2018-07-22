@@ -95,9 +95,6 @@ public class PesquisaContagemProduto extends ActivityBase {
      * Popula a lista novamente
      */
     public static void populaListView() {
-        // Switch to new cursor and update contents of ListView
-        Toast.makeText(context, "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
-
         if(cursorLista != null)
             cursorLista.close();
 

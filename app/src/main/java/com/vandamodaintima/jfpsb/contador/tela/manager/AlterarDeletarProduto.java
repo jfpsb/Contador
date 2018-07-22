@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -25,7 +26,7 @@ import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
     private Produto produto = new Produto();
-    private Fornecedor fornecedor = new Fornecedor();
+    private Fornecedor fornecedor;
     private EditText txtCodBarra;
     private EditText txtDescricao;
     private EditText txtPreco;
@@ -53,12 +54,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
-        txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
+        txtCodBarra.setText(produto.getCod_barra());
         txtDescricao.setText(produto.getDescricao());
         txtPreco.setText(String.valueOf(produto.getPreco()));
 
         if(produto.getFornecedor() != null) {
             txtFornecedorAtual.setText(produto.getFornecedor().getNome());
+            fornecedor = produto.getFornecedor();
         }
         else{
             txtFornecedorAtual.setText("Sem Fornecedor");
@@ -81,37 +83,6 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         produtoManager = new ProdutoManager(conn);
     }
 
-    @Override
-    protected void setAlertBuilder(final Object cod_barra) {
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle("Deletar Produto");
-        builder.setMessage("Tem certeza que deseja apagar o produto de código de barras " + cod_barra + "?");
-
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = produtoManager.deletar(cod_barra);
-
-                if(result) {
-                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    PesquisarProduto.populaListView();
-                }
-                else {
-                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
-                }
-
-                finish();
-            }
-        });
-
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void setSpinnerFornecedor() {
         Cursor spinnerCursor = null, spinnerCursor2 = null;
 
@@ -119,7 +90,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             spinnerCursor = fornecedorManager.listarCursor();
 
             // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
-            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
+            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome", "cnpj"});
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -130,9 +101,9 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 for (int i = 0; i < spinnerCursor2.getCount(); i++) {
                     spinnerCursor2.moveToPosition(i);
 
-                    String id = spinnerCursor2.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
+                    int id = spinnerCursor2.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
 
-                    if (produto.getFornecedor().equals(id)) {
+                    if (produto.getFornecedor().getId() == id) {
                         spinnerFornecedor.setSelection(i);
                         break;
                     }
@@ -141,6 +112,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 spinnerFornecedor.setSelection(0);
             }
         } catch (Exception e) {
+            Log.e("Contador", e.getMessage(), e);
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally {
@@ -151,16 +123,23 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0) {
-                    Cursor c = (Cursor) adapterView.getItemAtPosition(i);
+                try {
+                    if (i != 0) {
+                        Cursor c = (Cursor) adapterView.getItemAtPosition(i);
 
-                    c.moveToPosition(i);
+                        c.moveToPosition(i);
 
-                    fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
-                    fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+                        fornecedor = new Fornecedor();
+                        fornecedor.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
+                        fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("cnpj")));
+                        fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+                    } else {
+                        fornecedor = null;
+                    }
                 }
-                else {
-                    fornecedor.setCnpj(null);
+                catch (Exception e) {
+                    Log.e("Contador", e.getMessage(), e);
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Escolher Fornecedor. Contate Suporte Caso Persista", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -193,19 +172,20 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     produto.setPreco(Double.parseDouble(preco));
                     produto.setFornecedor(fornecedor);
 
-                    boolean result = produtoManager.atualizar(produto);
+                    boolean result = produtoManager.atualizar(produto, produto.getCod_barra());
 
                     if(result) {
                         Toast.makeText(AlterarDeletarProduto.this, "Produto com código de barras " + produto.getCod_barra() + " atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-
                         PesquisarProduto.populaListView();
+                        finish();
                     }
                     else {
                         Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar Produto", Toast.LENGTH_SHORT).show();
                     }
 
                 }catch (Exception e) {
-                    Toast.makeText(AlterarDeletarProduto.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Contador", "Erro", e);
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -218,6 +198,36 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             public void onClick(View view) {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+            }
+        });
+    }
+
+    @Override
+    protected void setAlertBuilder(final Object cod_barra) {
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Deletar Produto");
+        builder.setMessage("Tem certeza que deseja apagar o produto de código de barras " + cod_barra + "?");
+
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean result = produtoManager.deletar(cod_barra);
+
+                if(result) {
+                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    PesquisarProduto.populaListView();
+                    finish();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,8 +75,6 @@ public class PesquisarProduto extends FragmentBase {
      * Popula a lista novamente
      */
     public static void populaListView() {
-        Toast.makeText(viewInflate.getContext(), "Pesquisando todos os produtos", Toast.LENGTH_SHORT).show();
-
         if(cursorLista != null)
             cursorLista.close();
 
@@ -109,6 +108,7 @@ public class PesquisarProduto extends FragmentBase {
             produtoCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("Contador", e.getMessage(), e);
         }
     }
 
@@ -140,7 +140,7 @@ public class PesquisarProduto extends FragmentBase {
                 cursor.moveToPosition(i);
 
                 // Como tem fornecedor uso o manager pra vir logo iniciado
-                Produto produto = produtoManager.listarPorChave(cursor.getColumnIndexOrThrow("_id"));
+                Produto produto = produtoManager.listarPorChave(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
                 Bundle bundle = new Bundle();
 

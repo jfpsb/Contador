@@ -25,6 +25,7 @@ public class CadastrarLoja extends FragmentBase {
     private Button btnCadastrar;
     private LojaManager lojaManager;
     private EditText txtNome;
+    private EditText txtCnpj;
 
     public CadastrarLoja() {
         // Required empty public constructor
@@ -37,6 +38,7 @@ public class CadastrarLoja extends FragmentBase {
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtNome = viewInflate.findViewById(R.id.txtNome);
+        txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
 
         setManagers();
 
@@ -52,11 +54,16 @@ public class CadastrarLoja extends FragmentBase {
                 Loja loja = new Loja();
 
                 try {
+                    String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
+
+                    if(cnpj.isEmpty())
+                        throw new Exception("O campo de cnpj está vazio");
 
                     if(nome.isEmpty())
                         throw new Exception("O campo de nome está vazio");
 
+                    loja.setCnpj(cnpj);
                     loja.setNome(nome.toUpperCase());
 
                     boolean result = lojaManager.inserir(loja);

@@ -22,7 +22,7 @@ public abstract class DAO<T> {
             return conn.rawQuery(sql, selection);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", "Erro em SelectRaw", e);
         }
 
         return null;

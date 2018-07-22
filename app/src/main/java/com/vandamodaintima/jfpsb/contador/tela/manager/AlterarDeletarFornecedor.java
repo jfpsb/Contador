@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
@@ -39,7 +38,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
-        txtId.setText(Integer.toString(fornecedor.getId()));
+        txtId.setText(String.valueOf(fornecedor.getId()));
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
@@ -108,10 +107,10 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome.toUpperCase());
 
-                    boolean result = fornecedorManager.atualizar(fornecedor);
+                    boolean result = fornecedorManager.atualizar(fornecedor, fornecedor.getId());
 
                     if(result) {
-                        Toast.makeText(AlterarDeletarFornecedor.this, "O fornecedor de CNPJ " + fornecedor.getCnpj() + " foi atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AlterarDeletarFornecedor.this, "O Fornecedor Foi Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
                         PesquisarFornecedor.populaListView();
                     }
                     else {

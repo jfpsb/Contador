@@ -22,13 +22,19 @@ public class DAOFornecedor extends DAO<Fornecedor> {
 
     @Override
     public long inserir(Fornecedor objeto) {
-        ContentValues contentValues = new ContentValues();
+        try {
+            ContentValues contentValues = new ContentValues();
 
-        contentValues.put("id", objeto.getId());
-        contentValues.put("cnpj", objeto.getCnpj());
-        contentValues.put("nome", objeto.getNome());
+            contentValues.put("cnpj", objeto.getCnpj());
+            contentValues.put("nome", objeto.getNome());
 
-        return conn.insert(TABELA, "", contentValues);
+            return conn.insert(TABELA, "", contentValues);
+        }
+        catch (Exception e) {
+            Log.e("Contador", e.getMessage(), e);
+        }
+
+        return -1;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
             return conn.update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -55,7 +61,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
             return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(id[0])});
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return -1;
@@ -67,7 +73,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
             return conn.query(TABELA, Fornecedor.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage());
+            Log.e("Contador", e.getMessage(), e);
         }
 
         return null;

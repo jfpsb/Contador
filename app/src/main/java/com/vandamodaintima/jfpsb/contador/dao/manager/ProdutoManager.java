@@ -49,21 +49,21 @@ public class ProdutoManager extends Manager<Produto> {
 
     public Cursor listarCursorPorCodBarra(String cod_barra) {
         String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND cod_barra LIKE ? ORDER BY descricao";
-        String[] selection = new String[] { cod_barra };
+        String[] selection = new String[] { "%" + cod_barra + "%"};
 
         return daoEntidade.selectRaw(sql, selection);
     }
 
     public Cursor listarCursorPorDescricao(String descricao) {
         String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao";
-        String[] selection = new String[] { descricao };
+        String[] selection = new String[] { "%" + descricao + "%"};
 
         return daoEntidade.selectRaw(sql, selection);
     }
 
     public Cursor listarCursorPorFornecedor(String nome) {
         String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao";
-        String[] selection = new String[] { nome };
+        String[] selection = new String[] { "%" + nome + "%" };
 
         return daoEntidade.selectRaw(sql, selection);
     }
