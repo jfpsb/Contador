@@ -21,6 +21,7 @@ import com.vandamodaintima.jfpsb.contador.ContagemCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
@@ -37,7 +38,7 @@ import java.util.Date;
 public class PesquisarContagem extends FragmentBase {
 
     private static ContagemManager contagemManager;
-    private DAOLoja daoLoja;
+    private LojaManager lojaManager;
     private ListView listView;
     private static ContagemCursorAdapter contagemCursorAdapter;
     private EditText txtDataInicial;
@@ -58,7 +59,7 @@ public class PesquisarContagem extends FragmentBase {
 
         dataAtual = new Date();
 
-        setDAOs();
+        setManagers();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicial);
@@ -77,9 +78,9 @@ public class PesquisarContagem extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
+    protected void setManagers() {
         contagemManager = new ContagemManager(((ActivityBase) getActivity()).getConn());
-        daoLoja = new DAOLoja(((ActivityBase) getActivity()).getConn().conexao());
+        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
     }
 
     private void setListView() {
@@ -87,9 +88,9 @@ public class PesquisarContagem extends FragmentBase {
             cursorLista.close();
 
         try {
-            //cursorLista = contagemManager.listarCursor();
+            Cursor c = contagemManager.listarCursor();
 
-            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), null);
+            contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), c);
 
             listView.setAdapter(contagemCursorAdapter);
 
@@ -100,7 +101,8 @@ public class PesquisarContagem extends FragmentBase {
 
                     cursorItem.moveToPosition(i);
 
-                    Contagem contagem = contagemManager.listarPorId(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
+                    // Contagem possui Loja então usando o Manager a Loja já vem iniciada
+                    Contagem contagem = contagemManager.listarPorChave(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
 
                     Bundle bundle = new Bundle();
 
@@ -121,7 +123,7 @@ public class PesquisarContagem extends FragmentBase {
         Cursor cursorSpinner = null, cursorSpinner2 = null;
 
         try {
-            cursorSpinner = daoLoja.selectLojas();
+            cursorSpinner = lojaManager.listarCursor();
 
             cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome"});
 
@@ -148,10 +150,10 @@ public class PesquisarContagem extends FragmentBase {
 
                     innerCursor.moveToPosition(i);
 
-                    loja.setIdloja(innerCursor.getInt(innerCursor.getColumnIndexOrThrow("_id")));
+                    loja.setCnpj(innerCursor.getString(innerCursor.getColumnIndexOrThrow("_id")));
                     loja.setNome(innerCursor.getString(innerCursor.getColumnIndexOrThrow("nome")));
                 } else {
-                    loja.setIdloja(-1);
+                    loja.setCnpj("-1");
                 }
             }
 

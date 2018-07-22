@@ -12,57 +12,15 @@ import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ContagemManager {
-    private DAOContagem daoContagem;
-    private DAOLoja daoLoja;
+public class ContagemManager extends Manager<Contagem> {
+    private LojaManager lojaManager;
 
     public ContagemManager(ConexaoBanco conexao) {
-        daoContagem = new DAOContagem(conexao.conexao());
-        daoLoja = new DAOLoja(conexao.conexao());
+        daoEntidade = new DAOContagem(conexao.conexao());
+        lojaManager = new LojaManager(conexao);
     }
 
-    public boolean inserir(Contagem contagem) {
-        long result = daoContagem.inserir(contagem);
-
-        if(result != -1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean atualizar(Contagem contagem, int chave) {
-        long result = daoContagem.atualizar(contagem, chave);
-
-        if(result != -1)
-            return true;
-
-        return false;
-    }
-
-    public boolean atualizarSemDataFinal(Contagem contagem, int chave) {
-        long result = daoContagem.atualizarSemDataFinal(contagem, chave);
-
-        if(result != -1)
-            return true;
-
-        return false;
-    }
-
-    public boolean deletar(int id) {
-        long result = daoContagem.deletar(id);
-
-        if(result != -1) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Lista todas as contagens no banco de dados e retorna uma lista
-     * @return ArrayList de Contagem
-     */
+    @Override
     public ArrayList<Contagem> listar() {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
@@ -74,7 +32,7 @@ public class ContagemManager {
 
                 contagem.setIdcontagem(c.getInt(c.getColumnIndexOrThrow("_id")));
 
-                Loja loja = daoLoja.selectLoja(c.getInt(c.getColumnIndexOrThrow("loja")));
+                Loja loja = lojaManager.listarPorChave(c.getInt(c.getColumnIndexOrThrow("loja")));
                 contagem.setLoja(loja);
 
                 contagem.setDatainicio(TrataDisplayData.getDataDoBD(c.getString(c.getColumnIndexOrThrow("datainicio"))));
@@ -87,18 +45,28 @@ public class ContagemManager {
         return contagens;
     }
 
-    public Contagem listarPorId(int id) {
-        Contagem contagem = null;
-        Cursor c = listarCursorPorId(id);
+    @Override
+    public Cursor listarCursor() {
+        DAOContagem daoContagem = (DAOContagem)daoEntidade;
 
-        if(c.getCount() > 0) {
+        String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = cnpj OR loja = null ORDER BY datainicio";
+
+        return daoContagem.selectRaw(sql, null);
+    }
+
+    @Override
+    public Contagem listarPorChave(Object... chaves) {
+        Contagem contagem = null;
+        Cursor c = listarCursorPorChave(chaves[0]);
+
+        if(c != null && c.getCount() > 0) {
             c.moveToFirst();
 
             contagem = new Contagem();
 
             contagem.setIdcontagem(c.getInt(c.getColumnIndexOrThrow("_id")));
 
-            Loja loja = daoLoja.selectLoja(c.getInt(c.getColumnIndexOrThrow("loja")));
+            Loja loja = lojaManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("loja")));
             contagem.setLoja(loja);
 
             contagem.setDatainicio(TrataDisplayData.getDataDoBD(c.getString(c.getColumnIndexOrThrow("datainicio"))));
@@ -111,22 +79,28 @@ public class ContagemManager {
         return contagem;
     }
 
-    /**
-     * Lista todas as contagens no banco de dados e retorna um cursor
-     * @return Cursor
-     */
-    public Cursor listarCursor() {
-        return daoContagem.select(null, null, null, null, "datainicio DESC", null);
+    @Override
+    public Cursor listarCursorPorChave(Object... chaves) {
+        return daoEntidade.select("idcontagem = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "datainicio DESC", null);
     }
 
-    public Cursor listarCursorPorId(int id) {
-        return daoContagem.select("idcontagem = ?", new String[] { String.valueOf(id) }, null, null, "datainicio DESC", null);
+    public boolean atualizarSemDataFinal(Contagem contagem, int chave) {
+        DAOContagem daoContagem = (DAOContagem)daoEntidade;
+
+        long result = daoContagem.atualizarSemDataFinal(contagem, chave);
+
+        if(result != -1)
+            return true;
+
+        return false;
     }
 
     public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, Loja loja) {
-        String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = idloja AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
+        DAOContagem daoContagem = (DAOContagem)daoEntidade;
 
-        String[] selection = new String[] { TrataDisplayData.getDataEmString(datainicio), TrataDisplayData.getDataEmString(datafinal), String.valueOf(loja.getIdloja()) };
+        String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = cnpj AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
+
+        String[] selection = new String[] { TrataDisplayData.getDataEmString(datainicio), TrataDisplayData.getDataEmString(datafinal), String.valueOf(loja.getCnpj()) };
 
         return daoContagem.selectRaw(sql, selection);
     }

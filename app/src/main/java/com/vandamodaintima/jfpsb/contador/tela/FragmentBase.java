@@ -7,9 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.vandamodaintima.jfpsb.contador.R;
 
 public class FragmentBase extends Fragment {
 
@@ -28,13 +25,13 @@ public class FragmentBase extends Fragment {
         return viewInflate;
     }
 
-    protected void setDAOs() {
+    protected void setManagers() {
 
     }
 
     @Override
     public void onResume() {
-        setDAOs();
+        setManagers();
         super.onResume();
     }
 

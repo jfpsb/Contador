@@ -15,16 +15,16 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +37,8 @@ public class CadastrarProduto extends FragmentBase {
     private EditText txtDescricao;
     private EditText txtPreco;
 
-    private DAOProduto daoProduto;
-    private DAOFornecedor daoFornecedor;
+    private ProdutoManager produtoManager;
+    private FornecedorManager fornecedorManager;
 
     private Fornecedor fornecedor = new Fornecedor();
 
@@ -57,7 +57,7 @@ public class CadastrarProduto extends FragmentBase {
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         spinnerFornecedor = viewInflate.findViewById(R.id.spinnerFornecedores);
 
-        setDAOs();
+        setManagers();
 
         setSpinnerFornecedor();
 
@@ -67,16 +67,16 @@ public class CadastrarProduto extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoProduto = new DAOProduto(((ActivityBase)getActivity()).getConn().conexao());
-        daoFornecedor = new DAOFornecedor(((ActivityBase)getActivity()).getConn().conexao());
+    protected void setManagers() {
+        produtoManager = new ProdutoManager(((ActivityBase)getActivity()).getConn());
+        fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
     }
 
     private void setSpinnerFornecedor() {
         Cursor cursor = null, cursor2 = null;
 
         try {
-            cursor = daoFornecedor.selectFornecedores();
+            cursor = fornecedorManager.listarCursor();
 
             cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
 
@@ -144,11 +144,11 @@ public class CadastrarProduto extends FragmentBase {
                     produto.setCod_barra(cod_barra);
                     produto.setPreco(Double.parseDouble(preco));
                     produto.setDescricao(descricao.toUpperCase());
-                    produto.setFornecedor(fornecedor.getCnpj());
+                    produto.setFornecedor(fornecedor);
 
-                    long result = daoProduto.inserir(produto);
+                    boolean result = produtoManager.inserir(produto);
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(viewInflate.getContext(), "O produto " + produto.getDescricao() + " foi inserido com sucesso!" , Toast.LENGTH_SHORT).show();
 
                         PesquisarProduto.populaListView();
@@ -159,7 +159,7 @@ public class CadastrarProduto extends FragmentBase {
                         spinnerFornecedor.setSelection(0);
                     }
                     else {
-                        Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Este Produto.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (NumberFormatException nfe) {
                     Toast.makeText(viewInflate.getContext(), "O valor digitado no campo preço não é um número válido!", Toast.LENGTH_SHORT).show();

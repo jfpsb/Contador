@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,11 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +33,7 @@ public class PesquisarProduto extends FragmentBase {
 
     private RadioGroup radioGroup;
     private EditText txtPesquisaProduto;
-    private static DAOProduto daoProduto;
+    private static ProdutoManager produtoManager;
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
@@ -50,7 +48,7 @@ public class PesquisarProduto extends FragmentBase {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
-        setDAOs();
+        setManagers();
 
         radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
 
@@ -68,8 +66,8 @@ public class PesquisarProduto extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoProduto = new DAOProduto(((ActivityBase) getActivity()).getConn().conexao());
+    protected void setManagers() {
+        produtoManager = new ProdutoManager(((ActivityBase) getActivity()).getConn());
     }
 
     /**
@@ -81,7 +79,7 @@ public class PesquisarProduto extends FragmentBase {
         if(cursorLista != null)
             cursorLista.close();
 
-        cursorLista = daoProduto.selectProdutos();
+        cursorLista = produtoManager.listarCursor();
 
         txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 
@@ -96,13 +94,13 @@ public class PesquisarProduto extends FragmentBase {
 
             switch (TIPO_PESQUISA) {
                 case 1:
-                    cursorLista = daoProduto.selectProdutosCodBarra(termo);
+                    cursorLista = produtoManager.listarCursorPorCodBarra(termo);
                     break;
                 case 2:
-                    cursorLista = daoProduto.selectProdutosDescricao(termo);
+                    cursorLista = produtoManager.listarCursorPorDescricao(termo);
                     break;
                 case 3:
-                    cursorLista = daoProduto.selectProdutosFornecedor(termo);
+                    cursorLista = produtoManager.listarCursorPorFornecedor(termo);
                     break;
             }
 
@@ -119,7 +117,7 @@ public class PesquisarProduto extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoProduto.selectProdutos();
+            cursorLista = produtoManager.listarCursor();
 
             txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 
@@ -141,18 +139,12 @@ public class PesquisarProduto extends FragmentBase {
 
                 cursor.moveToPosition(i);
 
-                Produto produto = new Produto();
-
-                produto.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
-                produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
-                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor")));
-                String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+                // Como tem fornecedor uso o manager pra vir logo iniciado
+                Produto produto = produtoManager.listarPorChave(cursor.getColumnIndexOrThrow("_id"));
 
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable("produto", produto);
-                bundle.putString("fornecedor", nomeFornecedor);
 
                 Intent alterarProduto = new Intent(viewInflate.getContext(), AlterarDeletarProduto.class);
 

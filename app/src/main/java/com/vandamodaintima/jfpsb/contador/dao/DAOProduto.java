@@ -3,33 +3,29 @@ package com.vandamodaintima.jfpsb.contador.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * Created by jfpsb on 09/02/2018.
  */
 
-public class DAOProduto {
-    private SQLiteDatabase conn;
-    private final String TABELA = "produto";
-
+public class DAOProduto extends DAO<Produto> {
     public DAOProduto(SQLiteDatabase conn) {
-        this.conn = conn;
+        super(conn);
+        TABELA = "produto";
     }
 
-    public long inserir(Produto produto) {
+    @Override
+    public long inserir(Produto objeto) {
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("cod_barra", produto.getCod_barra());
-        contentValues.put("descricao", produto.getDescricao());
-        contentValues.put("preco", produto.getPreco());
-        contentValues.put("fornecedor", produto.getFornecedor());
+        contentValues.put("cod_barra", objeto.getCod_barra());
+        contentValues.put("descricao", objeto.getDescricao());
+        contentValues.put("preco", objeto.getPreco());
+        contentValues.put("fornecedor", objeto.getFornecedor().getId());
 
         return conn.insert(TABELA, "", contentValues);
     }
@@ -41,7 +37,7 @@ public class DAOProduto {
             contentValues.put("cod_barra", produto.getCod_barra());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
-            contentValues.put("fornecedor", produto.getFornecedor());
+            contentValues.put("fornecedor", produto.getFornecedor().getId());
 
             return conn.insertWithOnConflict(TABELA, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
         } catch (SQLException e) {
@@ -50,75 +46,46 @@ public class DAOProduto {
         }
     }
 
-    public Produto selectProduto(int id) {
-        Cursor c = conn.query(true, TABELA, Produto.getProdutoColunas(), "cob_barra = " + id, null, null, null, null, null);
+    @Override
+    public long atualizar(Produto objeto, Object... chaves) {
+        try {
+            ContentValues contentValues = new ContentValues();
 
-        if(c.getCount() > 0) {
-            c.moveToFirst();
+            contentValues.put("cod_barra", objeto.getCod_barra());
+            contentValues.put("fornecedor", objeto.getFornecedor().getId());
+            contentValues.put("descricao", objeto.getDescricao());
+            contentValues.put("preco", objeto.getPreco());
 
-            Produto produto = new Produto();
+            return conn.update(TABELA, contentValues, "cod_barra = ?", new String[]{String.valueOf(chaves[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
 
-            produto.setCod_barra(c.getString(0));
-            produto.setFornecedor(c.getString(1));
-            produto.setDescricao(c.getString(2));
-            produto.setPreco(c.getDouble(3));
+        return -1;
+    }
 
-            return produto;
+    @Override
+    public long deletar(Object... id) {
+        try {
+            return conn.delete(TABELA, "cod_barra = ?", new String[]{String.valueOf(id[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        try {
+            return conn.query(TABELA, Produto.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
         }
 
         return null;
-    }
-
-    public Cursor selectProdutos() {
-        try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE fornecedor = id OR fornecedor IS NULL ORDER BY descricao", null);
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
-            return null;
-        }
-    }
-
-    public Cursor selectProdutosDescricao(String descricao) {
-        try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao", new String[] {"%" + descricao +"%"});
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
-            return null;
-        }
-    }
-
-    public Cursor selectProdutosCodBarra(String cod_barra) {
-        try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND cod_barra LIKE ? ORDER BY descricao", new String[] {"%" + cod_barra + "%" });
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
-            return null;
-        }
-    }
-
-    public Cursor selectProdutosFornecedor(String fornecedor_nome) {
-        try {
-            return conn.rawQuery("SELECT cod_barra as _id, fornecedor, nome, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao", new String[] {"%"+fornecedor_nome+"%"});
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar produtos: " + e.toString());
-            return null;
-        }
-    }
-
-    public int deletar(String id) {
-        int result = conn.delete(TABELA, "cod_barra = " + String.valueOf(id), null);
-        Log.i("Contador", "Deletando produto com código de barra " + id);
-        return result;
-    }
-
-    public int atualizar(Produto produto) {
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put("cod_barra", produto.getCod_barra());
-        contentValues.put("descricao", produto.getDescricao());
-        contentValues.put("fornecedor", produto.getFornecedor());
-        contentValues.put("preco", produto.getPreco());
-
-        return conn.update(TABELA, contentValues, "cod_barra = ?", new String[] {produto.getCod_barra()});
     }
 }

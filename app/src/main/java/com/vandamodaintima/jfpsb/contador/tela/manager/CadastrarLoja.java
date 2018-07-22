@@ -11,8 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
@@ -23,7 +23,7 @@ import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
  */
 public class CadastrarLoja extends FragmentBase {
     private Button btnCadastrar;
-    private DAOLoja daoLoja;
+    private LojaManager lojaManager;
     private EditText txtNome;
 
     public CadastrarLoja() {
@@ -38,7 +38,7 @@ public class CadastrarLoja extends FragmentBase {
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
-        setDAOs();
+        setManagers();
 
         setBtnCadastrar();
 
@@ -59,16 +59,16 @@ public class CadastrarLoja extends FragmentBase {
 
                     loja.setNome(nome.toUpperCase());
 
-                    long result[] = daoLoja.inserir(loja);
+                    boolean result = lojaManager.inserir(loja);
 
-                    if (result[0] != -1) {
+                    if (result) {
                         Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         PesquisarLoja.populaListView();
 
                         txtNome.setText("");
                     } else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
+                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Loja", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(view.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -78,7 +78,7 @@ public class CadastrarLoja extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoLoja = new DAOLoja(((ActivityBase)getActivity()).getConn().conexao());
+    protected void setManagers() {
+        lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
     }
 }

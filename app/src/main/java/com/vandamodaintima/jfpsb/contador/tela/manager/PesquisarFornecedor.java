@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,12 +17,11 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.FornecedorCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 
 /**
@@ -31,7 +29,7 @@ import com.vandamodaintima.jfpsb.contador.util.TestaIO;
  */
 public class PesquisarFornecedor extends FragmentBase {
 
-    private static DAOFornecedor daoFornecedor;
+    private static FornecedorManager fornecedorManager;
     private ListView listView;
     private static FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
@@ -45,7 +43,7 @@ public class PesquisarFornecedor extends FragmentBase {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
-        setDAOs();
+        setManagers();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
 
@@ -58,8 +56,8 @@ public class PesquisarFornecedor extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoFornecedor = new DAOFornecedor(((ActivityBase) getActivity()).getConn().conexao());
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
     }
 
     private void setTxtPesquisaFornecedor() {
@@ -86,7 +84,7 @@ public class PesquisarFornecedor extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoFornecedor.selectFornecedores();
+            cursorLista = fornecedorManager.listarCursor();
 
             fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursorLista);
 
@@ -105,8 +103,8 @@ public class PesquisarFornecedor extends FragmentBase {
                 Fornecedor fornecedor = new Fornecedor();
 
                 fornecedor.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
-                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
 
                 Bundle bundle = new Bundle();
 
@@ -133,19 +131,19 @@ public class PesquisarFornecedor extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoFornecedor.selectFornecedores();
+            cursorLista = fornecedorManager.listarCursor();
             fornecedorCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void populaListView(String nome) {
+    public static void populaListView(String termo) {
         if(cursorLista != null)
             cursorLista.close();
 
         try {
-            cursorLista = daoFornecedor.selectFornecedores(nome);
+            cursorLista = fornecedorManager.listarPorNomeOuCnpj(termo);
             fornecedorCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

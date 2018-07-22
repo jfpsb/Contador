@@ -13,12 +13,11 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem_Produto;
+import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 public class AdicionarContagemProduto extends ActivityBase {
 
@@ -36,7 +35,7 @@ public class AdicionarContagemProduto extends ActivityBase {
     private Fornecedor fornecedor = new Fornecedor();
     private Produto produto;
     private Contagem contagem;
-    private Contagem_Produto contagem_produto = new Contagem_Produto();
+    private ContagemProduto contagem_produto = new ContagemProduto();
     private Boolean addFornecedorFlag = false;
 
     @Override
@@ -47,11 +46,10 @@ public class AdicionarContagemProduto extends ActivityBase {
         stub.setLayoutResource(R.layout.content_adicionar_contagem_produto);
         stub.inflate();
 
-        setDAOs();
+        setManagers();
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
-        String nomeFornecedor = getIntent().getExtras().getString("fornecedor");
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtFornecedor = findViewById(R.id.txtFornecedor);
@@ -64,8 +62,8 @@ public class AdicionarContagemProduto extends ActivityBase {
 
         txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
 
-        if(nomeFornecedor != null) {
-            txtFornecedor.setText(nomeFornecedor);
+        if(produto.getFornecedor() != null) {
+            txtFornecedor.setText(produto.getFornecedor().getNome());
         } else {
             txtFornecedor.setText("Não Possui");
         }
@@ -81,7 +79,7 @@ public class AdicionarContagemProduto extends ActivityBase {
     }
 
     @Override
-    protected void setDAOs() {
+    protected void setManagers() {
         daoContagemProduto = new DAOContagemProduto(conn.conexao());
         daoProduto = new DAOProduto(conn.conexao());
     }
@@ -99,8 +97,8 @@ public class AdicionarContagemProduto extends ActivityBase {
                     if(!TestaIO.isValidInt(quant))
                         throw new Exception("O valor em quantidade é inválido!");
 
-                    contagem_produto.setContagem(contagem.getIdcontagem());
-                    contagem_produto.setProduto(produto.getCod_barra());
+                    contagem_produto.setContagem(contagem);
+                    contagem_produto.setProduto(produto);
                     contagem_produto.setQuant(Integer.parseInt(quant));
 
                     long result = daoContagemProduto.inserir(contagem_produto);
@@ -110,7 +108,7 @@ public class AdicionarContagemProduto extends ActivityBase {
 
                         if(addFornecedorFlag) {
 
-                            produto.setFornecedor(fornecedor.getCnpj());
+                            produto.setFornecedor(fornecedor);
 
                             long resultProduto = daoProduto.atualizar(produto);
 
@@ -178,7 +176,7 @@ public class AdicionarContagemProduto extends ActivityBase {
             if(resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "O fornecedor não foi escolhido", Toast.LENGTH_SHORT).show();
 
-                fornecedor.setCnpj(null);
+                fornecedor = null;
 
                 addFornecedorFlag = false;
             }

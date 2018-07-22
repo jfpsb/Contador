@@ -34,4 +34,8 @@ public class Fornecedor implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public static String[] getColunas() {
+        return new String[] { "id as _id", "cnpj", "nome" };
+    }
 }

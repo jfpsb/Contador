@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
@@ -30,10 +32,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private EditText txtFornecedorAtual;
     private Spinner spinnerFornecedor;
 
-    private String nomeFornecedor;
-
-    private DAOProduto daoProduto;
-    private DAOFornecedor daoFornecedor;
+    private ProdutoManager produtoManager;
+    private FornecedorManager fornecedorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,6 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         stub.inflate();
 
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
-        nomeFornecedor = getIntent().getExtras().getString("fornecedor");
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
@@ -58,8 +57,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         txtDescricao.setText(produto.getDescricao());
         txtPreco.setText(String.valueOf(produto.getPreco()));
 
-        if(nomeFornecedor != null) {
-            txtFornecedorAtual.setText(nomeFornecedor);
+        if(produto.getFornecedor() != null) {
+            txtFornecedorAtual.setText(produto.getFornecedor().getNome());
         }
         else{
             txtFornecedorAtual.setText("Sem Fornecedor");
@@ -67,7 +66,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
         setAlertBuilder(produto.getCod_barra());
 
-        setDAOs();
+        setManagers();
 
         setSpinnerFornecedor();
 
@@ -77,9 +76,9 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setDAOs() {
-        daoFornecedor = new DAOFornecedor(conn.conexao());
-        daoProduto = new DAOProduto(conn.conexao());
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(conn);
+        produtoManager = new ProdutoManager(conn);
     }
 
     @Override
@@ -91,9 +90,15 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoProduto.deletar(String.valueOf(cod_barra));
+                boolean result = produtoManager.deletar(cod_barra);
 
-                PesquisarProduto.populaListView();
+                if(result) {
+                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    PesquisarProduto.populaListView();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
+                }
 
                 finish();
             }
@@ -102,7 +107,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarProduto.this, "Produto não foi deletado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -111,7 +116,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         Cursor spinnerCursor = null, spinnerCursor2 = null;
 
         try {
-            spinnerCursor = daoFornecedor.selectFornecedores();
+            spinnerCursor = fornecedorManager.listarCursor();
 
             // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
             spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
@@ -186,14 +191,17 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
                     produto.setDescricao(descricao.toUpperCase());
                     produto.setPreco(Double.parseDouble(preco));
-                    produto.setFornecedor(fornecedor.getCnpj());
+                    produto.setFornecedor(fornecedor);
 
-                    int result = daoProduto.atualizar(produto);
+                    boolean result = produtoManager.atualizar(produto);
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(AlterarDeletarProduto.this, "Produto com código de barras " + produto.getCod_barra() + " atualizado com sucesso!", Toast.LENGTH_SHORT).show();
 
                         PesquisarProduto.populaListView();
+                    }
+                    else {
+                        Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar Produto", Toast.LENGTH_SHORT).show();
                     }
 
                 }catch (Exception e) {

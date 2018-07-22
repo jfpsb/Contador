@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
@@ -31,7 +32,7 @@ public class AdicionarFornecedor extends ActivityBase {
     private EditText txtCnpj;
     private EditText txtNome;
 
-    private DAOFornecedor daoFornecedor;
+    private FornecedorManager fornecedorManager;
 
     private Fornecedor fornecedor = new Fornecedor();
 
@@ -52,7 +53,7 @@ public class AdicionarFornecedor extends ActivityBase {
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
 
-        setDAOs();
+        setManagers();
 
         setTextChangedEmCampos();
 
@@ -64,8 +65,8 @@ public class AdicionarFornecedor extends ActivityBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(conn);
     }
 
     private void setBtnSelecionar() {
@@ -111,9 +112,9 @@ public class AdicionarFornecedor extends ActivityBase {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome.toUpperCase());
 
-                    long result[] = daoFornecedor.inserir(fornecedor);
+                    boolean result = fornecedorManager.inserir(fornecedor);
 
-                    if(result[0] != -1) {
+                    if(result) {
                         Toast.makeText(getApplicationContext(), "Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         Intent addFornecedor = new Intent();
@@ -125,8 +126,7 @@ public class AdicionarFornecedor extends ActivityBase {
                         finish();
                     }
                     else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(getApplicationContext(), result[1]);
-
+                        Toast.makeText(AdicionarFornecedor.this, "Erro ao Inserir Fornecedor", Toast.LENGTH_SHORT).show();
                         setResult(Activity.RESULT_CANCELED);
                     }
                 } catch (Exception e) {
@@ -140,7 +140,7 @@ public class AdicionarFornecedor extends ActivityBase {
         Cursor cursor = null, cursor2 = null;
 
         try {
-            cursor = daoFornecedor.selectFornecedores();
+            cursor = fornecedorManager.listarCursor();
 
             cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome"});
 

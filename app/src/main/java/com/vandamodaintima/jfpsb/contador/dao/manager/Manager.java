@@ -1,7 +1,43 @@
 package com.vandamodaintima.jfpsb.contador.dao.manager;
 
-public interface Manager<T> {
-    public boolean inserir(T objeto);
-    public boolean deletar(T objeto);
+import android.database.Cursor;
 
+import com.vandamodaintima.jfpsb.contador.dao.DAO;
+
+import java.util.ArrayList;
+
+public abstract class Manager<T> {
+    protected DAO daoEntidade;
+
+    public boolean inserir(T obj) {
+        long result = daoEntidade.inserir(obj);
+
+        if(result != -1)
+            return true;
+
+        return false;
+    }
+
+    public boolean atualizar(T obj, Object... chaves) {
+        long result = daoEntidade.atualizar(obj, chaves[0]);
+
+        if(result != -1)
+            return true;
+
+        return false;
+    }
+
+    public boolean deletar(Object chave) {
+        long result = daoEntidade.deletar(chave);
+
+        if(result != -1) {
+            return true;
+        }
+
+        return false;
+    }
+    public abstract ArrayList<T> listar();
+    public abstract Cursor listarCursor();
+    public abstract T listarPorChave(Object... chaves);
+    public abstract Cursor listarCursorPorChave(Object... chaves);
 }

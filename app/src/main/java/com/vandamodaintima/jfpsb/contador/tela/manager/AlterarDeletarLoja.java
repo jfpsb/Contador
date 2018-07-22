@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
@@ -18,7 +19,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
     private EditText txtIDLoja;
     private EditText txtNome;
     private Loja loja;
-    private DAOLoja daoLoja;
+    private LojaManager lojaManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         stub.setLayoutResource(R.layout.content_alterar_deletar_loja);
         stub.inflate();
 
-        setDAOs();
+        setManagers();
 
         loja = (Loja) getIntent().getExtras().getSerializable("loja");
 
@@ -37,7 +38,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
-        txtIDLoja.setText(String.valueOf(loja.getIdloja()));
+        txtIDLoja.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
 
         setAlertBuilder(loja);
@@ -48,8 +49,8 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setDAOs() {
-        daoLoja = new DAOLoja(conn.conexao());
+    protected void setManagers() {
+        lojaManager = new LojaManager(conn);
     }
 
     @Override
@@ -63,11 +64,16 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoLoja.deletar(objLoja.getIdloja());
+                boolean result = lojaManager.deletar(objLoja.getCnpj());
 
-                PesquisarLoja.populaListView();
-
-                finish();
+                if(result) {
+                    Toast.makeText(AlterarDeletarLoja.this, "Loja Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
+                    PesquisarLoja.populaListView();
+                    finish();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarLoja.this, "Erro ao Deletar Loja", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -92,12 +98,14 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
                     loja.setNome(nome.toUpperCase());
 
-                    int result = daoLoja.atualizar(loja);
+                    boolean result = lojaManager.atualizar(loja);
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(AlterarDeletarLoja.this, "A loja " + loja.getNome() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
-
                         PesquisarLoja.populaListView();
+                    }
+                    else {
+                        Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, e.getMessage(), Toast.LENGTH_SHORT).show();

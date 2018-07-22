@@ -15,10 +15,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
@@ -26,7 +25,6 @@ import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 import java.util.Date;
 
@@ -36,7 +34,7 @@ import java.util.Date;
 public class CadastrarContagem extends FragmentBase {
 
     private Button btnCadastrar;
-    private DAOLoja daoLoja;
+    private LojaManager lojaManager;
     private Spinner spinnerLoja;
     private EditText txtDataInicial;
     private Date dataAtual;
@@ -56,7 +54,7 @@ public class CadastrarContagem extends FragmentBase {
 
         dataAtual = new Date();
 
-        setDAOs();
+        setManagers();
 
         txtDataInicial = viewInflate.findViewById(R.id.txtDataInicio);
         txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
@@ -73,9 +71,9 @@ public class CadastrarContagem extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
+    protected void setManagers() {
         contagemManager = new ContagemManager(((ActivityBase)getActivity()).getConn());
-        daoLoja = new DAOLoja(((ActivityBase)getActivity()).getConn().conexao());
+        lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
     }
 
     private void setBtnCadastrar() {
@@ -114,7 +112,7 @@ public class CadastrarContagem extends FragmentBase {
         Cursor cursorSpinner = null, cursorSpinner2 = null;
 
         try {
-            cursorSpinner = daoLoja.selectLojas();
+            cursorSpinner = lojaManager.listarCursor();
 
             cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome"});
 
@@ -139,10 +137,10 @@ public class CadastrarContagem extends FragmentBase {
 
                     cursor.moveToPosition(i);
 
-                    loja.setIdloja(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                    loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                     loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 } else {
-                    loja.setIdloja(-1);
+                    loja.setCnpj("-1");
                 }
             }
 

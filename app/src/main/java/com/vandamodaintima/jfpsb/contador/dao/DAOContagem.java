@@ -12,20 +12,19 @@ import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
  * Created by jfpsb on 08/02/2018.
  */
 
-public class DAOContagem {
-    private SQLiteDatabase conn;
-    private final String TABELA = "contagem";
-
+public class DAOContagem extends DAO<Contagem>{
     public DAOContagem(SQLiteDatabase conn) {
-        this.conn = conn;
+        super(conn);
+        TABELA = "contagem";
     }
 
-    public long inserir(Contagem contagem) {
+    @Override
+    public long inserir(Contagem objeto) {
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("loja", contagem.getLoja().getIdloja());
-            contentValues.put("datainicio", TrataDisplayData.getDataEmString(contagem.getDatainicio()));
+            contentValues.put("loja", objeto.getLoja().getCnpj());
+            contentValues.put("datainicio", TrataDisplayData.getDataEmString(objeto.getDatainicio()));
 
             long result = conn.insertOrThrow(TABELA, "", contentValues);
 
@@ -37,7 +36,39 @@ public class DAOContagem {
         return -1;
     }
 
-    public Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit){
+    @Override
+    public long atualizar(Contagem objeto, Object... chaves) {
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("idcontagem", objeto.getIdcontagem());
+            contentValues.put("loja", objeto.getLoja().getCnpj());
+            contentValues.put("datainicio", TrataDisplayData.getDataEmString(objeto.getDatainicio()));
+            contentValues.put("datafinal", TrataDisplayData.getDataEmString(objeto.getDatafinal()));
+
+            return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chaves[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return -1;
+    }
+
+    @Override
+    public long deletar(Object... id) {
+        try {
+            return conn.delete(TABELA, "idcontagem = ?", new String[]{String.valueOf(id[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         try {
             return conn.query(TABELA, Contagem.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         }
@@ -48,52 +79,12 @@ public class DAOContagem {
         return null;
     }
 
-    public Cursor selectRaw(String sql, String[] selection) {
-        try {
-            return conn.rawQuery(sql, selection);
-        }
-        catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-        }
-
-        return null;
-    }
-
-    public int deletar(int id) {
-        try {
-            return conn.delete(TABELA, "idcontagem = ?", new String[]{String.valueOf(id)});
-        }
-        catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-        }
-
-        return -1;
-    }
-
-    public int atualizar(Contagem contagem, int chave) {
-        try {
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("idcontagem", contagem.getIdcontagem());
-            contentValues.put("loja", contagem.getLoja().getIdloja());
-            contentValues.put("datainicio", TrataDisplayData.getDataEmString(contagem.getDatainicio()));
-            contentValues.put("datafinal", TrataDisplayData.getDataEmString(contagem.getDatafinal()));
-
-            return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chave)});
-        }
-        catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-        }
-
-        return -1;
-    }
-
     public int atualizarSemDataFinal(Contagem contagem, int chave) {
         try {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("idcontagem", contagem.getIdcontagem());
-            contentValues.put("loja", contagem.getLoja().getIdloja());
+            contentValues.put("loja", contagem.getLoja().getCnpj());
             contentValues.put("datainicio", TrataDisplayData.getDataEmString(contagem.getDatainicio()));
 
             return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chave)});

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
@@ -20,7 +21,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     private EditText txtId;
     private Fornecedor fornecedor;
     private AlertDialog.Builder builder;
-    private DAOFornecedor daoFornecedor;
+    private FornecedorManager fornecedorManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
-        setDAOs();
+        setManagers();
 
         setAlertBuilder(fornecedor);
 
@@ -52,8 +53,8 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setDAOs() {
-        daoFornecedor = new DAOFornecedor(conn.conexao());
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(conn);
     }
 
     @Override
@@ -68,11 +69,16 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                daoFornecedor.deletar(fornecedor);
+                boolean result = fornecedorManager.deletar(fornecedor.getId());
 
-                PesquisarFornecedor.populaListView();
-
-                finish();
+                if(result) {
+                    Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    PesquisarFornecedor.populaListView();
+                    finish();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Deletar Fornecedor", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -102,12 +108,14 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome.toUpperCase());
 
-                    int result = daoFornecedor.atualizar(fornecedor);
+                    boolean result = fornecedorManager.atualizar(fornecedor);
 
-                    if(result != -1) {
+                    if(result) {
                         Toast.makeText(AlterarDeletarFornecedor.this, "O fornecedor de CNPJ " + fornecedor.getCnpj() + " foi atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-
                         PesquisarFornecedor.populaListView();
+                    }
+                    else {
+                        Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Atualizar Fornecedor", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();

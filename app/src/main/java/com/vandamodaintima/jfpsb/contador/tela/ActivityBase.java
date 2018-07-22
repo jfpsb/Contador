@@ -37,7 +37,7 @@ public class ActivityBase extends AppCompatActivity {
 
         conn = new ConexaoBanco(getApplicationContext());
 
-        setDAOs();
+        setManagers();
     }
 
     protected void setViewPagerTabLayout(Fragment telaPesquisar, Fragment telaCadastrar) {
@@ -81,7 +81,7 @@ public class ActivityBase extends AppCompatActivity {
         });
     }
 
-    protected void setDAOs() {
+    protected void setManagers() {
 
     }
 
@@ -110,7 +110,7 @@ public class ActivityBase extends AppCompatActivity {
     protected void onRestart() {
         if(!conn.conexao().isOpen()) {
             conn = new ConexaoBanco(getApplicationContext());
-            setDAOs();
+            setManagers();
         }
         Log.i("Contador", "ONRESTART -> " + this.getComponentName().toShortString());
         super.onRestart();
@@ -120,7 +120,7 @@ public class ActivityBase extends AppCompatActivity {
     protected void onResume() {
         if(!conn.conexao().isOpen()) {
             conn = new ConexaoBanco(getApplicationContext());
-            setDAOs();
+            setManagers();
         }
         Log.i("Contador", "ONRESUME -> " + this.getComponentName().toShortString());
         super.onResume();

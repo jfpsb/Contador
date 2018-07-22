@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
@@ -30,7 +29,7 @@ public class PesquisaContagemProduto extends ActivityBase {
     private RadioGroup radioGroup;
     private EditText txtPesquisaProduto;
     private static TextView txtQuantProdutosCadastrados;
-    private static DAOProduto daoProduto;
+    private static ProdutoManager produtoManager;
     private ListView listView;
     private static ProdutoCursorAdapter produtoCursorAdapter;
     private static int TIPO_PESQUISA = 1;
@@ -54,7 +53,7 @@ public class PesquisaContagemProduto extends ActivityBase {
 
         context = getApplicationContext();
 
-        setDAOs();
+        setManagers();
 
         setTxtPesquisaProduto();
 
@@ -64,8 +63,8 @@ public class PesquisaContagemProduto extends ActivityBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoProduto = new DAOProduto(conn.conexao());
+    protected void setManagers() {
+        produtoManager = new ProdutoManager(conn);
     }
 
     private void setListViewOnItemClickListener() {
@@ -76,19 +75,13 @@ public class PesquisaContagemProduto extends ActivityBase {
 
                 cursor.moveToPosition(i);
 
-                Produto produto = new Produto();
-
-                produto.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
-                produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
-                produto.setFornecedor(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor")));
-                String nomeFornecedor = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+                // Já que produto possui um Fornecedor em recupero logo do banco pq o Fornecedor já vem iniciado se existir
+                Produto produto = produtoManager.listarPorChave(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable("produto", produto);
                 bundle.putSerializable("contagem", contagem);
-                bundle.putString("fornecedor", nomeFornecedor);
 
                 Intent adicionarProduto = new Intent(getApplicationContext(), AdicionarContagemProduto.class);
 
@@ -109,7 +102,7 @@ public class PesquisaContagemProduto extends ActivityBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoProduto.selectProdutos();
+            cursorLista = produtoManager.listarCursor();
 
             txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 
@@ -126,13 +119,13 @@ public class PesquisaContagemProduto extends ActivityBase {
         try {
             switch (TIPO_PESQUISA) {
                 case 1:
-                    cursorLista = daoProduto.selectProdutosCodBarra(termo);
+                    cursorLista = produtoManager.listarCursorPorCodBarra(termo);
                     break;
                 case 2:
-                    cursorLista = daoProduto.selectProdutosDescricao(termo);
+                    cursorLista = produtoManager.listarCursorPorDescricao(termo);
                     break;
                 case 3:
-                    cursorLista = daoProduto.selectProdutosFornecedor(termo);
+                    cursorLista = produtoManager.listarCursorPorFornecedor(termo);
                     break;
             }
 
@@ -151,7 +144,7 @@ public class PesquisaContagemProduto extends ActivityBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoProduto.selectProdutos();
+            cursorLista = produtoManager.listarCursor();
 
             txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
 

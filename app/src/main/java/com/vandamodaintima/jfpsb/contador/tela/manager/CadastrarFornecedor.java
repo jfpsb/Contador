@@ -11,10 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
@@ -29,7 +27,7 @@ public class CadastrarFornecedor extends FragmentBase {
     private Button btnCadastrar;
     private EditText txtCnpj;
     private EditText txtNome;
-    private DAOFornecedor daoFornecedor;
+    private FornecedorManager fornecedorManager;
 
     public CadastrarFornecedor() {
         // Required empty public constructor
@@ -44,7 +42,7 @@ public class CadastrarFornecedor extends FragmentBase {
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
-        setDAOs();
+        setManagers();
 
         setBtnCadastrar();
 
@@ -52,9 +50,9 @@ public class CadastrarFornecedor extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoFornecedor = new DAOFornecedor(((ActivityBase)getActivity()).getConn().conexao());
-        super.setDAOs();
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
+        super.setManagers();
     }
 
     private void setBtnCadastrar() {
@@ -76,9 +74,9 @@ public class CadastrarFornecedor extends FragmentBase {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome.toUpperCase());
 
-                    long result[] = daoFornecedor.inserir(fornecedor);
+                    boolean result = fornecedorManager.inserir(fornecedor);
 
-                    if(result[0] != -1) {
+                    if(result) {
                         Toast.makeText(view.getContext(), "Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
                         PesquisarFornecedor.populaListView();
@@ -87,7 +85,7 @@ public class CadastrarFornecedor extends FragmentBase {
                         txtNome.setText("");
                     }
                     else {
-                        TratamentoMensagensSQLite.trataErroEmInsert(viewInflate.getContext(), result[1]);
+                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Fornecedor", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

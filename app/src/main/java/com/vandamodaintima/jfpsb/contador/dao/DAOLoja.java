@@ -14,84 +14,60 @@ import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
  * Created by jfpsb on 08/02/2018.
  */
 
-public class DAOLoja {
-    private SQLiteDatabase conn;
-    private final String TABELA = "loja";
-
+public class DAOLoja extends DAO<Loja> {
     public DAOLoja(SQLiteDatabase conn) {
-        this.conn = conn;
+        super(conn);
+        TABELA = "loja";
     }
 
-    public long[] inserir(Loja loja) {
-        long[] result = new long[2];
-
-        try {
+    @Override
+    public long inserir(Loja objeto) {
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("nome", loja.getNome());
+        contentValues.put("cnpj", objeto.getCnpj());
+        contentValues.put("nome", objeto.getNome());
 
-        result[0] = conn.insertOrThrow(TABELA, "", contentValues);
-        } catch (SQLiteConstraintException sce) {
-            Log.i("Contador", sce.getMessage());
-            result[0] = -1;
-            result[1] = TratamentoMensagensSQLite.retornaCodigoErro(sce.getMessage());
-        } catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-            result[0] = -1;
-            result[1] = -1;
-        }
-
-        return result;
+        return conn.insert(TABELA, "", contentValues);
     }
 
-    public Loja selectLoja(int id) {
-        Cursor c = conn.query(true, TABELA, null, "idloja = " + id, null, null, null, null, null);
+    @Override
+    public long atualizar(Loja objeto, Object... chaves) {
+        try {
+            ContentValues contentValues = new ContentValues();
 
-        if(c.getCount() > 0) {
-            c.moveToFirst();
+            contentValues.put("cnpj", objeto.getCnpj());
+            contentValues.put("nome", objeto.getNome());
 
-            Loja loja = new Loja();
+            return conn.update(TABELA, contentValues, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
 
-            loja.setIdloja(c.getInt(0));
-            loja.setNome(c.getString(1));
+        return -1;
+    }
 
-            return loja;
+    @Override
+    public long deletar(Object... id) {
+        try {
+            return conn.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(id[0])});
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        try {
+            return conn.query(TABELA, Loja.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage());
         }
 
         return null;
-    }
-
-    public Cursor selectLojas() {
-        try {
-            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, null, null, null, null, "nome");
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
-            return null;
-        }
-    }
-
-    public Cursor selectLojas(String nome) {
-        try {
-            return conn.query(TABELA, new String[] {"idloja _id", "nome"}, "nome LIKE ?", new String[] { "%" + nome + "%"}, null, null, "nome");
-        } catch(SQLException e) {
-            Log.e("Contador", "Erro ao buscar lojas: " + e.toString());
-            return null;
-        }
-    }
-
-    public int deletar(int id) {
-        int result = conn.delete(TABELA, "idloja = " + String.valueOf(id), null);
-        Log.i("Contador", "Deletando loja com id " + id);
-        return result;
-        //TODO; Colocar para tratar erro de chave estrangeira
-    }
-
-    public int atualizar(Loja loja) {
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put("idloja", loja.getIdloja());
-        contentValues.put("nome", loja.getNome());
-
-        return conn.update(TABELA, contentValues, "idloja = ?", new String[] {String.valueOf(loja.getIdloja())});
     }
 }

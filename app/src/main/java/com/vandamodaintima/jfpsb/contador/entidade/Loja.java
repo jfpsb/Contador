@@ -7,15 +7,15 @@ import java.io.Serializable;
  */
 
 public class Loja implements Serializable {
-    private int idloja;
+    private String cnpj;
     private String nome;
 
-    public int getIdloja() {
-        return idloja;
+    public String getCnpj() {
+        return cnpj;
     }
 
-    public void setIdloja(int idloja) {
-        this.idloja = idloja;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public String getNome() {
@@ -24,5 +24,9 @@ public class Loja implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public static String[] getColunas() {
+        return new String[] { "cnpj as _id", "nome" };
     }
 }

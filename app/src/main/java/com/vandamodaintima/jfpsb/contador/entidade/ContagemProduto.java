@@ -4,10 +4,10 @@ package com.vandamodaintima.jfpsb.contador.entidade;
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Contagem_Produto {
+public class ContagemProduto {
     private int id;
-    private int contagem;
-    private String produto;
+    private Contagem contagem;
+    private Produto produto;
     private int quant;
 
     public int getId() {
@@ -18,19 +18,19 @@ public class Contagem_Produto {
         this.id = id;
     }
 
-    public int getContagem() {
+    public Contagem getContagem() {
         return contagem;
     }
 
-    public void setContagem(int contagem) {
+    public void setContagem(Contagem contagem) {
         this.contagem = contagem;
     }
 
-    public String getProduto() {
+    public Produto getProduto() {
         return produto;
     }
 
-    public void setProduto(String produto) {
+    public void setProduto(Produto produto) {
         this.produto = produto;
     }
 
@@ -40,5 +40,9 @@ public class Contagem_Produto {
 
     public void setQuant(int quant) {
         this.quant = quant;
+    }
+
+    public static String[] getColunas() {
+        return new String[] { "id as _id", "contagem", "produto", "quant" };
     }
 }

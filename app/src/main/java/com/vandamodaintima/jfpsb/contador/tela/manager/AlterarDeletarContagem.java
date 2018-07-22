@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
@@ -49,7 +50,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     private CheckBox checkBoxDataFinal;
     private Button btnAdicionar;
 
-    private DAOLoja daoLoja;
+    private LojaManager lojaManager;
     private ContagemManager contagemManager;
 
     private static final int ESCOLHER_DIRETORIO = 1;
@@ -85,7 +86,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
         spinnerLoja = findViewById(R.id.spinnerLoja);
 
-        setDAOs();
+        setManagers();
         setSpinnerLoja();
         setBtnAtualizar();
         setBtnDeletar();
@@ -136,9 +137,8 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setDAOs() {
-        daoLoja = new DAOLoja(conn.conexao());
-
+    protected void setManagers() {
+        lojaManager = new LojaManager(conn);
         contagemManager = new ContagemManager(conn);
     }
 
@@ -154,13 +154,13 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                 boolean result = contagemManager.deletar((int) idcontagem);
 
                 if(result) {
+                    Toast.makeText(AlterarDeletarContagem.this, "Contagem Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
                     PesquisarContagem.populaListView(contagem);
+                    finish();
                 }
                 else {
                     Toast.makeText(AlterarDeletarContagem.this, "Erro ao Deletar Contagem", Toast.LENGTH_SHORT).show();
                 }
-
-                finish();
             }
         });
 
@@ -173,14 +173,12 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     private void setSpinnerLoja() {
-        Cursor spinnerCursor = null, spinnerCursor2 = null;
+        Cursor spinnerCursor = null;
 
         try {
-            spinnerCursor = daoLoja.selectLojas();
+            spinnerCursor = lojaManager.listarCursor();
 
-            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE A LOJA", new String[]{ "_id", "nome"});
-
-            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             spinnerLoja.setAdapter(simpleCursorAdapter);
@@ -188,9 +186,9 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             for (int i = 0; i < spinnerCursor.getCount(); i++) {
                 spinnerCursor.moveToPosition(i);
 
-                int id = spinnerCursor.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
+                String cnpj = spinnerCursor.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
 
-                if (id == contagem.getLoja().getIdloja()) {
+                if (cnpj.equals(contagem.getLoja().getCnpj())) {
                     spinnerLoja.setSelection(i);
                     break;
                 }
@@ -206,10 +204,10 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
                 c.moveToPosition(i);
 
-                String idloja = c.getString(c.getColumnIndexOrThrow("_id"));
+                String cnpj = c.getString(c.getColumnIndexOrThrow("_id"));
                 String nome = c.getString(c.getColumnIndexOrThrow("nome"));
 
-                loja.setIdloja(Integer.parseInt(idloja));
+                loja.setCnpj(cnpj);
                 loja.setNome(nome);
             }
 
@@ -226,6 +224,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 try {
+                    Toast.makeText(AlterarDeletarContagem.this, ">>>" + txtDataFinal.getText().toString(), Toast.LENGTH_SHORT).show();
                     Date data_final = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
 
                     contagem.setDatafinal(data_final);
@@ -282,7 +281,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
                 Bundle bundle = new Bundle();
 
-                bundle.putSerializable("contagem",contagem);
+                bundle.putSerializable("contagem", contagem);
 
                 pesquisaContagemProduto.putExtras(bundle);
 

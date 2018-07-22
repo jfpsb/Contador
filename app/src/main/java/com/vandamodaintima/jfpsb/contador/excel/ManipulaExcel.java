@@ -5,16 +5,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
@@ -24,8 +22,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.PatternFormatting;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
@@ -33,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -41,19 +38,19 @@ import java.util.Date;
 
 public class ManipulaExcel {
     private static DAOProduto daoProduto;
-    private static DAOContagemProduto daoContagemProduto;
+    private static ContagemProdutoManager contagemProdutoManager;
     private AsyncTask task;
     private int ProdutosCadastrados = 0;
 
     public ManipulaExcel(ConexaoBanco conexao) {
         daoProduto = new DAOProduto(conexao.conexao());
-        daoContagemProduto = new DAOContagemProduto(conexao.conexao());
+        contagemProdutoManager = new ContagemProdutoManager(conexao);
     }
 
     public ManipulaExcel(AsyncTask task, ConexaoBanco conexao) {
         this.task = task;
         daoProduto = new DAOProduto(conexao.conexao());
-        daoContagemProduto = new DAOContagemProduto(conexao.conexao());
+        contagemProdutoManager = new ContagemProdutoManager(conexao);
     }
 
     public int ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
@@ -161,27 +158,29 @@ public class ManipulaExcel {
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        Cursor cursor = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
+        ArrayList<ContagemProduto> contagemproduto  = contagemProdutoManager.listarPorContagem(contagem.getIdcontagem());
 
         try {
-            if(cursor.getCount() <= 0)
-                throw new Exception("Não Há Produtos Na Contagem");
+            if(contagemproduto.size() == 0)
+                throw new Exception("Não Há Produtos na Contagem");
 
-            while (cursor.moveToNext()) {
-                Row row = arquivoExcel.getPlanilha().createRow(rowIndex++);
+            for(int i = rowIndex; i <= contagemproduto.size(); i++) {
+                Row row = arquivoExcel.getPlanilha().createRow(i);
 
-                Cell cell1 = row.createCell(0);
-                cell1.setCellValue(cursor.getString(cursor.getColumnIndexOrThrow("produto")));
+                ContagemProduto contagemProduto = contagemproduto.get(i - 1);
 
-                Cell cell2 = row.createCell(1);
-                cell2.setCellValue(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
+                Cell cod_barra = row.createCell(0);
+                cod_barra.setCellValue(contagemProduto.getProduto().getCod_barra());
 
-                Cell cell3 = row.createCell(2);
-                cell3.setCellValue(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+                Cell descricao = row.createCell(1);
+                descricao.setCellValue(contagemProduto.getProduto().getDescricao());
 
-                cell1.setCellStyle(cellStyle);
-                cell2.setCellStyle(cellStyle);
-                cell3.setCellStyle(cellStyle);
+                Cell quant = row.createCell(2);
+                quant.setCellValue(contagemProduto.getQuant());
+
+                cod_barra.setCellStyle(cellStyle);
+                descricao.setCellStyle(cellStyle);
+                quant.setCellStyle(cellStyle);
             }
 
             arquivoExcel.getPlanilha().setColumnWidth(0, 23*256);

@@ -8,13 +8,14 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.ProdutoContagemCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 public class VisualizarProdutosContagem extends ActivityBase {
 
     private Contagem contagem;
-    private DAOContagemProduto daoContagemProduto;
+    private ContagemProdutoManager contagemProdutoManager;
     private ListView listViewProdutoContagem;
     private ProdutoContagemCursorAdapter produtoContagemCursorAdapter;
 
@@ -30,19 +31,19 @@ public class VisualizarProdutosContagem extends ActivityBase {
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 
-        setDAOs();
+        setManagers();
 
         setListView();
     }
 
     @Override
-    protected void setDAOs() {
-        daoContagemProduto = new DAOContagemProduto(conn.conexao());
+    protected void setManagers() {
+        contagemProdutoManager = new ContagemProdutoManager(conn);
     }
 
     private void setListView() {
         try {
-            cursorLista = daoContagemProduto.selectContagemProdutos(contagem.getIdcontagem());
+            cursorLista = contagemProdutoManager.listarPorContagemCursor(contagem.getIdcontagem());
 
             produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(), cursorLista);
 

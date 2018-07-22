@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Produto implements Serializable {
     private String cod_barra;
-    private String fornecedor;
+    private Fornecedor fornecedor;
     private String descricao;
     private Double preco;
 
@@ -20,11 +20,11 @@ public class Produto implements Serializable {
         this.cod_barra = cod_barra;
     }
 
-    public String getFornecedor() {
+    public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(String fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
 
@@ -44,7 +44,7 @@ public class Produto implements Serializable {
         this.preco = preco;
     }
 
-    public static String[] getProdutoColunas() {
+    public static String[] getColunas() {
         return new String[] {"cod_barra as _id", "fornecedor", "descricao", "preco"};
     }
 }

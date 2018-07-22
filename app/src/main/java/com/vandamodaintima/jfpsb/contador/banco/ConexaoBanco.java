@@ -11,8 +11,7 @@ import android.util.Log;
 public class ConexaoBanco{
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 3;
-    private static final String[] DELETE_DATABASE = new String[] {"DROP TABLE IF EXISTS produto", "DROP TABLE IF EXISTS contagem_produto", "DROP TABLE IF EXISTS contagem", "DROP TABLE IF EXISTS fornecedor", "DROP TABLE IF EXISTS loja"};
+    private static final int VERSAO_BANCO = 5;
     private SQLiteHelper sqLiteHelper;
 
     private static int aberta = 0;
@@ -20,6 +19,7 @@ public class ConexaoBanco{
 
     public ConexaoBanco(Context context) {
         sqLiteHelper = new SQLiteHelper(context, NOME_BANCO, VERSAO_BANCO);
+        sqLiteHelper.setForcedUpgrade();
         Log.i("Contador", "ABRINDO CONN "  + (++aberta));
         conn = sqLiteHelper.getWritableDatabase();
     }

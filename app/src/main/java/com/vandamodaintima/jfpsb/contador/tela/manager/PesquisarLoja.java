@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,21 +17,18 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.LojaCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
-
-import java.security.spec.ECField;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PesquisarLoja extends FragmentBase {
 
-    private static DAOLoja daoLoja;
+    private static LojaManager lojaManager;
     private ListView listView;
     private static LojaCursorAdapter lojaCursorAdapter;
     private EditText txtNome;
@@ -46,7 +42,7 @@ public class PesquisarLoja extends FragmentBase {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 
-        setDAOs();
+        setManagers();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
         txtNome = viewInflate.findViewById(R.id.txtNome);
@@ -58,8 +54,8 @@ public class PesquisarLoja extends FragmentBase {
     }
 
     @Override
-    protected void setDAOs() {
-        daoLoja = new DAOLoja(((ActivityBase) getActivity()).getConn().conexao());
+    protected void setManagers() {
+        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
     }
 
     private void setTxtNome() {
@@ -86,7 +82,7 @@ public class PesquisarLoja extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoLoja.selectLojas();
+            cursorLista = lojaManager.listarCursor();
 
             lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorLista);
 
@@ -104,7 +100,7 @@ public class PesquisarLoja extends FragmentBase {
 
                 Loja loja = new Loja();
 
-                loja.setIdloja(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 Bundle bundle = new Bundle();
@@ -132,7 +128,7 @@ public class PesquisarLoja extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoLoja.selectLojas();
+            cursorLista = lojaManager.listarCursor();
             lojaCursorAdapter.changeCursor(cursorLista);
         }catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -144,7 +140,7 @@ public class PesquisarLoja extends FragmentBase {
             cursorLista.close();
 
         try {
-            cursorLista = daoLoja.selectLojas(nome);
+            cursorLista = lojaManager.listarPorNome(nome);
             lojaCursorAdapter.changeCursor(cursorLista);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
