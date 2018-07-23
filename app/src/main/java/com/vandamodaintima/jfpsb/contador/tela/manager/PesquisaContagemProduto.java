@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
@@ -47,6 +47,7 @@ public class PesquisaContagemProduto extends ActivityBase {
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
         radioGroup = findViewById(R.id.radioGroupOpcao);
+        listView = findViewById(R.id.listViewProduto);
 
         txtPesquisaProduto = findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = findViewById(R.id.txtQuantProdutosCadastrados);
@@ -71,22 +72,31 @@ public class PesquisaContagemProduto extends ActivityBase {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                try {
+                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                cursor.moveToPosition(i);
+                    if(cursor == null)
+                        Log.i("Contador", "Cursor está fechado");
 
-                // Já que produto possui um Fornecedor em recupero logo do banco pq o Fornecedor já vem iniciado se existir
-                Produto produto = produtoManager.listarPorChave(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                    cursor.moveToPosition(i);
 
-                Bundle bundle = new Bundle();
+                    // Já que produto possui um Fornecedor em recupero logo do banco pq o Fornecedor já vem iniciado se existir
+                    Produto produto = produtoManager.listarPorChave(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
-                bundle.putSerializable("produto", produto);
-                bundle.putSerializable("contagem", contagem);
+                    Bundle bundle = new Bundle();
 
-                Intent adicionarProduto = new Intent(getApplicationContext(), AdicionarContagemProduto.class);
+                    bundle.putSerializable("produto", produto);
+                    bundle.putSerializable("contagem", contagem);
 
-                adicionarProduto.putExtras(bundle);
-                startActivity(adicionarProduto);
+                    Intent adicionarProduto = new Intent(getApplicationContext(), AdicionarContagemProduto.class);
+
+                    adicionarProduto.putExtras(bundle);
+
+                    startActivity(adicionarProduto);
+                }
+                catch (Exception e) {
+                    Log.e("Contador", e.getMessage(), e);
+                }
             }
         });
     }
@@ -94,7 +104,7 @@ public class PesquisaContagemProduto extends ActivityBase {
     /**
      * Popula a lista novamente
      */
-    public static void populaListView() {
+    public void populaListView() {
         if(cursorLista != null)
             cursorLista.close();
 
@@ -109,7 +119,7 @@ public class PesquisaContagemProduto extends ActivityBase {
         }
     }
 
-    public static void populaListView(String termo) {
+    public void populaListView(String termo) {
         if(cursorLista != null)
             cursorLista.close();
 
@@ -135,8 +145,6 @@ public class PesquisaContagemProduto extends ActivityBase {
     }
 
     private void setListView() {
-        listView = findViewById(R.id.listViewProduto);
-
         if(cursorLista != null)
             cursorLista.close();
 

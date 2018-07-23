@@ -148,9 +148,8 @@ public class AdicionarContagemProduto extends ActivityBase {
         btnLimparFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fornecedor.getCnpj() != null) {
-                    fornecedor.setCnpj(null);
-                    fornecedor.setNome(null);
+                if(fornecedor != null) {
+                    fornecedor = null;
 
                     txtFornecedor.setText("Removido Pelo Usuário");
 

@@ -10,31 +10,36 @@
     tools:context="com.vandamodaintima.jfpsb.contador.MainActivity">
 
     <Button
+        android:id="@+id/btn_contador"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/century_gothic"
         android:text="Contador"
         android:textSize="20dp"
-        android:id="@+id/btn_contador" />
+        android:typeface="normal" />
 
     <Button
+        android:id="@+id/btn_produto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/century_gothic"
         android:text="Produto"
-        android:textSize="20dp"
-        android:id="@+id/btn_produto" />
+        android:textSize="20dp" />
 
     <Button
+        android:id="@+id/btn_fornecedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/century_gothic"
         android:text="Fornecedor"
-        android:textSize="20dp"
-        android:id="@+id/btn_fornecedor" />
+        android:textSize="20dp" />
 
     <Button
+        android:id="@+id/btn_loja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/century_gothic"
         android:text="Loja"
-        android:textSize="20dp"
-        android:id="@+id/btn_loja" />
+        android:textSize="20dp" />
 
 </LinearLayout>

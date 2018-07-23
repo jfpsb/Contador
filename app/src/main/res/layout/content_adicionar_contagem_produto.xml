@@ -5,167 +5,157 @@
     android:orientation="vertical"
     android:layout_margin="10dip">
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TableRow android:weightSum="1">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
-                android:textSize="24dp"
-                android:text="Dados de Produto"
-                android:textAlignment="center"
-                android:layout_weight="1"/>
-        </TableRow>
-
-        <TableRow android:weightSum="2">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Cód. de Barra:"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:layout_weight="1"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:textAlignment="center"
-                android:id="@+id/txtCodBarra" />
-        </TableRow>
-
-        <TableRow android:weightSum="3">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Fornecedor:"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:layout_weight="1"
-                android:enabled="false"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:textAlignment="center"
-                android:id="@+id/txtFornecedor"/>
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Add Fornecedor"
-                android:textSize="10dp"
-                android:id="@+id/btnAddFornecedor"/>
-        </TableRow>
-
-        <TableRow android:weightSum="3">
-            <TextView android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Remover Fornecedor Deste Produto"
-                android:textColor="#000"
-                android:textSize="14dp"
-                android:layout_gravity="center"
-                android:textAlignment="center"/>
-
-            <Button
-                android:id="@+id/btnLimparFornecedor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="Limpar Fornecedor"
-                android:textSize="10dp"
-                android:layout_weight="1"/>
-
-        </TableRow>
-
-        <TableRow android:weightSum="3">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Descrição:"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:layout_weight="1"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:layout_weight="2"
-                android:textAlignment="center"
-                android:id="@+id/txtDescricao"
-                android:minLines="2"
-                android:enabled="false"/>
-        </TableRow>
-
-        <TableRow android:weightSum="2">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Preço:"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:layout_weight="1"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:layout_weight="1"
-                android:textAlignment="center"
-                android:id="@+id/txtPreco"
-                android:inputType="number"
-                android:enabled="false"/>
-        </TableRow>
-
-        <TableRow android:weightSum="2">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="Quantidade a Adicionar:"
-                android:layout_weight="1"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:textAlignment="center"/>
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtQuantidade"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="20dp"
-                android:layout_weight="1"
-                android:inputType="number"/>
-        </TableRow>
-    </TableLayout>
-
-    <Button
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adicionar"
-        android:textSize="24dp"
-        android:layout_gravity="center"
-        android:layout_margin="15dip"
-        android:padding="10dip"
-        android:id="@+id/btnAdicionar"/>
+        android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dip">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dados de Produto"
+            android:textAlignment="center"
+            android:textColor="#000"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cód. de Barra:"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/txtCodBarra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Fornecedor:"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/txtFornecedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnAddFornecedor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Adicionar Fornecedor"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remover Fornecedor Deste Produto"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnLimparFornecedor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Limpar Fornecedor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descrição:"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:textAlignment="textStart"
+            android:id="@+id/txtDescricao"
+            android:enabled="false" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Preço:"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:textAlignment="textStart"
+            android:id="@+id/txtPreco"
+            android:inputType="number"
+            android:enabled="false" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Quantidade a Adicionar:"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtQuantidade"
+            android:textAlignment="textStart"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/btnAdicionar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dip"
+            android:padding="10dip"
+            android:text="Adicionar"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

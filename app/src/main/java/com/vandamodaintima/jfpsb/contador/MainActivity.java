@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         Button btnProduto = findViewById(R.id.btn_produto);
         Button btnFornecedor = findViewById(R.id.btn_fornecedor);
         Button btnLoja = findViewById(R.id.btn_loja);
+
+
 
         btnContador.setOnClickListener(new View.OnClickListener() {
             @Override

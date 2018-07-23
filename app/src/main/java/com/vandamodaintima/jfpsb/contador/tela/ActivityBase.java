@@ -20,7 +20,7 @@ public class ActivityBase extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    protected static Cursor cursorLista = null;
+    protected Cursor cursorLista = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
