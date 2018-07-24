@@ -104,7 +104,8 @@
             android:textColor="#000"
             android:textAlignment="textStart"
             android:id="@+id/txtDescricao"
-            android:enabled="false" />
+            android:enabled="false"
+            android:inputType="" />
 
         <TextView
             android:layout_width="match_parent"

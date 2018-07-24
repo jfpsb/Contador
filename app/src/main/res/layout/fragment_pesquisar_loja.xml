@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Digite o nome:"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textColor="#000000"/>
 
     <EditText
@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lojas Cadastradas:"
-        android:textSize="24dp"
-        android:layout_marginTop="5dip"
+        android:textSize="24sp"
         android:textColor="#000000"
         android:textAlignment="center"/>
 
@@ -55,7 +54,4 @@
         android:id="@+id/listViewLoja"
         android:layout_margin="10dip" >
     </ListView>
-
-
-
 </LinearLayout>

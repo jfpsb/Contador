@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,12 +23,13 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarFornecedor extends FragmentBase {
+public class PesquisarFornecedor extends TelaPesquisa {
 
     private static FornecedorManager fornecedorManager;
     private ListView listView;
@@ -80,13 +82,13 @@ public class PesquisarFornecedor extends FragmentBase {
     }
 
     private void setListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = fornecedorManager.listarCursor();
+            cursorPesquisa = fornecedorManager.listarCursor();
 
-            fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursorLista);
+            fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursorPesquisa);
 
             listView.setAdapter(fornecedorCursorAdapter);
         } catch (Exception e) {
@@ -114,34 +116,47 @@ public class PesquisarFornecedor extends FragmentBase {
 
                 alterarFornecedor.putExtras(bundle);
 
-                startActivity(alterarFornecedor);
+                startActivityForResult(alterarFornecedor, TELA_ALTERAR_DELETAR);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if(resultCode == Activity.RESULT_OK) {
+                    populaListView(txtPesquisaFornecedor.getText().toString());
+                }
+                else {
+                    Toast.makeText(viewInflate.getContext(), "O Fornecedor Não Foi Alterado", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     /**
      * Popula a lista novamente
      */
-
-    public static void populaListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+    public void populaListView() {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = fornecedorManager.listarCursor();
-            fornecedorCursorAdapter.changeCursor(cursorLista);
+            cursorPesquisa = fornecedorManager.listarCursor();
+            fornecedorCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void populaListView(String termo) {
-        if(cursorLista != null)
-            cursorLista.close();
+    public void populaListView(String termo) {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = fornecedorManager.listarPorNomeOuCnpj(termo);
-            fornecedorCursorAdapter.changeCursor(cursorLista);
+            cursorPesquisa = fornecedorManager.listarPorNomeOuCnpj(termo);
+            fornecedorCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

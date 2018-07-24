@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Contagem de Produtos"
-        android:textSize="24dp"
+        android:textSize="28sp"
         android:textColor="#000"
         android:textAlignment="center"/>
 

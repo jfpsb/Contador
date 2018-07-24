@@ -1,11 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,24 +13,15 @@ import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.SimpleCursorAdapter;
 import android.view.ViewStub;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -45,12 +36,8 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     private EditText txtDataFinal;
     private EditText txtDataInicial;
     private EditText txtLojaAtual;
-    private Spinner spinnerLoja;
-    private Loja loja = new Loja();
-    private CheckBox checkBoxDataFinal;
     private Button btnAdicionar;
 
-    private LojaManager lojaManager;
     private ContagemManager contagemManager;
 
     private static final int ESCOLHER_DIRETORIO = 1;
@@ -72,25 +59,22 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         txtLojaAtual = findViewById(R.id.txtLojaAtual);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
-        checkBoxDataFinal = findViewById(R.id.checkBoxDataFinal);
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
         txtIDContagem.setText(String.valueOf(contagem.getIdcontagem()));
         if(contagem.getDatafinal() != null) {
             txtDataFinal.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatafinal()));
         }
+
         txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()));
         txtLojaAtual.setText(contagem.getLoja().getNome());
 
-        setAlertBuilder(contagem.getIdcontagem());
-
-        spinnerLoja = findViewById(R.id.spinnerLoja);
+        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
 
         setManagers();
-        setSpinnerLoja();
         setBtnAtualizar();
         setBtnDeletar();
-        setCheckBoxDataFinal();
         setBtnAdicionar();
     }
 
@@ -138,84 +122,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
     @Override
     protected void setManagers() {
-        lojaManager = new LojaManager(conn);
         contagemManager = new ContagemManager(conn);
-    }
-
-    @Override
-    protected void setAlertBuilder(final Object idcontagem) {
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle("Deletar Contagem");
-        builder.setMessage("Tem certeza que deseja apagar a contagem de ID " + idcontagem + "?");
-
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = contagemManager.deletar((int) idcontagem);
-
-                if(result) {
-                    Toast.makeText(AlterarDeletarContagem.this, "Contagem Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
-                    PesquisarContagem.populaListView(contagem);
-                    finish();
-                }
-                else {
-                    Toast.makeText(AlterarDeletarContagem.this, "Erro ao Deletar Contagem", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarContagem.this, "Contagem não foi deletada", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setSpinnerLoja() {
-        Cursor spinnerCursor = null;
-
-        try {
-            spinnerCursor = lojaManager.listarCursor();
-
-            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
-            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spinnerLoja.setAdapter(simpleCursorAdapter);
-
-            for (int i = 0; i < spinnerCursor.getCount(); i++) {
-                spinnerCursor.moveToPosition(i);
-
-                String cnpj = spinnerCursor.getString(spinnerCursor.getColumnIndexOrThrow("_id"));
-
-                if (cnpj.equals(contagem.getLoja().getCnpj())) {
-                    spinnerLoja.setSelection(i);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor c = (Cursor) adapterView.getItemAtPosition(i);
-
-                c.moveToPosition(i);
-
-                String cnpj = c.getString(c.getColumnIndexOrThrow("_id"));
-                String nome = c.getString(c.getColumnIndexOrThrow("nome"));
-
-                loja.setCnpj(cnpj);
-                loja.setNome(nome);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
     }
 
     @Override
@@ -223,27 +130,11 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Date data_final = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
+                String dataFinal = txtDataFinal.getText().toString();
+                AlertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
 
-                    contagem.setDatafinal(data_final);
-                    contagem.setLoja(loja);
-
-                    boolean result;
-
-                    if(checkBoxDataFinal.isChecked())
-                        result = contagemManager.atualizar(contagem, contagem.getIdcontagem());
-                    else
-                        result = contagemManager.atualizarSemDataFinal(contagem, contagem.getIdcontagem());
-
-                    if(result) {
-                        Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
-                        PesquisarContagem.populaListView(contagem);
-                        finish();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(AlterarDeletarContagem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                alertDialog.show();
             }
         });
     }
@@ -253,22 +144,78 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = builder.create();
+                AlertDialog alertDialog = AlertBuilderDeletar.create();
                 alertDialog.show();
             }
         });
     }
 
-    private void setCheckBoxDataFinal() {
-        checkBoxDataFinal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    @Override
+    protected void setAlertBuilderAtualizar() {
+        AlertBuilderAtualizar = new AlertDialog.Builder(this);
+        AlertBuilderAtualizar.setTitle("Atualizar Contagem");
+
+        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(checkBoxDataFinal.isChecked()) {
-                    txtDataFinal.setEnabled(true);
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    Date data = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
+
+                    Contagem toUpdate = new Contagem();
+                    toUpdate.setIdcontagem(contagem.getIdcontagem());
+                    toUpdate.setDatainicio(contagem.getDatainicio());
+                    toUpdate.setLoja(contagem.getLoja());
+
+                    toUpdate.setDatafinal(data);
+
+                    boolean result = contagemManager.atualizar(toUpdate, contagem.getIdcontagem());
+
+                    if (result) {
+                        Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+                        setResult(Activity.RESULT_OK, null);
+                        finish();
+                    }
+                }
+                catch (Exception e) {
+                    Toast.makeText(AlterarDeletarContagem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        AlertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Atualizada", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void setAlertBuilderDeletar() {
+        AlertBuilderDeletar = new AlertDialog.Builder(this);
+        AlertBuilderDeletar.setTitle("Deletar Contagem");
+        AlertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID " + contagem.getIdcontagem() + "?");
+
+        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean result = contagemManager.deletar(contagem.getIdcontagem());
+
+                if(result) {
+                    Toast.makeText(AlterarDeletarContagem.this, "Contagem Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
+                    setResult(Activity.RESULT_OK, null);
+                    finish();
                 }
                 else {
-                    txtDataFinal.setEnabled(false);
+                    Toast.makeText(AlterarDeletarContagem.this, "Erro ao Deletar Contagem", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Deletada", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -277,7 +224,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent pesquisaContagemProduto = new Intent(AlterarDeletarContagem.this, PesquisaContagemProduto.class);
+                Intent pesquisaContagemProduto = new Intent(AlterarDeletarContagem.this, PesquisaContagemProdutoContainer.class);
 
                 Bundle bundle = new Bundle();
 

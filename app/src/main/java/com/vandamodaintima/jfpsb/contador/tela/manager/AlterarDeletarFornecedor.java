@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     private EditText txtNome;
     private EditText txtId;
     private Fornecedor fornecedor;
-    private AlertDialog.Builder builder;
     private FornecedorManager fornecedorManager;
 
     @Override
@@ -44,7 +44,8 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
         setManagers();
 
-        setAlertBuilder(fornecedor);
+        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
 
         setBtnAtualizar();
 
@@ -57,43 +58,36 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilder(final Object entidade) {
-
-        final Fornecedor fornecedor = (Fornecedor)entidade;
-
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle("Deletar Fornecedor");
-        builder.setMessage("Tem certeza que deseja apagar o fornecedor de CNPJ " + fornecedor.getCnpj() + "?");
-
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+    protected void setBtnAtualizar() {
+        btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = fornecedorManager.deletar(fornecedor.getId());
-
-                if(result) {
-                    Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    PesquisarFornecedor.populaListView();
-                    finish();
-                }
-                else {
-                    Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Deletar Fornecedor", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor não foi deletado", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                alertDialog.show();
             }
         });
     }
 
     @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
+    protected void setBtnDeletar() {
+        btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                alertDialog.show();
+            }
+        });
+    }
+
+    @Override
+    protected void setAlertBuilderAtualizar() {
+        AlertBuilderAtualizar = new AlertDialog.Builder(this);
+        AlertBuilderAtualizar.setTitle("Atualizar Fornecedor");
+        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+
+        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 try {
                     String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
@@ -104,14 +98,17 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo de nome não pode ficar vazio!");
 
-                    fornecedor.setCnpj(cnpj);
-                    fornecedor.setNome(nome.toUpperCase());
+                    Fornecedor toUpdate = new Fornecedor();
+                    toUpdate.setId(fornecedor.getId());
+                    toUpdate.setCnpj(cnpj);
+                    toUpdate.setNome(nome.toUpperCase());
 
-                    boolean result = fornecedorManager.atualizar(fornecedor, fornecedor.getId());
+                    boolean result = fornecedorManager.atualizar(toUpdate, fornecedor.getId());
 
                     if(result) {
                         Toast.makeText(AlterarDeletarFornecedor.this, "O Fornecedor Foi Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
-                        PesquisarFornecedor.populaListView();
+                        setResult(Activity.RESULT_OK, null);
+                        finish();
                     }
                     else {
                         Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Atualizar Fornecedor", Toast.LENGTH_SHORT).show();
@@ -121,17 +118,42 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                 }
             }
         });
-    }
 
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
+        AlertBuilderAtualizar.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Atualizado", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    @Override
+    protected void setAlertBuilderDeletar() {
+        AlertBuilderDeletar = new AlertDialog.Builder(this);
+        AlertBuilderDeletar.setTitle("Deletar Fornecedor");
+        AlertBuilderDeletar.setMessage("Tem certeza que deseja deletar o fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+
+        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean result = fornecedorManager.deletar(fornecedor.getId());
+
+                if(result) {
+                    Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    setResult(Activity.RESULT_OK, null);
+                    finish();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Deletar Fornecedor", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Deletado", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

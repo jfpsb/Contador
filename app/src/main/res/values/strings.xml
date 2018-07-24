@@ -13,4 +13,6 @@
     <string name="title_activity_visualizar_produtos_contagem">Visualização Da Contagem de Produtos</string>
     <string name="title_activity_adicionar_fornecedor">Adicionar Fornecedor</string>
     <string name="title_activity_base">ActivityBase</string>
+    <string name="title_activity_pesquisa_contagem_produto_container">Contagem e Produto: adicionar</string>
+    <string name="action_settings">Settings</string>
 </resources>

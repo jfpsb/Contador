@@ -71,7 +71,7 @@ public class CadastrarLoja extends FragmentBase {
                     if (result) {
                         Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
-                        PesquisarLoja.populaListView();
+                        //TODO: result
 
                         txtNome.setText("");
                     } else {
@@ -86,6 +86,6 @@ public class CadastrarLoja extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
+        //lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
     }
 }

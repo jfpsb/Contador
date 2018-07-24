@@ -8,16 +8,17 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        tools:replace="android:theme"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/TabAppTheme">
+        android:theme="@style/TabAppTheme"
+        tools:replace="android:theme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -54,10 +55,6 @@
             android:label="@string/title_activity_alterar_deletar_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.PesquisaContagemProduto"
-            android:label="@string/title_activity_adicionar_contagem_produto"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
             android:name=".tela.manager.AdicionarContagemProduto"
             android:label="@string/title_activity_adicionar_contagem_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
@@ -72,13 +69,17 @@
         <activity
             android:name=".tela.ActivityBase"
             android:label="@string/title_activity_base"
-            android:theme="@style/TabAppTheme.NoActionBar"></activity>
-        <activity
-            android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
+            android:theme="@style/TabAppTheme.NoActionBar" />
+        <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
+
+        <activity
+            android:name=".tela.manager.PesquisaContagemProdutoContainer"
+            android:label="@string/title_activity_pesquisa_contagem_produto_container"
+            android:theme="@style/TabAppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

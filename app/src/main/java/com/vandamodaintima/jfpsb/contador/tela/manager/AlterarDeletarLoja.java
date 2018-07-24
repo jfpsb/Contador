@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,8 +22,6 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
     private Loja loja;
     private LojaManager lojaManager;
 
-    private String chave; //Chave original do objeto já que ela pode ser alterada
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +42,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         txtCnpj.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
 
-        chave = loja.getCnpj();
-
-        setAlertBuilder(loja);
+        setAlertBuilderDeletar();
         setBtnAtualizar();
         setBtnDeletar();
     }
@@ -56,21 +53,41 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilder(final Object loja) {
-        final Loja objLoja = (Loja) loja;
+    protected void setBtnAtualizar() {
+        btnAtualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                alertDialog.show();
+            }
+        });
+    }
 
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle("Deletar Loja");
-        builder.setMessage("Tem certeza que deseja apagar a loja " + objLoja.getNome() + "?");
+    @Override
+    protected void setBtnDeletar() {
+        btnDeletar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                alertDialog.show();
+            }
+        });
+    }
 
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+    @Override
+    protected void setAlertBuilderDeletar() {
+        AlertBuilderDeletar = new AlertDialog.Builder(this);
+        AlertBuilderDeletar.setTitle("Deletar Loja");
+        AlertBuilderDeletar.setMessage("Tem certeza que deseja apagar a loja " + loja.getNome() + "?");
+
+        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = lojaManager.deletar(objLoja.getCnpj());
+                boolean result = lojaManager.deletar(loja.getCnpj());
 
                 if(result) {
                     Toast.makeText(AlterarDeletarLoja.this, "Loja Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
-                    PesquisarLoja.populaListView();
+                    setResult(Activity.RESULT_OK, null);
                     finish();
                 }
                 else {
@@ -79,19 +96,23 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
             }
         });
 
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarLoja.this, "Loja não foi deletada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarLoja.this, "Loja Não Foi Deletada", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
+    protected void setAlertBuilderAtualizar() {
+        AlertBuilderAtualizar = new AlertDialog.Builder(this);
+        AlertBuilderAtualizar.setTitle("Atualizar Loja");
+        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + loja.getNome() + "?");
+
+        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialog, int which) {
                 try {
                     String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
@@ -102,14 +123,16 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
                     if(TestaIO.isStringEmpty(nome))
                         throw new Exception("O campo nome não pode estar vazio!");
 
-                    loja.setCnpj(cnpj);
-                    loja.setNome(nome.toUpperCase());
+                    Loja toUpdate = new Loja();
 
-                    boolean result = lojaManager.atualizar(loja, chave);
+                    toUpdate.setCnpj(cnpj);
+                    toUpdate.setNome(nome);
+
+                    boolean result = lojaManager.atualizar(toUpdate, loja.getCnpj());
 
                     if(result) {
                         Toast.makeText(AlterarDeletarLoja.this, "A loja Foi Atualizada Com Sucesso!", Toast.LENGTH_SHORT).show();
-                        PesquisarLoja.populaListView();
+                        setResult(Activity.RESULT_OK, null);
                         finish();
                     }
                     else {
@@ -122,16 +145,4 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
             }
         });
     }
-
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
-    }
-
 }

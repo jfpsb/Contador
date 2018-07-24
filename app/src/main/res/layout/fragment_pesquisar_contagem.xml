@@ -9,32 +9,34 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="7dip">
+        android:layout_margin="10dip">
 
-        <TableRow android:layout_weight="2">
+        <TableRow>
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Loja:"
                 android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_weight="1"/>
-
-            <Spinner
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerLoja"
+                android:textSize="24sp"
                 android:layout_weight="1"/>
         </TableRow>
-        <TableRow android:layout_weight="7" android:layout_marginTop="7dip">
+        <TableRow>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerLoja"
+                android:layout_weight="1" />
+        </TableRow>
+        <TableRow>
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Intervalo:"
                 android:textColor="#000000"
-                android:textSize="20dp"
-                android:layout_weight="2"/>
-
+                android:textSize="24sp"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:layout_weight="5">
             <EditText
                 android:id="@+id/txtDataInicial"
                 android:hint="@string/data_hint"
@@ -44,7 +46,7 @@
 
             <TextView
                 android:text="a"
-                android:textSize="20dp"
+                android:textSize="24sp"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -57,23 +59,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"/>
-
+        </TableRow>
+        <TableRow>
+            <Button
+                android:id="@+id/btnPesquisar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Pesquisar"
+                android:textSize="24sp"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button android:id="@+id/btnPesquisar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="Pesquisar"
-            android:textSize="24dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

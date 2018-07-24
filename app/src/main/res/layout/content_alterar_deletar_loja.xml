@@ -6,63 +6,67 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip">
         <TableRow android:weightSum="1">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Dados de Loja"
-                android:textSize="24dp"
+                android:textSize="28sp"
                 android:textAlignment="center"
                 android:textColor="#000000"
                 android:layout_weight="1"/>
         </TableRow>
-        <TableRow android:weightSum="2">
+        <TableRow>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:text="CNPJ:"
-                android:textSize="20dp"
+                android:textSize="24sp"
                 android:textColor="#000" />
+        </TableRow>
 
+        <TableRow>
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textAlignment="textStart"
                 android:textColor="#000"
                 android:layout_weight="1"
                 android:id="@+id/txtCnpj"/>
         </TableRow>
-        <TableRow android:weightSum="2">
+
+        <TableRow>
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="#000000"
-                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textColor="#000"
+                android:textAlignment="textStart"
                 android:layout_weight="1"
                 android:text="Nome:"/>
+        </TableRow>
 
+        <TableRow>
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textSize="24sp"
                 android:id="@+id/txtNome"
                 android:layout_weight="1"
-                android:textAlignment="center"/>
+                android:textAlignment="textStart"/>
         </TableRow>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2">
-
+        <TableRow>
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="28sp"
                 android:text="Atualizar"
                 android:id="@+id/btnAtualizar"/>
 
@@ -70,9 +74,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="28sp"
                 android:text="Deletar"
                 android:textColor="#FF0000"
                 android:id="@+id/btnDeletar"/>
-        </LinearLayout>
+        </TableRow>
     </TableLayout>
 </LinearLayout>

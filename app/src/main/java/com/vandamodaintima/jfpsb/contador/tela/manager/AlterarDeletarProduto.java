@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -14,8 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
@@ -66,7 +65,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             txtFornecedorAtual.setText("Sem Fornecedor");
         }
 
-        setAlertBuilder(produto.getCod_barra());
+        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
 
         setManagers();
 
@@ -116,8 +116,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally {
-            spinnerCursor.close();
-            spinnerCursor2.close();
+            if(spinnerCursor != null)
+                spinnerCursor.close();
+
+            if(spinnerCursor2 != null)
+                spinnerCursor2.close();
         }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -155,7 +158,64 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                alertDialog.show();
+            }
+        });
+    }
+
+    @Override
+    protected void setBtnDeletar() {
+        btnDeletar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                alertDialog.show();
+            }
+        });
+    }
+
+    @Override
+    protected void setAlertBuilderDeletar() {
+        AlertBuilderDeletar = new AlertDialog.Builder(this);
+        AlertBuilderDeletar.setTitle("Deletar Produto");
+        AlertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
+
+        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean result = produtoManager.deletar(produto.getCod_barra());
+
+                if(result) {
+                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    setResult(Activity.RESULT_OK, null);
+                    finish();
+                }
+                else {
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void setAlertBuilderAtualizar() {
+        AlertBuilderAtualizar = new AlertDialog.Builder(this);
+        AlertBuilderAtualizar.setTitle("Atualizar Produto");
+        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto" + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
+
+        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 try {
+                    String cod_barra = txtCodBarra.getText().toString();
                     String descricao = txtDescricao.getText().toString();
                     String preco = txtPreco.getText().toString();
 
@@ -168,15 +228,18 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     if(!TestaIO.isValidDouble(preco))
                         throw new Exception("O valor no campo preço é inválido!");
 
-                    produto.setDescricao(descricao.toUpperCase());
-                    produto.setPreco(Double.parseDouble(preco));
-                    produto.setFornecedor(fornecedor);
+                    Produto toUpdate = new Produto();
 
-                    boolean result = produtoManager.atualizar(produto, produto.getCod_barra());
+                    toUpdate.setCod_barra(cod_barra);
+                    toUpdate.setDescricao(descricao.toUpperCase());
+                    toUpdate.setPreco(Double.parseDouble(preco));
+                    toUpdate.setFornecedor(fornecedor);
+
+                    boolean result = produtoManager.atualizar(toUpdate, produto.getCod_barra());
 
                     if(result) {
-                        Toast.makeText(AlterarDeletarProduto.this, "Produto com código de barras " + produto.getCod_barra() + " atualizado com sucesso!", Toast.LENGTH_SHORT).show();
-                        PesquisarProduto.populaListView();
+                        Toast.makeText(AlterarDeletarProduto.this, "Produto Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
+                        setResult(Activity.RESULT_OK, null);
                         finish();
                     }
                     else {
@@ -189,45 +252,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 }
             }
         });
-    }
 
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
+        AlertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    protected void setAlertBuilder(final Object cod_barra) {
-        builder = new AlertDialog.Builder(this);
-        builder.setTitle("Deletar Produto");
-        builder.setMessage("Tem certeza que deseja apagar o produto de código de barras " + cod_barra + "?");
-
-        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = produtoManager.deletar(cod_barra);
-
-                if(result) {
-                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    PesquisarProduto.populaListView();
-                    finish();
-                }
-                else {
-                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();
             }
         });
     }

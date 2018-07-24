@@ -60,7 +60,14 @@ public class DAOProduto extends DAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("cod_barra", objeto.getCod_barra());
-            contentValues.put("fornecedor", objeto.getFornecedor().getId());
+
+            if(objeto.getFornecedor() != null) {
+                contentValues.put("fornecedor", objeto.getFornecedor().getId());
+            }
+            else {
+                contentValues.putNull("fornecedor");
+            }
+
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
 

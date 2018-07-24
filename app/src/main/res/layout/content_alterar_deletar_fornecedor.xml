@@ -11,92 +11,91 @@
 
         <TableRow android:weightSum="1">
             <TextView android:text="Dados De Fornecedor"
-                android:textSize="24dp"
+                android:textSize="28sp"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:textColor="#000000"
-                android:layout_marginTop="10dip"/>
+                android:textColor="#000000" />
         </TableRow>
 
-        <TableRow android:weightSum="2">
+        <TableRow>
             <TextView
                 android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="Id: "
-                android:textColor="#000000"
-                android:textAlignment="center" />
-
+                android:textSize="24sp"
+                android:text="Id:"
+                android:textColor="#000"
+                android:textAlignment="textStart" />
+        </TableRow>
+        <TableRow>
             <EditText android:id="@+id/txtIDFornecedor"
                 android:enabled="false"
-                android:textAlignment="center"
+                android:textSize="24sp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"/>
-
+                android:layout_width="match_parent"/>
         </TableRow>
 
-        <TableRow android:weightSum="2">
+        <TableRow>
             <TextView
                 android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="CNPJ: "
-                android:textColor="#000000"
-                android:textAlignment="center" />
-
+                android:textSize="24sp"
+                android:text="CNPJ:"
+                android:textColor="#000"
+                android:textAlignment="textStart" />
+        </TableRow>
+        <TableRow>
             <EditText android:id="@+id/txtCnpj"
-                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textAlignment="textStart"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"/>
-
+                android:layout_width="match_parent"/>
         </TableRow>
 
-        <TableRow android:weightSum="2">
+        <TableRow>
             <TextView
                 android:text="Nome:"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="#000000"
                 android:layout_weight="1"
-                android:textSize="20dp"
-                android:layout_width="0dp"
+                android:textSize="24sp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
+        </TableRow>
+        <TableRow>
             <EditText android:id="@+id/txtNome"
-                android:textSize="20dp"
-                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textAlignment="textStart"
                 android:layout_weight="1"
-                android:textColor="#000000"
-                android:layout_width="0dp"
+                android:textColor="#000"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+        </TableRow>
+        <TableRow>
+            <Button
+                android:id="@+id/btnAtualizar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Atualizar"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btnDeletar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Deletar"
+                android:textColor="#FF0000"
+                android:textSize="28sp"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Atualizar"
-            android:id="@+id/btnAtualizar"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Deletar"
-            android:textColor="#FF0000"
-            android:id="@+id/btnDeletar"/>
-    </LinearLayout>
 
 </LinearLayout>

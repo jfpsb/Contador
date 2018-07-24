@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,11 +23,12 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarLoja extends FragmentBase {
+public class PesquisarLoja extends TelaPesquisa {
 
     private static LojaManager lojaManager;
     private ListView listView;
@@ -78,13 +80,13 @@ public class PesquisarLoja extends FragmentBase {
     }
 
     private void setListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = lojaManager.listarCursor();
+            cursorPesquisa = lojaManager.listarCursor();
 
-            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorLista);
+            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorPesquisa);
 
             listView.setAdapter(lojaCursorAdapter);
         } catch (Exception e) {
@@ -111,42 +113,56 @@ public class PesquisarLoja extends FragmentBase {
 
                 alterarLoja.putExtras(bundle);
 
-                startActivity(alterarLoja);
+                startActivityForResult(alterarLoja, TELA_ALTERAR_DELETAR);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if(resultCode == Activity.RESULT_OK) {
+                    populaListView(txtNome.getText().toString());
+                }
+                else {
+                    Toast.makeText(viewInflate.getContext(), "A Loja Não Foi Alterada", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     /**
      * Popula a lista novamente
      */
 
-    public static void populaListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+    public void populaListView() {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = lojaManager.listarCursor();
+            cursorPesquisa = lojaManager.listarCursor();
 
-            if(cursorLista.getCount() == 0)
+            if(cursorPesquisa.getCount() == 0)
                 Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
 
-            lojaCursorAdapter.changeCursor(cursorLista);
+            lojaCursorAdapter.changeCursor(cursorPesquisa);
         }catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void populaListView(String nome) {
-        if(cursorLista != null)
-            cursorLista.close();
+    public void populaListView(String nome) {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = lojaManager.listarPorNome(nome);
+            cursorPesquisa = lojaManager.listarPorNome(nome);
 
-            if(cursorLista.getCount() == 0)
+            if(cursorPesquisa.getCount() == 0)
                 Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
 
-            lojaCursorAdapter.changeCursor(cursorLista);
+            lojaCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

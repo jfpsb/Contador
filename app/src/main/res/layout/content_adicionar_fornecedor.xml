@@ -8,37 +8,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Escolher Fornecedor de Menu Abaixo:"
-            android:textAlignment="center"
-            android:textSize="20dp"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
             android:textColor="#000"/>
 
         <Spinner
+            android:id="@+id/spinnerFornecedor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerFornecedor"
-            android:textAlignment="center">
-        </Spinner>
+            android:textAlignment="center"
+            android:tooltipText="Selecione" />
 
         <Button
+            android:id="@+id/btnSelecionar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnSelecionar"
             android:text="Selecionar de Lista"
-            android:textSize="24dp"/>
+            android:textSize="24dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="250px"
             android:textAlignment="center"
             android:textColor="#000"
-            android:textSize="28dp"
+            android:textSize="28sp"
             android:text="OU"
             android:gravity="center_vertical"/>
 
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cadastrar Novo Fornecedor:"
-            android:textAlignment="center"
-            android:textSize="20dp"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
             android:textColor="#000"/>
 
         <include layout="@layout/fragment_cadastrar_fornecedor" />

@@ -15,4 +15,10 @@
 
     <style name="TabAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextoTab" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

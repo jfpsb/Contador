@@ -95,12 +95,12 @@ public class ContagemManager extends Manager<Contagem> {
         return false;
     }
 
-    public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, Loja loja) {
+    public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, String cnpj) {
         DAOContagem daoContagem = (DAOContagem)daoEntidade;
 
         String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = cnpj AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
 
-        String[] selection = new String[] { TrataDisplayData.getDataEmString(datainicio), TrataDisplayData.getDataEmString(datafinal), String.valueOf(loja.getCnpj()) };
+        String[] selection = new String[] { TrataDisplayData.getDataEmString(datainicio), TrataDisplayData.getDataEmString(datafinal), cnpj };
 
         return daoContagem.selectRaw(sql, selection);
     }

@@ -52,7 +52,6 @@ public class CadastrarFornecedor extends FragmentBase {
     @Override
     protected void setManagers() {
         fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
-        super.setManagers();
     }
 
     private void setBtnCadastrar() {
@@ -79,7 +78,7 @@ public class CadastrarFornecedor extends FragmentBase {
                     if(result) {
                         Toast.makeText(view.getContext(), "Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
 
-                        PesquisarFornecedor.populaListView();
+                        //TODO: result
 
                         txtCnpj.setText("");
                         txtNome.setText("");

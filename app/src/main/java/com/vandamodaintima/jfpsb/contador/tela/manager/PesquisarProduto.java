@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,36 +27,35 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarProduto extends FragmentBase {
+public class PesquisarProduto extends TelaPesquisa {
 
-    private RadioGroup radioGroup;
-    private EditText txtPesquisaProduto;
-    private static ProdutoManager produtoManager;
-    private ListView listView;
-    private static ProdutoCursorAdapter produtoCursorAdapter;
-    private static int TIPO_PESQUISA = 1;
-    private static TextView txtQuantProdutosCadastrados;
+    protected RadioGroup radioGroup;
+    protected EditText txtPesquisaProduto;
+    protected ProdutoManager produtoManager;
+    protected ListView listView;
+    protected ProdutoCursorAdapter produtoCursorAdapter;
+    protected static int TIPO_PESQUISA = 1;
+    protected TextView txtQuantProdutosCadastrados;
 
     public PesquisarProduto() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
-        setManagers();
-
         radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
-
         txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
         listView = viewInflate.findViewById(R.id.listViewProduto);
+
+        setManagers();
 
         setTxtPesquisaProduto();
 
@@ -74,54 +74,54 @@ public class PesquisarProduto extends FragmentBase {
     /**
      * Popula a lista novamente
      */
-    public static void populaListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+    protected void populaListView() {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
-        cursorLista = produtoManager.listarCursor();
+        cursorPesquisa = produtoManager.listarCursor();
 
-        txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
+        txtQuantProdutosCadastrados.setText(String.valueOf(cursorPesquisa.getCount()));
 
-        produtoCursorAdapter.changeCursor(cursorLista);
+        produtoCursorAdapter.changeCursor(cursorPesquisa);
     }
 
-    public static void populaListView(String termo) {
-        if(cursorLista != null)
-            cursorLista.close();
+    protected void populaListView(String termo) {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
 
             switch (TIPO_PESQUISA) {
                 case 1:
-                    cursorLista = produtoManager.listarCursorPorCodBarra(termo);
+                    cursorPesquisa = produtoManager.listarCursorPorCodBarra(termo);
                     break;
                 case 2:
-                    cursorLista = produtoManager.listarCursorPorDescricao(termo);
+                    cursorPesquisa = produtoManager.listarCursorPorDescricao(termo);
                     break;
                 case 3:
-                    cursorLista = produtoManager.listarCursorPorFornecedor(termo);
+                    cursorPesquisa = produtoManager.listarCursorPorFornecedor(termo);
                     break;
             }
 
-            txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursorPesquisa.getCount()));
 
-            produtoCursorAdapter.changeCursor(cursorLista);
+            produtoCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("Contador", e.getMessage(), e);
         }
     }
 
-    private void setListView(final View viewInflate) {
-        if(cursorLista != null)
-            cursorLista.close();
+    protected void setListView(final View viewInflate) {
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
-            cursorLista = produtoManager.listarCursor();
+            cursorPesquisa = produtoManager.listarCursor();
 
-            txtQuantProdutosCadastrados.setText(String.valueOf(cursorLista.getCount()));
+            txtQuantProdutosCadastrados.setText(String.valueOf(cursorPesquisa.getCount()));
 
-            produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursorLista);
+            produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursorPesquisa);
 
             listView.setAdapter(produtoCursorAdapter);
 
@@ -131,7 +131,7 @@ public class PesquisarProduto extends FragmentBase {
         }
     }
 
-    private void setListViewOnItemClickListener(final View viewInflate) {
+    protected void setListViewOnItemClickListener(final View viewInflate) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -150,12 +150,26 @@ public class PesquisarProduto extends FragmentBase {
 
                 alterarProduto.putExtras(bundle);
 
-                startActivity(alterarProduto);
+                startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
             }
         });
     }
 
-    private void setRadioGroup() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if(resultCode == Activity.RESULT_OK) {
+                    populaListView(txtPesquisaProduto.getText().toString());
+                }
+                else {
+                    Toast.makeText(viewInflate.getContext(), "O Produto Não Foi Alterado", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
+    protected void setRadioGroup() {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -186,7 +200,7 @@ public class PesquisarProduto extends FragmentBase {
         });
     }
 
-    private void setTxtPesquisaProduto(){
+    protected void setTxtPesquisaProduto(){
         txtPesquisaProduto.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

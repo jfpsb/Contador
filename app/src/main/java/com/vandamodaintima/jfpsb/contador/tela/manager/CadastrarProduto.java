@@ -148,8 +148,6 @@ public class CadastrarProduto extends FragmentBase {
                     if(result) {
                         Toast.makeText(viewInflate.getContext(), "O produto " + produto.getDescricao() + " foi inserido com sucesso!" , Toast.LENGTH_SHORT).show();
 
-                        PesquisarProduto.populaListView();
-
                         txtPreco.setText("");
                         txtDescricao.setText("");
                         txtCodBarra.setText("");

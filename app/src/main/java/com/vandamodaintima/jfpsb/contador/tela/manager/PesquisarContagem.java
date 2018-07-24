@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
@@ -34,17 +36,17 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarContagem extends FragmentBase {
+public class PesquisarContagem extends TelaPesquisa {
 
     private static ContagemManager contagemManager;
     private LojaManager lojaManager;
     private ListView listView;
-    private static ContagemCursorAdapter contagemCursorAdapter;
+    private ContagemCursorAdapter contagemCursorAdapter;
     private EditText txtDataInicial;
     private EditText txtDataFinal;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
-    private Loja loja = new Loja();
+    private Loja loja;
     private Date dataAtual;
 
     public PesquisarContagem() {
@@ -83,8 +85,8 @@ public class PesquisarContagem extends FragmentBase {
     }
 
     private void setListView() {
-        if(cursorLista != null)
-            cursorLista.close();
+        if(cursorPesquisa != null)
+            cursorPesquisa.close();
 
         try {
             contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), null);
@@ -108,11 +110,25 @@ public class PesquisarContagem extends FragmentBase {
                     Intent alterarContagem = new Intent(viewInflate.getContext(), AlterarDeletarContagem.class);
                     alterarContagem.putExtras(bundle);
 
-                    startActivity(alterarContagem);
+                    startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
                 }
             });
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if(resultCode == Activity.RESULT_OK) {
+                    btnPesquisar.performClick();
+                }
+                else {
+                    Toast.makeText(viewInflate.getContext(), "A Contagem Não Foi Alterada", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -121,7 +137,6 @@ public class PesquisarContagem extends FragmentBase {
 
         try {
             cursorSpinner = lojaManager.listarCursor();
-
             cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome" });
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
@@ -147,10 +162,11 @@ public class PesquisarContagem extends FragmentBase {
 
                     innerCursor.moveToPosition(i);
 
+                    loja = new Loja();
                     loja.setCnpj(innerCursor.getString(innerCursor.getColumnIndexOrThrow("_id")));
                     loja.setNome(innerCursor.getString(innerCursor.getColumnIndexOrThrow("nome")));
                 } else {
-                    loja.setCnpj("-1");
+                    loja = null;
                 }
             }
 
@@ -165,8 +181,6 @@ public class PesquisarContagem extends FragmentBase {
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Contagem contagem = new Contagem();
-
                 String data_inicial = txtDataInicial.getText().toString();
                 String data_final = txtDataFinal.getText().toString();
 
@@ -187,11 +201,7 @@ public class PesquisarContagem extends FragmentBase {
                     if(!TestaIO.isValidDate(data_final))
                         throw new Exception("A data final digitada é inválida!");
 
-                    contagem.setDatainicio(TrataDisplayData.getDataDisplay(data_inicial));
-                    contagem.setDatafinal(TrataDisplayData.getDataDisplay(data_final));
-                    contagem.setLoja(loja);
-
-                    populaListView(contagem);
+                    populaListView(TrataDisplayData.getDataDisplay(data_inicial), TrataDisplayData.getDataDisplay(data_final), loja.getCnpj());
 
                 }catch (Exception e) {
                     Log.e("Contador", e.getMessage(), e);
@@ -201,15 +211,15 @@ public class PesquisarContagem extends FragmentBase {
         });
     }
 
-    public static void populaListView(Contagem contagem) {
+    private void populaListView(Date datainicial, Date datafinal, String cnpj) {
         try {
-            cursorLista = contagemManager.listarPorPeriodoELoja(contagem.getDatainicio(), contagem.getDatafinal(), contagem.getLoja());
+            cursorPesquisa = contagemManager.listarPorPeriodoELoja(datainicial, datafinal, cnpj);
 
-            if(cursorLista.getCount() == 0) {
+            if(cursorPesquisa.getCount() == 0) {
                 Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
             }
 
-            contagemCursorAdapter.changeCursor(cursorLista);
+            contagemCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Log.i("Contador", e.getMessage());
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
