@@ -77,13 +77,14 @@
                 android:layout_height="wrap_content"/>
         </TableRow>
         <TableRow>
+
             <Button
                 android:id="@+id/btnAtualizar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Atualizar"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Button
@@ -93,7 +94,7 @@
                 android:layout_weight="1"
                 android:text="Deletar"
                 android:textColor="#FF0000"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>

@@ -44,7 +44,13 @@ public class DAOContagem extends DAO<Contagem>{
             contentValues.put("idcontagem", objeto.getIdcontagem());
             contentValues.put("loja", objeto.getLoja().getCnpj());
             contentValues.put("datainicio", TrataDisplayData.getDataEmString(objeto.getDatainicio()));
-            contentValues.put("datafinal", TrataDisplayData.getDataEmString(objeto.getDatafinal()));
+
+            if(objeto.getDatafinal() != null) {
+                contentValues.put("datafinal", TrataDisplayData.getDataEmString(objeto.getDatafinal()));
+            }
+            else {
+                contentValues.putNull("datafinal");
+            }
 
             return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chaves[0])});
         }
@@ -77,22 +83,5 @@ public class DAOContagem extends DAO<Contagem>{
         }
 
         return null;
-    }
-
-    public int atualizarSemDataFinal(Contagem contagem, int chave) {
-        try {
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("idcontagem", contagem.getIdcontagem());
-            contentValues.put("loja", contagem.getLoja().getCnpj());
-            contentValues.put("datainicio", TrataDisplayData.getDataEmString(contagem.getDatainicio()));
-
-            return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chave)});
-        }
-        catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
-        }
-
-        return -1;
     }
 }

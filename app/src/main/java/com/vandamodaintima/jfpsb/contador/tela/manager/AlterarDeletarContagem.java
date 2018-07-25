@@ -22,6 +22,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
+import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -131,6 +132,12 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             @Override
             public void onClick(View view) {
                 String dataFinal = txtDataFinal.getText().toString();
+
+                if(dataFinal.isEmpty()) {
+                    Toast.makeText(AlterarDeletarContagem.this, "O Campo de Data Final Não Pode Estar Vazio", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 AlertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
 
                 AlertDialog alertDialog = AlertBuilderAtualizar.create();

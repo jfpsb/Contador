@@ -43,6 +43,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         txtNome.setText(loja.getNome());
 
         setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
         setBtnAtualizar();
         setBtnDeletar();
     }

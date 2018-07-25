@@ -41,7 +41,7 @@ public class CadastrarContagem extends FragmentBase {
 
     private ContagemManager contagemManager;
 
-    private Loja loja = new Loja();
+    private Loja loja = null;
 
     public CadastrarContagem() {
         // Required empty public constructor
@@ -85,6 +85,9 @@ public class CadastrarContagem extends FragmentBase {
                 try {
                     String dataInicial = txtDataInicial.getText().toString();
 
+                    if(loja == null)
+                        throw new Exception("Loja Inválida");
+
                     if(TestaIO.isStringEmpty(dataInicial))
                         throw new Exception("O campo de data inicial não pode estar vazio!");
 
@@ -94,7 +97,7 @@ public class CadastrarContagem extends FragmentBase {
                     boolean result = contagemManager.inserir(contagem);
 
                     if(result) {
-                        Toast.makeText(viewInflate.getContext(), "Contagem inserida com data incial " + contagem.getDatainicio(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(viewInflate.getContext(), "Contagem inserida com data inicial " + TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()), Toast.LENGTH_SHORT).show();
                         txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(dataAtual));
                     }
                     else {
@@ -102,7 +105,7 @@ public class CadastrarContagem extends FragmentBase {
                     }
 
                 }catch (Exception e) {
-                    Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Contagem: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -137,10 +140,11 @@ public class CadastrarContagem extends FragmentBase {
 
                     cursor.moveToPosition(i);
 
+                    loja = new Loja();
                     loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                     loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 } else {
-                    loja.setCnpj("-1");
+                    loja = null;
                 }
             }
 

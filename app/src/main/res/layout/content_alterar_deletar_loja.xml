@@ -62,22 +62,25 @@
         </TableRow>
 
         <TableRow>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="28sp"
-                android:text="Atualizar"
-                android:id="@+id/btnAtualizar"/>
 
             <Button
+                android:id="@+id/btnAtualizar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="28sp"
+                android:text="Atualizar"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnDeletar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Deletar"
                 android:textColor="#FF0000"
-                android:id="@+id/btnDeletar"/>
+                android:textSize="24sp"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
 </LinearLayout>

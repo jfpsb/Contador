@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
+
 /**
  * Created by jfpsb on 09/02/2018.
  */
@@ -30,7 +32,9 @@ public class ContagemCursorAdapter extends CursorAdapter {
         String lojaNome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
         String datainicial = cursor.getString(cursor.getColumnIndexOrThrow("datainicio"));
 
-        labelLojaNome.setText(String.valueOf(lojaNome));
+        datainicial = TrataDisplayData.getDataEmStringDisplay(datainicial);
+
+        labelLojaNome.setText(lojaNome);
         labelDataInicial.setText(datainicial);
     }
 }

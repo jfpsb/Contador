@@ -84,17 +84,6 @@ public class ContagemManager extends Manager<Contagem> {
         return daoEntidade.select("idcontagem = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "datainicio DESC", null);
     }
 
-    public boolean atualizarSemDataFinal(Contagem contagem, int chave) {
-        DAOContagem daoContagem = (DAOContagem)daoEntidade;
-
-        long result = daoContagem.atualizarSemDataFinal(contagem, chave);
-
-        if(result != -1)
-            return true;
-
-        return false;
-    }
-
     public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, String cnpj) {
         DAOContagem daoContagem = (DAOContagem)daoEntidade;
 

@@ -49,7 +49,7 @@
             android:id="@+id/btnCadastrar"
             android:layout_margin="15dip"
             android:text="Cadastrar"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
     </TableLayout>
 

@@ -185,7 +185,7 @@ public class PesquisarContagem extends TelaPesquisa {
                 String data_final = txtDataFinal.getText().toString();
 
                 try {
-                    if(loja.getCnpj().equals("-1")) {
+                    if(loja == null) {
                         throw new Exception("Loja Inválida");
                     }
 

@@ -22,6 +22,12 @@ public abstract class FragmentBase extends Fragment {
         return viewInflate;
     }
 
+    public void showDatePicker(View v) {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setView(v);
+        datePickerFragment.show(getFragmentManager(), "datePicker");
+    }
+
     protected abstract void setManagers();
 
     @Override

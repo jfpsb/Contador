@@ -152,7 +152,7 @@
             android:layout_margin="15dip"
             android:padding="10dip"
             android:text="Adicionar"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
     </LinearLayout>

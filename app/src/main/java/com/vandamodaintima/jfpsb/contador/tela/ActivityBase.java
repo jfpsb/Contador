@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
@@ -87,6 +88,12 @@ public class ActivityBase extends AppCompatActivity {
 
     public ConexaoBanco getConn() {
         return conn;
+    }
+
+    public void showDatePicker(View v) {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setView(v);
+        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
