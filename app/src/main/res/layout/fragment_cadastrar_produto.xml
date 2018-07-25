@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:stretchColumns="1"
-    android:layout_margin="7dip">
+    android:layout_margin="10dip"
+    android:animateLayoutChanges="true">
 
     <TableRow>
         <TextView
@@ -21,6 +22,16 @@
             android:inputType="number"
             android:textSize="24sp"
             android:layout_weight="1" />
+    </TableRow>
+    <TableRow>
+        <TextView android:id="@+id/lblCodRepetido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="#FF0000"
+            android:visibility="gone"
+            android:text="Código De Barras Já Existe No Sistema" />
     </TableRow>
     <TableRow>
         <TextView

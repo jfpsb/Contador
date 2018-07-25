@@ -4,20 +4,23 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
@@ -37,11 +40,14 @@ public class CadastrarProduto extends FragmentBase {
     private Spinner spinnerFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
+    private TextView lblCodRepetido;
 
     private ProdutoManager produtoManager;
     private FornecedorManager fornecedorManager;
 
     private Fornecedor fornecedor;
+
+    private Animation slidedown;
 
     public CadastrarProduto() {
         // Required empty public constructor
@@ -57,12 +63,12 @@ public class CadastrarProduto extends FragmentBase {
         txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         spinnerFornecedor = viewInflate.findViewById(R.id.spinnerFornecedores);
+        lblCodRepetido = viewInflate.findViewById(R.id.lblCodRepetido);
 
         setManagers();
-
         setSpinnerFornecedor();
-
         setBtnCadastrar();
+        setTxtCodBarra();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -89,8 +95,11 @@ public class CadastrarProduto extends FragmentBase {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         finally {
-            cursor.close();
-            cursor2.close();
+            if(cursor != null)
+                cursor.close();
+
+            if(cursor2 != null)
+                cursor2.close();
         }
 
         spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -165,4 +174,46 @@ public class CadastrarProduto extends FragmentBase {
         });
     }
 
+    private void setTxtCodBarra() {
+        slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
+
+        txtCodBarra.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String texto = txtCodBarra.getText().toString();
+
+                if(! texto.isEmpty()) {
+                    Produto produto = produtoManager.listarPorChave(texto);
+
+                    if(produto != null) {
+                        txtDescricao.setEnabled(false);
+                        txtPreco.setEnabled(false);
+                        btnCadastrar.setEnabled(false);
+                        spinnerFornecedor.setEnabled(false);
+
+                        lblCodRepetido.setVisibility(View.VISIBLE);
+                        lblCodRepetido.startAnimation(slidedown);
+                    }
+                    else {
+                        txtDescricao.setEnabled(true);
+                        txtPreco.setEnabled(true);
+                        btnCadastrar.setEnabled(true);
+                        spinnerFornecedor.setEnabled(true);
+
+                        lblCodRepetido.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+    }
 }
