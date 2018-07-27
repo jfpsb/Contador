@@ -4,7 +4,7 @@
     <string name="hintRadioButtonCodBarra">Digite o Código De Barra do Produto</string>
     <string name="hintRadioButtonNomeFornecedor">Digite o Fornecedor do Produto</string>
     <string name="hintRadioButtonDescricao">"Digite uma descrição do produto"</string>
-    <string name="txtPesquisaFornecedor">CNPJ ou nome de fornecedor</string>
+    <string name="txtPesquisaFornecedor">CNPJ, nome ou fantasia</string>
     <string name="title_activity_alterar_deletar_contagem">Contagem: alterar, deletar ou manipular</string>
     <string name="title_activity_alterar_deletar_fornecedor">Fornecedor: alterar ou deletar</string>
     <string name="title_activity_alterar_deletar_loja">Loja: alterar ou deletar</string>

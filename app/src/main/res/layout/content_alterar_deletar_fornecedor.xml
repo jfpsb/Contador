@@ -54,13 +54,13 @@
                 android:textSize="22sp" />
         </TableRow>
         <TableRow>
-
             <EditText
                 android:id="@+id/txtCnpj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="textStart"
+                android:inputType="number"
                 android:textSize="20sp" />
         </TableRow>
         <TableRow>

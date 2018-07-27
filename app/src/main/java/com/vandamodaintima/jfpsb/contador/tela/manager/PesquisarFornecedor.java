@@ -154,7 +154,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
             cursorPesquisa.close();
 
         try {
-            cursorPesquisa = fornecedorManager.listarCursorPorNomeOuCnpj(termo);
+            cursorPesquisa = fornecedorManager.listarCursorPorNomeCnpjFantasia(termo);
             fornecedorCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

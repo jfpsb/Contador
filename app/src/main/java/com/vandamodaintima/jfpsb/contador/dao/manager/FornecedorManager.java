@@ -82,8 +82,8 @@ public class FornecedorManager extends Manager<Fornecedor> {
         return daoEntidade.select("id = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "nome", null);
     }
 
-    public Cursor listarCursorPorNomeOuCnpj(String termo) {
-        return daoEntidade.select("nome LIKE ? OR cnpj LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+    public Cursor listarCursorPorNomeCnpjFantasia(String termo) {
+        return daoEntidade.select("nome LIKE ? OR cnpj LIKE ? OR fantasia LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%", "%" + termo + "%" }, null, null, "nome", null);
     }
 
     public Cursor listarCursorPorCnpj(String cnpj) {
