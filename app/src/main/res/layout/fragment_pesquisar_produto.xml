@@ -25,24 +25,21 @@
             android:id="@+id/rbCodBarra"
             android:text="Cod. Barra"
             android:checked="true"
-            android:textSize="16dp"
-            android:layout_margin="5dip" />
+            android:textSize="16dp" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rbFornecedor"
             android:text="Fornecedor"
-            android:textSize="16dp"
-            android:layout_margin="5dip" />
+            android:textSize="16dp" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rbDescricao"
             android:text="Descrição"
-            android:textSize="16dp"
-            android:layout_margin="5dip" />
+            android:textSize="16dp" />
 
     </RadioGroup>
 

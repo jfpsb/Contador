@@ -9,11 +9,7 @@ import android.view.ViewStub;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
-/**
- * PesquisaContagemProduto é uma Fragment filha de PesquisarProduto. Esta
- * activity serve como container de PesquisaContagemProduto
- */
-public class PesquisaContagemProdutoContainer extends ActivityBase {
+public class CadastrarFornecedorSemInternetContainer extends ActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +19,17 @@ public class PesquisaContagemProdutoContainer extends ActivityBase {
         stub.setLayoutResource(R.layout.content_fragment_container_for_activity);
         stub.inflate();
 
-        PesquisaContagemProduto pesquisaContagemProduto = new PesquisaContagemProduto();
+        CadastrarFornecedorSemInternet cadastrarFornecedorSemInternet = new CadastrarFornecedorSemInternet();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("contagem", getIntent().getExtras().getSerializable("contagem"));
-
-        pesquisaContagemProduto.setArguments(bundle);
-
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, pesquisaContagemProduto);
+        fragmentTransaction.add(R.id.fragment_container, cadastrarFornecedorSemInternet);
         fragmentTransaction.commit();
+    }
+
+    public void setResultCadastro() {
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 }

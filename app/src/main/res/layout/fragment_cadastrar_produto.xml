@@ -1,100 +1,109 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:stretchColumns="1"
-    android:layout_margin="10dip"
-    android:animateLayoutChanges="true">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content">
 
-    <TableRow>
-        <TextView
-            android:text="Código De Barra: "
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#000"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
-        <EditText
-            android:id="@+id/txtCodBarra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textSize="24sp"
-            android:layout_weight="1" />
-    </TableRow>
-    <TableRow>
-        <TextView android:id="@+id/lblCodRepetido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="#FF0000"
-            android:visibility="gone"
-            android:text="Código De Barras Já Existe No Sistema" />
-    </TableRow>
-    <TableRow>
-        <TextView
-            android:text="Fornecedor: "
-            android:textSize="24sp"
-            android:textColor="#000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
-        <Spinner
-            android:id="@+id/spinnerFornecedores"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </TableRow>
-    <TableRow>
-        <TextView
-            android:text="Descrição: "
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_weight="1"
-            android:textColor="#000" />
-    </TableRow>
-    <TableRow>
-        <EditText
-            android:id="@+id/txtDescricao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:inputType="textMultiLine"
-            android:layout_weight="1" />
-    </TableRow>
-    <TableRow>
-        <TextView
-            android:text="Preço: "
-            android:textSize="24sp"
-            android:textColor="#000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
-        <EditText
-            android:id="@+id/txtPreco"
-            android:inputType="number"
-            android:textSize="24sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </TableRow>
-    <TableRow>
+            android:layout_height="match_parent"
+            android:stretchColumns="1"
+            android:layout_margin="10dip">
 
-        <Button
-            android:id="@+id/btnCadastrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cadastrar"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-    </TableRow>
-</TableLayout>
+            <TableRow>
+                <TextView
+                    android:text="Código De Barra: "
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textColor="#000"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <EditText
+                    android:id="@+id/txtCodBarra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textSize="24sp"
+                    android:layout_weight="1" />
+            </TableRow>
+            <TableRow>
+                <TextView android:id="@+id/lblCnpjRepetido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="#FF0000"
+                    android:visibility="gone"
+                    android:text="Código De Barras Já Existe No Sistema" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Fornecedor: "
+                    android:textSize="24sp"
+                    android:textColor="#000"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <Spinner
+                    android:id="@+id/spinnerFornecedores"
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Descrição: "
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:layout_weight="1"
+                    android:textColor="#000" />
+            </TableRow>
+            <TableRow>
+                <EditText
+                    android:id="@+id/txtDescricao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:inputType="textMultiLine"
+                    android:layout_weight="1" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:text="Preço: "
+                    android:textSize="24sp"
+                    android:textColor="#000"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <EditText
+                    android:id="@+id/txtPreco"
+                    android:inputType="number"
+                    android:textSize="24sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </TableRow>
+            <TableRow>
+
+                <Button
+                    android:id="@+id/btnCadastrar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cadastrar"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+</LinearLayout>

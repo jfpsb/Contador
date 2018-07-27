@@ -63,7 +63,7 @@ public class CadastrarProduto extends FragmentBase {
         txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         spinnerFornecedor = viewInflate.findViewById(R.id.spinnerFornecedores);
-        lblCodRepetido = viewInflate.findViewById(R.id.lblCodRepetido);
+        lblCodRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
 
         setManagers();
         setSpinnerFornecedor();

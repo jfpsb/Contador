@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 
@@ -37,14 +36,14 @@ import java.net.URL;
  * A simple {@link Fragment} subclass.
  */
 public class CadastrarFornecedor extends FragmentBase {
-    private Button btnCadastrar;
-    private EditText txtCnpj;
-    private TextView lblCodRepetido;
-    private FornecedorManager fornecedorManager;
+    protected Button btnCadastrar;
+    protected EditText txtCnpj;
+    protected TextView lblCnpjRepetido;
+    protected FornecedorManager fornecedorManager;
 
-    private AlertDialog.Builder alertaCadastro;
+    protected AlertDialog.Builder alertaCadastro;
 
-    private Animation slidedown;
+    protected Animation slidedown;
 
     public CadastrarFornecedor() {
         // Required empty public constructor
@@ -57,7 +56,7 @@ public class CadastrarFornecedor extends FragmentBase {
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
-        lblCodRepetido = viewInflate.findViewById(R.id.lblCodRepetido);
+        lblCnpjRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
 
         setManagers();
         setBtnCadastrar();
@@ -66,7 +65,7 @@ public class CadastrarFornecedor extends FragmentBase {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    private void setTxtCnpj() {
+    protected void setTxtCnpj() {
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
 
         txtCnpj.addTextChangedListener(new TextWatcher() {
@@ -89,12 +88,12 @@ public class CadastrarFornecedor extends FragmentBase {
 
                     if(fornecedor != null) {
                         btnCadastrar.setEnabled(false);
-                        lblCodRepetido.setVisibility(View.VISIBLE);
-                        lblCodRepetido.startAnimation(slidedown);
+                        lblCnpjRepetido.setVisibility(View.VISIBLE);
+                        lblCnpjRepetido.startAnimation(slidedown);
                     }
                     else {
                         btnCadastrar.setEnabled(true);
-                        lblCodRepetido.setVisibility(View.GONE);
+                        lblCnpjRepetido.setVisibility(View.GONE);
                     }
                 }
             }
@@ -106,7 +105,7 @@ public class CadastrarFornecedor extends FragmentBase {
         fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
     }
 
-    private void setBtnCadastrar() {
+    protected void setBtnCadastrar() {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +118,7 @@ public class CadastrarFornecedor extends FragmentBase {
                     new RetornarEmpresa().execute("https://www.receitaws.com.br/v1/cnpj/", cnpj);
                 }
                 catch (Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Contador", e.getMessage(), e);
                 }
             }
@@ -224,7 +224,7 @@ public class CadastrarFornecedor extends FragmentBase {
         }
     }
 
-    private void setAlertaCadastro(final Fornecedor fornecedor, final Toast toast) {
+    protected void setAlertaCadastro(final Fornecedor fornecedor, final Toast toast) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Fornecedor");
 
@@ -245,14 +245,10 @@ public class CadastrarFornecedor extends FragmentBase {
                 boolean result = fornecedorManager.inserir(fornecedor);
 
                 if (result) {
-                    toast.setText("Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso");
+                    toast.setText("Inserção de Fornecedor " + fornecedor.getNome() + " Efetuada com Sucesso");
                     toast.show();
 
-                    // Atualiza lista em aba de pesquisa
-                    Fragment fragment = ((ActivityBase)(getActivity())).getAdapter().getItem(0);
-                    ((PesquisarFornecedor) fragment).populaListView();
-
-                    txtCnpj.setText("");
+                    PesquisaAposCadastro();
                 } else {
                     toast.setText("Erro ao Inserir Fornecedor");
                     toast.show();
@@ -269,5 +265,21 @@ public class CadastrarFornecedor extends FragmentBase {
         });
 
         alertaCadastro.show();
+    }
+
+    /**
+     * Depois que o cadastro é efetuado esse método é responsável por atualizar a lista de pesquisa
+     */
+    protected void PesquisaAposCadastro() {
+        try {
+            // Atualiza lista em aba de pesquisa
+            Fragment fragment = ((ActivityBase) (getActivity())).getAdapter().getItem(0);
+            ((PesquisarFornecedor) fragment).populaListView();
+
+            txtCnpj.setText("");
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage(), e);
+        }
     }
 }

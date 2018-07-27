@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.tela;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
 import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedorSemInternetContainer;
 import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarFornecedor;
 import com.vandamodaintima.jfpsb.contador.R;
 
@@ -27,6 +29,7 @@ public class TelaFornecedor extends ActivityBase {
 
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
+    private static final int CADASTRAR_SEM_INTERNET = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class TelaFornecedor extends ActivityBase {
 
         switch (id) {
             case R.id.itemCadastrarFornecedorSemInternet:
+                Intent intent = new Intent(this, CadastrarFornecedorSemInternetContainer.class);
+                startActivityForResult(intent, CADASTRAR_SEM_INTERNET);
                 return true;
             case R.id.itemExportarFornecedorExcel:
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -96,21 +101,29 @@ public class TelaFornecedor extends ActivityBase {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == ESCOLHER_DIRETORIO) {
-            if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
+        switch (requestCode) {
+            case ESCOLHER_DIRETORIO:
+                if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                    String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
 
-                ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
+                    ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
 
-                boolean result = manipulaExcel.ExportaFornecedor(diretorio);
+                    boolean result = manipulaExcel.ExportaFornecedor(diretorio);
 
-                if(result) {
-                    Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    if(result) {
+                        Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else {
-                    Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
+                break;
+
+            case CADASTRAR_SEM_INTERNET:
+                if(resultCode == Activity.RESULT_OK) {
+                    pesquisarFornecedor.populaListView();
                 }
-            }
+                break;
         }
     }
 }
