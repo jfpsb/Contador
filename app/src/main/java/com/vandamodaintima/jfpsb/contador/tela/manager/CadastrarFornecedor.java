@@ -1,23 +1,36 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager;
 
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 /**
@@ -26,8 +39,12 @@ import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 public class CadastrarFornecedor extends FragmentBase {
     private Button btnCadastrar;
     private EditText txtCnpj;
-    private EditText txtNome;
+    private TextView lblCodRepetido;
     private FornecedorManager fornecedorManager;
+
+    private AlertDialog.Builder alertaCadastro;
+
+    private Animation slidedown;
 
     public CadastrarFornecedor() {
         // Required empty public constructor
@@ -40,13 +57,48 @@ public class CadastrarFornecedor extends FragmentBase {
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
-        txtNome = viewInflate.findViewById(R.id.txtNome);
+        lblCodRepetido = viewInflate.findViewById(R.id.lblCodRepetido);
 
         setManagers();
-
         setBtnCadastrar();
+        setTxtCnpj();
 
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private void setTxtCnpj() {
+        slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
+
+        txtCnpj.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String texto = txtCnpj.getText().toString();
+
+                if(! texto.isEmpty()) {
+                    Fornecedor fornecedor = fornecedorManager.listarPorCnpj(texto);
+
+                    if(fornecedor != null) {
+                        btnCadastrar.setEnabled(false);
+                        lblCodRepetido.setVisibility(View.VISIBLE);
+                        lblCodRepetido.startAnimation(slidedown);
+                    }
+                    else {
+                        btnCadastrar.setEnabled(true);
+                        lblCodRepetido.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -58,38 +110,164 @@ public class CadastrarFornecedor extends FragmentBase {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fornecedor fornecedor = new Fornecedor();
-
                 try {
                     String cnpj = txtCnpj.getText().toString();
-                    String nome = txtNome.getText().toString();
 
-                    if(TestaIO.isStringEmpty(cnpj))
-                        throw new Exception("Campo de CNPJ não pode ficar vazio!");
+                    if(cnpj.isEmpty())
+                        throw new Exception("CNPJ Não Pode Ficar Vazio!");
 
-                    if(TestaIO.isStringEmpty(nome))
-                        throw new Exception("Campo de nome não pode ficar vazio!");
-
-                    fornecedor.setCnpj(cnpj);
-                    fornecedor.setNome(nome.toUpperCase());
-
-                    boolean result = fornecedorManager.inserir(fornecedor);
-
-                    if(result) {
-                        Toast.makeText(view.getContext(), "Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
-
-                        //TODO: result
-
-                        txtCnpj.setText("");
-                        txtNome.setText("");
-                    }
-                    else {
-                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Fornecedor", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    new RetornarEmpresa().execute("https://www.receitaws.com.br/v1/cnpj/", cnpj);
+                }
+                catch (Exception e) {
+                    Log.e("Contador", e.getMessage(), e);
                 }
             }
         });
+    }
+
+    public class RetornarEmpresa extends AsyncTask<String, Void, Object> {
+        private Toast toast = Toast.makeText(viewInflate.getContext(), null, Toast.LENGTH_LONG);
+
+        @Override
+        protected void onPreExecute() {
+            toast.setText("Pesquisando CNPJ na Receita Federal");
+            toast.show();
+        }
+
+        @Override
+        protected Object doInBackground(String... strings) {
+            HttpURLConnection urlConnection = null;
+            JsonReader jsonReader = null;
+
+            try {
+                URL url = new URL(strings[0] + strings[1]);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                int response = urlConnection.getResponseCode();
+
+                if(response == HttpURLConnection.HTTP_OK) {
+                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                    jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
+                    String cnpj = strings[1];
+                    String nome = null;
+                    String fantasia = null;
+                    String message = null;
+
+                    jsonReader.beginObject();
+
+                    while (jsonReader.hasNext()) {
+                        String indice = jsonReader.nextName();
+
+                        if(indice.equals("nome")) {
+                            nome = jsonReader.nextString();
+                        }
+                        else if (indice.equals("fantasia")){
+                            fantasia = jsonReader.nextString();
+                        }
+                        else if(indice.equals("message")) {
+                            message = jsonReader.nextString();
+                            return message;
+                        }
+                        else {
+                            jsonReader.skipValue();
+                        }
+                    }
+
+                    jsonReader.endObject();
+
+                    Fornecedor fornecedor = new Fornecedor();
+
+                    fornecedor.setCnpj(cnpj);
+                    fornecedor.setNome(nome);
+                    fornecedor.setFantasia(fantasia);
+
+                    return fornecedor;
+                }
+                else {
+                    Log.i("Contador", "Erro em Request. Server retornou status " + response);
+                }
+            }
+            catch (Exception e) {
+                Log.e("Contador", e.getMessage(), e);
+            }
+            finally {
+                try {
+                    if(jsonReader != null)
+                        jsonReader.close();
+                } catch (Exception e) {
+                    Log.e("Contador", "Fechando JsonReader: " + e.getMessage(), e);
+                }
+
+                urlConnection.disconnect();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object object) {
+            if(object == null) {
+                Toast.makeText(getContext(), "Erro ao Retornar Empresa", Toast.LENGTH_SHORT).show();
+            }
+            else if(object instanceof Fornecedor){
+                Fornecedor fornecedor = (Fornecedor)object;
+                setAlertaCadastro(fornecedor, toast);
+            }
+            else {
+                String mensagem = (String)object;
+                toast.setText("Erro ao Inserir Fornecedor: " + mensagem);
+                toast.show();
+            }
+        }
+    }
+
+    private void setAlertaCadastro(final Fornecedor fornecedor, final Toast toast) {
+        alertaCadastro = new AlertDialog.Builder(getContext());
+        alertaCadastro.setTitle("Cadastrar Fornecedor");
+
+        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
+        mensagem += "Nome: " + fornecedor.getNome() + "\n\n";
+
+        if(!fornecedor.getFantasia().isEmpty()) {
+            mensagem += "Nome Fantasia: " + fornecedor.getFantasia() + "\n\n";
+        }
+
+        mensagem += "Deseja Cadastrar Este Fornecedor?";
+
+        alertaCadastro.setMessage(mensagem);
+
+        alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                boolean result = fornecedorManager.inserir(fornecedor);
+
+                if (result) {
+                    toast.setText("Inserção de fornecedor " + fornecedor.getNome() + " efetuada com sucesso");
+                    toast.show();
+
+                    // Atualiza lista em aba de pesquisa
+                    Fragment fragment = ((ActivityBase)(getActivity())).getAdapter().getItem(0);
+                    ((PesquisarFornecedor) fragment).populaListView();
+
+                    txtCnpj.setText("");
+                } else {
+                    toast.setText("Erro ao Inserir Fornecedor");
+                    toast.show();
+                }
+            }
+        });
+
+        alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                toast.setText("Fornecedor Não Foi Cadastrado");
+                toast.show();
+            }
+        });
+
+        alertaCadastro.show();
     }
 }

@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,56 +23,52 @@
                 android:textAlignment="center"
                 android:layout_weight="1"/>
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Cód. de Barra:"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_weight="1" />
+                android:textSize="22sp" />
         </TableRow>
         <TableRow>
             <EditText
+                android:id="@+id/txtCodBarra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="#000"
                 android:layout_weight="1"
-                android:id="@+id/txtCodBarra" />
+                android:textColor="#000"
+                android:textSize="20sp" />
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Fornecedor Atual:"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_weight="1"/>
+                android:textSize="22sp" />
         </TableRow>
         <TableRow>
             <EditText
+                android:id="@+id/txtFornecedorAtual"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="#000"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:id="@+id/txtFornecedorAtual"/>
+                android:textColor="#000"
+                android:textSize="20sp" />
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Alterar Fornecedor Para:"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_weight="1" />
+                android:textSize="22sp" />
         </TableRow>
-
         <TableRow>
             <Spinner
                 android:layout_width="match_parent"
@@ -78,48 +78,43 @@
                 android:layout_weight="1"
                 android:id="@+id/spinnerFornecedor"/>
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Descrição:"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_weight="1"/>
+                android:textSize="22sp" />
         </TableRow>
-
         <TableRow>
             <EditText
+                android:id="@+id/txtDescricao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="#000"
                 android:layout_weight="1"
-                android:id="@+id/txtDescricao" />
+                android:textColor="#000"
+                android:textSize="20sp" />
         </TableRow>
-
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Preço:"
                 android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_weight="1" />
+                android:textSize="22sp" />
         </TableRow>
-
         <TableRow>
             <EditText
+                android:id="@+id/txtPreco"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="#000"
                 android:layout_weight="1"
-                android:id="@+id/txtPreco"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="#000"
+                android:textSize="20sp" />
         </TableRow>
-
         <TableRow>
             <Button
                 android:layout_width="0dp"
@@ -141,4 +136,5 @@
                 android:id="@+id/btnDeletar"/>
         </TableRow>
     </TableLayout>
+    </ScrollView>
 </LinearLayout>

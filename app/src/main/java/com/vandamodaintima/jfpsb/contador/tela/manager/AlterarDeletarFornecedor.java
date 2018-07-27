@@ -19,6 +19,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
     private EditText txtCnpj;
     private EditText txtNome;
     private EditText txtId;
+    private EditText txtFantasia;
     private Fornecedor fornecedor;
     private FornecedorManager fornecedorManager;
 
@@ -35,6 +36,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         txtId = findViewById(R.id.txtIDFornecedor);
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
+        txtFantasia = findViewById(R.id.txtFantasia);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
@@ -42,13 +44,18 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
+        if(fornecedor.getFantasia().isEmpty()) {
+            txtFantasia.setText("Não Possui Nome Fantasia");
+        }
+        else {
+            txtFantasia.setText(fornecedor.getFantasia());
+        }
+
         setManagers();
 
         setAlertBuilderDeletar();
         setAlertBuilderAtualizar();
-
         setBtnAtualizar();
-
         setBtnDeletar();
     }
 
@@ -62,7 +69,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                AlertDialog alertDialog = alertBuilderAtualizar.create();
                 alertDialog.show();
             }
         });
@@ -73,7 +80,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
             }
         });
@@ -81,11 +88,11 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderAtualizar() {
-        AlertBuilderAtualizar = new AlertDialog.Builder(this);
-        AlertBuilderAtualizar.setTitle("Atualizar Fornecedor");
-        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+        alertBuilderAtualizar = new AlertDialog.Builder(this);
+        alertBuilderAtualizar.setTitle("Atualizar Fornecedor");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
 
-        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
@@ -119,7 +126,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderAtualizar.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Atualizado", Toast.LENGTH_SHORT).show();
@@ -129,11 +136,11 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderDeletar() {
-        AlertBuilderDeletar = new AlertDialog.Builder(this);
-        AlertBuilderDeletar.setTitle("Deletar Fornecedor");
-        AlertBuilderDeletar.setMessage("Tem certeza que deseja deletar o fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+        alertBuilderDeletar = new AlertDialog.Builder(this);
+        alertBuilderDeletar.setTitle("Deletar Fornecedor");
+        alertBuilderDeletar.setMessage("Tem certeza que deseja deletar o fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
 
-        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean result = fornecedorManager.deletar(fornecedor.getId());
@@ -149,7 +156,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Deletado", Toast.LENGTH_SHORT).show();

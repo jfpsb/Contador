@@ -27,6 +27,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
 
             contentValues.put("cnpj", objeto.getCnpj());
             contentValues.put("nome", objeto.getNome());
+            contentValues.put("fantasia", objeto.getFantasia());
 
             return conn.insert(TABELA, "", contentValues);
         }
@@ -45,6 +46,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
             contentValues.put("id", objeto.getId());
             contentValues.put("cnpj", objeto.getCnpj());
             contentValues.put("nome", objeto.getNome());
+            contentValues.put("fantasia", objeto.getFantasia());
 
             return conn.update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(chaves[0])});
         }

@@ -22,7 +22,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -117,6 +116,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                     Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
                     AbrirEscolhaDiretorioActivity();
                 }
+
                 break;
         }
     }
@@ -138,9 +138,9 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                     return;
                 }
 
-                AlertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
+                alertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
 
-                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                AlertDialog alertDialog = alertBuilderAtualizar.create();
                 alertDialog.show();
             }
         });
@@ -151,7 +151,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
             }
         });
@@ -159,10 +159,10 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderAtualizar() {
-        AlertBuilderAtualizar = new AlertDialog.Builder(this);
-        AlertBuilderAtualizar.setTitle("Atualizar Contagem");
+        alertBuilderAtualizar = new AlertDialog.Builder(this);
+        alertBuilderAtualizar.setTitle("Atualizar Contagem");
 
-        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
@@ -189,7 +189,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Atualizada", Toast.LENGTH_SHORT).show();
@@ -199,11 +199,11 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderDeletar() {
-        AlertBuilderDeletar = new AlertDialog.Builder(this);
-        AlertBuilderDeletar.setTitle("Deletar Contagem");
-        AlertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID " + contagem.getIdcontagem() + "?");
+        alertBuilderDeletar = new AlertDialog.Builder(this);
+        alertBuilderDeletar.setTitle("Deletar Contagem");
+        alertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID " + contagem.getIdcontagem() + "?");
 
-        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean result = contagemManager.deletar(contagem.getIdcontagem());
@@ -219,7 +219,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Deletada", Toast.LENGTH_SHORT).show();

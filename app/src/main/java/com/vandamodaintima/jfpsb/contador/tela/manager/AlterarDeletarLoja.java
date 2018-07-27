@@ -58,7 +58,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                AlertDialog alertDialog = alertBuilderAtualizar.create();
                 alertDialog.show();
             }
         });
@@ -69,7 +69,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
         btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
             }
         });
@@ -77,11 +77,11 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderDeletar() {
-        AlertBuilderDeletar = new AlertDialog.Builder(this);
-        AlertBuilderDeletar.setTitle("Deletar Loja");
-        AlertBuilderDeletar.setMessage("Tem certeza que deseja apagar a loja " + loja.getNome() + "?");
+        alertBuilderDeletar = new AlertDialog.Builder(this);
+        alertBuilderDeletar.setTitle("Deletar Loja");
+        alertBuilderDeletar.setMessage("Tem certeza que deseja apagar a loja " + loja.getNome() + "?");
 
-        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean result = lojaManager.deletar(loja.getCnpj());
@@ -97,7 +97,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarLoja.this, "Loja Não Foi Deletada", Toast.LENGTH_SHORT).show();
@@ -107,11 +107,11 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderAtualizar() {
-        AlertBuilderAtualizar = new AlertDialog.Builder(this);
-        AlertBuilderAtualizar.setTitle("Atualizar Loja");
-        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + loja.getNome() + "?");
+        alertBuilderAtualizar = new AlertDialog.Builder(this);
+        alertBuilderAtualizar.setTitle("Atualizar Loja");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + loja.getNome() + "?");
 
-        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {

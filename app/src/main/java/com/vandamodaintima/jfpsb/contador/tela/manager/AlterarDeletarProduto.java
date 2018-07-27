@@ -158,7 +158,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderAtualizar.create();
+                AlertDialog alertDialog = alertBuilderAtualizar.create();
                 alertDialog.show();
             }
         });
@@ -169,7 +169,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = AlertBuilderDeletar.create();
+                AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
             }
         });
@@ -177,11 +177,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderDeletar() {
-        AlertBuilderDeletar = new AlertDialog.Builder(this);
-        AlertBuilderDeletar.setTitle("Deletar Produto");
-        AlertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
+        alertBuilderDeletar = new AlertDialog.Builder(this);
+        alertBuilderDeletar.setTitle("Deletar Produto");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
 
-        AlertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean result = produtoManager.deletar(produto.getCod_barra());
@@ -197,7 +197,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
@@ -207,11 +207,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderAtualizar() {
-        AlertBuilderAtualizar = new AlertDialog.Builder(this);
-        AlertBuilderAtualizar.setTitle("Atualizar Produto");
-        AlertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto" + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
+        alertBuilderAtualizar = new AlertDialog.Builder(this);
+        alertBuilderAtualizar.setTitle("Atualizar Produto");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto" + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
 
-        AlertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
@@ -253,7 +253,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             }
         });
 
-        AlertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+        alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();

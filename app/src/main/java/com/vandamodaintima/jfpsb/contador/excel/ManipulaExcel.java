@@ -1,18 +1,18 @@
 package com.vandamodaintima.jfpsb.contador.excel;
 
 import android.content.ContentResolver;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
+import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
@@ -38,22 +38,24 @@ import java.util.Date;
 
 public class ManipulaExcel {
     private static DAOProduto daoProduto;
-    private static ContagemProdutoManager contagemProdutoManager;
+    private ContagemProdutoManager contagemProdutoManager;
+    private FornecedorManager fornecedorManager;
     private AsyncTask task;
     private int ProdutosCadastrados = 0;
+    private ConexaoBanco conexaoBanco;
 
     public ManipulaExcel(ConexaoBanco conexao) {
-        daoProduto = new DAOProduto(conexao.conexao());
-        contagemProdutoManager = new ContagemProdutoManager(conexao);
+        conexaoBanco = conexao;
     }
 
     public ManipulaExcel(AsyncTask task, ConexaoBanco conexao) {
         this.task = task;
-        daoProduto = new DAOProduto(conexao.conexao());
-        contagemProdutoManager = new ContagemProdutoManager(conexao);
+        conexaoBanco = conexao;
     }
 
     public int ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
+        daoProduto = new DAOProduto(conexaoBanco.conexao());
+
         Produto[] produtos = null;
 
         InputStream inputStream = null;
@@ -149,12 +151,14 @@ public class ManipulaExcel {
 
     //TODO: Tentar simplificar. Estilizar planilha
     public boolean ExportaContagem(Contagem contagem, String diretorio) {
+        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
+
         Date dataAtual = new Date();
         ArquivoExcel arquivoExcel = new ArquivoExcel();
         int rowIndex = 1; //Inicia após cabeçalho
         OutputStream outputStream = null;
 
-        setCabecalho(arquivoExcel);
+        setCabecalhoContagem(arquivoExcel);
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
@@ -214,7 +218,76 @@ public class ManipulaExcel {
         return false;
     }
 
-    private void setCabecalho(ArquivoExcel arquivoExcel) {
+    //TODO: Tentar simplificar. Estilizar planilha
+    public boolean ExportaFornecedor(String diretorio) {
+        fornecedorManager = new FornecedorManager(conexaoBanco);
+
+        Date dataAtual = new Date();
+        ArquivoExcel arquivoExcel = new ArquivoExcel();
+        int rowIndex = 1; //Inicia após cabeçalho
+        OutputStream outputStream = null;
+
+        setCabecalhoFornecedor(arquivoExcel);
+
+        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
+
+        ArrayList<Fornecedor> fornecedores  = fornecedorManager.listar();
+
+        try {
+            if(fornecedores.size() == 0)
+                throw new Exception("Não Há Produtos na Contagem");
+
+            for(int i = rowIndex; i <= fornecedores.size(); i++) {
+                Row row = arquivoExcel.getPlanilha().createRow(i);
+
+                Fornecedor fornecedor = fornecedores.get(i - 1);
+
+                Cell cnpj = row.createCell(0);
+                cnpj.setCellValue(fornecedor.getCnpj());
+
+                Cell nome = row.createCell(1);
+                nome.setCellValue(fornecedor.getNome());
+
+                Cell fantasia = row.createCell(2);
+                fantasia.setCellValue(fornecedor.getFantasia());
+
+                cnpj.setCellStyle(cellStyle);
+                nome.setCellStyle(cellStyle);
+                fantasia.setCellStyle(cellStyle);
+            }
+
+            arquivoExcel.getPlanilha().setColumnWidth(0, 25*256);
+            arquivoExcel.getPlanilha().setColumnWidth(1, 70*256);
+            arquivoExcel.getPlanilha().setColumnWidth(2, 40*256);
+
+            String nomeArquivo = "Fornecedores " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+
+            File arquivo = new File(diretorio, nomeArquivo);
+
+            outputStream = new FileOutputStream(arquivo.getAbsolutePath());
+
+            arquivoExcel.getPastaTrabalho().write(outputStream);
+
+            return true;
+        }
+        catch (Exception e) {
+            Log.e("Contador", e.getMessage(), e);
+        }
+        finally {
+            try {
+                if(outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    private void setCabecalhoContagem(ArquivoExcel arquivoExcel) {
         CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
 
         Font font = arquivoExcel.getPastaTrabalho().createFont();
@@ -235,6 +308,33 @@ public class ManipulaExcel {
 
         Cell cab3 = cabecalho.createCell(2);
         cab3.setCellValue("Quantidade");
+
+        cab1.setCellStyle(cabecalhoStyle);
+        cab2.setCellStyle(cabecalhoStyle);
+        cab3.setCellStyle(cabecalhoStyle);
+    }
+
+    private void setCabecalhoFornecedor(ArquivoExcel arquivoExcel) {
+        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+
+        Font font = arquivoExcel.getPastaTrabalho().createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+
+        cabecalhoStyle.setFont(font);
+        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
+
+        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
+
+        Cell cab1 = cabecalho.createCell(0);
+        cab1.setCellValue("CNPJ");
+
+        Cell cab2 = cabecalho.createCell(1);
+        cab2.setCellValue("Nome");
+
+        Cell cab3 = cabecalho.createCell(2);
+        cab3.setCellValue("Nome Fantasia");
 
         cab1.setCellStyle(cabecalhoStyle);
         cab2.setCellStyle(cabecalhoStyle);

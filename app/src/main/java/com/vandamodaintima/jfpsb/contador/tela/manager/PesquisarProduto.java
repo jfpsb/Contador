@@ -90,7 +90,6 @@ public class PesquisarProduto extends TelaPesquisa {
             cursorPesquisa.close();
 
         try {
-
             switch (TIPO_PESQUISA) {
                 case 1:
                     cursorPesquisa = produtoManager.listarCursorPorCodBarra(termo);
@@ -104,7 +103,6 @@ public class PesquisarProduto extends TelaPesquisa {
             }
 
             txtQuantProdutosCadastrados.setText(String.valueOf(cursorPesquisa.getCount()));
-
             produtoCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

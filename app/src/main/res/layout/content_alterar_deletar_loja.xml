@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,46 +27,41 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="textStart"
                 android:text="CNPJ:"
-                android:textSize="24sp"
-                android:textColor="#000" />
-        </TableRow>
-
-        <TableRow>
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"
                 android:textAlignment="textStart"
                 android:textColor="#000"
-                android:layout_weight="1"
-                android:id="@+id/txtCnpj"/>
+                android:textSize="22sp" />
         </TableRow>
-
+        <TableRow>
+            <EditText
+                android:id="@+id/txtCnpj"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="textStart"
+                android:textColor="#000"
+                android:textSize="20sp" />
+        </TableRow>
         <TableRow>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textColor="#000"
-                android:textAlignment="textStart"
                 android:layout_weight="1"
-                android:text="Nome:"/>
+                android:text="Nome:"
+                android:textAlignment="textStart"
+                android:textColor="#000"
+                android:textSize="22sp" />
         </TableRow>
-
         <TableRow>
             <EditText
+                android:id="@+id/txtNome"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:id="@+id/txtNome"
                 android:layout_weight="1"
-                android:textAlignment="textStart"/>
+                android:textAlignment="textStart"
+                android:textSize="20sp" />
         </TableRow>
-
         <TableRow>
-
             <Button
                 android:id="@+id/btnAtualizar"
                 android:layout_width="0dp"
@@ -83,4 +82,5 @@
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>
+    </ScrollView>
 </LinearLayout>

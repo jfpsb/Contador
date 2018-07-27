@@ -20,6 +20,7 @@ public class ActivityBase extends AppCompatActivity {
     protected ConexaoBanco conn;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private MyPagerAdapter adapter;
 
     protected Cursor cursorLista = null;
 
@@ -45,7 +46,7 @@ public class ActivityBase extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.tabLayout);
 
-        MyPagerAdapter adapter = new MyPagerAdapter (getSupportFragmentManager());
+        adapter = new MyPagerAdapter (getSupportFragmentManager());
 
         //PesquisaTab
         TabLayout.Tab pesquisaTab = tabLayout.newTab();
@@ -94,6 +95,10 @@ public class ActivityBase extends AppCompatActivity {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setView(v);
         datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    public MyPagerAdapter getAdapter() {
+        return adapter;
     }
 
     @Override

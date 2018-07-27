@@ -19,18 +19,27 @@ public class FornecedorCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item_pesquisa_id_nome, parent,false);
+        return LayoutInflater.from(context).inflate(R.layout.item_lista_fornecedor, parent,false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView labelCnpj = view.findViewById(R.id.labelId);
-        TextView labelNome = view.findViewById(R.id.labelNome);
+        TextView labelCnpj = view.findViewById(R.id.listaFornecedorCnpj);
+        TextView labelNome = view.findViewById(R.id.listaFornecedorNome);
+        TextView labelFantasia = view.findViewById(R.id.listaFornecedorFantasia);
 
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("cnpj"));
         String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+        String fantasia = cursor.getString(cursor.getColumnIndexOrThrow("fantasia"));
 
         labelCnpj.setText(cnpj);
         labelNome.setText(nome);
+
+        if(fantasia.isEmpty()) {
+            labelFantasia.setText("Não Possui");
+        }
+        else {
+            labelFantasia.setText(fantasia);
+        }
     }
 }

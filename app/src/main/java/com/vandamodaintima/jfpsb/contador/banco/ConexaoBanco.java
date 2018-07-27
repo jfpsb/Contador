@@ -16,7 +16,6 @@ public class ConexaoBanco {
 
     public ConexaoBanco(Context context) {
         sqLiteHelper = new SQLiteHelper(context, NOME_BANCO, VERSAO_BANCO);
-        sqLiteHelper.setForcedUpgrade(1);
         conn = sqLiteHelper.getWritableDatabase();
     }
 

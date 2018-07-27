@@ -18,11 +18,9 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.FornecedorCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOFornecedor;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 
@@ -107,6 +105,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
                 fornecedor.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
 
                 Bundle bundle = new Bundle();
 
@@ -155,7 +154,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
             cursorPesquisa.close();
 
         try {
-            cursorPesquisa = fornecedorManager.listarPorNomeOuCnpj(termo);
+            cursorPesquisa = fornecedorManager.listarCursorPorNomeOuCnpj(termo);
             fornecedorCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

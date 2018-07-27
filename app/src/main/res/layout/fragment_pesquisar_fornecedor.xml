@@ -19,34 +19,50 @@
         android:id="@+id/txtPesquisaFornecedor"
         android:hint="@string/txtPesquisaFornecedor"/>
 
-    <LinearLayout
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_margin="10dip">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="CNPJ"
-            android:textSize="20dp"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Nome"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:layout_weight="1" />
-    </LinearLayout>
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="CNPJ"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                />
+        </TableRow>
+        <TableRow
+            android:layout_weight="2"
+            android:background="@drawable/tablerow_bottom_border">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Nome"
+                android:textSize="22sp"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Fantasia"
+                android:textSize="22sp"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:layout_weight="1"
+                />
+        </TableRow>
+    </TableLayout>
 
     <ListView
+        android:id="@+id/listViewLoja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewLoja"
-        android:layout_margin="10dip">
+        android:textAlignment="textStart">
     </ListView>
 
 </LinearLayout>

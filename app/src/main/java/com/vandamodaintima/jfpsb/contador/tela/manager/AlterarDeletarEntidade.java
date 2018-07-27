@@ -14,8 +14,8 @@ import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 public abstract class AlterarDeletarEntidade extends ActivityBase {
     protected Button btnAtualizar;
     protected Button btnDeletar;
-    protected AlertDialog.Builder AlertBuilderDeletar;
-    protected AlertDialog.Builder AlertBuilderAtualizar;
+    protected AlertDialog.Builder alertBuilderDeletar;
+    protected AlertDialog.Builder alertBuilderAtualizar;
 
     @Override
     protected void onCreate(Bundle bundle) {

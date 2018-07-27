@@ -10,6 +10,7 @@ public class Fornecedor implements Serializable {
     private int id;
     private String cnpj;
     private String nome;
+    private String fantasia;
 
     public int getId() {
         return id;
@@ -35,7 +36,15 @@ public class Fornecedor implements Serializable {
         this.nome = nome;
     }
 
+    public String getFantasia() {
+        return fantasia;
+    }
+
+    public void setFantasia(String fantasia) {
+        this.fantasia = fantasia;
+    }
+
     public static String[] getColunas() {
-        return new String[] { "id as _id", "cnpj", "nome" };
+        return new String[] { "id as _id", "cnpj", "nome", "fantasia"};
     }
 }
