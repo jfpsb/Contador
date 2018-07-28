@@ -24,7 +24,6 @@
             </TableRow>
             <TableRow android:layout_marginTop="10dip">
                 <TextView
-                    android:id="@+id/lblCnpj"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -53,7 +52,6 @@
             </TableRow>
             <TableRow android:layout_marginTop="10dip">
                 <TextView
-                    android:id="@+id/lblNome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -72,7 +70,6 @@
             </TableRow>
             <TableRow android:layout_marginTop="10dip">
                 <TextView
-                    android:id="@+id/lblFantasia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

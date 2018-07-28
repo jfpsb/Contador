@@ -73,6 +73,6 @@ public class CadastrarFornecedorSemInternet extends CadastrarFornecedor {
 
     @Override
     protected void PesquisaAposCadastro() {
-        ((CadastrarFornecedorSemInternetContainer) getActivity()).setResultCadastro();
+        ((CadastrarFornecedorSemInternetContainer) getActivity()).setResultCadastro(null);
     }
 }

@@ -79,20 +79,24 @@ public class PesquisarLoja extends TelaPesquisa {
         });
     }
 
-    private void setListView() {
+    @Override
+    protected void setListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
             cursorPesquisa = lojaManager.listarCursor();
-
             lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorPesquisa);
-
             listView.setAdapter(lojaCursorAdapter);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+        super.setListView();
+    }
+
+    @Override
+    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

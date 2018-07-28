@@ -3,12 +3,14 @@ package com.vandamodaintima.jfpsb.contador.tela.manager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -30,10 +32,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedorAtual;
-    private Spinner spinnerFornecedor;
+
+    private Button btnAlterarFornecedor;
 
     private ProdutoManager produtoManager;
     private FornecedorManager fornecedorManager;
+
+    private static final int ALTERAR_FORNECEDOR = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +54,9 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedorAtual = findViewById(R.id.txtFornecedorAtual);
-        spinnerFornecedor = findViewById(R.id.spinnerFornecedor);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
+        btnAlterarFornecedor = findViewById(R.id.btnAlterarFornecedor);
 
         txtCodBarra.setText(produto.getCod_barra());
         txtDescricao.setText(produto.getDescricao());
@@ -69,88 +74,15 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         setAlertBuilderAtualizar();
 
         setManagers();
-
-        setSpinnerFornecedor();
-
         setBtnAtualizar();
-
         setBtnDeletar();
+        setBtnAlterarFornecedor();
     }
 
     @Override
     protected void setManagers() {
         fornecedorManager = new FornecedorManager(conn);
         produtoManager = new ProdutoManager(conn);
-    }
-
-    private void setSpinnerFornecedor() {
-        Cursor spinnerCursor = null, spinnerCursor2 = null;
-
-        try {
-            spinnerCursor = fornecedorManager.listarCursor();
-
-            // Cursor que deve ser utilizado, pois possui o primeiro elemento como hint
-            spinnerCursor2 = ManipulaCursor.retornaCursorComHintNull(spinnerCursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome", "cnpj"});
-
-            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerCursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
-            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spinnerFornecedor.setAdapter(simpleCursorAdapter);
-
-            if (produto.getFornecedor() != null) {
-                for (int i = 0; i < spinnerCursor2.getCount(); i++) {
-                    spinnerCursor2.moveToPosition(i);
-
-                    int id = spinnerCursor2.getInt(spinnerCursor.getColumnIndexOrThrow("_id"));
-
-                    if (produto.getFornecedor().getId() == id) {
-                        spinnerFornecedor.setSelection(i);
-                        break;
-                    }
-                }
-            } else {
-                spinnerFornecedor.setSelection(0);
-            }
-        } catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        finally {
-            if(spinnerCursor != null)
-                spinnerCursor.close();
-
-            if(spinnerCursor2 != null)
-                spinnerCursor2.close();
-        }
-
-        spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    if (i != 0) {
-                        Cursor c = (Cursor) adapterView.getItemAtPosition(i);
-
-                        c.moveToPosition(i);
-
-                        fornecedor = new Fornecedor();
-                        fornecedor.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-                        fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("cnpj")));
-                        fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
-                    } else {
-                        fornecedor = null;
-                    }
-                }
-                catch (Exception e) {
-                    Log.e("Contador", e.getMessage(), e);
-                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Escolher Fornecedor. Contate Suporte Caso Persista", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
     }
 
     @Override
@@ -173,6 +105,32 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 alertDialog.show();
             }
         });
+    }
+
+    private void setBtnAlterarFornecedor() {
+        btnAlterarFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlterarDeletarProduto.this, AlterarFornecedorEmProdutoContainer.class);
+                startActivityForResult(intent, ALTERAR_FORNECEDOR);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ALTERAR_FORNECEDOR:
+                if(resultCode == Activity.RESULT_OK) {
+                    fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+                    Log.i("Contador", "Fornecedor: " + fornecedor.getNome());
+                    Toast.makeText(this, "Fornecedor Escolhido. Aperte em \"Atualizar\" para Finalizar.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "Fornecedor Não Foi Alterado", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     @Override

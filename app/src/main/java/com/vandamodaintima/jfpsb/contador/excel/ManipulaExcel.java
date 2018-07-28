@@ -100,6 +100,9 @@ public class ManipulaExcel {
 
                         CellValue cellValue = arquivoExcel.getFormulaEvaluator().evaluate(cell);
 
+                        if(cellValue == null)
+                            continue;
+
                         switch (cellValue.getCellType()) {
                             case Cell.CELL_TYPE_NUMERIC:
                                 produto.setPreco(cell.getNumericCellValue());
@@ -115,7 +118,9 @@ public class ManipulaExcel {
 
                         produto.setFornecedor(null);
 
-                        produtos[i - 1] = produto;
+                        if(produto != null && produto.getDescricao() != null && produto.getCod_barra() != null) {
+                            produtos[i - 1] = produto;
+                        }
                     } catch (Exception e) {
                         Log.e("Contador", e.getMessage(), e);
                     }

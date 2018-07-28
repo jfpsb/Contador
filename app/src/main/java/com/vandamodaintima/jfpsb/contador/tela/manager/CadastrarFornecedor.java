@@ -84,7 +84,7 @@ public class CadastrarFornecedor extends FragmentBase {
                 String texto = txtCnpj.getText().toString();
 
                 if(! texto.isEmpty()) {
-                    Fornecedor fornecedor = fornecedorManager.listarPorCnpj(texto);
+                    Fornecedor fornecedor = fornecedorManager.listarPorChave(texto);
 
                     if(fornecedor != null) {
                         btnCadastrar.setEnabled(false);

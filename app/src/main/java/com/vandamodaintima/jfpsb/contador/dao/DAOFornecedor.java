@@ -43,12 +43,11 @@ public class DAOFornecedor extends DAO<Fornecedor> {
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", objeto.getId());
             contentValues.put("cnpj", objeto.getCnpj());
             contentValues.put("nome", objeto.getNome());
             contentValues.put("fantasia", objeto.getFantasia());
 
-            return conn.update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(chaves[0])});
+            return conn.update(TABELA, contentValues, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
@@ -60,7 +59,7 @@ public class DAOFornecedor extends DAO<Fornecedor> {
     @Override
     public long deletar(Object... id) {
         try {
-            return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(id[0])});
+            return conn.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(id[0])});
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);

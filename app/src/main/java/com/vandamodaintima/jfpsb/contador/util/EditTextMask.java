@@ -1,0 +1,81 @@
+package com.vandamodaintima.jfpsb.contador.util;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.widget.EditText;
+
+public class EditTextMask implements TextWatcher {
+    private Boolean isUpdating = true;
+    private EditText editText;
+    private String mask;
+    public static final String CNPJ = "##.###.###/####-##";
+    private static String formatado = "";
+
+    public EditTextMask(EditText editText, String mask) {
+        this.editText = editText;
+        this.mask = mask;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if(isUpdating) {
+            String input = unmask(s.toString());
+            formatado = "";
+            int index = 0;
+
+            for (int i = 0; i < mask.length(); i++) {
+                char c = mask.charAt(i);
+
+                try {
+                    if (c == '#') {
+                        formatado += input.charAt(index);
+                        index++;
+                    } else {
+                        formatado += c;
+                    }
+                } catch (Exception e) {
+                    break;
+                }
+            }
+
+            Log.i("Contador", formatado);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    public static String unmask(final String s) {
+        return s.replaceAll("[.]", "").replaceAll("[-]", "").replaceAll("[/]", "").replaceAll("[(]", "").replaceAll("[ ]","").replaceAll("[:]", "").replaceAll("[)]", "");
+    }
+
+    public static String mask(String input, String mask) {
+        formatado = "";
+        int index = 0;
+
+        for (int i = 0; i < mask.length(); i++) {
+            char c = mask.charAt(i);
+
+            try {
+                if (c == '#') {
+                    formatado += input.charAt(index);
+                    index++;
+                } else {
+                    formatado += c;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
+
+        Log.i("Contador", formatado);
+
+        return formatado;
+    }
+}

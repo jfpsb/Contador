@@ -18,7 +18,6 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
     private EditText txtCnpj;
     private EditText txtNome;
-    private EditText txtId;
     private EditText txtFantasia;
     private Fornecedor fornecedor;
     private FornecedorManager fornecedorManager;
@@ -33,14 +32,12 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
         fornecedor = (Fornecedor) getIntent().getExtras().getSerializable("fornecedor");
 
-        txtId = findViewById(R.id.txtIDFornecedor);
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
-        txtId.setText(String.valueOf(fornecedor.getId()));
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
 
@@ -106,11 +103,10 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                         throw new Exception("O campo de nome não pode ficar vazio!");
 
                     Fornecedor toUpdate = new Fornecedor();
-                    toUpdate.setId(fornecedor.getId());
                     toUpdate.setCnpj(cnpj);
                     toUpdate.setNome(nome.toUpperCase());
 
-                    boolean result = fornecedorManager.atualizar(toUpdate, fornecedor.getId());
+                    boolean result = fornecedorManager.atualizar(toUpdate, fornecedor.getCnpj());
 
                     if(result) {
                         Toast.makeText(AlterarDeletarFornecedor.this, "O Fornecedor Foi Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
@@ -143,7 +139,7 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = fornecedorManager.deletar(fornecedor.getId());
+                boolean result = fornecedorManager.deletar(fornecedor.getCnpj());
 
                 if(result) {
                     Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Deletado Com Sucesso", Toast.LENGTH_SHORT).show();

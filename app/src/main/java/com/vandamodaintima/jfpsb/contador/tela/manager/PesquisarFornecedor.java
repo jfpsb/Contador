@@ -22,6 +22,7 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
+import com.vandamodaintima.jfpsb.contador.util.EditTextMask;
 
 
 /**
@@ -30,7 +31,7 @@ import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 public class PesquisarFornecedor extends TelaPesquisa {
 
     private static FornecedorManager fornecedorManager;
-    private ListView listView;
+    protected ListView listView;
     private static FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
 
@@ -61,6 +62,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
     }
 
     private void setTxtPesquisaFornecedor() {
+        txtPesquisaFornecedor.addTextChangedListener(new EditTextMask(txtPesquisaFornecedor, EditTextMask.CNPJ));
         txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -79,20 +81,24 @@ public class PesquisarFornecedor extends TelaPesquisa {
         });
     }
 
-    private void setListView() {
+    @Override
+    protected void setListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
             cursorPesquisa = fornecedorManager.listarCursor();
-
             fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursorPesquisa);
-
             listView.setAdapter(fornecedorCursorAdapter);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+        super.setListView();
+    }
+
+    @Override
+    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -102,9 +108,8 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
                 Fornecedor fornecedor = new Fornecedor();
 
-                fornecedor.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
                 fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
 
                 Bundle bundle = new Bundle();

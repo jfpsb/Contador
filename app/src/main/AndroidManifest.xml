@@ -85,6 +85,11 @@
             android:name=".tela.manager.PesquisaContagemProdutoContainer"
             android:label="@string/title_activity_pesquisa_contagem_produto_container"
             android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".tela.manager.AlterarFornecedorEmProdutoContainer"
+            android:label="Produto: Alterar Fornecedor"
+            android:theme="@style/TabAppTheme.NoActionBar" />
     </application>
 
 </manifest>

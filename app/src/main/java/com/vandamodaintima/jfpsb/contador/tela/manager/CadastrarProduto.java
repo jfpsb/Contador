@@ -85,7 +85,7 @@ public class CadastrarProduto extends FragmentBase {
         try {
             cursor = fornecedorManager.listarCursor();
 
-            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{"_id", "nome", "cnpj"});
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{ "_id", "nome" });
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -111,8 +111,7 @@ public class CadastrarProduto extends FragmentBase {
                     cursor.moveToPosition(i);
 
                     fornecedor = new Fornecedor();
-                    fornecedor.setId(cursor.getInt(cursor.getColumnIndex("_id")));
-                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                     fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 }
                 else {
@@ -156,6 +155,9 @@ public class CadastrarProduto extends FragmentBase {
 
                     if(result) {
                         Toast.makeText(viewInflate.getContext(), "O produto " + produto.getDescricao() + " foi inserido com sucesso!" , Toast.LENGTH_SHORT).show();
+
+                        Fragment fragment = ((ActivityBase)getActivity()).getAdapter().getItem(0);
+                        ((PesquisarProduto)fragment).populaListView();
 
                         txtPreco.setText("");
                         txtDescricao.setText("");

@@ -23,8 +23,7 @@ public class FornecedorManager extends Manager<Fornecedor> {
             while (c.moveToNext()) {
                 Fornecedor fornecedor = new Fornecedor();
 
-                fornecedor.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-                fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("cnpj")));
+                fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
                 fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
                 fornecedor.setFantasia(c.getString(c.getColumnIndexOrThrow("fantasia")));
 
@@ -50,26 +49,7 @@ public class FornecedorManager extends Manager<Fornecedor> {
 
             fornecedor = new Fornecedor();
 
-            fornecedor.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-            fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("cnpj")));
-            fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
-            fornecedor.setFantasia(c.getString(c.getColumnIndexOrThrow("fantasia")));
-        }
-
-        return fornecedor;
-    }
-
-    public Fornecedor listarPorCnpj(String cnpj) {
-        Fornecedor fornecedor = null;
-        Cursor c = listarCursorPorCnpj(cnpj);
-
-        if(c.getCount() > 0) {
-            c.moveToFirst();
-
-            fornecedor = new Fornecedor();
-
-            fornecedor.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-            fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("cnpj")));
+            fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
             fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
             fornecedor.setFantasia(c.getString(c.getColumnIndexOrThrow("fantasia")));
         }
@@ -79,14 +59,10 @@ public class FornecedorManager extends Manager<Fornecedor> {
 
     @Override
     public Cursor listarCursorPorChave(Object... chaves) {
-        return daoEntidade.select("id = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "nome", null);
+        return daoEntidade.select("cnpj = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "nome", null);
     }
 
     public Cursor listarCursorPorNomeCnpjFantasia(String termo) {
         return daoEntidade.select("nome LIKE ? OR cnpj LIKE ? OR fantasia LIKE ?", new String[] { "%" + termo + "%", "%" + termo + "%", "%" + termo + "%" }, null, null, "nome", null);
-    }
-
-    public Cursor listarCursorPorCnpj(String cnpj) {
-        return daoEntidade.select("cnpj = ?", new String[] { cnpj }, null, null, "nome", null);
     }
 }

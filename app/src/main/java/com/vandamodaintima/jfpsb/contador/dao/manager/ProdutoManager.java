@@ -48,21 +48,21 @@ public class ProdutoManager extends Manager<Produto> {
     }
 
     public Cursor listarCursorPorCodBarra(String cod_barra) {
-        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND cod_barra LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND cod_barra LIKE ? ORDER BY descricao";
         String[] selection = new String[] { "%" + cod_barra + "%"};
 
         return daoEntidade.selectRaw(sql, selection);
     }
 
     public Cursor listarCursorPorDescricao(String descricao) {
-        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao";
         String[] selection = new String[] { "%" + descricao + "%"};
 
         return daoEntidade.selectRaw(sql, selection);
     }
 
     public Cursor listarCursorPorFornecedor(String nome) {
-        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.id WHERE (fornecedor = id OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, fornecedor, descricao, preco FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao";
         String[] selection = new String[] { "%" + nome + "%" };
 
         return daoEntidade.selectRaw(sql, selection);
@@ -80,7 +80,7 @@ public class ProdutoManager extends Manager<Produto> {
 
             produto.setCod_barra(c.getString(c.getColumnIndexOrThrow("_id")));
 
-            Fornecedor fornecedor = fornecedorManager.listarPorChave(c.getInt(c.getColumnIndexOrThrow("fornecedor")));
+            Fornecedor fornecedor = fornecedorManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("fornecedor")));
             produto.setFornecedor(fornecedor);
 
             produto.setDescricao(c.getString(c.getColumnIndexOrThrow("descricao")));

@@ -7,18 +7,9 @@ import java.io.Serializable;
  */
 
 public class Fornecedor implements Serializable {
-    private int id;
     private String cnpj;
     private String nome;
     private String fantasia;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCnpj() {
         return cnpj;
@@ -45,6 +36,6 @@ public class Fornecedor implements Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[] { "id as _id", "cnpj", "nome", "fantasia"};
+        return new String[] { "cnpj as _id", "nome", "fantasia"};
     }
 }

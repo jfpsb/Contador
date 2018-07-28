@@ -29,7 +29,7 @@ public class PesquisaContagemProduto extends PesquisarProduto {
     }
 
     @Override
-    protected void setListViewOnItemClickListener(final View viewInflate) {
+    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

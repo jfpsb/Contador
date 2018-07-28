@@ -20,6 +20,12 @@ public abstract class TelaPesquisa extends FragmentBase {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    protected void setListView() {
+        setListOnItemClickListener();
+    };
+
+    protected abstract void setListOnItemClickListener();
+
     @Override
     public void onDestroy() {
         if(cursorPesquisa != null)

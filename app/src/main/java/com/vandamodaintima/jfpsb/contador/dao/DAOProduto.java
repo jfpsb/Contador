@@ -26,7 +26,7 @@ public class DAOProduto extends DAO<Produto> {
             contentValues.put("cod_barra", objeto.getCod_barra());
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
-            contentValues.put("fornecedor", objeto.getFornecedor().getId());
+            contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
 
             return conn.insert(TABELA, "", contentValues);
         }
@@ -44,7 +44,13 @@ public class DAOProduto extends DAO<Produto> {
             contentValues.put("cod_barra", produto.getCod_barra());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
-            contentValues.put("fornecedor", produto.getFornecedor().getId());
+
+            if(produto.getFornecedor() == null) {
+                contentValues.putNull("fornecedor");
+            }
+            else {
+                contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
+            }
 
             return conn.insertWithOnConflict(TABELA, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
         } catch (SQLException e) {
@@ -62,7 +68,7 @@ public class DAOProduto extends DAO<Produto> {
             contentValues.put("cod_barra", objeto.getCod_barra());
 
             if(objeto.getFornecedor() != null) {
-                contentValues.put("fornecedor", objeto.getFornecedor().getId());
+                contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
             }
             else {
                 contentValues.putNull("fornecedor");

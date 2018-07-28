@@ -84,38 +84,43 @@ public class PesquisarContagem extends TelaPesquisa {
         lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
     }
 
-    private void setListView() {
+    @Override
+    protected void setListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
             contagemCursorAdapter = new ContagemCursorAdapter(viewInflate.getContext(), null);
-
             listView.setAdapter(contagemCursorAdapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Cursor cursorItem = (Cursor) adapterView.getItemAtPosition(i);
-
-                    cursorItem.moveToPosition(i);
-
-                    // Contagem possui Loja então usando o Manager a Loja já vem iniciada
-                    Contagem contagem = contagemManager.listarPorChave(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
-
-                    Bundle bundle = new Bundle();
-
-                    bundle.putSerializable("contagem", contagem);
-
-                    Intent alterarContagem = new Intent(viewInflate.getContext(), AlterarDeletarContagem.class);
-                    alterarContagem.putExtras(bundle);
-
-                    startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
-                }
-            });
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
+        super.setListView();
+    }
+
+    @Override
+    protected void setListOnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cursorItem = (Cursor) adapterView.getItemAtPosition(i);
+
+                cursorItem.moveToPosition(i);
+
+                // Contagem possui Loja então usando o Manager a Loja já vem iniciada
+                Contagem contagem = contagemManager.listarPorChave(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("contagem", contagem);
+
+                Intent alterarContagem = new Intent(viewInflate.getContext(), AlterarDeletarContagem.class);
+                alterarContagem.putExtras(bundle);
+
+                startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
+            }
+        });
     }
 
     @Override

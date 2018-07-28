@@ -81,7 +81,7 @@ public class TelaProduto extends ActivityBase {
         }
     }
 
-    public class Tarefa extends AsyncTask<Void, String, String> {
+    public class Tarefa extends AsyncTask<Void, String, Integer> {
         public class Progresso {
             private Tarefa tarefa;
 
@@ -114,30 +114,32 @@ public class TelaProduto extends ActivityBase {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
             outAnimation = new AlphaAnimation(1f, 0f);
             outAnimation.setDuration(500);
             progressBarHolder.setAnimation(outAnimation);
             progressBarHolder.setVisibility(View.GONE);
 
-            Toast.makeText(TelaProduto.this, result, Toast.LENGTH_SHORT).show();
+            if(result == 0) {
+                Toast.makeText(TelaProduto.this, "Nem Um Produto Foi Cadastrado. Talvez Todos Já Estejam No Banco de Dados", Toast.LENGTH_SHORT).show();
+            }
+            else if(result > 0) {
+                Toast.makeText(TelaProduto.this, result + " Produtos Cadastrados com Sucesso!", Toast.LENGTH_SHORT).show();
+                pesquisarProduto.populaListView();
+            }
+            else {
+                Toast.makeText(TelaProduto.this, "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
 
             int result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
 
-            if(result == 0) {
-                return "Nem Um Produto Foi Cadastrado. Talvez Todos Já Estejam No Banco de Dados.";
-            }
-            else if(result > 0) {
-                return result + " Produtos Cadastrados com Sucesso!";
-            }
-
-            return "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir";
+            return result;
         }
     }
 }

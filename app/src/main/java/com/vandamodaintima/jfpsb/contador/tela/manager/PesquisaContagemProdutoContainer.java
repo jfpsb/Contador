@@ -8,32 +8,22 @@ import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.FragmentContainer;
+
+import org.apache.poi.ss.formula.eval.NotImplementedException;
 
 /**
  * PesquisaContagemProduto é uma Fragment filha de PesquisarProduto. Esta
  * activity serve como container de PesquisaContagemProduto
  */
-public class PesquisaContagemProdutoContainer extends ActivityBase {
+public class PesquisaContagemProdutoContainer extends FragmentContainer {
+
+    public PesquisaContagemProdutoContainer() {
+        super(new PesquisaContagemProduto());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_fragment_container_for_activity);
-        stub.inflate();
-
-        PesquisaContagemProduto pesquisaContagemProduto = new PesquisaContagemProduto();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("contagem", getIntent().getExtras().getSerializable("contagem"));
-
-        pesquisaContagemProduto.setArguments(bundle);
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, pesquisaContagemProduto);
-        fragmentTransaction.commit();
+    public void setResultCadastro(Object object) {
+        throw new NotImplementedException("Você Não Devia Usar Esse Método");
     }
 }

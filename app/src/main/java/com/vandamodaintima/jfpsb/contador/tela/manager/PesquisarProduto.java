@@ -56,12 +56,9 @@ public class PesquisarProduto extends TelaPesquisa {
         listView = viewInflate.findViewById(R.id.listViewProduto);
 
         setManagers();
-
         setTxtPesquisaProduto();
-
         setRadioGroup();
-
-        setListView(viewInflate);
+        setListView();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -74,7 +71,7 @@ public class PesquisarProduto extends TelaPesquisa {
     /**
      * Popula a lista novamente
      */
-    protected void populaListView() {
+    public void populaListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
@@ -110,26 +107,25 @@ public class PesquisarProduto extends TelaPesquisa {
         }
     }
 
-    protected void setListView(final View viewInflate) {
+    @Override
+    protected void setListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
             cursorPesquisa = produtoManager.listarCursor();
-
             txtQuantProdutosCadastrados.setText(String.valueOf(cursorPesquisa.getCount()));
-
             produtoCursorAdapter = new ProdutoCursorAdapter(viewInflate.getContext(), cursorPesquisa);
-
             listView.setAdapter(produtoCursorAdapter);
-
-            setListViewOnItemClickListener(viewInflate);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
+        super.setListView();
     }
 
-    protected void setListViewOnItemClickListener(final View viewInflate) {
+    @Override
+    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
