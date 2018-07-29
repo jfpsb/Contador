@@ -59,11 +59,10 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         txtDescricao.setText(produto.getDescricao());
         txtPreco.setText(String.valueOf(produto.getPreco()));
 
-        if(produto.getFornecedor() != null) {
+        if (produto.getFornecedor() != null) {
             txtFornecedorAtual.setText(produto.getFornecedor().getNome());
             fornecedor = produto.getFornecedor();
-        }
-        else{
+        } else {
             txtFornecedorAtual.setText("Sem Fornecedor");
         }
 
@@ -118,12 +117,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ALTERAR_FORNECEDOR:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
                     txtFornecedorAtual.setText(fornecedor.getNome());
                     Toast.makeText(this, "Fornecedor Escolhido. Aperte em \"Atualizar\" para Finalizar.", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Fornecedor Não Foi Alterado", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -141,12 +139,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean result = produtoManager.deletar(produto.getCod_barra());
 
-                if(result) {
+                if (result) {
                     Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
                     setResult(Activity.RESULT_OK, null);
                     finish();
-                }
-                else {
+                } else {
                     Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -174,13 +171,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     String descricao = txtDescricao.getText().toString();
                     String preco = txtPreco.getText().toString();
 
-                    if(TestaIO.isStringEmpty(descricao))
+                    if (TestaIO.isStringEmpty(descricao))
                         throw new Exception("O campo de descrição não pode ficar vazio!");
 
-                    if(TestaIO.isStringEmpty(preco))
+                    if (TestaIO.isStringEmpty(preco))
                         throw new Exception("O campo de preço não pode ficar vazio!");
 
-                    if(!TestaIO.isValidDouble(preco))
+                    if (!TestaIO.isValidDouble(preco))
                         throw new Exception("O valor no campo preço é inválido!");
 
                     Produto toUpdate = new Produto();
@@ -192,16 +189,15 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
                     boolean result = produtoManager.atualizar(toUpdate, produto.getCod_barra());
 
-                    if(result) {
+                    if (result) {
                         Toast.makeText(AlterarDeletarProduto.this, "Produto Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
                         setResult(Activity.RESULT_OK, null);
                         finish();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar Produto", Toast.LENGTH_SHORT).show();
                     }
 
-                }catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Contador", "Erro", e);
                     Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar", Toast.LENGTH_SHORT).show();
                 }

@@ -2,119 +2,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="5dip"
     android:orientation="vertical"
-    android:layout_margin="10dip"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.produto.PesquisarProduto" >
+    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.produto.PesquisarProduto">
 
-    <TextView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pesquisar Por:"
-        android:textSize="22dp"
-        android:textColor="#000000"/>
+        android:layout_height="match_parent">
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/radioGroupOpcao"
-        android:orientation="horizontal">
+        <TableRow>
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rbCodBarra"
-            android:text="Cod. Barra"
-            android:checked="true"
-            android:textSize="16dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pesquisar Por:"
+                android:textColor="#000000"
+                android:textSize="22sp" />
+        </TableRow>
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rbFornecedor"
-            android:text="Fornecedor"
-            android:textSize="16dp" />
+        <TableRow>
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/rbDescricao"
-            android:text="Descrição"
-            android:textSize="16dp" />
+            <RadioGroup
+                android:id="@+id/radioGroupOpcao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/rbCodBarra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Cod. Barra"
+                    android:textSize="16dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtPesquisaProduto"
-        android:inputType="number"
-        android:hint="@string/hintRadioButtonCodBarra"/>
+                <RadioButton
+                    android:id="@+id/rbFornecedor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fornecedor"
+                    android:textSize="16dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
+                <RadioButton
+                    android:id="@+id/rbDescricao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descrição"
+                    android:textSize="16dp" />
+            </RadioGroup>
+        </TableRow>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="24dp"
-            android:text="Produtos Listados:"
-            android:textColor="#000000"
-            android:layout_margin="5dip"
-            android:layout_weight="2"
-            android:textAlignment="center"/>
+        <TableRow>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/txtQuantProdutosCadastrados"
-            android:textColor="#000000"
-            android:textSize="24dp"
-            android:layout_weight="1"
-            android:textAlignment="center"/>
+            <EditText
+                android:id="@+id/txtPesquisaProduto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/hintRadioButtonCodBarra"
+                android:inputType="number" />
+        </TableRow>
 
+        <TableRow>
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dip"
+                android:layout_weight="2"
+                android:text="Produtos Listados:"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="24dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Cod. Barra"
-            android:textSize="20dp"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Descrição"
-            android:textSize="20dp"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textAlignment="center"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Preço"
-            android:textSize="20dp"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textAlignment="center"/>
+            <TextView
+                android:id="@+id/txtQuantProdutosCadastrados"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="24dp" />
+        </TableRow>
 
-    </LinearLayout>
+        <TableRow>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewProduto"
-        android:layout_margin="5dip">
-    </ListView>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cod. Barra"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20dp" />
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Descrição"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Preço"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="20dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <ListView
+                android:id="@+id/listViewProduto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></ListView>
+        </TableRow>
+    </TableLayout>
 </LinearLayout>
