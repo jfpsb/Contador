@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Fragment base para todas as fragments do app
+ */
 public abstract class FragmentBase extends Fragment {
     protected static View viewInflate;
 
@@ -22,6 +25,11 @@ public abstract class FragmentBase extends Fragment {
         return viewInflate;
     }
 
+    /**
+     * Mostra fragment para escolher data. Comum em algumas fragments então foi colocada aqui.
+     * onClick é atribuído no layout xml
+     * @param v
+     */
     public void showDatePicker(View v) {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setView(v);

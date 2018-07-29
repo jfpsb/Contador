@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.loja;
 
 
 import android.os.Bundle;
@@ -11,12 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
-import com.vandamodaintima.jfpsb.contador.util.TratamentoMensagensSQLite;
 
 /**
  * A simple {@link Fragment} subclass.

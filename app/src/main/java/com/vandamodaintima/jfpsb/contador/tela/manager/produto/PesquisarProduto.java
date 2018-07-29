@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.produto;
 
 
 import android.app.Activity;
@@ -22,12 +22,11 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
+import com.vandamodaintima.jfpsb.contador.tela.manager.produto.AlterarDeletarProduto;
 
 /**
  * A simple {@link Fragment} subclass.

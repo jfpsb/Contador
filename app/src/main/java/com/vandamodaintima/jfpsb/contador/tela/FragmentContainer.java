@@ -8,8 +8,11 @@ import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 
+/**
+ * Serve como classe base para as Activities containers de Fragments
+ */
 public abstract class FragmentContainer extends ActivityBase {
-    private Fragment fragment;
+    private Fragment fragment; //Fragment que será hosteada pela activity
 
     public FragmentContainer(Fragment fragment) {
         this.fragment = fragment;
@@ -25,10 +28,15 @@ public abstract class FragmentContainer extends ActivityBase {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
+        // Adiciona fragment na activity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
 
     public abstract void setResultCadastro(Object object);
+
+    protected Fragment getFragment() {
+        return fragment;
+    }
 }

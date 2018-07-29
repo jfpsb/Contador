@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
 
 import android.app.Activity;
@@ -25,7 +25,6 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;

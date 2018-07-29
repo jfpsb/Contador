@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {

@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,16 +6,16 @@ import android.content.Intent;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentContainer;
 
-public class AlterarFornecedorEmProdutoContainer extends FragmentContainer {
+public class CadastrarFornecedorSemInternetContainer extends FragmentContainer {
 
-    public AlterarFornecedorEmProdutoContainer() {
-        super(new AlterarFornecedorEmProduto());
+    public CadastrarFornecedorSemInternetContainer() {
+        super(new CadastrarFornecedorSemInternet());
     }
 
     @Override
     public void setResultCadastro(Object object) {
         Intent intent = new Intent();
-        intent.putExtra("fornecedor", (Fornecedor)object);
+        intent.putExtra("fornecedor", (Fornecedor) object);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

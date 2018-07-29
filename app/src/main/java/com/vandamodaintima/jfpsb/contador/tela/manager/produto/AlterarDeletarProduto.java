@@ -1,19 +1,15 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.produto;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -21,7 +17,8 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
+import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.AlterarFornecedorEmProdutoContainer;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarProduto extends AlterarDeletarEntidade {
@@ -123,7 +120,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             case ALTERAR_FORNECEDOR:
                 if(resultCode == Activity.RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
-                    Log.i("Contador", "Fornecedor: " + fornecedor.getNome());
+                    txtFornecedorAtual.setText(fornecedor.getNome());
                     Toast.makeText(this, "Fornecedor Escolhido. Aperte em \"Atualizar\" para Finalizar.", Toast.LENGTH_SHORT).show();
                 }
                 else {

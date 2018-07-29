@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.tela.manager.produto;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,9 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarProduto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarProduto;
 
 public class TelaProduto extends ActivityBase {
 
@@ -73,6 +72,9 @@ public class TelaProduto extends ActivityBase {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Se não chamar não executa o onActivityResult das fragments em TelaFornecedorForResult
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == ESCOLHER_ARQUIVO) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();

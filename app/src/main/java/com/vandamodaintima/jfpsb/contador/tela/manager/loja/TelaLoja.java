@@ -1,11 +1,12 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.tela.manager.loja;
 
 import android.os.Bundle;
 import android.view.ViewStub;
 
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarLoja;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.loja.CadastrarLoja;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarLoja;
+import com.vandamodaintima.jfpsb.contador.tela.manager.loja.PesquisarLoja;
 
 public class TelaLoja extends ActivityBase {
 

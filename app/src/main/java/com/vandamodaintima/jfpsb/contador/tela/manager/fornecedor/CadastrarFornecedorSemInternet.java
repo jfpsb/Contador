@@ -1,9 +1,6 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +69,7 @@ public class CadastrarFornecedorSemInternet extends CadastrarFornecedor {
     }
 
     @Override
-    protected void PesquisaAposCadastro() {
-        ((CadastrarFornecedorSemInternetContainer) getActivity()).setResultCadastro(null);
+    protected void aposCadastro(Fornecedor fornecedor) {
+        ((CadastrarFornecedorSemInternetContainer) getActivity()).setResultCadastro(fornecedor);
     }
 }

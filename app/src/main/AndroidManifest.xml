@@ -23,48 +23,44 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".tela.TelaContador"
+            android:name=".tela.manager.contagem.TelaContador"
             android:label="Gerenciar Contagens"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.TelaProduto"
+            android:name=".tela.manager.produto.TelaProduto"
             android:label="Gerenciar Produtos"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.TelaFornecedor"
+            android:name=".tela.manager.fornecedor.TelaFornecedor"
             android:label="Gerenciar Fornecedores"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.TelaLoja"
+            android:name=".tela.manager.loja.TelaLoja"
             android:label="Gerenciar Lojas"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.AlterarDeletarContagem"
+            android:name=".tela.manager.contagem.AlterarDeletarContagem"
             android:label="@string/title_activity_alterar_deletar_contagem"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.AlterarDeletarFornecedor"
+            android:name=".tela.manager.fornecedor.AlterarDeletarFornecedor"
             android:label="@string/title_activity_alterar_deletar_fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.AlterarDeletarLoja"
+            android:name=".tela.manager.loja.AlterarDeletarLoja"
             android:label="@string/title_activity_alterar_deletar_loja"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.AlterarDeletarProduto"
+            android:name=".tela.manager.produto.AlterarDeletarProduto"
             android:label="@string/title_activity_alterar_deletar_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.AdicionarContagemProduto"
+            android:name=".tela.manager.contagem.AdicionarContagemProduto"
             android:label="@string/title_activity_adicionar_contagem_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.VisualizarProdutosContagem"
+            android:name=".tela.manager.contagem.VisualizarProdutosContagem"
             android:label="@string/title_activity_visualizar_produtos_contagem"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
-            android:name=".tela.manager.AdicionarFornecedor"
-            android:label="@string/title_activity_adicionar_fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
             android:name=".tela.ActivityBase"
@@ -77,19 +73,25 @@
             android:value="barcode" />
 
         <activity
-            android:name=".tela.manager.CadastrarFornecedorSemInternetContainer"
+            android:name=".tela.manager.fornecedor.CadastrarFornecedorSemInternetContainer"
             android:label="Cadastrar Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".tela.manager.PesquisaContagemProdutoContainer"
+            android:name=".tela.manager.contagem.PesquisaContagemProdutoContainer"
             android:label="@string/title_activity_pesquisa_contagem_produto_container"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".tela.manager.AlterarFornecedorEmProdutoContainer"
+            android:name=".tela.manager.fornecedor.AlterarFornecedorEmProdutoContainer"
             android:label="Produto: Alterar Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".tela.manager.fornecedor.TelaFornecedorForResult"
+            android:label="Produto: Escolher Fornecedor"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

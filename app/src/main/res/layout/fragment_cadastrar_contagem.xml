@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="7dip"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarContagem">
+    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.contagem.CadastrarContagem">
 
     <TableLayout
         android:layout_width="match_parent"

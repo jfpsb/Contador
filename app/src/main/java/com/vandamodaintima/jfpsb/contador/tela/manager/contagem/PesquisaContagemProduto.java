@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.AdicionarContagemProduto;
+import com.vandamodaintima.jfpsb.contador.tela.manager.produto.PesquisarProduto;
 
 public class PesquisaContagemProduto extends PesquisarProduto {
     private Contagem contagem;
@@ -22,7 +24,6 @@ public class PesquisaContagemProduto extends PesquisarProduto {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-
         contagem = (Contagem) bundle.getSerializable("contagem");
 
         return super.onCreateView(inflater, container, savedInstanceState);

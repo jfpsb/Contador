@@ -1,13 +1,7 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.ViewStub;
 
-import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentContainer;
 
 import org.apache.poi.ss.formula.eval.NotImplementedException;
@@ -20,6 +14,19 @@ public class PesquisaContagemProdutoContainer extends FragmentContainer {
 
     public PesquisaContagemProdutoContainer() {
         super(new PesquisaContagemProduto());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        PesquisaContagemProduto pesquisaContagemProduto = (PesquisaContagemProduto) getFragment();
+
+        Bundle bundle = new Bundle();
+
+        bundle.putSerializable("contagem", getIntent().getExtras().getSerializable("contagem"));
+
+        pesquisaContagemProduto.setArguments(bundle);
     }
 
     @Override

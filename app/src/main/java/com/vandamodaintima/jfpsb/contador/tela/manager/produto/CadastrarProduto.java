@@ -1,6 +1,8 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.produto;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
@@ -36,18 +39,20 @@ import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 public class CadastrarProduto extends FragmentBase {
 
     private Button btnCadastrar;
+    private Button btnEscolherFornecedor;
     private EditText txtCodBarra;
-    private Spinner spinnerFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
+    private EditText txtFornecedor;
     private TextView lblCodRepetido;
 
     private ProdutoManager produtoManager;
-    private FornecedorManager fornecedorManager;
 
     private Fornecedor fornecedor;
 
     private Animation slidedown;
+
+    private static final int ESCOLHER_FORNECEDOR = 1;
 
     public CadastrarProduto() {
         // Required empty public constructor
@@ -62,11 +67,12 @@ public class CadastrarProduto extends FragmentBase {
         txtCodBarra = viewInflate.findViewById(R.id.txtCodBarra);
         txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
-        spinnerFornecedor = viewInflate.findViewById(R.id.spinnerFornecedores);
+        txtFornecedor = viewInflate.findViewById(R.id.txtFornecedor);
+        btnEscolherFornecedor = viewInflate.findViewById(R.id.btnEscolherFornecedor);
         lblCodRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
 
         setManagers();
-        setSpinnerFornecedor();
+        setBtnEscolherFornecedor();
         setBtnCadastrar();
         setTxtCodBarra();
 
@@ -76,54 +82,28 @@ public class CadastrarProduto extends FragmentBase {
     @Override
     protected void setManagers() {
         produtoManager = new ProdutoManager(((ActivityBase)getActivity()).getConn());
-        fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
     }
 
-    private void setSpinnerFornecedor() {
-        Cursor cursor = null, cursor2 = null;
-
-        try {
-            cursor = fornecedorManager.listarCursor();
-
-            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE O FORNECEDOR", new String[]{ "_id", "nome" });
-
-            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
-            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            spinnerFornecedor.setAdapter(simpleCursorAdapter);
-        } catch (Exception e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        finally {
-            if(cursor != null)
-                cursor.close();
-
-            if(cursor2 != null)
-                cursor2.close();
-        }
-
-        spinnerFornecedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    private void setBtnEscolherFornecedor() {
+        btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0) {
-                    Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-                    cursor.moveToPosition(i);
-
-                    fornecedor = new Fornecedor();
-                    fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                    fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-                }
-                else {
-                    fornecedor = null;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
+                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ESCOLHER_FORNECEDOR:
+                if(resultCode == Activity.RESULT_OK) {
+                    fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+                    txtFornecedor.setText(fornecedor.getNome());
+                }
+                break;
+        }
     }
 
     private void setBtnCadastrar() {
@@ -162,7 +142,6 @@ public class CadastrarProduto extends FragmentBase {
                         txtPreco.setText("");
                         txtDescricao.setText("");
                         txtCodBarra.setText("");
-                        spinnerFornecedor.setSelection(0);
                     }
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
@@ -201,7 +180,7 @@ public class CadastrarProduto extends FragmentBase {
                         txtDescricao.setEnabled(false);
                         txtPreco.setEnabled(false);
                         btnCadastrar.setEnabled(false);
-                        spinnerFornecedor.setEnabled(false);
+                        btnEscolherFornecedor.setEnabled(false);
 
                         lblCodRepetido.setVisibility(View.VISIBLE);
                         lblCodRepetido.startAnimation(slidedown);
@@ -210,7 +189,7 @@ public class CadastrarProduto extends FragmentBase {
                         txtDescricao.setEnabled(true);
                         txtPreco.setEnabled(true);
                         btnCadastrar.setEnabled(true);
-                        spinnerFornecedor.setEnabled(true);
+                        btnEscolherFornecedor.setEnabled(true);
 
                         lblCodRepetido.setVisibility(View.GONE);
                     }

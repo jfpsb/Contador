@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="10dip"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarFornecedor">
+    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.PesquisarFornecedor">
 
     <TextView
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,9 +14,10 @@ import android.view.ViewStub;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarFornecedorSemInternetContainer;
-import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarFornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.CadastrarFornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.CadastrarFornecedorSemInternetContainer;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.PesquisarFornecedor;
 import com.vandamodaintima.jfpsb.contador.R;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -80,7 +81,6 @@ public class TelaFornecedor extends ActivityBase {
                     Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
                     AbrirEscolhaDiretorioActivity();
                 }
-
                 break;
         }
     }
@@ -93,14 +93,11 @@ public class TelaFornecedor extends ActivityBase {
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-
         startActivityForResult(intentDiretorio, ESCOLHER_DIRETORIO);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ESCOLHER_DIRETORIO:
                 if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {

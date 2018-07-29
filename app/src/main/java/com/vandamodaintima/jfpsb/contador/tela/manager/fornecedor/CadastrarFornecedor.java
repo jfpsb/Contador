@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -248,7 +248,7 @@ public class CadastrarFornecedor extends FragmentBase {
                     toast.setText("Inserção de Fornecedor " + fornecedor.getNome() + " Efetuada com Sucesso");
                     toast.show();
 
-                    PesquisaAposCadastro();
+                    aposCadastro(fornecedor);
                 } else {
                     toast.setText("Erro ao Inserir Fornecedor");
                     toast.show();
@@ -268,9 +268,9 @@ public class CadastrarFornecedor extends FragmentBase {
     }
 
     /**
-     * Depois que o cadastro é efetuado esse método é responsável por atualizar a lista de pesquisa
+     * Operação para ser feita após cadastro efetuado com sucesso
      */
-    protected void PesquisaAposCadastro() {
+    protected void aposCadastro(Fornecedor fornecedor) {
         try {
             // Atualiza lista em aba de pesquisa
             Fragment fragment = ((ActivityBase) (getActivity())).getAdapter().getItem(0);

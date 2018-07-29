@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,7 +11,14 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
+/**
+ * Usado em AlterarDeletarProduto
+ * Lista os fornecedores e permite que o usuário escolha um ao clicar nele
+ * e atribuir ao produto
+ * Isso é uma Fragment
+ */
 public class AlterarFornecedorEmProduto extends PesquisarFornecedor {
     AlertDialog.Builder alertaEscolha;
 
@@ -48,7 +55,14 @@ public class AlterarFornecedorEmProduto extends PesquisarFornecedor {
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((AlterarFornecedorEmProdutoContainer)getActivity()).setResultCadastro(fornecedor);
+                ActivityBase activityBase = (ActivityBase) getActivity();
+
+                if(activityBase instanceof AlterarFornecedorEmProdutoContainer) {
+                    ((AlterarFornecedorEmProdutoContainer)getActivity()).setResultCadastro(fornecedor);
+                }
+                else if(activityBase instanceof TelaFornecedorForResult){
+                    ((TelaFornecedorForResult)getActivity()).setResultado(fornecedor);
+                }
             }
         });
 

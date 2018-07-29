@@ -14,7 +14,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
+import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -75,17 +75,17 @@ public class ManipulaExcel {
 
             ArquivoExcel arquivoExcel = new ArquivoExcel(inputStream);
 
-            int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
-
-            progresso.publish(rows + " Produto(s) Encontrado(s)");
-
-            produtos = new Produto[rows - 1];
-
             Row auxRow = arquivoExcel.getPlanilha().getRow(0);
 
             if (auxRow.getPhysicalNumberOfCells() != 3) {
                 throw new Exception("Planilha Configurada de Forma Errada. A Planilha Deve Conter Três Colunas contendo Cód. de Barras do Produto, Descrição e Preço.");
             }
+
+            int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
+
+            progresso.publish(rows + " Produto(s) Encontrado(s)");
+
+            produtos = new Produto[rows - 1];
 
             for (int i = 1; i < rows; i++) {
                 Row row = arquivoExcel.getPlanilha().getRow(i);

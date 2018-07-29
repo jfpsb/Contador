@@ -1,16 +1,15 @@
 package com.vandamodaintima.jfpsb.contador;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.vandamodaintima.jfpsb.contador.tela.TelaContador;
-import com.vandamodaintima.jfpsb.contador.tela.TelaFornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.TelaLoja;
-import com.vandamodaintima.jfpsb.contador.tela.TelaProduto;
+import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.TelaContador;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.manager.loja.TelaLoja;
+import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
 
 public class MainActivity extends AppCompatActivity {
 

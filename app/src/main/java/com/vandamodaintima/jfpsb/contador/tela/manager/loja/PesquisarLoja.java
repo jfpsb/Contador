@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.loja;
 
 
 import android.app.Activity;
@@ -16,41 +16,38 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.FornecedorCursorAdapter;
+import com.vandamodaintima.jfpsb.contador.LojaCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
-import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
+import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
-import com.vandamodaintima.jfpsb.contador.util.EditTextMask;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarFornecedor extends TelaPesquisa {
+public class PesquisarLoja extends TelaPesquisa {
 
-    private static FornecedorManager fornecedorManager;
-    protected ListView listView;
-    private static FornecedorCursorAdapter fornecedorCursorAdapter;
-    private EditText txtPesquisaFornecedor;
+    private static LojaManager lojaManager;
+    private ListView listView;
+    private static LojaCursorAdapter lojaCursorAdapter;
+    private EditText txtNome;
 
-    public PesquisarFornecedor() {
+    public PesquisarLoja() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
+        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 
         setManagers();
 
         listView = viewInflate.findViewById(R.id.listViewLoja);
+        txtNome = viewInflate.findViewById(R.id.txtNome);
 
-        txtPesquisaFornecedor = viewInflate.findViewById(R.id.txtPesquisaFornecedor);
-
-        setTxtPesquisaFornecedor();
+        setTxtNome();
         setListView();
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -58,12 +55,11 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
     @Override
     protected void setManagers() {
-        fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
+        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
     }
 
-    private void setTxtPesquisaFornecedor() {
-        txtPesquisaFornecedor.addTextChangedListener(new EditTextMask(txtPesquisaFornecedor, EditTextMask.CNPJ));
-        txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
+    private void setTxtNome() {
+        txtNome.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -76,7 +72,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                populaListView(txtPesquisaFornecedor.getText().toString());
+                populaListView(txtNome.getText().toString());
             }
         });
     }
@@ -87,9 +83,9 @@ public class PesquisarFornecedor extends TelaPesquisa {
             cursorPesquisa.close();
 
         try {
-            cursorPesquisa = fornecedorManager.listarCursor();
-            fornecedorCursorAdapter = new FornecedorCursorAdapter(viewInflate.getContext(), cursorPesquisa);
-            listView.setAdapter(fornecedorCursorAdapter);
+            cursorPesquisa = lojaManager.listarCursor();
+            lojaCursorAdapter = new LojaCursorAdapter(viewInflate.getContext(), cursorPesquisa);
+            listView.setAdapter(lojaCursorAdapter);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -106,21 +102,20 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
                 cursor.moveToPosition(i);
 
-                Fornecedor fornecedor = new Fornecedor();
+                Loja loja = new Loja();
 
-                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+                loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 Bundle bundle = new Bundle();
 
-                bundle.putSerializable("fornecedor", fornecedor);
+                bundle.putSerializable("loja", loja);
 
-                Intent alterarFornecedor = new Intent(viewInflate.getContext(), AlterarDeletarFornecedor.class);
+                Intent alterarLoja = new Intent(viewInflate.getContext(), AlterarDeletarLoja.class);
 
-                alterarFornecedor.putExtras(bundle);
+                alterarLoja.putExtras(bundle);
 
-                startActivityForResult(alterarFornecedor, TELA_ALTERAR_DELETAR);
+                startActivityForResult(alterarLoja, TELA_ALTERAR_DELETAR);
             }
         });
     }
@@ -130,10 +125,10 @@ public class PesquisarFornecedor extends TelaPesquisa {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
                 if(resultCode == Activity.RESULT_OK) {
-                    populaListView(txtPesquisaFornecedor.getText().toString());
+                    populaListView(txtNome.getText().toString());
                 }
                 else {
-                    Toast.makeText(viewInflate.getContext(), "O Fornecedor Não Foi Alterado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(viewInflate.getContext(), "A Loja Não Foi Alterada", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -142,25 +137,34 @@ public class PesquisarFornecedor extends TelaPesquisa {
     /**
      * Popula a lista novamente
      */
+
     public void populaListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
-            cursorPesquisa = fornecedorManager.listarCursor();
-            fornecedorCursorAdapter.changeCursor(cursorPesquisa);
-        } catch (Exception e) {
+            cursorPesquisa = lojaManager.listarCursor();
+
+            if(cursorPesquisa.getCount() == 0)
+                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+
+            lojaCursorAdapter.changeCursor(cursorPesquisa);
+        }catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void populaListView(String termo) {
+    public void populaListView(String nome) {
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
-            cursorPesquisa = fornecedorManager.listarCursorPorNomeCnpjFantasia(termo);
-            fornecedorCursorAdapter.changeCursor(cursorPesquisa);
+            cursorPesquisa = lojaManager.listarPorNome(nome);
+
+            if(cursorPesquisa.getCount() == 0)
+                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+
+            lojaCursorAdapter.changeCursor(cursorPesquisa);
         } catch (Exception e) {
             Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }

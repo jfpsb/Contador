@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager;
+package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
 import android.os.Bundle;
 import android.view.ViewStub;

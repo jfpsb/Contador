@@ -1,11 +1,12 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
 import android.os.Bundle;
 import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.manager.CadastrarContagem;
-import com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarContagem;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.CadastrarContagem;
+import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.PesquisarContagem;
 
 public class TelaContador extends ActivityBase {
 

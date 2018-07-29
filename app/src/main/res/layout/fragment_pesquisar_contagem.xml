@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="7dip"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.PesquisarContagem">
+    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.contagem.PesquisarContagem">
 
     <TableLayout
         android:layout_width="match_parent"
