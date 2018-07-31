@@ -26,27 +26,18 @@ public class TestaIO {
     public static boolean isValidDouble(String num) {
         try {
             Double.parseDouble(num);
+            return true;
         } catch (NumberFormatException nfe) {
             return false;
         }
-
-        return true;
     }
 
     public static boolean isValidInt(String num) {
         try {
             Integer.parseInt(num);
+            return true;
         } catch (NumberFormatException nfe) {
             return false;
         }
-
-        return true;
-    }
-
-    public static boolean isStringEmpty(String string) {
-        if(string.isEmpty())
-            return  true;
-
-        return false;
     }
 }

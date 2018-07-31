@@ -33,7 +33,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
     private static FornecedorManager fornecedorManager;
     protected ListView listView;
-    private static FornecedorCursorAdapter fornecedorCursorAdapter;
+    private FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
 
     public PesquisarFornecedor() {
@@ -63,7 +63,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
     }
 
     private void setTxtPesquisaFornecedor() {
-        txtPesquisaFornecedor.addTextChangedListener(new EditTextMask(txtPesquisaFornecedor, EditTextMask.CNPJ));
+        //txtPesquisaFornecedor.addTextChangedListener(new EditTextMask(txtPesquisaFornecedor, EditTextMask.CNPJ));
         txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

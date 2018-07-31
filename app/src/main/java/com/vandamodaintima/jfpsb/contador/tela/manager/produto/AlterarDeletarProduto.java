@@ -4,21 +4,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.AlterarFornecedorEmProdutoContainer;
+import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AlterarDeletarProduto extends AlterarDeletarEntidade {
@@ -29,11 +34,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedorAtual;
+    private EditText txtCodBarraFornecedor;
+    private Spinner spinnerMarca;
 
     private Button btnAlterarFornecedor;
 
     private ProdutoManager produtoManager;
-    private FornecedorManager fornecedorManager;
+    private MarcaManager marcaManager;
 
     private static final int ALTERAR_FORNECEDOR = 1;
 
@@ -51,9 +58,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedorAtual = findViewById(R.id.txtFornecedorAtual);
+        txtCodBarraFornecedor = findViewById(R.id.txtCodBarraFornecedor);
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
         btnAlterarFornecedor = findViewById(R.id.btnAlterarFornecedor);
+        spinnerMarca = findViewById(R.id.spinnerMarca);
 
         txtCodBarra.setText(produto.getCod_barra());
         txtDescricao.setText(produto.getDescricao());
@@ -66,6 +75,14 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             txtFornecedorAtual.setText("Sem Fornecedor");
         }
 
+        if(produto.getCod_barra_fornecedor() != null && ! produto.getCod_barra_fornecedor().isEmpty()) {
+            txtCodBarraFornecedor.setText(produto.getCod_barra_fornecedor());
+        }
+        else {
+            txtCodBarraFornecedor.setText("Não Definido");
+        }
+
+        setSpinnerMarca();
         setAlertBuilderDeletar();
         setAlertBuilderAtualizar();
 
@@ -77,8 +94,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
     @Override
     protected void setManagers() {
-        fornecedorManager = new FornecedorManager(conn);
         produtoManager = new ProdutoManager(conn);
+        marcaManager = new MarcaManager(conn);
     }
 
     @Override
@@ -161,7 +178,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     protected void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Produto");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto" + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -170,11 +187,13 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     String cod_barra = txtCodBarra.getText().toString();
                     String descricao = txtDescricao.getText().toString();
                     String preco = txtPreco.getText().toString();
+                    String cod_barra_fornecedor = txtCodBarraFornecedor.getText().toString();
+                    int marca = (int) spinnerMarca.getSelectedItemId();
 
-                    if (TestaIO.isStringEmpty(descricao))
+                    if (descricao.isEmpty())
                         throw new Exception("O campo de descrição não pode ficar vazio!");
 
-                    if (TestaIO.isStringEmpty(preco))
+                    if (preco.isEmpty())
                         throw new Exception("O campo de preço não pode ficar vazio!");
 
                     if (!TestaIO.isValidDouble(preco))
@@ -187,6 +206,20 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     toUpdate.setPreco(Double.parseDouble(preco));
                     toUpdate.setFornecedor(fornecedor);
 
+                    if(marca != -1) {
+                        toUpdate.setMarca(marca);
+                    }
+                    else {
+                        toUpdate.setMarca(0);
+                    }
+
+                    if(! cod_barra_fornecedor.isEmpty()) {
+                        toUpdate.setCod_barra_fornecedor(cod_barra_fornecedor);
+                    }
+                    else {
+                        toUpdate.setCod_barra_fornecedor(null);
+                    }
+
                     boolean result = produtoManager.atualizar(toUpdate, produto.getCod_barra());
 
                     if (result) {
@@ -198,8 +231,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     }
 
                 } catch (Exception e) {
-                    Log.e("Contador", "Erro", e);
-                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar", Toast.LENGTH_SHORT).show();
+                    Log.e("Contador", "Erro ao Atualizar Produto", e);
+                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Atualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -210,5 +243,42 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setSpinnerMarca() {
+        Cursor cursor = null, cursor2 = null;
+
+        try {
+            cursor = marcaManager.listarCursor();
+
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE A MARCA", new String[]{"_id", "nome" });
+
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinnerMarca.setAdapter(simpleCursorAdapter);
+
+            if(cursor != null && cursor.getCount() > 0 && produto.getMarca() != 0) {
+                for(int i = 1; i < cursor2.getCount(); i++) {
+                    cursor2.moveToPosition(i);
+
+                    int id = cursor2.getInt(cursor2.getColumnIndexOrThrow("_id"));
+
+                    if(id == produto.getMarca()) {
+                        spinnerMarca.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        finally {
+            if(cursor != null)
+                cursor.close();
+
+            if(cursor2 != null)
+                cursor2.close();
+        }
     }
 }

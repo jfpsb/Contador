@@ -97,10 +97,10 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
                     String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
 
-                    if(TestaIO.isStringEmpty(cnpj))
+                    if(cnpj.isEmpty())
                         throw new Exception("O campo de cnpj não pode ficar vazio!");
 
-                    if(TestaIO.isStringEmpty(nome))
+                    if(nome.isEmpty())
                         throw new Exception("O campo de nome não pode ficar vazio!");
 
                     Fornecedor toUpdate = new Fornecedor();

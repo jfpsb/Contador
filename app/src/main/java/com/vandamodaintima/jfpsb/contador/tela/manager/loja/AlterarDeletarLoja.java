@@ -122,7 +122,7 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
                     if(cnpj.isEmpty())
                         throw new Exception("O campo cnpj não pode estar vazio!");
 
-                    if(TestaIO.isStringEmpty(nome))
+                    if(nome.isEmpty())
                         throw new Exception("O campo nome não pode estar vazio!");
 
                     Loja toUpdate = new Loja();

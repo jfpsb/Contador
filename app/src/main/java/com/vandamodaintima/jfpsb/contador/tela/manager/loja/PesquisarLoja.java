@@ -42,11 +42,10 @@ public class PesquisarLoja extends TelaPesquisa {
                              Bundle savedInstanceState) {
         viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 
-        setManagers();
-
         listView = viewInflate.findViewById(R.id.listViewLoja);
         txtNome = viewInflate.findViewById(R.id.txtNome);
 
+        setManagers();
         setTxtNome();
         setListView();
 
@@ -100,8 +99,6 @@ public class PesquisarLoja extends TelaPesquisa {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                cursor.moveToPosition(i);
-
                 Loja loja = new Loja();
 
                 loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
@@ -137,7 +134,6 @@ public class PesquisarLoja extends TelaPesquisa {
     /**
      * Popula a lista novamente
      */
-
     public void populaListView() {
         if(cursorPesquisa != null)
             cursorPesquisa.close();

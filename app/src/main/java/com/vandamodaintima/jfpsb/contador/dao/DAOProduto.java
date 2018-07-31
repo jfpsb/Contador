@@ -24,11 +24,19 @@ public class DAOProduto extends DAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("cod_barra", objeto.getCod_barra());
+            contentValues.put("cod_barra_fornecedor", objeto.getCod_barra_fornecedor());
+            contentValues.put("marca", objeto.getMarca());
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
-            contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
 
-            return conn.insert(TABELA, "", contentValues);
+            if(objeto.getFornecedor() != null) {
+                contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
+            }
+            else {
+                contentValues.putNull("fornecedor");
+            }
+
+            return conn.insertOrThrow(TABELA, "", contentValues);
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
@@ -42,14 +50,16 @@ public class DAOProduto extends DAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("cod_barra", produto.getCod_barra());
+            contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
+            contentValues.put("marca", produto.getMarca());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
 
-            if(produto.getFornecedor() == null) {
-                contentValues.putNull("fornecedor");
+            if(produto.getFornecedor() != null) {
+                contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
             }
             else {
-                contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
+                contentValues.putNull("fornecedor");
             }
 
             return conn.insertWithOnConflict(TABELA, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -74,6 +84,14 @@ public class DAOProduto extends DAO<Produto> {
                 contentValues.putNull("fornecedor");
             }
 
+            if(objeto.getCod_barra_fornecedor() != null) {
+                contentValues.put("cod_barra_fornecedor", objeto.getCod_barra_fornecedor());
+            }
+            else {
+                contentValues.putNull("cod_barra_fornecedor");
+            }
+
+            contentValues.put("marca", objeto.getMarca());
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
 

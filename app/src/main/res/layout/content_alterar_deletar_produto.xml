@@ -11,7 +11,7 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip">
+        android:layout_margin="5dip">
 
         <TableRow>
             <TextView
@@ -35,6 +35,43 @@
         <TableRow>
             <EditText
                 android:id="@+id/txtCodBarra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:textSize="20sp" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cód. de Barra do Fornecedor:"
+                android:textColor="#000"
+                android:textSize="22sp" />
+        </TableRow>
+        <TableRow>
+            <EditText
+                android:id="@+id/txtCodBarraFornecedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:inputType="number" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Marca:"
+                android:textColor="#000"
+                android:textSize="22sp" />
+        </TableRow>
+        <TableRow>
+            <Spinner
+                android:id="@+id/spinnerMarca"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

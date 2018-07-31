@@ -8,9 +8,27 @@ import java.io.Serializable;
 
 public class Produto implements Serializable {
     private String cod_barra;
+    private String cod_barra_fornecedor;
+    private int marca;
     private Fornecedor fornecedor;
     private String descricao;
     private Double preco;
+
+    public String getCod_barra_fornecedor() {
+        return cod_barra_fornecedor;
+    }
+
+    public void setCod_barra_fornecedor(String cod_barra_fornecedor) {
+        this.cod_barra_fornecedor = cod_barra_fornecedor;
+    }
+
+    public int getMarca() {
+        return marca;
+    }
+
+    public void setMarca(int marca) {
+        this.marca = marca;
+    }
 
     public String getCod_barra() {
         return cod_barra;
@@ -45,6 +63,6 @@ public class Produto implements Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[] {"cod_barra as _id", "fornecedor", "descricao", "preco"};
+        return new String[]{ "cod_barra as _id", "cod_barra_fornecedor", "marca", "fornecedor", "descricao", "preco" };
     }
 }

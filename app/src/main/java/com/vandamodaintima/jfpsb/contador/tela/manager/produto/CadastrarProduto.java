@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,15 +18,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
@@ -44,9 +45,12 @@ public class CadastrarProduto extends FragmentBase {
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
+    private EditText txtCodBarraFornecedor;
+    private Spinner spinnerMarca;
     private TextView lblCodRepetido;
 
     private ProdutoManager produtoManager;
+    private MarcaManager marcaManager;
 
     private Fornecedor fornecedor;
 
@@ -68,6 +72,8 @@ public class CadastrarProduto extends FragmentBase {
         txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         txtFornecedor = viewInflate.findViewById(R.id.txtFornecedor);
+        txtCodBarraFornecedor = viewInflate.findViewById(R.id.txtCodBarraFornecedor);
+        spinnerMarca = viewInflate.findViewById(R.id.spinnerMarca);
         btnEscolherFornecedor = viewInflate.findViewById(R.id.btnEscolherFornecedor);
         lblCodRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
 
@@ -76,12 +82,15 @@ public class CadastrarProduto extends FragmentBase {
         setBtnCadastrar();
         setTxtCodBarra();
 
+        setSpinnerMarca();
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     protected void setManagers() {
         produtoManager = new ProdutoManager(((ActivityBase)getActivity()).getConn());
+        marcaManager = new MarcaManager(((ActivityBase)getActivity()).getConn());
     }
 
     private void setBtnEscolherFornecedor() {
@@ -94,13 +103,66 @@ public class CadastrarProduto extends FragmentBase {
         });
     }
 
+    private void setSpinnerMarca() {
+        Cursor cursor = null, cursor2 = null;
+
+        try {
+            cursor = marcaManager.listarCursor();
+
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE A MARCA", new String[]{"_id", "nome" });
+
+            SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+            simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            spinnerMarca.setAdapter(simpleCursorAdapter);
+
+            setSpinnerMarcaOnItemSelectedListener();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        finally {
+            if(cursor != null)
+                cursor.close();
+
+            if(cursor2 != null)
+                cursor2.close();
+        }
+    }
+
+    private void setSpinnerMarcaOnItemSelectedListener() {
+        if(spinnerMarca.getOnItemSelectedListener() == null) {
+            spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position != 0) {
+                        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                        cursor.moveToPosition(position);
+
+                        String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+                        Toast.makeText(getContext(), "Marca " + nome + "Escolhida", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "A Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Toast.makeText(getContext(), "A Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if(resultCode == Activity.RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
-                    txtFornecedor.setText(fornecedor.getNome());
+
+                    if(fornecedor != null) {
+                        txtFornecedor.setText(fornecedor.getNome());
+                    }
                 }
                 break;
         }
@@ -116,32 +178,41 @@ public class CadastrarProduto extends FragmentBase {
                     String cod_barra = txtCodBarra.getText().toString();
                     String descricao = txtDescricao.getText().toString();
                     String preco = txtPreco.getText().toString();
+                    String cod_barra_fornecedor = txtCodBarraFornecedor.getText().toString();
+                    int marca = (int) spinnerMarca.getSelectedItemId();
 
-                    if(TestaIO.isStringEmpty(cod_barra))
-                        throw new Exception("Código de barras não pode estar vazio!");
+                    if(cod_barra.isEmpty())
+                        throw new Exception("Código de Barras Não Pode Estar Vazio!");
 
-                    if(TestaIO.isStringEmpty(descricao))
-                        throw new Exception("A descrição do produto não pode estar vazia!");
+                    if(descricao.isEmpty())
+                        throw new Exception("A Descrição do Produto Não Pode Estar Vazia!");
 
-                    if(TestaIO.isStringEmpty(preco))
-                        throw new Exception("O preço do produto não pode estar vazio!");
+                    if(preco.isEmpty() || ! TestaIO.isValidDouble(preco))
+                        throw new Exception("Digite um Valor de Preço Válido!");
 
                     produto.setCod_barra(cod_barra);
+                    produto.setCod_barra_fornecedor(cod_barra_fornecedor);
                     produto.setPreco(Double.parseDouble(preco));
                     produto.setDescricao(descricao.toUpperCase());
                     produto.setFornecedor(fornecedor);
 
+                    if(marca != -1)
+                        produto.setMarca(marca);
+
                     boolean result = produtoManager.inserir(produto);
 
                     if(result) {
-                        Toast.makeText(viewInflate.getContext(), "O produto " + produto.getDescricao() + " foi inserido com sucesso!" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(viewInflate.getContext(), "O Produto " + produto.getDescricao() + " Foi Inserido com Sucesso!" , Toast.LENGTH_SHORT).show();
 
                         Fragment fragment = ((ActivityBase)getActivity()).getAdapter().getItem(0);
                         ((PesquisarProduto)fragment).populaListView();
 
-                        txtPreco.setText("");
-                        txtDescricao.setText("");
-                        txtCodBarra.setText("");
+                        txtPreco.getText().clear();
+                        txtDescricao.getText().clear();
+                        txtCodBarra.getText().clear();
+                        txtCodBarraFornecedor.getText().clear();
+                        txtFornecedor.getText().clear();
+                        spinnerMarca.setSelection(0);
                     }
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();

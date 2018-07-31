@@ -42,6 +42,7 @@ public class CadastrarFornecedor extends FragmentBase {
     protected FornecedorManager fornecedorManager;
 
     protected AlertDialog.Builder alertaCadastro;
+    private AlertDialog.Builder alertaCadastrarMarcas;
 
     protected Animation slidedown;
 
@@ -267,6 +268,26 @@ public class CadastrarFornecedor extends FragmentBase {
         alertaCadastro.show();
     }
 
+    private void setAlertaCadastrarMarcas() {
+        alertaCadastrarMarcas = new AlertDialog.Builder(getContext());
+        alertaCadastrarMarcas.setTitle("Cadastrar Marcas");
+        alertaCadastrarMarcas.setMessage("Deseja Cadastrar As Marcas Que Esse Fornecedor Possui?");
+
+        alertaCadastrarMarcas.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alertaCadastrarMarcas.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getContext(), "Marcas Não Foram Cadastradas. Você Pode Utilizar a Tela de Alterar Fornecedor para Cadastrar Depois", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     /**
      * Operação para ser feita após cadastro efetuado com sucesso
      */
@@ -277,6 +298,8 @@ public class CadastrarFornecedor extends FragmentBase {
             ((PesquisarFornecedor) fragment).populaListView();
 
             txtCnpj.setText("");
+
+            alertaCadastrarMarcas.show();
         }
         catch (Exception e) {
             Log.i("Contador", e.getMessage(), e);

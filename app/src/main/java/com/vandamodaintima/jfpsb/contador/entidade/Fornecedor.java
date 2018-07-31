@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by jfpsb on 08/02/2018.

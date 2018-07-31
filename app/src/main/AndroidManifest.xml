@@ -92,6 +92,14 @@
             android:label="Produto: Escolher Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
+        <activity android:name=".tela.manager.marca.TelaMarca"
+            android:label="Gerenciar Marcas"
+            android:theme="@style/TabAppTheme.NoActionBar"  />
+
+        <activity android:name=".tela.manager.marca.AlterarDeletarMarca"
+            android:label="Marca: alterar ou deletar"
+            android:theme="@style/TabAppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>

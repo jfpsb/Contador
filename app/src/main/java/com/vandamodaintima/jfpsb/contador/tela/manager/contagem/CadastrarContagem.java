@@ -88,7 +88,7 @@ public class CadastrarContagem extends FragmentBase {
                     if(loja == null)
                         throw new Exception("Loja Inválida");
 
-                    if(TestaIO.isStringEmpty(dataInicial))
+                    if(dataInicial.isEmpty())
                         throw new Exception("O campo de data inicial não pode estar vazio!");
 
                     contagem.setDatainicio(TrataDisplayData.getDataDisplay(dataInicial));

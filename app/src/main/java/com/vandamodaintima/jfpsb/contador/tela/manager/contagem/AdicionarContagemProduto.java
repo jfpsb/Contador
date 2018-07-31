@@ -85,11 +85,11 @@ public class AdicionarContagemProduto extends ActivityBase {
                 try {
                     String quant = txtQuantidade.getText().toString();
 
-                    if(TestaIO.isStringEmpty(quant))
-                        throw new Exception("O campo de quantidade não pode estar vazio!");
+                    if(quant.isEmpty())
+                        throw new Exception("O Campo de Quantidade Não Pode Estar Vazio!");
 
-                    if(!TestaIO.isValidInt(quant))
-                        throw new Exception("O valor em quantidade é inválido!");
+                    if(! TestaIO.isValidInt(quant))
+                        throw new Exception("O Valor em Quantidade é Inválido!");
 
                     contagem_produto.setContagem(contagem);
                     contagem_produto.setProduto(produto);
@@ -98,7 +98,7 @@ public class AdicionarContagemProduto extends ActivityBase {
                     boolean result = contagemProdutoManager.inserir(contagem_produto);
 
                     if(result) {
-                        Toast.makeText(AdicionarContagemProduto.this, "Contagem de produto inserida com sucesso!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AdicionarContagemProduto.this, "Contagem de Produto Inserida com Sucesso!", Toast.LENGTH_SHORT).show();
 
                         if(addFornecedorFlag) {
 
@@ -107,9 +107,9 @@ public class AdicionarContagemProduto extends ActivityBase {
                             boolean resultProduto = produtoManager.atualizar(produto, produto.getCod_barra());
 
                             if(resultProduto) {
-                                Toast.makeText(AdicionarContagemProduto.this, "Fornecedor de produto atualizado com sucesso!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AdicionarContagemProduto.this, "Fornecedor de Produto Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(AdicionarContagemProduto.this, "Houve um erro ao atualizar fornecedor de produto", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AdicionarContagemProduto.this, "Houve um Erro ao Atualizar Fornecedor de Produto", Toast.LENGTH_SHORT).show();
                             }
                         }
 

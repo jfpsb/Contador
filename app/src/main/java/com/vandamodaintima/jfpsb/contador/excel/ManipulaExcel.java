@@ -63,13 +63,13 @@ public class ManipulaExcel {
         progresso.publish("Iniciando Cadastro");
 
         try {
-            if(task == null) {
+            if (task == null) {
                 throw new Exception("Você precisa passar um objeto AsyncTask no construtor!");
             }
 
             inputStream = Arquivo.getInputStreamFromUri(contentResolver, filepath);
 
-            if(inputStream == null) {
+            if (inputStream == null) {
                 throw new Exception("InputStream de arquivo Excel escolhido voltou nula");
             }
 
@@ -87,20 +87,21 @@ public class ManipulaExcel {
 
             produtos = new Produto[rows - 1];
 
-            for (int i = 1; i < rows; i++) {
-                Row row = arquivoExcel.getPlanilha().getRow(i);
+            try {
 
-                int cells = row.getPhysicalNumberOfCells();
+                for (int i = 1; i < rows; i++) {
+                    Row row = arquivoExcel.getPlanilha().getRow(i);
 
-                Produto produto = new Produto();
+                    int cells = row.getPhysicalNumberOfCells();
 
-                for (int j = 0; j < cells; j++) {
-                    try {
+                    Produto produto = new Produto();
+
+                    for (int j = 0; j < cells; j++) {
                         Cell cell = row.getCell(j);
 
                         CellValue cellValue = arquivoExcel.getFormulaEvaluator().evaluate(cell);
 
-                        if(cellValue == null)
+                        if (cellValue == null)
                             continue;
 
                         switch (cellValue.getCellType()) {
@@ -118,33 +119,31 @@ public class ManipulaExcel {
 
                         produto.setFornecedor(null);
 
-                        if(produto != null && produto.getDescricao() != null && produto.getCod_barra() != null) {
+                        if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null) {
                             produtos[i - 1] = produto;
                         }
-                    } catch (Exception e) {
-                        Log.e("Contador", e.getMessage(), e);
                     }
                 }
-            }
 
-            for (int i = 0; i < produtos.length; i++) {
-                long result = daoProduto.inserirBulk(produtos[i]);
+                for (int i = 0; i < produtos.length; i++) {
+                    long result = daoProduto.inserirBulk(produtos[i]);
 
-                if(result != -1) {
-                    progresso.publish("Produto com Cód. " + produtos[i].getCod_barra() + " Cadastrado");
-                    ProdutosCadastrados++;
+                    if (result != -1) {
+                        progresso.publish("Produto com Cód. " + produtos[i].getCod_barra() + " Cadastrado");
+                        ProdutosCadastrados++;
+                    }
                 }
+            } catch (Exception e) {
+                Log.e("Contador", e.getMessage(), e);
             }
 
             return ProdutosCadastrados;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.i("Contador", e.getMessage());
             progresso.publish(e.getMessage());
             return -1;
-        }
-        finally {
-            if(inputStream != null) {
+        } finally {
+            if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
@@ -167,13 +166,13 @@ public class ManipulaExcel {
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        ArrayList<ContagemProduto> contagemproduto  = contagemProdutoManager.listarPorContagem(contagem.getIdcontagem());
+        ArrayList<ContagemProduto> contagemproduto = contagemProdutoManager.listarPorContagem(contagem.getIdcontagem());
 
         try {
-            if(contagemproduto.size() == 0)
+            if (contagemproduto.size() == 0)
                 throw new Exception("Não Há Produtos na Contagem");
 
-            for(int i = rowIndex; i <= contagemproduto.size(); i++) {
+            for (int i = rowIndex; i <= contagemproduto.size(); i++) {
                 Row row = arquivoExcel.getPlanilha().createRow(i);
 
                 ContagemProduto contagemProduto = contagemproduto.get(i - 1);
@@ -192,9 +191,9 @@ public class ManipulaExcel {
                 quant.setCellStyle(cellStyle);
             }
 
-            arquivoExcel.getPlanilha().setColumnWidth(0, 23*256);
-            arquivoExcel.getPlanilha().setColumnWidth(1, 65*256);
-            arquivoExcel.getPlanilha().setColumnWidth(2, 18*256);
+            arquivoExcel.getPlanilha().setColumnWidth(0, 23 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(1, 65 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(2, 18 * 256);
 
             String nomeArquivo = "Contagem - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
 
@@ -205,13 +204,11 @@ public class ManipulaExcel {
             arquivoExcel.getPastaTrabalho().write(outputStream);
 
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
-        }
-        finally {
+        } finally {
             try {
-                if(outputStream != null) {
+                if (outputStream != null) {
                     outputStream.flush();
                     outputStream.close();
                 }
@@ -236,13 +233,13 @@ public class ManipulaExcel {
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        ArrayList<Fornecedor> fornecedores  = fornecedorManager.listar();
+        ArrayList<Fornecedor> fornecedores = fornecedorManager.listar();
 
         try {
-            if(fornecedores.size() == 0)
-                throw new Exception("Não Há Produtos na Contagem");
+            if (fornecedores.size() == 0)
+                throw new Exception("Não Há Fornecedores Cadastrados");
 
-            for(int i = rowIndex; i <= fornecedores.size(); i++) {
+            for (int i = rowIndex; i <= fornecedores.size(); i++) {
                 Row row = arquivoExcel.getPlanilha().createRow(i);
 
                 Fornecedor fornecedor = fornecedores.get(i - 1);
@@ -261,9 +258,9 @@ public class ManipulaExcel {
                 fantasia.setCellStyle(cellStyle);
             }
 
-            arquivoExcel.getPlanilha().setColumnWidth(0, 25*256);
-            arquivoExcel.getPlanilha().setColumnWidth(1, 70*256);
-            arquivoExcel.getPlanilha().setColumnWidth(2, 40*256);
+            arquivoExcel.getPlanilha().setColumnWidth(0, 25 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(1, 70 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(2, 40 * 256);
 
             String nomeArquivo = "Fornecedores " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
 
@@ -274,13 +271,11 @@ public class ManipulaExcel {
             arquivoExcel.getPastaTrabalho().write(outputStream);
 
             return true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
-        }
-        finally {
+        } finally {
             try {
-                if(outputStream != null) {
+                if (outputStream != null) {
                     outputStream.flush();
                     outputStream.close();
                 }

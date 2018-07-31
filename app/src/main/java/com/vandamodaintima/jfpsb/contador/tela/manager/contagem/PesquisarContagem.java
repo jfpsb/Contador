@@ -193,13 +193,13 @@ public class PesquisarContagem extends TelaPesquisa {
                         throw new Exception("Loja Inválida");
                     }
 
-                    if(TestaIO.isStringEmpty(data_inicial))
+                    if(data_inicial.isEmpty())
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
                     if(!TestaIO.isValidDate(data_inicial))
                         throw new Exception("A data inicial digitada é inválida!");
 
-                    if(TestaIO.isStringEmpty(data_final))
+                    if(data_final.isEmpty())
                         throw new Exception("Campo de data final não pode estar vazio!");
 
                     if(!TestaIO.isValidDate(data_final))

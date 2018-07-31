@@ -1,28 +1,33 @@
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:stretchColumns="1"
-            android:layout_margin="10dip">
+            android:layout_margin="10dip"
+            android:stretchColumns="1">
+
             <TableRow>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cadastrar Produto"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
+                    android:textAlignment="center"
                     android:textColor="#000"
-                    android:textAlignment="center"/>
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
             </TableRow>
+
             <TableRow>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -31,7 +36,9 @@
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
+
             <TableRow>
+
                 <EditText
                     android:id="@+id/txtCodBarra"
                     android:layout_width="match_parent"
@@ -40,17 +47,45 @@
                     android:inputType="number"
                     android:textSize="20sp" />
             </TableRow>
+
             <TableRow>
-                <TextView android:id="@+id/lblCnpjRepetido"
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="18sp"
-                    android:textColor="#FF0000"
-                    android:visibility="gone"
-                    android:text="Código De Barras Já Existe No Sistema" />
+                    android:text="Cód. de Barra do Fornecedor:"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
             </TableRow>
+
             <TableRow>
+
+                <EditText
+                    android:id="@+id/txtCodBarraFornecedor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000"
+                    android:textSize="20sp"
+                    android:inputType="number" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/lblCnpjRepetido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Código De Barras Já Existe No Sistema"
+                    android:textColor="#FF0000"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+            </TableRow>
+
+            <TableRow>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,7 +94,9 @@
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
+
             <TableRow>
+
                 <EditText
                     android:id="@+id/txtFornecedor"
                     android:layout_width="match_parent"
@@ -69,7 +106,9 @@
                     android:hint="@string/escolha_fornecedor_hint"
                     android:textSize="20sp" />
             </TableRow>
+
             <TableRow>
+
                 <Button
                     android:id="@+id/btnEscolherFornecedor"
                     android:layout_width="match_parent"
@@ -78,7 +117,31 @@
                     android:text="Escolher Fornecedor"
                     android:textSize="20sp" />
             </TableRow>
+
             <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Marca:"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <Spinner
+                    android:id="@+id/spinnerMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,6 +150,7 @@
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
+
             <TableRow>
 
                 <EditText
@@ -97,6 +161,7 @@
                     android:inputType="textMultiLine"
                     android:textSize="20sp" />
             </TableRow>
+
             <TableRow>
 
                 <TextView
@@ -107,6 +172,7 @@
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
+
             <TableRow>
 
                 <EditText
@@ -117,6 +183,7 @@
                     android:inputType="number"
                     android:textSize="20sp" />
             </TableRow>
+
             <TableRow>
 
                 <Button
