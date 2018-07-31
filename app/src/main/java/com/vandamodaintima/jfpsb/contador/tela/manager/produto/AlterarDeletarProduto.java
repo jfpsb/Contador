@@ -43,6 +43,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private MarcaManager marcaManager;
 
     private static final int ALTERAR_FORNECEDOR = 1;
+    private static final String SEM_FORNECEDOR = "Sem Fornecedor";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +73,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             txtFornecedorAtual.setText(produto.getFornecedor().getNome());
             fornecedor = produto.getFornecedor();
         } else {
-            txtFornecedorAtual.setText("Sem Fornecedor");
+            txtFornecedorAtual.setText(SEM_FORNECEDOR);
         }
 
         if(produto.getCod_barra_fornecedor() != null && ! produto.getCod_barra_fornecedor().isEmpty()) {
             txtCodBarraFornecedor.setText(produto.getCod_barra_fornecedor());
-        }
-        else {
-            txtCodBarraFornecedor.setText("Não Definido");
         }
 
         setSpinnerMarca();
@@ -199,12 +197,17 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     if (!TestaIO.isValidDouble(preco))
                         throw new Exception("O valor no campo preço é inválido!");
 
+                    if(! cod_barra_fornecedor.isEmpty() && ! TestaIO.isValidInt(cod_barra_fornecedor)) {
+                        throw new Exception("Digite um Código de Barras de Fornecedor Válido!");
+                    }
+
                     Produto toUpdate = new Produto();
 
                     toUpdate.setCod_barra(cod_barra);
                     toUpdate.setDescricao(descricao.toUpperCase());
                     toUpdate.setPreco(Double.parseDouble(preco));
                     toUpdate.setFornecedor(fornecedor);
+                    toUpdate.setCod_barra_fornecedor(cod_barra_fornecedor);
 
                     if(marca != -1) {
                         toUpdate.setMarca(marca);
@@ -213,11 +216,11 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                         toUpdate.setMarca(0);
                     }
 
-                    if(! cod_barra_fornecedor.isEmpty()) {
-                        toUpdate.setCod_barra_fornecedor(cod_barra_fornecedor);
+                    if(cod_barra_fornecedor.isEmpty()) {
+                        toUpdate.setCod_barra_fornecedor(null);
                     }
                     else {
-                        toUpdate.setCod_barra_fornecedor(null);
+                        toUpdate.setCod_barra_fornecedor(cod_barra_fornecedor);
                     }
 
                     boolean result = produtoManager.atualizar(toUpdate, produto.getCod_barra());
