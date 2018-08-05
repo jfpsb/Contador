@@ -5,16 +5,19 @@ import android.database.Cursor;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 
 import java.util.ArrayList;
 
 public class ProdutoManager extends Manager<Produto> {
     FornecedorManager fornecedorManager;
+    MarcaManager marcaManager;
 
     public ProdutoManager(ConexaoBanco conexao) {
         daoEntidade = new DAOProduto(conexao.conexao());
         fornecedorManager = new FornecedorManager(conexao);
+        marcaManager = new MarcaManager(conexao);
     }
 
     @Override
@@ -33,7 +36,10 @@ public class ProdutoManager extends Manager<Produto> {
                 produto.setFornecedor(fornecedor);
 
                 produto.setCod_barra_fornecedor(c.getString(c.getColumnIndexOrThrow("cod_barra_fornecedor")));
-                produto.setMarca(c.getInt(c.getColumnIndexOrThrow("marca")));
+
+                Marca marca = marcaManager.listarPorChave(c.getInt(c.getColumnIndexOrThrow("marca")));
+                produto.setMarca(marca);
+                
                 produto.setDescricao(c.getString(c.getColumnIndexOrThrow("descricao")));
                 produto.setPreco(c.getDouble(c.getColumnIndexOrThrow("preco")));
 
@@ -86,7 +92,10 @@ public class ProdutoManager extends Manager<Produto> {
             produto.setFornecedor(fornecedor);
 
             produto.setCod_barra_fornecedor(c.getString(c.getColumnIndexOrThrow("cod_barra_fornecedor")));
-            produto.setMarca(c.getInt(c.getColumnIndexOrThrow("marca")));
+
+            Marca marca = marcaManager.listarPorChave(c.getInt(c.getColumnIndexOrThrow("marca")));
+            produto.setMarca(marca);
+
             produto.setDescricao(c.getString(c.getColumnIndexOrThrow("descricao")));
             produto.setPreco(c.getDouble(c.getColumnIndexOrThrow("preco")));
         }

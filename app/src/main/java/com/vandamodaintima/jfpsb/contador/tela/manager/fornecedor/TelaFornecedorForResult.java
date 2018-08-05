@@ -36,6 +36,11 @@ public class TelaFornecedorForResult extends ActivityBase {
     }
 
     @Override
+    protected void setManagers() {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_tela_fornecedor, menu);
         return true;

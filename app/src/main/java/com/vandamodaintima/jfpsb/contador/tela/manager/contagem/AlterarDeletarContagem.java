@@ -46,11 +46,12 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_contagem);
-        stub.inflate();
+        savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_contagem);
+
+        super.onCreate(savedInstanceState);
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
@@ -58,8 +59,6 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         txtDataFinal = findViewById(R.id.txtDataFinal);
         txtDataInicial = findViewById(R.id.txtDataInicial);
         txtLojaAtual = findViewById(R.id.txtLojaAtual);
-        btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnDeletar = findViewById(R.id.btnDeletar);
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
         txtIDContagem.setText(String.valueOf(contagem.getIdcontagem()));
@@ -70,12 +69,6 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
         txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()));
         txtLojaAtual.setText(contagem.getLoja().getNome());
 
-        setAlertBuilderDeletar();
-        setAlertBuilderAtualizar();
-
-        setManagers();
-        setBtnAtualizar();
-        setBtnDeletar();
         setBtnAdicionar();
     }
 
@@ -142,17 +135,6 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
                 alertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
 
                 AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
             }
         });

@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barra:"
+                    android:text="Cód. de Barras:"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barra do Fornecedor:"
+                    android:text="Cód. de Barras do Fornecedor:"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Não Definido"
-                    android:inputType="number"
+                    android:inputType="textNoSuggestions"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>

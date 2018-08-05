@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 
@@ -25,7 +26,7 @@ public class DAOProduto extends DAO<Produto> {
 
             contentValues.put("cod_barra", objeto.getCod_barra());
             contentValues.put("cod_barra_fornecedor", objeto.getCod_barra_fornecedor());
-            contentValues.put("marca", objeto.getMarca());
+            contentValues.put("marca", objeto.getMarca().getId());
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
 
@@ -51,9 +52,12 @@ public class DAOProduto extends DAO<Produto> {
 
             contentValues.put("cod_barra", produto.getCod_barra());
             contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
-            contentValues.put("marca", produto.getMarca());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
+
+            if(produto.getMarca() != null) {
+                contentValues.put("marca", produto.getMarca().getId());
+            }
 
             if(produto.getFornecedor() != null) {
                 contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
@@ -91,7 +95,10 @@ public class DAOProduto extends DAO<Produto> {
                 contentValues.putNull("cod_barra_fornecedor");
             }
 
-            contentValues.put("marca", objeto.getMarca());
+            if(objeto.getMarca() != null) {
+                contentValues.put("marca", objeto.getMarca().getId());
+            }
+
             contentValues.put("descricao", objeto.getDescricao());
             contentValues.put("preco", objeto.getPreco());
 

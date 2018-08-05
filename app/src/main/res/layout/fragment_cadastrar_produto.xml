@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Código De Barra: "
+                    android:text="Código De Barras: "
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -51,10 +51,23 @@
             <TableRow>
 
                 <TextView
+                    android:id="@+id/lblCnpjRepetido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barra do Fornecedor:"
+                    android:text="Código De Barras Já Existe No Sistema"
+                    android:textColor="#FF0000"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cód. de Barras do Fornecedor:"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -66,22 +79,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:inputType="textNoSuggestions"
                     android:textColor="#000"
-                    android:textSize="20sp"
-                    android:inputType="number" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/lblCnpjRepetido"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Código De Barras Já Existe No Sistema"
-                    android:textColor="#FF0000"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
+                    android:textSize="20sp" />
             </TableRow>
 
             <TableRow>

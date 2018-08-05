@@ -26,4 +26,9 @@ public class TelaContador extends ActivityBase {
 
         setViewPagerTabLayout(pesquisarContagem, cadastrarContagem);
     }
+
+    @Override
+    protected void setManagers() {
+
+    }
 }

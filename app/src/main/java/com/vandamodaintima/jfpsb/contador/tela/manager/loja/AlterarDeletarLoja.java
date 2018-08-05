@@ -25,55 +25,25 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
+
+        savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_loja);
+
         super.onCreate(savedInstanceState);
-
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_loja);
-        stub.inflate();
-
-        setManagers();
 
         loja = (Loja) getIntent().getExtras().getSerializable("loja");
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
-        btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnDeletar = findViewById(R.id.btnDeletar);
 
         txtCnpj.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
-
-        setAlertBuilderDeletar();
-        setAlertBuilderAtualizar();
-        setBtnAtualizar();
-        setBtnDeletar();
     }
 
     @Override
     protected void setManagers() {
         lojaManager = new LojaManager(conn);
-    }
-
-    @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderDeletar.create();
-                alertDialog.show();
-            }
-        });
     }
 
     @Override

@@ -1,13 +1,19 @@
 PRAGMA foreign_keys = 0;
 
+CREATE TABLE sqlitestudio_temp_table AS SELECT *
+                                          FROM marca;
+DROP TABLE marca;
+
 CREATE TABLE marca (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     nome       TEXT    UNIQUE
                        NOT NULL
 );
 
+INSERT INTO marca (id, nome) SELECT id, nome FROM sqlitestudio_temp_table;
 
-CREATE TABLE sqlitestudio_temp_table AS SELECT *
+
+CREATE TABLE sqlitestudio_temp_table1 AS SELECT *
                                           FROM produto;
 
 DROP TABLE produto;
@@ -38,8 +44,9 @@ INSERT INTO produto (
                            preco,
                            null,
                            0
-                      FROM sqlitestudio_temp_table;
+                      FROM sqlitestudio_temp_table1;
 
 DROP TABLE sqlitestudio_temp_table;
+DROP TABLE sqlitestudio_temp_table1;
 
 PRAGMA foreign_keys = 1;

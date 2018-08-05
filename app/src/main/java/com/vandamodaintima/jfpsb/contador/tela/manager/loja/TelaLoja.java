@@ -26,4 +26,9 @@ public class TelaLoja extends ActivityBase {
 
         setViewPagerTabLayout(telaPesquisarLoja, telaCadastrarLoja);
     }
+
+    @Override
+    protected void setManagers() {
+
+    }
 }

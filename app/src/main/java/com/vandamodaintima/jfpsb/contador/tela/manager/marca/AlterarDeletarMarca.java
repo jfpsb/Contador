@@ -26,23 +26,16 @@ public class AlterarDeletarMarca extends AlterarDeletarEntidade {
 
     @Override
     protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        if(bundle == null)
+            bundle = new Bundle();
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_marca);
-        stub.inflate();
+        bundle.putInt("layout", R.layout.content_alterar_deletar_marca);
+
+        super.onCreate(bundle);
 
         marca = (Marca) getIntent().getExtras().getSerializable("marca");
 
         txtNome = findViewById(R.id.txtNome);
-        btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnDeletar = findViewById(R.id.btnDeletar);
-
-        setManagers();
-        setBtnAtualizar();
-        setBtnDeletar();
-        setAlertBuilderAtualizar();
-        setAlertBuilderDeletar();
 
         txtNome.setText(marca.getNome());
     }
@@ -50,28 +43,6 @@ public class AlterarDeletarMarca extends AlterarDeletarEntidade {
     @Override
     protected void setManagers() {
         marcaManager = new MarcaManager(conn);
-    }
-
-    @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderDeletar.create();
-                alertDialog.show();
-            }
-        });
     }
 
     @Override

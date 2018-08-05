@@ -19,7 +19,7 @@ public abstract class Manager<T> {
     }
 
     public boolean atualizar(T obj, Object... chaves) {
-        long result = daoEntidade.atualizar(obj, chaves[0]);
+        long result = daoEntidade.atualizar(obj, chaves);
 
         if(result != -1)
             return true;

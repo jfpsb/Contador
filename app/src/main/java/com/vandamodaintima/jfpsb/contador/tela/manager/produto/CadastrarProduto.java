@@ -53,6 +53,7 @@ public class CadastrarProduto extends FragmentBase {
     private MarcaManager marcaManager;
 
     private Fornecedor fornecedor;
+    private Marca marca = new Marca();
 
     private Animation slidedown;
 
@@ -89,8 +90,8 @@ public class CadastrarProduto extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        produtoManager = new ProdutoManager(((ActivityBase)getActivity()).getConn());
-        marcaManager = new MarcaManager(((ActivityBase)getActivity()).getConn());
+        produtoManager = new ProdutoManager(((ActivityBase) getActivity()).getConn());
+        marcaManager = new MarcaManager(((ActivityBase) getActivity()).getConn());
     }
 
     private void setBtnEscolherFornecedor() {
@@ -109,7 +110,7 @@ public class CadastrarProduto extends FragmentBase {
         try {
             cursor = marcaManager.listarCursor();
 
-            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE A MARCA", new String[]{"_id", "nome" });
+            cursor2 = ManipulaCursor.retornaCursorComHintNull(cursor, "SELECIONE A MARCA", new String[]{"_id", "nome"});
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursor2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -119,35 +120,39 @@ public class CadastrarProduto extends FragmentBase {
             setSpinnerMarcaOnItemSelectedListener();
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        finally {
-            if(cursor != null)
+        } finally {
+            if (cursor != null)
                 cursor.close();
 
-            if(cursor2 != null)
+            if (cursor2 != null)
                 cursor2.close();
         }
     }
 
     private void setSpinnerMarcaOnItemSelectedListener() {
-        if(spinnerMarca.getOnItemSelectedListener() == null) {
+        if (spinnerMarca.getOnItemSelectedListener() == null) {
             spinnerMarca.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position != 0) {
                         Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                        cursor.moveToPosition(position);
 
+                        int idmarca = cursor.getInt(cursor.getColumnIndex("_id"));
                         String nome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+
+                        marca.setId(idmarca);
+                        marca.setNome(nome);
+
                         Toast.makeText(getContext(), "Marca " + nome + "Escolhida", Toast.LENGTH_SHORT).show();
                     } else {
+                        marca.setId(0);
                         Toast.makeText(getContext(), "A Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-                    Toast.makeText(getContext(), "A Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
@@ -157,10 +162,10 @@ public class CadastrarProduto extends FragmentBase {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
 
-                    if(fornecedor != null) {
+                    if (fornecedor != null) {
                         txtFornecedor.setText(fornecedor.getNome());
                     }
                 }
@@ -179,15 +184,14 @@ public class CadastrarProduto extends FragmentBase {
                     String descricao = txtDescricao.getText().toString();
                     String preco = txtPreco.getText().toString();
                     String cod_barra_fornecedor = txtCodBarraFornecedor.getText().toString();
-                    int marca = (int) spinnerMarca.getSelectedItemId();
 
-                    if(cod_barra.isEmpty())
+                    if (cod_barra.isEmpty())
                         throw new Exception("Código de Barras Não Pode Estar Vazio!");
 
-                    if(descricao.isEmpty())
+                    if (descricao.isEmpty())
                         throw new Exception("A Descrição do Produto Não Pode Estar Vazia!");
 
-                    if(preco.isEmpty() || ! TestaIO.isValidDouble(preco))
+                    if (preco.isEmpty() || !TestaIO.isValidDouble(preco))
                         throw new Exception("Digite um Valor de Preço Válido!");
 
                     produto.setCod_barra(cod_barra);
@@ -196,16 +200,16 @@ public class CadastrarProduto extends FragmentBase {
                     produto.setDescricao(descricao.toUpperCase());
                     produto.setFornecedor(fornecedor);
 
-                    if(marca != -1)
+                    if (marca.getId() != 0)
                         produto.setMarca(marca);
 
                     boolean result = produtoManager.inserir(produto);
 
-                    if(result) {
-                        Toast.makeText(viewInflate.getContext(), "O Produto " + produto.getDescricao() + " Foi Inserido com Sucesso!" , Toast.LENGTH_SHORT).show();
+                    if (result) {
+                        Toast.makeText(viewInflate.getContext(), "O Produto " + produto.getDescricao() + " Foi Inserido com Sucesso!", Toast.LENGTH_SHORT).show();
 
-                        Fragment fragment = ((ActivityBase)getActivity()).getAdapter().getItem(0);
-                        ((PesquisarProduto)fragment).populaListView();
+                        Fragment fragment = ((ActivityBase) getActivity()).getAdapter().getItem(0);
+                        ((PesquisarProduto) fragment).populaListView();
 
                         txtPreco.getText().clear();
                         txtDescricao.getText().clear();
@@ -213,14 +217,12 @@ public class CadastrarProduto extends FragmentBase {
                         txtCodBarraFornecedor.getText().clear();
                         txtFornecedor.getText().clear();
                         spinnerMarca.setSelection(0);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Contador", e.getMessage(), e);
-                    Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -244,10 +246,10 @@ public class CadastrarProduto extends FragmentBase {
             public void afterTextChanged(Editable s) {
                 String texto = txtCodBarra.getText().toString();
 
-                if(! texto.isEmpty()) {
+                if (!texto.isEmpty()) {
                     Produto produto = produtoManager.listarPorChave(texto);
 
-                    if(produto != null) {
+                    if (produto != null) {
                         txtDescricao.setEnabled(false);
                         txtPreco.setEnabled(false);
                         btnCadastrar.setEnabled(false);
@@ -255,8 +257,7 @@ public class CadastrarProduto extends FragmentBase {
 
                         lblCodRepetido.setVisibility(View.VISIBLE);
                         lblCodRepetido.startAnimation(slidedown);
-                    }
-                    else {
+                    } else {
                         txtDescricao.setEnabled(true);
                         txtPreco.setEnabled(true);
                         btnCadastrar.setEnabled(true);

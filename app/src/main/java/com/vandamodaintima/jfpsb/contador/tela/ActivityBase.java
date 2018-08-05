@@ -15,6 +15,8 @@ import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 
+import org.apache.poi.ss.formula.eval.NotImplementedException;
+
 public class ActivityBase extends AppCompatActivity {
 
     protected ConexaoBanco conn;
@@ -84,7 +86,7 @@ public class ActivityBase extends AppCompatActivity {
     }
 
     protected void setManagers() {
-
+        throw new NotImplementedException("Sobrescreva setManagers nesta Activity!");
     }
 
     public ConexaoBanco getConn() {

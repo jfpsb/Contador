@@ -10,6 +10,7 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
@@ -17,6 +18,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,6 +42,7 @@ public class ManipulaExcel {
     private static DAOProduto daoProduto;
     private ContagemProdutoManager contagemProdutoManager;
     private FornecedorManager fornecedorManager;
+    private ProdutoManager produtoManager;
     private AsyncTask task;
     private int ProdutosCadastrados = 0;
     private ConexaoBanco conexaoBanco;
@@ -287,6 +290,81 @@ public class ManipulaExcel {
         return false;
     }
 
+    //TODO: Tentar simplificar. Estilizar planilha
+    public boolean ExportaProduto(String diretorio) {
+        produtoManager = new ProdutoManager(conexaoBanco);
+
+        Date dataAtual = new Date();
+        ArquivoExcel arquivoExcel = new ArquivoExcel();
+        int rowIndex = 1; //Inicia após cabeçalho
+        OutputStream outputStream = null;
+
+        setCabecalhoProduto(arquivoExcel);
+
+        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
+
+        ArrayList<Produto> produtos = produtoManager.listar();
+
+        try {
+            if (produtos.size() == 0)
+                throw new Exception("Não Há Produtos Cadastrados");
+
+            Row[] rows = new Row[produtos.size()];
+
+            for(int i = rowIndex; i <= rows.length; i++) {
+                Row row = arquivoExcel.getPlanilha().createRow(i);
+
+                for(int j = 0; j < Produto.getHeaders().length; i++) {
+                    Cell cell = row.createCell(j);
+                    cell.setCellStyle(cellStyle);
+                }
+
+                rows[i - 1] = row;
+            }
+
+            for (int i = 0; i < rows.length; i++) {
+                Produto produto = produtos.get(i);
+
+                rows[i].getCell(0).setCellValue(produto.getCod_barra());
+                rows[i].getCell(1).setCellValue(produto.getCod_barra_fornecedor());
+                rows[i].getCell(2).setCellValue(produto.getFornecedor().getNome());
+                rows[i].getCell(3).setCellValue(produto.getMarca().getNome());
+                rows[i].getCell(4).setCellValue(produto.getDescricao());
+                rows[i].getCell(5).setCellValue(produto.getPreco());
+            }
+
+            arquivoExcel.getPlanilha().setColumnWidth(0, 25 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(1, 70 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(2, 40 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(3, 40 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(4, 40 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(5, 40 * 256);
+
+            String nomeArquivo = "Produtos " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+
+            File arquivo = new File(diretorio, nomeArquivo);
+
+            outputStream = new FileOutputStream(arquivo.getAbsolutePath());
+
+            arquivoExcel.getPastaTrabalho().write(outputStream);
+
+            return true;
+        } catch (Exception e) {
+            Log.e("Contador", e.getMessage(), e);
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
     private void setCabecalhoContagem(ArquivoExcel arquivoExcel) {
         CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
 
@@ -339,6 +417,26 @@ public class ManipulaExcel {
         cab1.setCellStyle(cabecalhoStyle);
         cab2.setCellStyle(cabecalhoStyle);
         cab3.setCellStyle(cabecalhoStyle);
+    }
+
+    private void setCabecalhoProduto(ArquivoExcel arquivoExcel) {
+        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+
+        Font font = arquivoExcel.getPastaTrabalho().createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+
+        cabecalhoStyle.setFont(font);
+        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
+
+        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
+
+        for (int i = 0; i < Produto.getHeaders().length; i++) {
+            Cell header = cabecalho.createCell(i);
+            header.setCellValue(Produto.getHeaders()[i]);
+            header.setCellStyle(cabecalhoStyle);
+        }
     }
 
     private CellStyle CellStylePadrao(ArquivoExcel arquivoExcel) {

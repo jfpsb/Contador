@@ -52,12 +52,10 @@ public class MarcaManager extends Manager<Marca> {
         if(c.getCount() > 0) {
             c.moveToFirst();
 
-            while (c.moveToNext()) {
-                marca = new Marca();
+            marca = new Marca();
 
-                marca.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-                marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
-            }
+            marca.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
+            marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
         }
 
         return marca;

@@ -24,4 +24,9 @@ public class TelaMarca extends ActivityBase {
 
         setViewPagerTabLayout(pesquisarMarca, cadastrarMarca);
     }
+
+    @Override
+    protected void setManagers() {
+
+    }
 }

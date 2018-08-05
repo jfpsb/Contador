@@ -9,10 +9,12 @@ import java.io.Serializable;
 public class Produto implements Serializable {
     private String cod_barra;
     private String cod_barra_fornecedor;
-    private int marca;
+    private Marca marca;
     private Fornecedor fornecedor;
     private String descricao;
     private Double preco;
+
+    private static String[] headers = new String[] { "Cód. de Barras", "Cód. de Barras Fornecedor", "Fornecedor", "Marca", "Descrição", "Preço" };
 
     public String getCod_barra_fornecedor() {
         return cod_barra_fornecedor;
@@ -22,11 +24,11 @@ public class Produto implements Serializable {
         this.cod_barra_fornecedor = cod_barra_fornecedor;
     }
 
-    public int getMarca() {
+    public Marca getMarca() {
         return marca;
     }
 
-    public void setMarca(int marca) {
+    public void setMarca(Marca marca) {
         this.marca = marca;
     }
 
@@ -64,5 +66,9 @@ public class Produto implements Serializable {
 
     public static String[] getColunas() {
         return new String[]{ "cod_barra as _id", "cod_barra_fornecedor", "marca", "fornecedor", "descricao", "preco" };
+    }
+
+    public static String[] getHeaders() {
+        return headers;
     }
 }

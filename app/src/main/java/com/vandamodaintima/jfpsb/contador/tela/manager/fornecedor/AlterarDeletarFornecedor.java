@@ -25,19 +25,18 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_fornecedor);
-        stub.inflate();
+        savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_fornecedor);
+
+        super.onCreate(savedInstanceState);
 
         fornecedor = (Fornecedor) getIntent().getExtras().getSerializable("fornecedor");
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
-        btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnDeletar = findViewById(R.id.btnDeletar);
 
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
@@ -48,40 +47,11 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade {
         else {
             txtFantasia.setText(fornecedor.getFantasia());
         }
-
-        setManagers();
-
-        setAlertBuilderDeletar();
-        setAlertBuilderAtualizar();
-        setBtnAtualizar();
-        setBtnDeletar();
     }
 
     @Override
     protected void setManagers() {
         fornecedorManager = new FornecedorManager(conn);
-    }
-
-    @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    protected void setBtnDeletar() {
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderDeletar.create();
-                alertDialog.show();
-            }
-        });
     }
 
     @Override

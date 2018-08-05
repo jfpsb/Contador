@@ -4,4 +4,8 @@
     <item
         android:title="Cadastrar Produtos Em Excel"
         android:id="@+id/itemCadastrarProdutosBatch"/>
+
+    <item
+        android:id="@+id/itemExportarProdutoExcel"
+        android:title="Exportar Produtos" />
 </menu>
