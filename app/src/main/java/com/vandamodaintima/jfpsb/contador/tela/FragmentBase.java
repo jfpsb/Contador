@@ -21,13 +21,13 @@ public abstract class FragmentBase extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         return viewInflate;
     }
 
     /**
      * Mostra fragment para escolher data. Comum em algumas fragments então foi colocada aqui.
      * onClick é atribuído no layout xml
+     *
      * @param v
      */
     public void showDatePicker(View v) {

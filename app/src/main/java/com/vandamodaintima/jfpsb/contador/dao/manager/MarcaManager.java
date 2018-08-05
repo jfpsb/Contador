@@ -67,6 +67,6 @@ public class MarcaManager extends Manager<Marca> {
     }
 
     public Cursor listarCursorPorNome(String nome) {
-        return daoEntidade.select("nome LIKE ?", new String[] { nome }, null, null, "nome", null);
+        return daoEntidade.select("nome LIKE ?", new String[] { "%" + nome + "%" }, null, null, "nome", null);
     }
 }

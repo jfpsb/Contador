@@ -34,6 +34,11 @@ public abstract class FragmentContainer extends ActivityBase {
         fragmentTransaction.commit();
     }
 
+    @Override
+    protected void setManagers() {
+
+    }
+
     public abstract void setResultCadastro(Object object);
 
     protected Fragment getFragment() {
