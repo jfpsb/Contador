@@ -25,7 +25,7 @@ import org.apache.poi.ss.formula.eval.NotImplementedException;
 
 public class PesquisarMarca extends TelaPesquisa {
     private EditText txtNome;
-    private ListView listView;
+    protected ListView listView;
     private SimpleCursorAdapter simpleCursorAdapter;
 
     private MarcaManager marcaManager;

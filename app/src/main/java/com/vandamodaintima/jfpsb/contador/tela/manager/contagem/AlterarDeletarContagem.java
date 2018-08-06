@@ -184,7 +184,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     protected void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Contagem");
-        alertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID " + contagem.getIdcontagem() + "?");
+        alertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override

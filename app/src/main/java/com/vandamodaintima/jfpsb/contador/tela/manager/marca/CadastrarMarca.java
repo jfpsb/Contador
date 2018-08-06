@@ -65,10 +65,7 @@ public class CadastrarMarca extends FragmentBase {
                     if(result) {
                         Toast.makeText(getContext(), "Inserção de Marca " + marca.getNome() + " Efetuada Com Sucesso.", Toast.LENGTH_SHORT).show();
 
-                        Fragment fragment = ((ActivityBase)getActivity()).getAdapter().getItem(0);
-                        ((PesquisarMarca)fragment).populaListView();
-
-                        txtNome.setText("");
+                        aposCadastro(marca);
                     }
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Marca", Toast.LENGTH_SHORT).show();
@@ -79,5 +76,21 @@ public class CadastrarMarca extends FragmentBase {
                 }
             }
         });
+    }
+
+    /**
+     * Operação para ser feita após cadastro efetuado com sucesso
+     */
+    protected void aposCadastro(Marca marca) {
+        try {
+            // Atualiza lista em aba de pesquisa
+            Fragment fragment = ((ActivityBase) (getActivity())).getAdapter().getItem(0);
+            ((PesquisarMarca) fragment).populaListView();
+
+            txtNome.setText("");
+        }
+        catch (Exception e) {
+            Log.i("Contador", e.getMessage(), e);
+        }
     }
 }

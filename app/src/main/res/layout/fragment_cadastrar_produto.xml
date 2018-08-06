@@ -131,12 +131,24 @@
 
             <TableRow>
 
-                <Spinner
-                    android:id="@+id/spinnerMarca"
+                <EditText
+                    android:id="@+id/txtMarca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="#000"
+                    android:enabled="false"
+                    android:hint="Escolha No Botão Abaixo"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/btnEscolherMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Escolher Marca"
                     android:textSize="20sp" />
             </TableRow>
 

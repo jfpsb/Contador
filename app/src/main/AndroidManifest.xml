@@ -83,13 +83,8 @@
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".tela.manager.fornecedor.AlterarFornecedorEmProdutoContainer"
-            android:label="Produto: Alterar Fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity
             android:name=".tela.manager.fornecedor.TelaFornecedorForResult"
-            android:label="Produto: Escolher Fornecedor"
+            android:label="Escolher Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity android:name=".tela.manager.marca.TelaMarca"
@@ -99,6 +94,10 @@
         <activity android:name=".tela.manager.marca.AlterarDeletarMarca"
             android:label="Marca: alterar ou deletar"
             android:theme="@style/TabAppTheme.NoActionBar"/>
+
+        <activity android:name=".tela.manager.marca.TelaMarcaForResult"
+            android:label="Escolher Marca"
+            android:theme="@style/TabAppTheme.NoActionBar" />
 
     </application>
 

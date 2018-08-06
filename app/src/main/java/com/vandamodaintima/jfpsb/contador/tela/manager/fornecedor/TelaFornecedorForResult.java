@@ -30,7 +30,7 @@ public class TelaFornecedorForResult extends ActivityBase {
         stub.inflate();
 
         cadastrarFornecedor = new CadastrarFornecedorEmProduto();
-        pesquisarFornecedor = new AlterarFornecedorEmProduto();
+        pesquisarFornecedor = new PesquisarFornecedorEmProduto();
 
         setViewPagerTabLayout(pesquisarFornecedor, cadastrarFornecedor);
     }

@@ -16,7 +16,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.AlterarFornecedorEmProdutoContainer;
+import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class AdicionarContagemProduto extends ActivityBase {
@@ -56,7 +56,7 @@ public class AdicionarContagemProduto extends ActivityBase {
         txtQuantidade = findViewById(R.id.txtQuantidade);
         txtDescricao = findViewById(R.id.txtDescricao);
         btnAdicionar = findViewById(R.id.btnAdicionar);
-        btnAlterarFornecedor = findViewById(R.id.btnAlterarFornecedor);
+        btnAlterarFornecedor = findViewById(R.id.btnEscolherFornecedor);
 
         txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
 
@@ -130,7 +130,7 @@ public class AdicionarContagemProduto extends ActivityBase {
             @Override
             public void onClick(View v) {
                 if(produto.getFornecedor() == null) {
-                    Intent intent = new Intent(AdicionarContagemProduto.this, AlterarFornecedorEmProdutoContainer.class);
+                    Intent intent = new Intent(AdicionarContagemProduto.this, TelaFornecedorForResult.class);
                     startActivityForResult(intent, ALTERAR_FORNECEDOR);
                 }
                 else {
@@ -146,9 +146,12 @@ public class AdicionarContagemProduto extends ActivityBase {
             case ALTERAR_FORNECEDOR:
                 if(resultCode == RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
-                    Toast.makeText(this, "Fornecedor Escolhido. Dados Serão Salvos ao Adicionar Contagem de Produto", Toast.LENGTH_LONG).show();
-                    txtFornecedor.setText(fornecedor.getNome());
-                    addFornecedorFlag = true;
+
+                    if(fornecedor != null) {
+                        txtFornecedor.setText(fornecedor.getNome());
+                        addFornecedorFlag = true;
+                        Toast.makeText(this, "Fornecedor Escolhido. Dados Serão Salvos ao Adicionar Contagem de Produto", Toast.LENGTH_LONG).show();
+                    }
                 }
                 else {
                     Toast.makeText(this, "O Fornecedor Não Foi Escolhido", Toast.LENGTH_SHORT).show();

@@ -14,12 +14,12 @@ import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 /**
- * Usado em AlterarDeletarProduto
+ * Usado em TelaFornecedorForResult
  * Lista os fornecedores e permite que o usuário escolha um ao clicar nele
  * e atribuir ao produto
  * Isso é uma Fragment
  */
-public class AlterarFornecedorEmProduto extends PesquisarFornecedor {
+public class PesquisarFornecedorEmProduto extends PesquisarFornecedor {
     AlertDialog.Builder alertaEscolha;
 
     @Override
@@ -33,8 +33,6 @@ public class AlterarFornecedorEmProduto extends PesquisarFornecedor {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-                cursor.moveToPosition(i);
 
                 Fornecedor fornecedor = new Fornecedor();
 
@@ -50,19 +48,12 @@ public class AlterarFornecedorEmProduto extends PesquisarFornecedor {
     private void setAlertaEscolha(final Fornecedor fornecedor) {
         alertaEscolha = new AlertDialog.Builder(getContext());
         alertaEscolha.setTitle("Escolher Fornecedor");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + fornecedor.getCnpj() + " - " +fornecedor.getNome() + " ao Produto?");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityBase activityBase = (ActivityBase) getActivity();
-
-                if(activityBase instanceof AlterarFornecedorEmProdutoContainer) {
-                    ((AlterarFornecedorEmProdutoContainer)getActivity()).setResultCadastro(fornecedor);
-                }
-                else if(activityBase instanceof TelaFornecedorForResult){
-                    ((TelaFornecedorForResult)getActivity()).setResultado(fornecedor);
-                }
+                ((TelaFornecedorForResult) getActivity()).setResultado(fornecedor);
             }
         });
 

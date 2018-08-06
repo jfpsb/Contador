@@ -77,28 +77,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Marca:"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <Spinner
-                    android:id="@+id/spinnerMarca"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#000"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Fornecedor Atual:"
                     android:textColor="#000"
                     android:textSize="22sp" />
@@ -112,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
+                    android:hint="Escolha No Botão Abaixo"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -119,11 +98,45 @@
             <TableRow>
 
                 <Button
-                    android:id="@+id/btnAlterarFornecedor"
+                    android:id="@+id/btnEscolherFornecedor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Alterar Fornecedor"
+                    android:text="Escolher Fornecedor"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Marca:"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/txtMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="false"
+                    android:hint="Escolha No Botão Abaixo"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/btnEscolherMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Escolher Marca"
                     android:textSize="20sp" />
             </TableRow>
 
