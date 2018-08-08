@@ -42,7 +42,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
             }
         }
         catch (NullPointerException e) {
-            Toast.makeText(getContext(), "Erro ao Selecionar Data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Erro ao Selecionar Data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("Contador", e.getMessage(), e);
         }
     }

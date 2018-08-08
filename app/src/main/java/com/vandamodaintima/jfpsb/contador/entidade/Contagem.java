@@ -13,7 +13,7 @@ public class Contagem implements Serializable {
     private Date data;
     private Boolean finalizada;
 
-    private static final String[] colunas = new String[] { "ROWID as _id", "loja", "data", "finalizada" };
+    private static final String[] colunas = new String[] { "rowid as _id", "loja", "data", "finalizada" };
 
     public int getRowid() {
         return rowid;

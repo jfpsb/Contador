@@ -26,6 +26,7 @@ public class FornecedorManager extends Manager<Fornecedor> {
                 fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
                 fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
                 fornecedor.setFantasia(c.getString(c.getColumnIndexOrThrow("fantasia")));
+                fornecedor.setEmail(c.getString(c.getColumnIndexOrThrow("email")));
 
                 fornecedores.add(fornecedor);
             }
@@ -52,6 +53,7 @@ public class FornecedorManager extends Manager<Fornecedor> {
             fornecedor.setCnpj(c.getString(c.getColumnIndexOrThrow("_id")));
             fornecedor.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
             fornecedor.setFantasia(c.getString(c.getColumnIndexOrThrow("fantasia")));
+            fornecedor.setEmail(c.getString(c.getColumnIndexOrThrow("email")));
         }
 
         return fornecedor;

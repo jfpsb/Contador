@@ -24,6 +24,7 @@ public class PesquisaContagemProduto extends PesquisarProduto {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = getArguments();
+
         contagem = (Contagem) bundle.getSerializable("contagem");
 
         return super.onCreateView(inflater, container, savedInstanceState);

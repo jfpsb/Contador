@@ -29,30 +29,36 @@ public class CadastrarMarca extends FragmentBase {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
+        if (savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        txtNome = viewInflate.findViewById(R.id.txtNome);
-        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
-
-        setManagers();
-        setBtnCadastrar();
+        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_marca);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     protected void setManagers() {
-        marcaManager = new MarcaManager(((ActivityBase)getActivity()).getConn());
+        marcaManager = new MarcaManager(((ActivityBase) getActivity()).getConn());
+    }
+
+    @Override
+    protected void setViews() {
+        txtNome = viewInflate.findViewById(R.id.txtNome);
+
+        setBtnCadastrar();
     }
 
     private void setBtnCadastrar() {
+        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
+
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     String nome = txtNome.getText().toString();
 
-                    if(nome.isEmpty()) {
+                    if (nome.isEmpty()) {
                         throw new Exception("Campo de Nome Não Pode Estar Vazio!");
                     }
 
@@ -62,16 +68,14 @@ public class CadastrarMarca extends FragmentBase {
 
                     boolean result = marcaManager.inserir(marca);
 
-                    if(result) {
+                    if (result) {
                         Toast.makeText(getContext(), "Inserção de Marca " + marca.getNome() + " Efetuada Com Sucesso.", Toast.LENGTH_SHORT).show();
 
                         aposCadastro(marca);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Marca", Toast.LENGTH_SHORT).show();
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Contador", e.getMessage(), e);
                 }
             }
@@ -88,8 +92,7 @@ public class CadastrarMarca extends FragmentBase {
             ((PesquisarMarca) fragment).populaListView();
 
             txtNome.setText("");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.i("Contador", e.getMessage(), e);
         }
     }

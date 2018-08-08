@@ -41,38 +41,19 @@ public class PesquisarContagem extends TelaPesquisa {
     private LojaManager lojaManager;
     private ListView listView;
     private ContagemCursorAdapter contagemCursorAdapter;
-    private EditText txtDataInicial;
-    private EditText txtDataFinal;
+    private EditText txtData;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
     private Loja loja;
     private Date dataAtual;
 
-    public PesquisarContagem() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
+        if (savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        dataAtual = new Date();
-
-        setManagers();
-
-        listView = viewInflate.findViewById(R.id.listViewLoja);
-        txtDataInicial = viewInflate.findViewById(R.id.txtDataInicial);
-        txtDataFinal = viewInflate.findViewById(R.id.txtDataFinal);
-        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
-        txtDataFinal.setText(TestaIO.dateFormat.format(dataAtual));
-
-        spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
-        btnPesquisar = viewInflate.findViewById(R.id.btnPesquisar);
-
-        setListView();
-        setBtnPesquisar();
-        setSpinnerLoja();
+        savedInstanceState.putInt("layout", R.layout.fragment_pesquisar_contagem);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -84,8 +65,32 @@ public class PesquisarContagem extends TelaPesquisa {
     }
 
     @Override
+    protected void setViews() {
+        setTxtData();
+        setListView();
+        setBtnPesquisar();
+        setSpinnerLoja();
+    }
+
+    private void setTxtData() {
+        dataAtual = new Date();
+
+        txtData = viewInflate.findViewById(R.id.txtData);
+        txtData.setText(TestaIO.dateFormat.format(dataAtual));
+
+        txtData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker(v);
+            }
+        });
+    }
+
+    @Override
     protected void setListView() {
-        if(cursorPesquisa != null)
+        listView = viewInflate.findViewById(R.id.listViewLoja);
+
+        if (cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
@@ -103,12 +108,16 @@ public class PesquisarContagem extends TelaPesquisa {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursorItem = (Cursor) adapterView.getItemAtPosition(i);
+                Cursor c = (Cursor) adapterView.getItemAtPosition(i);
 
-                cursorItem.moveToPosition(i);
+                Loja loja = new Loja();
+                String cnpj = c.getString(c.getColumnIndexOrThrow("loja"));
+                loja.setCnpj(cnpj);
+
+                Date data = TrataDisplayData.getDataBD(c.getString(c.getColumnIndexOrThrow("data")));
 
                 // Contagem possui Loja então usando o Manager a Loja já vem iniciada
-                Contagem contagem = contagemManager.listarPorChave(cursorItem.getInt(cursorItem.getColumnIndexOrThrow("_id")));
+                Contagem contagem = contagemManager.listarPorChave(loja, data);
 
                 Bundle bundle = new Bundle();
 
@@ -126,10 +135,9 @@ public class PesquisarContagem extends TelaPesquisa {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     btnPesquisar.performClick();
-                }
-                else {
+                } else {
                     Toast.makeText(viewInflate.getContext(), "A Contagem Não Foi Alterada", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -137,11 +145,13 @@ public class PesquisarContagem extends TelaPesquisa {
     }
 
     private void setSpinnerLoja() {
+        spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
+
         Cursor cursorSpinner = null, cursorSpinner2 = null;
 
         try {
             cursorSpinner = lojaManager.listarCursor();
-            cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome" });
+            cursorSpinner2 = ManipulaCursor.retornaCursorComHintNull(cursorSpinner, "SELECIONE A LOJA", new String[]{"_id", "nome"});
 
             SimpleCursorAdapter simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), android.R.layout.simple_spinner_dropdown_item, cursorSpinner2, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
             simpleCursorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -149,19 +159,18 @@ public class PesquisarContagem extends TelaPesquisa {
             spinnerLoja.setAdapter(simpleCursorAdapter);
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        finally {
-            if(cursorSpinner != null)
+        } finally {
+            if (cursorSpinner != null)
                 cursorSpinner.close();
 
-            if(cursorSpinner2 != null)
+            if (cursorSpinner2 != null)
                 cursorSpinner2.close();
         }
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i != 0) {
+                if (i != 0) {
                     Cursor innerCursor = (Cursor) adapterView.getItemAtPosition(i);
 
                     innerCursor.moveToPosition(i);
@@ -182,44 +191,39 @@ public class PesquisarContagem extends TelaPesquisa {
     }
 
     private void setBtnPesquisar() {
+        btnPesquisar = viewInflate.findViewById(R.id.btnPesquisar);
+
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String data_inicial = txtDataInicial.getText().toString();
-                String data_final = txtDataFinal.getText().toString();
+                String data = txtData.getText().toString();
 
                 try {
-                    if(loja == null) {
+                    if (loja == null) {
                         throw new Exception("Loja Inválida");
                     }
 
-                    if(data_inicial.isEmpty())
+                    if (data.isEmpty())
                         throw new Exception("Campo de data inicial não pode estar vazio!");
 
-                    if(!TestaIO.isValidDate(data_inicial))
+                    if (!TestaIO.isValidDate(data))
                         throw new Exception("A data inicial digitada é inválida!");
 
-                    if(data_final.isEmpty())
-                        throw new Exception("Campo de data final não pode estar vazio!");
+                    populaListView(TrataDisplayData.getDataDisplay(data), loja.getCnpj());
 
-                    if(!TestaIO.isValidDate(data_final))
-                        throw new Exception("A data final digitada é inválida!");
-
-                    populaListView(TrataDisplayData.getDataDisplay(data_inicial), TrataDisplayData.getDataDisplay(data_final), loja.getCnpj());
-
-                }catch (Exception e) {
+                } catch (Exception e) {
                     Log.e("Contador", e.getMessage(), e);
-                    Toast.makeText(viewInflate.getContext(), "Erro ao Pesquisar Contagens: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Erro ao Pesquisar Contagens: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void populaListView(Date datainicial, Date datafinal, String cnpj) {
+    private void populaListView(Date data, String cnpj) {
         try {
-            cursorPesquisa = contagemManager.listarPorPeriodoELoja(datainicial, datafinal, cnpj);
+            cursorPesquisa = contagemManager.listarPorDataELoja(data, cnpj);
 
-            if(cursorPesquisa.getCount() == 0) {
+            if (cursorPesquisa.getCount() == 0) {
                 Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
             }
 

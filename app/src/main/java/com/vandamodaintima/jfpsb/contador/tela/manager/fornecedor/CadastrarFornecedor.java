@@ -50,22 +50,31 @@ public class CadastrarFornecedor extends FragmentBase {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_fornecedor, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
-        txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
-        lblCnpjRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
-
-        setManagers();
-        setBtnCadastrar();
-        setTxtCnpj();
+        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_fornecedor);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    protected void setManagers() {
+        fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
+    }
+
+    @Override
+    protected void setViews() {
+        lblCnpjRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
+
+        setBtnCadastrar();
+        setTxtCnpj();
+    }
+
     protected void setTxtCnpj() {
+        txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
+
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
 
         txtCnpj.addTextChangedListener(new TextWatcher() {
@@ -83,15 +92,14 @@ public class CadastrarFornecedor extends FragmentBase {
             public void afterTextChanged(Editable s) {
                 String texto = txtCnpj.getText().toString();
 
-                if(! texto.isEmpty()) {
+                if (!texto.isEmpty()) {
                     Fornecedor fornecedor = fornecedorManager.listarPorChave(texto);
 
-                    if(fornecedor != null) {
+                    if (fornecedor != null) {
                         btnCadastrar.setEnabled(false);
                         lblCnpjRepetido.setVisibility(View.VISIBLE);
                         lblCnpjRepetido.startAnimation(slidedown);
-                    }
-                    else {
+                    } else {
                         btnCadastrar.setEnabled(true);
                         lblCnpjRepetido.setVisibility(View.GONE);
                     }
@@ -100,24 +108,20 @@ public class CadastrarFornecedor extends FragmentBase {
         });
     }
 
-    @Override
-    protected void setManagers() {
-        fornecedorManager = new FornecedorManager(((ActivityBase)getActivity()).getConn());
-    }
-
     protected void setBtnCadastrar() {
+        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
+
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     String cnpj = txtCnpj.getText().toString();
 
-                    if(cnpj.isEmpty())
+                    if (cnpj.isEmpty())
                         throw new Exception("CNPJ Não Pode Ficar Vazio!");
 
                     new RetornarEmpresa().execute("https://www.receitaws.com.br/v1/cnpj/", cnpj);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("Contador", e.getMessage(), e);
                 }
@@ -146,7 +150,7 @@ public class CadastrarFornecedor extends FragmentBase {
                 urlConnection.setRequestMethod("GET");
                 int response = urlConnection.getResponseCode();
 
-                if(response == HttpURLConnection.HTTP_OK) {
+                if (response == HttpURLConnection.HTTP_OK) {
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
                     jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -161,17 +165,14 @@ public class CadastrarFornecedor extends FragmentBase {
                     while (jsonReader.hasNext()) {
                         String indice = jsonReader.nextName();
 
-                        if(indice.equals("nome")) {
+                        if (indice.equals("nome")) {
                             nome = jsonReader.nextString();
-                        }
-                        else if (indice.equals("fantasia")){
+                        } else if (indice.equals("fantasia")) {
                             fantasia = jsonReader.nextString();
-                        }
-                        else if(indice.equals("message")) {
+                        } else if (indice.equals("message")) {
                             message = jsonReader.nextString();
                             return message;
-                        }
-                        else {
+                        } else {
                             jsonReader.skipValue();
                         }
                     }
@@ -185,17 +186,14 @@ public class CadastrarFornecedor extends FragmentBase {
                     fornecedor.setFantasia(fantasia);
 
                     return fornecedor;
-                }
-                else {
+                } else {
                     Log.i("Contador", "Erro em Request. Server retornou status " + response);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e("Contador", e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 try {
-                    if(jsonReader != null)
+                    if (jsonReader != null)
                         jsonReader.close();
                 } catch (Exception e) {
                     Log.e("Contador", "Fechando JsonReader: " + e.getMessage(), e);
@@ -209,15 +207,13 @@ public class CadastrarFornecedor extends FragmentBase {
 
         @Override
         protected void onPostExecute(Object object) {
-            if(object == null) {
+            if (object == null) {
                 Toast.makeText(getContext(), "Erro ao Retornar Empresa", Toast.LENGTH_SHORT).show();
-            }
-            else if(object instanceof Fornecedor){
-                Fornecedor fornecedor = (Fornecedor)object;
+            } else if (object instanceof Fornecedor) {
+                Fornecedor fornecedor = (Fornecedor) object;
                 setAlertaCadastro(fornecedor, toast);
-            }
-            else {
-                String mensagem = (String)object;
+            } else {
+                String mensagem = (String) object;
                 toast.setText("Erro ao Inserir Fornecedor: " + mensagem);
                 toast.show();
             }
@@ -231,7 +227,7 @@ public class CadastrarFornecedor extends FragmentBase {
         String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
         mensagem += "Nome: " + fornecedor.getNome() + "\n\n";
 
-        if(!fornecedor.getFantasia().isEmpty()) {
+        if (!fornecedor.getFantasia().isEmpty()) {
             mensagem += "Nome Fantasia: " + fornecedor.getFantasia() + "\n\n";
         }
 
@@ -277,8 +273,7 @@ public class CadastrarFornecedor extends FragmentBase {
             ((PesquisarFornecedor) fragment).populaListView();
 
             txtCnpj.setText("");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.i("Contador", e.getMessage(), e);
         }
     }

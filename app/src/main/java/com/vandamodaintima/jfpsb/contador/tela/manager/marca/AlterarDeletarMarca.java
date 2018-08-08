@@ -15,6 +15,8 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
 
+import org.apache.poi.ss.formula.eval.NotImplementedException;
+
 public class AlterarDeletarMarca extends AlterarDeletarEntidade {
     private Button btnAtualizar;
     private Button btnDeletar;
@@ -49,16 +51,17 @@ public class AlterarDeletarMarca extends AlterarDeletarEntidade {
     protected void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Marca");
-        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a Marca " + marca.getNome() + "?");
+
+        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a Marca?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                boolean result = marcaManager.deletar(marca.getId());
+                boolean result = marcaManager.deletar(marca.getNome());
 
                 if (result) {
-                    Toast.makeText(AlterarDeletarMarca.this, "Marca Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK, null);
+                    Toast.makeText(getApplicationContext(), "Marca Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(AlterarDeletarMarca.this, "Erro ao Deletar Marca", Toast.LENGTH_SHORT).show();
@@ -76,46 +79,6 @@ public class AlterarDeletarMarca extends AlterarDeletarEntidade {
 
     @Override
     protected void setAlertBuilderAtualizar() {
-        alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar Marca");
-        alertBuilderAtualizar.setMessage("Tem Certeza que Deseja Atualizar Esta Marca?");
-
-        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    String nome = txtNome.getText().toString();
-
-                    if(nome.isEmpty())
-                        throw new Exception("Nome de Marca Não Pode Ser Vazio!");
-
-                    Marca toUpdate = new Marca();
-
-                    toUpdate.setId(marca.getId());
-                    toUpdate.setNome(nome.toUpperCase());
-
-                    boolean result = marcaManager.atualizar(toUpdate, marca.getId());
-
-                    if (result) {
-                        Toast.makeText(getApplicationContext(), "Marca Atualizada com Sucesso!", Toast.LENGTH_SHORT).show();
-                        setResult(RESULT_OK, null);
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Erro ao Atualizar Marca", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                catch (Exception e) {
-                    Log.e("Contador", "Erro ao Atualizar Marca", e);
-                    Toast.makeText(AlterarDeletarMarca.this, "Erro ao Atualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplicationContext(), "Marca Não foi Alterada", Toast.LENGTH_SHORT).show();
-            }
-        });
+        throw new NotImplementedException("Não Tem Como Atualizar Marca");
     }
 }

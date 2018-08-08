@@ -26,11 +26,7 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
-import com.vandamodaintima.jfpsb.contador.tela.manager.produto.AlterarDeletarProduto;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PesquisarProduto extends TelaPesquisa {
 
     protected RadioGroup radioGroup;
@@ -38,26 +34,16 @@ public class PesquisarProduto extends TelaPesquisa {
     protected ProdutoManager produtoManager;
     protected ListView listView;
     protected ProdutoCursorAdapter produtoCursorAdapter;
-    protected static int TIPO_PESQUISA = 1;
     protected TextView txtQuantProdutosCadastrados;
 
-    public PesquisarProduto() {
-        // Required empty public constructor
-    }
+    protected static int TIPO_PESQUISA = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
-        txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
-        txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
-        listView = viewInflate.findViewById(R.id.listViewProduto);
-
-        setManagers();
-        setTxtPesquisaProduto();
-        setRadioGroup();
-        setListView();
+        savedInstanceState.putInt("layout", R.layout.fragment_pesquisar_produto);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -65,6 +51,15 @@ public class PesquisarProduto extends TelaPesquisa {
     @Override
     protected void setManagers() {
         produtoManager = new ProdutoManager(((ActivityBase) getActivity()).getConn());
+    }
+
+    @Override
+    protected void setViews() {
+        txtQuantProdutosCadastrados = viewInflate.findViewById(R.id.txtQuantProdutosCadastrados);
+
+        setTxtPesquisaProduto();
+        setRadioGroup();
+        setListView();
     }
 
     /**
@@ -108,6 +103,8 @@ public class PesquisarProduto extends TelaPesquisa {
 
     @Override
     protected void setListView() {
+        listView = viewInflate.findViewById(R.id.listViewProduto);
+
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 
@@ -163,6 +160,8 @@ public class PesquisarProduto extends TelaPesquisa {
     }
 
     protected void setRadioGroup() {
+        radioGroup = viewInflate.findViewById(R.id.radioGroupOpcao);
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -194,6 +193,8 @@ public class PesquisarProduto extends TelaPesquisa {
     }
 
     protected void setTxtPesquisaProduto(){
+        txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
+
         txtPesquisaProduto.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

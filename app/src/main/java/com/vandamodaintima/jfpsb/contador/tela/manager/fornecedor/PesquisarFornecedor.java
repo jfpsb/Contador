@@ -36,23 +36,13 @@ public class PesquisarFornecedor extends TelaPesquisa {
     private FornecedorCursorAdapter fornecedorCursorAdapter;
     private EditText txtPesquisaFornecedor;
 
-    public PesquisarFornecedor() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
+        if (savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        setManagers();
-
-        listView = viewInflate.findViewById(R.id.listViewLoja);
-
-        txtPesquisaFornecedor = viewInflate.findViewById(R.id.txtPesquisaFornecedor);
-
-        setTxtPesquisaFornecedor();
-        setListView();
+        savedInstanceState.putInt("layout", R.layout.fragment_pesquisar_fornecedor);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -62,8 +52,15 @@ public class PesquisarFornecedor extends TelaPesquisa {
         fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
     }
 
+    @Override
+    protected void setViews() {
+        setTxtPesquisaFornecedor();
+        setListView();
+    }
+
     private void setTxtPesquisaFornecedor() {
-        //txtPesquisaFornecedor.addTextChangedListener(new EditTextMask(txtPesquisaFornecedor, EditTextMask.CNPJ));
+        txtPesquisaFornecedor = viewInflate.findViewById(R.id.txtPesquisaFornecedor);
+
         txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -84,7 +81,9 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
     @Override
     protected void setListView() {
-        if(cursorPesquisa != null)
+        listView = viewInflate.findViewById(R.id.listViewLoja);
+
+        if (cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
@@ -130,10 +129,9 @@ public class PesquisarFornecedor extends TelaPesquisa {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     populaListView(txtPesquisaFornecedor.getText().toString());
-                }
-                else {
+                } else {
                     Toast.makeText(viewInflate.getContext(), "O Fornecedor Não Foi Alterado", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -144,7 +142,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
      * Popula a lista novamente
      */
     public void populaListView() {
-        if(cursorPesquisa != null)
+        if (cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {
@@ -156,7 +154,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
     }
 
     public void populaListView(String termo) {
-        if(cursorPesquisa != null)
+        if (cursorPesquisa != null)
             cursorPesquisa.close();
 
         try {

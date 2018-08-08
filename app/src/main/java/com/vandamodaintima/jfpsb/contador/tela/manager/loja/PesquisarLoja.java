@@ -40,14 +40,10 @@ public class PesquisarLoja extends TelaPesquisa {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        listView = viewInflate.findViewById(R.id.listViewLoja);
-        txtNome = viewInflate.findViewById(R.id.txtNome);
-
-        setManagers();
-        setTxtNome();
-        setListView();
+        savedInstanceState.putInt("layout",R.layout.fragment_pesquisar_loja);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -57,7 +53,15 @@ public class PesquisarLoja extends TelaPesquisa {
         lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
     }
 
+    @Override
+    protected void setViews() {
+        setTxtNome();
+        setListView();
+    }
+
     private void setTxtNome() {
+        txtNome = viewInflate.findViewById(R.id.txtNome);
+
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -78,6 +82,8 @@ public class PesquisarLoja extends TelaPesquisa {
 
     @Override
     protected void setListView() {
+        listView = viewInflate.findViewById(R.id.listViewLoja);
+
         if(cursorPesquisa != null)
             cursorPesquisa.close();
 

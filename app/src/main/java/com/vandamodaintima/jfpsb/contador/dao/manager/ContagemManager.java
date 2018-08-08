@@ -46,7 +46,7 @@ public class ContagemManager extends Manager<Contagem> {
 
     @Override
     public Cursor listarCursor() {
-        String sql = "SELECT " + Contagem.getColunas() + " FROM contagem, loja WHERE loja = cnpj OR loja = null ORDER BY datainicio";
+        String sql = "SELECT contagem.rowid as _id, loja, nome, data, finalizada FROM contagem, loja WHERE loja = cnpj OR loja = null ORDER BY data";
 
         return daoEntidade.selectRaw(sql, null);
     }
@@ -81,10 +81,10 @@ public class ContagemManager extends Manager<Contagem> {
         return daoEntidade.select("loja = ? AND data = ?", new String[] { cnpj, data }, null, null, "data DESC", null);
     }
 
-    public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, String cnpj) {
-        String sql = "SELECT " + Contagem.getColunas() + " FROM contagem, loja WHERE loja = cnpj AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
+    public Cursor listarPorDataELoja(Date data, String cnpj) {
+        String sql = "SELECT contagem.rowid as _id, loja, nome, data, finalizada FROM contagem, loja WHERE loja = cnpj AND data = ? AND loja = ? ORDER BY data";
 
-        String[] selection = new String[] { TrataDisplayData.getDataFormatoBD(datainicio), TrataDisplayData.getDataFormatoBD(datafinal), cnpj };
+        String[] selection = new String[] { TrataDisplayData.getDataFormatoBD(data), cnpj };
 
         return daoEntidade.selectRaw(sql, selection);
     }

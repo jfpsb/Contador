@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="7dip"
+    android:orientation="vertical"
     tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.contagem.PesquisarContagem">
 
     <TableLayout
@@ -12,57 +12,48 @@
         android:layout_margin="10dip">
 
         <TableRow>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Loja:"
                 android:textColor="#000000"
-                android:textSize="24sp"
-                android:layout_weight="1"/>
+                android:textSize="24sp" />
         </TableRow>
+
         <TableRow>
+
             <Spinner
+                android:id="@+id/spinnerLoja"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerLoja"
                 android:layout_weight="1" />
         </TableRow>
+
         <TableRow>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Intervalo:"
                 android:textColor="#000000"
-                android:textSize="24sp"
-                android:layout_weight="1"/>
+                android:textSize="24sp" />
         </TableRow>
-        <TableRow android:layout_weight="5">
-            <EditText
-                android:id="@+id/txtDataInicial"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:focusable="false"
-                android:onClick="showDatePicker" />
 
-            <TextView
-                android:text="a"
-                android:textSize="24sp"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textColor="#000000"
-                android:textAlignment="center"/>
-
-            <EditText
-                android:id="@+id/txtDataFinal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:focusable="false"
-                android:onClick="showDatePicker" />
-        </TableRow>
         <TableRow>
+
+            <EditText
+                android:id="@+id/txtData"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false" />
+        </TableRow>
+
+        <TableRow>
+
             <Button
                 android:id="@+id/btnPesquisar"
                 android:layout_width="match_parent"
@@ -77,31 +68,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_marginTop="10dip">
+        android:layout_marginTop="10dip"
+        android:weightSum="2">
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Loja"
             android:textAlignment="center"
-            android:textSize="20dp"
             android:textColor="#000000"
-            android:layout_weight="1"/>
+            android:textSize="20dp" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Data Inicial"
             android:textAlignment="center"
-            android:textSize="20dp"
             android:textColor="#000000"
-            android:layout_weight="1"/>
+            android:textSize="20dp" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/listViewLoja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip" >
-    </ListView>
+        android:layout_margin="10dip"></ListView>
 
 </LinearLayout>

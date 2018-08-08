@@ -53,30 +53,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barras do Fornecedor:"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/txtCodBarraFornecedor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Não Definido"
-                    android:inputType="textNoSuggestions"
-                    android:textColor="#000"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Fornecedor Atual:"
                     android:textColor="#000"
                     android:textSize="22sp" />
@@ -85,7 +61,7 @@
             <TableRow>
 
                 <EditText
-                    android:id="@+id/txtFornecedorAtual"
+                    android:id="@+id/txtFornecedor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

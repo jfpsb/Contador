@@ -27,8 +27,8 @@ public abstract class Manager<T> {
         return false;
     }
 
-    public boolean deletar(Object chave) {
-        long result = daoEntidade.deletar(chave);
+    public boolean deletar(Object... chaves) {
+        long result = daoEntidade.deletar(chaves);
 
         if(result != -1) {
             return true;

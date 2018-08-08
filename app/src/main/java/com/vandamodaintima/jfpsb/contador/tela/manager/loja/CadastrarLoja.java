@@ -16,36 +16,39 @@ import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CadastrarLoja extends FragmentBase {
     private Button btnCadastrar;
     private LojaManager lojaManager;
     private EditText txtNome;
     private EditText txtCnpj;
 
-    public CadastrarLoja() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
+        if (savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
-        txtNome = viewInflate.findViewById(R.id.txtNome);
-        txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
-
-        setManagers();
-
-        setBtnCadastrar();
+        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_loja);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    protected void setManagers() {
+        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
+    }
+
+    @Override
+    protected void setViews() {
+        txtNome = viewInflate.findViewById(R.id.txtNome);
+        txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
+
+        setBtnCadastrar();
+    }
+
     private void setBtnCadastrar() {
+        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
+
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,10 +58,10 @@ public class CadastrarLoja extends FragmentBase {
                     String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
 
-                    if(cnpj.isEmpty())
+                    if (cnpj.isEmpty())
                         throw new Exception("O campo de cnpj está vazio");
 
-                    if(nome.isEmpty())
+                    if (nome.isEmpty())
                         throw new Exception("O campo de nome está vazio");
 
                     loja.setCnpj(cnpj);
@@ -67,10 +70,10 @@ public class CadastrarLoja extends FragmentBase {
                     boolean result = lojaManager.inserir(loja);
 
                     if (result) {
-                        Toast.makeText(view.getContext(), "Inserção de loja " + loja.getNome() + " efetuada com sucesso.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(view.getContext(), "Inserção de Loja " + loja.getNome() + " Efetuada Com Sucesso.", Toast.LENGTH_SHORT).show();
 
-                        Fragment fragment = ((ActivityBase)getActivity()).getAdapter().getItem(0);
-                        ((PesquisarLoja)fragment).populaListView();
+                        Fragment fragment = ((ActivityBase) getActivity()).getAdapter().getItem(0);
+                        ((PesquisarLoja) fragment).populaListView();
 
                         txtNome.setText("");
                     } else {
@@ -81,10 +84,5 @@ public class CadastrarLoja extends FragmentBase {
                 }
             }
         });
-    }
-
-    @Override
-    protected void setManagers() {
-        lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
     }
 }

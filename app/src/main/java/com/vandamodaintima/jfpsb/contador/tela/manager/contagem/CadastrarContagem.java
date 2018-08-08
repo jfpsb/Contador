@@ -35,36 +35,19 @@ public class CadastrarContagem extends FragmentBase {
     private Button btnCadastrar;
     private LojaManager lojaManager;
     private Spinner spinnerLoja;
-    private EditText txtDataInicial;
-    private Date dataAtual;
+    private EditText txtData;
+    private Date dataAtual = new Date();
 
     private ContagemManager contagemManager;
 
-    private Loja loja = null;
-
-    public CadastrarContagem() {
-        // Required empty public constructor
-    }
+    private Loja loja;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        viewInflate = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState == null)
+            savedInstanceState = new Bundle();
 
-        dataAtual = new Date();
-
-        setManagers();
-
-        txtDataInicial = viewInflate.findViewById(R.id.txtDataInicio);
-        txtDataInicial.setText(TestaIO.dateFormat.format(dataAtual));
-
-        spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
-
-        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
-
-        setBtnCadastrar();
-
-        setSpinnerLoja();
+        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_contagem);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -75,14 +58,35 @@ public class CadastrarContagem extends FragmentBase {
         lojaManager = new LojaManager(((ActivityBase)getActivity()).getConn());
     }
 
+    @Override
+    protected void setViews() {
+        setTxtData();
+        setBtnCadastrar();
+        setSpinnerLoja();
+    }
+
+    private void setTxtData() {
+        txtData = viewInflate.findViewById(R.id.txtDataInicio);
+        txtData.setText(TestaIO.dateFormat.format(dataAtual));
+
+        txtData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker(v);
+            }
+        });
+    }
+
     private void setBtnCadastrar() {
+        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
+
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Contagem contagem = new Contagem();
 
                 try {
-                    String dataInicial = txtDataInicial.getText().toString();
+                    String dataInicial = txtData.getText().toString();
 
                     if(loja == null)
                         throw new Exception("Loja Inválida");
@@ -90,14 +94,14 @@ public class CadastrarContagem extends FragmentBase {
                     if(dataInicial.isEmpty())
                         throw new Exception("O campo de data inicial não pode estar vazio!");
 
-                    contagem.setDatainicio(TrataDisplayData.getDataDisplay(dataInicial));
+                    contagem.setData(TrataDisplayData.getDataDisplay(dataInicial));
                     contagem.setLoja(loja);
 
                     boolean result = contagemManager.inserir(contagem);
 
                     if(result) {
-                        Toast.makeText(viewInflate.getContext(), "Contagem inserida com data inicial " + TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()), Toast.LENGTH_SHORT).show();
-                        txtDataInicial.setText(TrataDisplayData.getDataFormatoDisplay(dataAtual));
+                        Toast.makeText(viewInflate.getContext(), "Contagem Inserida Com Data " + TrataDisplayData.getDataFormatoDisplay(contagem.getData()), Toast.LENGTH_SHORT).show();
+                        txtData.setText(TrataDisplayData.getDataFormatoDisplay(dataAtual));
                     }
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Contagem", Toast.LENGTH_SHORT).show();
@@ -111,6 +115,8 @@ public class CadastrarContagem extends FragmentBase {
     }
 
     private void setSpinnerLoja() {
+        spinnerLoja = viewInflate.findViewById(R.id.spinnerLoja);
+
         Cursor cursorSpinner = null, cursorSpinner2 = null;
 
         try {

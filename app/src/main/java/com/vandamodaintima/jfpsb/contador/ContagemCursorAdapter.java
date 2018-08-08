@@ -29,12 +29,12 @@ public class ContagemCursorAdapter extends CursorAdapter {
         TextView labelLojaNome = view.findViewById(R.id.labelLojaNome);
         TextView labelDataInicial = view.findViewById(R.id.labelDataInicial);
 
-        String lojaNome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
-        String datainicial = cursor.getString(cursor.getColumnIndexOrThrow("datainicio"));
+        String loja = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+        String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
 
-        datainicial = TrataDisplayData.getDataFormatoDisplay(datainicial);
+        data = TrataDisplayData.getDataFormatoDisplay(data);
 
-        labelLojaNome.setText(lojaNome);
-        labelDataInicial.setText(datainicial);
+        labelLojaNome.setText(loja);
+        labelDataInicial.setText(data);
     }
 }

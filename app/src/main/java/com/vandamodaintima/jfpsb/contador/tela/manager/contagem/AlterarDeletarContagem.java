@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.view.ViewStub;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -33,10 +33,9 @@ import java.util.Date;
 public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
     private Contagem contagem;
-    private EditText txtIDContagem;
-    private EditText txtDataFinal;
-    private EditText txtDataInicial;
-    private EditText txtLojaAtual;
+    private EditText txtData;
+    private EditText txtLoja;
+    private CheckBox checkBoxFinalizada;
     private Button btnAdicionar;
 
     private ContagemManager contagemManager;
@@ -55,19 +54,13 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
-        txtIDContagem = findViewById(R.id.txtIDContagem);
-        txtDataFinal = findViewById(R.id.txtDataFinal);
-        txtDataInicial = findViewById(R.id.txtDataInicial);
-        txtLojaAtual = findViewById(R.id.txtLojaAtual);
+        txtData = findViewById(R.id.txtData);
+        txtLoja = findViewById(R.id.txtLoja);
+        checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
-        txtIDContagem.setText(String.valueOf(contagem.getIdcontagem()));
-        if(contagem.getDatafinal() != null) {
-            txtDataFinal.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatafinal()));
-        }
-
-        txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()));
-        txtLojaAtual.setText(contagem.getLoja().getNome());
+        txtData.setText(TrataDisplayData.getDataFormatoDisplay(contagem.getData()));
+        txtLoja.setText(contagem.getLoja().getNome());
 
         setBtnAdicionar();
     }
@@ -121,48 +114,26 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setBtnAtualizar() {
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String dataFinal = txtDataFinal.getText().toString();
-
-                if(dataFinal.isEmpty()) {
-                    Toast.makeText(AlterarDeletarContagem.this, "O Campo de Data Final Não Pode Estar Vazio", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                alertBuilderAtualizar.setMessage("Atualizar Data Final da Contagem para " + dataFinal + "?");
-
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
     protected void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Contagem");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Finalizar Esta Contagem?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    Date data = TrataDisplayData.getDataDisplay(txtDataFinal.getText().toString());
 
                     Contagem toUpdate = new Contagem();
-                    toUpdate.setIdcontagem(contagem.getIdcontagem());
-                    toUpdate.setDatainicio(contagem.getDatainicio());
+                    toUpdate.setData(contagem.getData());
                     toUpdate.setLoja(contagem.getLoja());
+                    toUpdate.setFinalizada(checkBoxFinalizada.isChecked());
 
-                    toUpdate.setDatafinal(data);
-
-                    boolean result = contagemManager.atualizar(toUpdate, contagem.getIdcontagem());
+                    boolean result = contagemManager.atualizar(toUpdate, contagem.getLoja(), contagem.getData());
 
                     if (result) {
-                        Toast.makeText(AlterarDeletarContagem.this, "A contagem com ID " + contagem.getIdcontagem() + " foi atualizada com sucesso!", Toast.LENGTH_SHORT).show();
-                        setResult(Activity.RESULT_OK, null);
+                        Toast.makeText(AlterarDeletarContagem.this, "A Contagem Foi Atualizada Com Sucesso!", Toast.LENGTH_SHORT).show();
+                        setResult(Activity.RESULT_OK);
                         finish();
                     }
                 }
@@ -184,12 +155,12 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     protected void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Contagem");
-        alertBuilderDeletar.setMessage("Tem certeza que deseja apagar a contagem de ID?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Contagem?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = contagemManager.deletar(contagem.getIdcontagem());
+                boolean result = contagemManager.deletar(contagem.getLoja(), contagem.getData());
 
                 if(result) {
                     Toast.makeText(AlterarDeletarContagem.this, "Contagem Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
