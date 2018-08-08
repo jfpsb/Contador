@@ -32,7 +32,7 @@ public class ContagemCursorAdapter extends CursorAdapter {
         String lojaNome = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
         String datainicial = cursor.getString(cursor.getColumnIndexOrThrow("datainicio"));
 
-        datainicial = TrataDisplayData.getDataEmStringDisplay(datainicial);
+        datainicial = TrataDisplayData.getDataFormatoDisplay(datainicial);
 
         labelLojaNome.setText(lojaNome);
         labelDataInicial.setText(datainicial);

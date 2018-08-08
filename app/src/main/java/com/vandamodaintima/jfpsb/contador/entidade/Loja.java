@@ -8,7 +8,11 @@ import java.io.Serializable;
 
 public class Loja implements Serializable {
     private String cnpj;
+    private Loja matriz;
     private String nome;
+    private String telefone;
+
+    private static final String[] colunas = new String[]{"cnpj as _id", "matriz", "nome", "telefone"};
 
     public String getCnpj() {
         return cnpj;
@@ -16,6 +20,14 @@ public class Loja implements Serializable {
 
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+    }
+
+    public Loja getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(Loja matriz) {
+        this.matriz = matriz;
     }
 
     public String getNome() {
@@ -26,7 +38,15 @@ public class Loja implements Serializable {
         this.nome = nome;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public static String[] getColunas() {
-        return new String[] { "cnpj as _id", "nome" };
+        return colunas;
     }
 }

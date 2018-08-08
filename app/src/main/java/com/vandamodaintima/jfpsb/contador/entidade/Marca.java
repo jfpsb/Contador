@@ -3,16 +3,9 @@ package com.vandamodaintima.jfpsb.contador.entidade;
 import java.io.Serializable;
 
 public class Marca implements Serializable {
-    private int id;
     private String nome;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private static final String[] colunas = new String[]{"nome as _id"};
 
     public String getNome() {
         return nome;
@@ -23,6 +16,6 @@ public class Marca implements Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[] { "id as _id", "nome" };
+        return colunas;
     }
 }

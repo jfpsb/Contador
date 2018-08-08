@@ -6,7 +6,9 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
+import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import java.util.ArrayList;
 
@@ -89,10 +91,10 @@ public class ContagemProdutoManager extends Manager<ContagemProduto> {
         return daoEntidade.select("id = ?", new String[] { String.valueOf(chaves[0]) }, null, null, null, null);
     }
 
-    public ArrayList<ContagemProduto> listarPorContagem(int idcontagem) {
+    public ArrayList<ContagemProduto> listarPorContagem(Contagem contagem) {
         ArrayList<ContagemProduto> contagemProdutos = new ArrayList<>();
 
-        Cursor c = listarPorContagemCursor(idcontagem);
+        Cursor c = listarPorContagemCursor(contagem);
 
         if(c != null) {
             if(c.getCount() > 0) {
@@ -101,8 +103,8 @@ public class ContagemProdutoManager extends Manager<ContagemProduto> {
 
                     contagemProduto.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
 
-                    Contagem contagem = contagemManager.listarPorChave(idcontagem);
-                    contagemProduto.setContagem(contagem);
+                    Contagem contagem1 = contagemManager.listarPorChave(contagem.getLoja(), contagem.getData());
+                    contagemProduto.setContagem(contagem1);
 
                     Produto produto = produtoManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("produto")));
                     contagemProduto.setProduto(produto);
@@ -119,9 +121,12 @@ public class ContagemProdutoManager extends Manager<ContagemProduto> {
         return contagemProdutos;
     }
 
-    public Cursor listarPorContagemCursor(int idcontagem) {
-        String sql = "SELECT id as _id, contagem, produto, descricao, SUM(quant) as quant FROM contagem_produto, produto WHERE produto = cod_barra AND contagem = ? GROUP BY produto ORDER BY descricao";
-        String[] selection = new String[] { String.valueOf(idcontagem) };
+    public Cursor listarPorContagemCursor(Contagem contagem) {
+        String cnpj = contagem.getLoja().getCnpj();
+        String data = TrataDisplayData.getDataFormatoBD(contagem.getData());
+
+        String sql = "SELECT id as _id, contagem_loja, contagem_data, produto, descricao, SUM(quant) as quant FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
+        String[] selection = new String[] { cnpj, data };
 
         return daoEntidade.selectRaw(sql, selection);
     }

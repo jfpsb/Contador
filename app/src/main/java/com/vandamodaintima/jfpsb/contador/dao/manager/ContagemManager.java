@@ -4,7 +4,6 @@ import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOContagem;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
@@ -30,13 +29,13 @@ public class ContagemManager extends Manager<Contagem> {
             while (c.moveToNext()) {
                 Contagem contagem = new Contagem();
 
-                contagem.setIdcontagem(c.getInt(c.getColumnIndexOrThrow("_id")));
+                contagem.setRowid(c.getInt(c.getColumnIndexOrThrow("_id")));
 
                 Loja loja = lojaManager.listarPorChave(c.getInt(c.getColumnIndexOrThrow("loja")));
                 contagem.setLoja(loja);
 
-                contagem.setDatainicio(TrataDisplayData.getDataDoBD(c.getString(c.getColumnIndexOrThrow("datainicio"))));
-                contagem.setDatafinal(TrataDisplayData.getDataDoBD(c.getString(c.getColumnIndexOrThrow("datafim"))));
+                contagem.setData(TrataDisplayData.getDataBD(c.getString(c.getColumnIndexOrThrow("data"))));
+                contagem.setFinalizada(c.getInt(c.getColumnIndexOrThrow("finalizada")) > 0);
 
                 contagens.add(contagem);
             }
@@ -47,33 +46,28 @@ public class ContagemManager extends Manager<Contagem> {
 
     @Override
     public Cursor listarCursor() {
-        DAOContagem daoContagem = (DAOContagem)daoEntidade;
+        String sql = "SELECT " + Contagem.getColunas() + " FROM contagem, loja WHERE loja = cnpj OR loja = null ORDER BY datainicio";
 
-        String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = cnpj OR loja = null ORDER BY datainicio";
-
-        return daoContagem.selectRaw(sql, null);
+        return daoEntidade.selectRaw(sql, null);
     }
 
     @Override
     public Contagem listarPorChave(Object... chaves) {
         Contagem contagem = null;
-        Cursor c = listarCursorPorChave(chaves[0]);
+        Cursor c = listarCursorPorChave(chaves[0], chaves[1]);
 
         if(c != null && c.getCount() > 0) {
             c.moveToFirst();
 
             contagem = new Contagem();
 
-            contagem.setIdcontagem(c.getInt(c.getColumnIndexOrThrow("_id")));
+            contagem.setRowid(c.getInt(c.getColumnIndexOrThrow("_id")));
 
             Loja loja = lojaManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("loja")));
             contagem.setLoja(loja);
 
-            contagem.setDatainicio(TrataDisplayData.getDataDoBD(c.getString(c.getColumnIndexOrThrow("datainicio"))));
-
-            String datafinal = c.getString(c.getColumnIndexOrThrow("datafinal"));
-            if(datafinal != null)
-                contagem.setDatafinal(TrataDisplayData.getDataDoBD(datafinal));
+            contagem.setData(TrataDisplayData.getDataBD(c.getString(c.getColumnIndexOrThrow("data"))));
+            contagem.setFinalizada(c.getInt(c.getColumnIndexOrThrow("finalizada")) > 0);
         }
 
         return contagem;
@@ -81,16 +75,17 @@ public class ContagemManager extends Manager<Contagem> {
 
     @Override
     public Cursor listarCursorPorChave(Object... chaves) {
-        return daoEntidade.select("idcontagem = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "datainicio DESC", null);
+        String cnpj = ((Loja) chaves[0]).getCnpj();
+        String data = TrataDisplayData.getDataFormatoBD((Date) chaves[1]);
+
+        return daoEntidade.select("loja = ? AND data = ?", new String[] { cnpj, data }, null, null, "data DESC", null);
     }
 
     public Cursor listarPorPeriodoELoja(Date datainicio, Date datafinal, String cnpj) {
-        DAOContagem daoContagem = (DAOContagem)daoEntidade;
+        String sql = "SELECT " + Contagem.getColunas() + " FROM contagem, loja WHERE loja = cnpj AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
 
-        String sql = "SELECT idcontagem as _id, loja, nome, datainicio, datafinal FROM contagem, loja WHERE loja = cnpj AND datainicio BETWEEN ? AND ? AND loja = ? ORDER BY datainicio";
+        String[] selection = new String[] { TrataDisplayData.getDataFormatoBD(datainicio), TrataDisplayData.getDataFormatoBD(datafinal), cnpj };
 
-        String[] selection = new String[] { TrataDisplayData.getDataEmString(datainicio), TrataDisplayData.getDataEmString(datafinal), cnpj };
-
-        return daoContagem.selectRaw(sql, selection);
+        return daoEntidade.selectRaw(sql, selection);
     }
 }

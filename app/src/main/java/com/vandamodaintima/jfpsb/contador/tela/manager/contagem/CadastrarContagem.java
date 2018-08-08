@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
@@ -98,7 +97,7 @@ public class CadastrarContagem extends FragmentBase {
 
                     if(result) {
                         Toast.makeText(viewInflate.getContext(), "Contagem inserida com data inicial " + TrataDisplayData.getDataEmStringDisplay(contagem.getDatainicio()), Toast.LENGTH_SHORT).show();
-                        txtDataInicial.setText(TrataDisplayData.getDataEmStringDisplay(dataAtual));
+                        txtDataInicial.setText(TrataDisplayData.getDataFormatoDisplay(dataAtual));
                     }
                     else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Contagem", Toast.LENGTH_SHORT).show();

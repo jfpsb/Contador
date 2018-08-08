@@ -11,6 +11,9 @@ public class Fornecedor implements Serializable {
     private String cnpj;
     private String nome;
     private String fantasia;
+    private String email;
+
+    private static final String[] colunas = new String[]{"cnpj as _id", "nome", "fantasia", "email"};
 
     public String getCnpj() {
         return cnpj;
@@ -36,7 +39,15 @@ public class Fornecedor implements Serializable {
         this.fantasia = fantasia;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public static String[] getColunas() {
-        return new String[] { "cnpj as _id", "nome", "fantasia"};
+        return colunas;
     }
 }

@@ -1,20 +1,18 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
-/**
- * Created by jfpsb on 08/02/2018.
- */
-
 public class ContagemProduto {
-    private int id;
+    private long id;
     private Contagem contagem;
     private Produto produto;
     private int quant;
 
-    public int getId() {
+    private static final String[] colunas = new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant" };
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -43,6 +41,6 @@ public class ContagemProduto {
     }
 
     public static String[] getColunas() {
-        return new String[] { "id as _id", "contagem", "produto", "quant" };
+        return colunas;
     }
 }

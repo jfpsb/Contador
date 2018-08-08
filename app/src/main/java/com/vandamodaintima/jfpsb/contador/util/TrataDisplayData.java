@@ -10,7 +10,7 @@ public class TrataDisplayData {
     private static final SimpleDateFormat FormatoBD = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat FormatoDataDisplay = new SimpleDateFormat("dd/MM/yyyy");
 
-    public static Date getDataDoBD(String dataEmString) {
+    public static Date getDataBD(String dataEmString) {
         try {
             Date data = FormatoBD.parse(dataEmString);
             return data;
@@ -32,16 +32,16 @@ public class TrataDisplayData {
         }
     }
 
-    public static String getDataEmStringDisplay(Date date) {
+    public static String getDataFormatoDisplay(Date date) {
         return FormatoDataDisplay.format(date);
     }
 
-    public static String getDataEmStringDisplay(String dataEmFormatoBD) {
-        Date date = getDataDoBD(dataEmFormatoBD);
+    public static String getDataFormatoDisplay(String dataEmFormatoBD) {
+        Date date = getDataBD(dataEmFormatoBD);
         return FormatoDataDisplay.format(date);
     }
 
-    public static String getDataEmString(Date date) {
+    public static String getDataFormatoBD(Date date) {
         return FormatoBD.format(date);
     }
 }

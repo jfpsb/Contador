@@ -1,26 +1,24 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
 import java.io.Serializable;
-
-/**
- * Created by jfpsb on 08/02/2018.
- */
+import java.util.ArrayList;
 
 public class Produto implements Serializable {
     private String cod_barra;
-    private String cod_barra_fornecedor;
+    private ArrayList<CodBarraFornecedor> cod_barra_fornecedor = new ArrayList<>();
     private Marca marca;
     private Fornecedor fornecedor;
     private String descricao;
     private Double preco;
 
-    private static String[] headers = new String[] { "Cód. de Barras", "Cód. de Barras Fornecedor", "Fornecedor", "Marca", "Descrição", "Preço" };
+    private static final String[] colunas = new String[]{"cod_barra as _id", "fornecedor", "marca", "descricao", "preco"};
+    private static String[] headers = new String[]{"Cód. de Barras", "Cód. de Barras Fornecedor", "Fornecedor", "Marca", "Descrição", "Preço"};
 
-    public String getCod_barra_fornecedor() {
+    public ArrayList<CodBarraFornecedor> getCod_barra_fornecedor() {
         return cod_barra_fornecedor;
     }
 
-    public void setCod_barra_fornecedor(String cod_barra_fornecedor) {
+    public void setCod_barra_fornecedor(ArrayList<CodBarraFornecedor> cod_barra_fornecedor) {
         this.cod_barra_fornecedor = cod_barra_fornecedor;
     }
 
@@ -65,7 +63,7 @@ public class Produto implements Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{ "cod_barra as _id", "cod_barra_fornecedor", "marca", "fornecedor", "descricao", "preco" };
+        return colunas;
     }
 
     public static String[] getHeaders() {

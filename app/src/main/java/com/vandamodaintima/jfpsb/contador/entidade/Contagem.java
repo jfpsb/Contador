@@ -8,17 +8,19 @@ import java.util.Date;
  */
 
 public class Contagem implements Serializable {
-    private int idcontagem;
+    private int rowid;
     private Loja loja;
-    private Date datainicio;
-    private Date datafinal;
+    private Date data;
+    private Boolean finalizada;
 
-    public int getIdcontagem() {
-        return idcontagem;
+    private static final String[] colunas = new String[] { "ROWID as _id", "loja", "data", "finalizada" };
+
+    public int getRowid() {
+        return rowid;
     }
 
-    public void setIdcontagem(int idcontagem) {
-        this.idcontagem = idcontagem;
+    public void setRowid(int rowid) {
+        this.rowid = rowid;
     }
 
     public Loja getLoja() {
@@ -29,23 +31,23 @@ public class Contagem implements Serializable {
         this.loja = loja;
     }
 
-    public Date getDatainicio() {
-        return datainicio;
+    public Date getData() {
+        return data;
     }
 
-    public void setDatainicio(Date datainicio) {
-        this.datainicio = datainicio;
+    public void setData(Date data) {
+        this.data = data;
     }
 
-    public Date getDatafinal() {
-        return datafinal;
+    public Boolean getFinalizada() {
+        return finalizada;
     }
 
-    public void setDatafinal(Date datafinal) {
-        this.datafinal = datafinal;
+    public void setFinalizada(Boolean finalizada) {
+        this.finalizada = finalizada;
     }
 
     public static String[] getColunas() {
-        return new String[] {"idcontagem as _id", "loja", "datainicio", "datafinal"};
+        return colunas;
     }
 }

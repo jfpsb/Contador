@@ -11,11 +11,9 @@ import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import java.util.ArrayList;
 
 public class MarcaManager extends Manager<Marca> {
-    private FornecedorManager fornecedorManager;
 
     public MarcaManager(ConexaoBanco conexaoBanco) {
         daoEntidade = new DAOMarca(conexaoBanco.conexao());
-        fornecedorManager = new FornecedorManager(conexaoBanco);
     }
 
     @Override
@@ -24,13 +22,10 @@ public class MarcaManager extends Manager<Marca> {
 
         Cursor c = listarCursor();
 
-        if(c.getCount() > 0) {
+        if (c.getCount() > 0) {
             while (c.moveToNext()) {
                 Marca marca = new Marca();
-
-                marca.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-                marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
-
+                marca.setNome(c.getString(c.getColumnIndexOrThrow("_id")));
                 marcas.add(marca);
             }
         }
@@ -47,15 +42,12 @@ public class MarcaManager extends Manager<Marca> {
     public Marca listarPorChave(Object... chaves) {
         Marca marca = null;
 
-        Cursor c = listarCursorPorChave(chaves);
+        Cursor c = listarCursorPorChave(chaves[0]);
 
-        if(c.getCount() > 0) {
+        if (c.getCount() > 0) {
             c.moveToFirst();
-
             marca = new Marca();
-
-            marca.setId(c.getInt(c.getColumnIndexOrThrow("_id")));
-            marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+            marca.setNome(c.getString(c.getColumnIndexOrThrow("_id")));
         }
 
         return marca;
@@ -63,10 +55,12 @@ public class MarcaManager extends Manager<Marca> {
 
     @Override
     public Cursor listarCursorPorChave(Object... chaves) {
-        return daoEntidade.select("id = ?", new String[] { String.valueOf(chaves[0]) }, null, null, "nome", null);
+        String nome = String.valueOf(chaves[0]);
+
+        return daoEntidade.select("nome = ?", new String[]{nome}, null, null, "nome", null);
     }
 
     public Cursor listarCursorPorNome(String nome) {
-        return daoEntidade.select("nome LIKE ?", new String[] { "%" + nome + "%" }, null, null, "nome", null);
+        return daoEntidade.select("nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, "nome", null);
     }
 }

@@ -18,7 +18,6 @@ import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -169,7 +168,7 @@ public class ManipulaExcel {
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        ArrayList<ContagemProduto> contagemproduto = contagemProdutoManager.listarPorContagem(contagem.getIdcontagem());
+        ArrayList<ContagemProduto> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
 
         try {
             if (contagemproduto.size() == 0)
@@ -198,7 +197,7 @@ public class ManipulaExcel {
             arquivoExcel.getPlanilha().setColumnWidth(1, 65 * 256);
             arquivoExcel.getPlanilha().setColumnWidth(2, 18 * 256);
 
-            String nomeArquivo = "Contagem - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+            String nomeArquivo = "Contagem - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataFormatoBD(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 
@@ -265,7 +264,7 @@ public class ManipulaExcel {
             arquivoExcel.getPlanilha().setColumnWidth(1, 70 * 256);
             arquivoExcel.getPlanilha().setColumnWidth(2, 40 * 256);
 
-            String nomeArquivo = "Fornecedores " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+            String nomeArquivo = "Fornecedores " + TrataDisplayData.getDataFormatoBD(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 
@@ -326,7 +325,7 @@ public class ManipulaExcel {
                 Produto produto = produtos.get(i);
 
                 rows[i].getCell(0).setCellValue(produto.getCod_barra());
-                rows[i].getCell(1).setCellValue(produto.getCod_barra_fornecedor());
+                //TODO: lista de codigos
                 rows[i].getCell(2).setCellValue(produto.getFornecedor().getNome());
                 rows[i].getCell(3).setCellValue(produto.getMarca().getNome());
                 rows[i].getCell(4).setCellValue(produto.getDescricao());
@@ -340,7 +339,7 @@ public class ManipulaExcel {
             arquivoExcel.getPlanilha().setColumnWidth(4, 40 * 256);
             arquivoExcel.getPlanilha().setColumnWidth(5, 40 * 256);
 
-            String nomeArquivo = "Produtos " + TrataDisplayData.getDataEmString(dataAtual) + ".xlsx";
+            String nomeArquivo = "Produtos " + TrataDisplayData.getDataFormatoBD(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 

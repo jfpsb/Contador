@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
+import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 /**
  * Created by jfpsb on 09/02/2018.
@@ -22,7 +23,9 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("contagem", objeto.getContagem().getIdcontagem());
+            contentValues.put("id", objeto.getId());
+            contentValues.put("contagem_data", TrataDisplayData.getDataFormatoBD(objeto.getContagem().getData()));
+            contentValues.put("contagem_loja", objeto.getContagem().getLoja().getCnpj());
             contentValues.put("produto", objeto.getProduto().getCod_barra());
             contentValues.put("quant", objeto.getQuant());
 
@@ -39,9 +42,6 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
         try {
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", objeto.getId());
-            contentValues.put("contagem", objeto.getContagem().getIdcontagem());
-            contentValues.put("produto", objeto.getProduto().getCod_barra());
             contentValues.put("quant", objeto.getQuant());
 
             return conn.update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(chaves[0])});
@@ -54,9 +54,9 @@ public class DAOContagemProduto extends DAO<ContagemProduto>{
     }
 
     @Override
-    public long deletar(Object... id) {
+    public long deletar(Object... chaves) {
         try {
-            return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(id[0])});
+            return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);

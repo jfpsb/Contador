@@ -48,9 +48,9 @@ public class DAOMarca extends DAO<Marca> {
     }
 
     @Override
-    public long deletar(Object... id) {
+    public long deletar(Object... chaves) {
         try {
-            return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(id[0])});
+            return conn.delete(TABELA, "id = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);

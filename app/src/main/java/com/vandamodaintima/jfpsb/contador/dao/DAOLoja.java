@@ -55,9 +55,9 @@ public class DAOLoja extends DAO<Loja> {
     }
 
     @Override
-    public long deletar(Object... id) {
+    public long deletar(Object... chaves) {
         try {
-            return conn.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(id[0])});
+            return conn.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
         }
         catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);

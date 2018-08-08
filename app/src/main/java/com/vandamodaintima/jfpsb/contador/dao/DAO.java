@@ -14,7 +14,7 @@ public abstract class DAO<T> {
 
     public abstract long inserir(T objeto);
     public abstract long atualizar(T objeto, Object... chaves);
-    public abstract long deletar(Object... id);
+    public abstract long deletar(Object... chaves);
     public abstract Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit);
 
     public Cursor selectRaw(String sql, String[] selection) {

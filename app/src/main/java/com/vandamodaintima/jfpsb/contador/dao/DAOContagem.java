@@ -6,13 +6,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
+import com.vandamodaintima.jfpsb.contador.entidade.Loja;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
+
+import java.util.Date;
 
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class DAOContagem extends DAO<Contagem>{
+public class DAOContagem extends DAO<Contagem> {
     public DAOContagem(SQLiteDatabase conn) {
         super(conn);
         TABELA = "contagem";
@@ -24,7 +27,7 @@ public class DAOContagem extends DAO<Contagem>{
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("loja", objeto.getLoja().getCnpj());
-            contentValues.put("datainicio", TrataDisplayData.getDataEmString(objeto.getDatainicio()));
+            contentValues.put("data", TrataDisplayData.getDataFormatoBD(objeto.getData()));
 
             long result = conn.insertOrThrow(TABELA, "", contentValues);
 
@@ -39,22 +42,15 @@ public class DAOContagem extends DAO<Contagem>{
     @Override
     public long atualizar(Contagem objeto, Object... chaves) {
         try {
+            String cnpj = ((Loja) chaves[0]).getCnpj();
+            String data = TrataDisplayData.getDataFormatoBD((Date) chaves[1]);
+
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("idcontagem", objeto.getIdcontagem());
-            contentValues.put("loja", objeto.getLoja().getCnpj());
-            contentValues.put("datainicio", TrataDisplayData.getDataEmString(objeto.getDatainicio()));
+            contentValues.put("finalizada", objeto.getFinalizada());
 
-            if(objeto.getDatafinal() != null) {
-                contentValues.put("datafinal", TrataDisplayData.getDataEmString(objeto.getDatafinal()));
-            }
-            else {
-                contentValues.putNull("datafinal");
-            }
-
-            return conn.update(TABELA, contentValues, "idcontagem = ?", new String[]{String.valueOf(chaves[0])});
-        }
-        catch (Exception e) {
+            return conn.update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{ cnpj, data});
+        } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
         }
 
@@ -62,11 +58,13 @@ public class DAOContagem extends DAO<Contagem>{
     }
 
     @Override
-    public long deletar(Object... id) {
+    public long deletar(Object... chaves) {
         try {
-            return conn.delete(TABELA, "idcontagem = ?", new String[]{String.valueOf(id[0])});
-        }
-        catch (Exception e) {
+            String cnpj = ((Loja) chaves[0]).getCnpj();
+            String data = TrataDisplayData.getDataFormatoBD((Date) chaves[1]);
+
+            return conn.delete(TABELA, "loja = ? AND data = ?", new String[]{ cnpj, data });
+        } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
         }
 
@@ -77,8 +75,7 @@ public class DAOContagem extends DAO<Contagem>{
     public Cursor select(String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         try {
             return conn.query(TABELA, Contagem.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
         }
 
