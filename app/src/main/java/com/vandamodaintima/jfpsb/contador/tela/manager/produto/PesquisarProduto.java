@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -25,6 +24,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 public class PesquisarProduto extends TelaPesquisa {
@@ -127,17 +127,13 @@ public class PesquisarProduto extends TelaPesquisa {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                cursor.moveToPosition(i);
-
                 // Como tem fornecedor uso o manager pra vir logo iniciado
                 Produto produto = produtoManager.listarPorChave(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
                 Bundle bundle = new Bundle();
-
                 bundle.putSerializable("produto", produto);
 
                 Intent alterarProduto = new Intent(viewInflate.getContext(), AlterarDeletarProduto.class);
-
                 alterarProduto.putExtras(bundle);
 
                 startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);

@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 public class PesquisarMarca extends TelaPesquisa {
@@ -40,7 +40,7 @@ public class PesquisarMarca extends TelaPesquisa {
 
     @Override
     protected void setManagers() {
-        marcaManager = new MarcaManager(((ActivityBase) getActivity()).getConn());
+        marcaManager = new MarcaManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class PesquisarMarca extends TelaPesquisa {
 
         try {
             cursorPesquisa = marcaManager.listarCursor();
-            simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), R.layout.item_lista_marca, cursorPesquisa, new String[]{"_id"}, new int[]{R.id.labelMarcaNome}, 0);
+            simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), R.layout.item_lista_marca, cursorPesquisa, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
             listView.setAdapter(simpleCursorAdapter);
 
             setListOnItemClickListener();
@@ -109,7 +109,8 @@ public class PesquisarMarca extends TelaPesquisa {
                 Cursor c = (Cursor) parent.getItemAtPosition(position);
 
                 Marca marca = new Marca();
-                marca.setNome(c.getString(c.getColumnIndexOrThrow("_id")));
+                marca.setId(c.getLong(c.getColumnIndexOrThrow("_id")));
+                marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
 
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("marca", marca);

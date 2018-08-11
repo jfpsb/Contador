@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 
 public class CadastrarLoja extends FragmentBase {
@@ -35,7 +35,7 @@ public class CadastrarLoja extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
+        lojaManager = new LojaManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CadastrarLoja extends FragmentBase {
                     if (result) {
                         Toast.makeText(view.getContext(), "Inserção de Loja " + loja.getNome() + " Efetuada Com Sucesso.", Toast.LENGTH_SHORT).show();
 
-                        Fragment fragment = ((ActivityBase) getActivity()).getAdapter().getItem(0);
+                        Fragment fragment = ((TabLayoutActivityBase) getActivity()).getPagerAdapter().getItem(0);
                         ((PesquisarLoja) fragment).populaListView();
 
                         txtNome.setText("");

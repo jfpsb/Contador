@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 
 /**
@@ -77,29 +78,54 @@ public class DAOProduto extends DAO<Produto> {
     @Override
     public long atualizar(Produto objeto, Object... chaves) {
         try {
-            ContentValues contentValues = new ContentValues();
+            conn.beginTransaction();
 
-            if (objeto.getFornecedor() != null) {
-                contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
-            } else {
-                contentValues.putNull("fornecedor");
+            ContentValues contentValues = getContentValuesAtualizar(objeto);
+            conn.update(TABELA, contentValues, "cod_barra = ?", new String[]{String.valueOf(chaves[0])});
+
+            conn.delete("cod_barra_fornecedor", "produto = ?", new String[] { String.valueOf(chaves[0]) });
+
+            for(int i = 0; i < objeto.getCod_barra_fornecedor().size(); i++) {
+                CodBarraFornecedor codBarraFornecedor = objeto.getCod_barra_fornecedor().get(i);
+
+                ContentValues contentCodBarraFornecedor = new ContentValues();
+                contentCodBarraFornecedor.put("produto", codBarraFornecedor.getProduto().getCod_barra());
+                contentCodBarraFornecedor.put("codigo", codBarraFornecedor.getCodigo());
+
+                conn.insert("cod_barra_fornecedor", null, contentCodBarraFornecedor);
             }
 
-            if (objeto.getMarca() != null) {
-                contentValues.put("marca", objeto.getMarca().getNome());
-            } else {
-                contentValues.putNull("marca");
-            }
+            conn.setTransactionSuccessful();
 
-            contentValues.put("descricao", objeto.getDescricao());
-            contentValues.put("preco", objeto.getPreco());
-
-            return conn.update(TABELA, contentValues, "cod_barra = ?", new String[]{String.valueOf(chaves[0])});
+            return 1;
         } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
+        } finally {
+            conn.endTransaction();
         }
 
         return -1;
+    }
+
+    private ContentValues getContentValuesAtualizar(Produto toUpdate) {
+        ContentValues contentValues = new ContentValues();
+
+        if (toUpdate.getFornecedor() != null) {
+            contentValues.put("fornecedor", toUpdate.getFornecedor().getCnpj());
+        } else {
+            contentValues.putNull("fornecedor");
+        }
+
+        if (toUpdate.getMarca() != null) {
+            contentValues.put("marca", toUpdate.getMarca().getNome());
+        } else {
+            contentValues.putNull("marca");
+        }
+
+        contentValues.put("descricao", toUpdate.getDescricao());
+        contentValues.put("preco", toUpdate.getPreco());
+
+        return contentValues;
     }
 
     @Override

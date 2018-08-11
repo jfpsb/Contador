@@ -63,23 +63,12 @@
 
             <TableRow>
 
-                <TextView
+                <Button
+                    android:id="@+id/btnGerenciarCodBarraFornecedor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barras do Fornecedor:"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/txtCodBarraFornecedor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="textNoSuggestions"
+                    android:text="Gerenciar Cód. de Barras de Fornecedor"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -111,10 +100,19 @@
 
                 <Button
                     android:id="@+id/btnEscolherFornecedor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Escolher Fornecedor"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/btnRemoverFornecedor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Remover Fornecedor"
+                    android:textColor="#ff00"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -145,10 +143,19 @@
 
                 <Button
                     android:id="@+id/btnEscolherMarca"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Escolher Marca"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/btnRemoverMarca"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Remover Marca"
+                    android:textColor="#ff00"
                     android:textSize="20sp" />
             </TableRow>
 

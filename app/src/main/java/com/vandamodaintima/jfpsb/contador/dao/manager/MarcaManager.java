@@ -25,7 +25,8 @@ public class MarcaManager extends Manager<Marca> {
         if (c.getCount() > 0) {
             while (c.moveToNext()) {
                 Marca marca = new Marca();
-                marca.setNome(c.getString(c.getColumnIndexOrThrow("_id")));
+                marca.setId(c.getLong(c.getColumnIndexOrThrow("_id")));
+                marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
                 marcas.add(marca);
             }
         }
@@ -47,7 +48,8 @@ public class MarcaManager extends Manager<Marca> {
         if (c.getCount() > 0) {
             c.moveToFirst();
             marca = new Marca();
-            marca.setNome(c.getString(c.getColumnIndexOrThrow("_id")));
+            marca.setId(c.getLong(c.getColumnIndexOrThrow("_id")));
+            marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
         }
 
         return marca;
@@ -57,7 +59,7 @@ public class MarcaManager extends Manager<Marca> {
     public Cursor listarCursorPorChave(Object... chaves) {
         String nome = String.valueOf(chaves[0]);
 
-        return daoEntidade.select("nome = ?", new String[]{nome}, null, null, "nome", null);
+        return daoEntidade.select("id = ?", new String[]{nome}, null, null, "nome", null);
     }
 
     public Cursor listarCursorPorNome(String nome) {

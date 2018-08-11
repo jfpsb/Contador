@@ -4,14 +4,16 @@ import android.os.Bundle;
 import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.CadastrarContagem;
-import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.PesquisarContagem;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 
-public class TelaContador extends ActivityBase {
+public class TelaContador extends TabLayoutActivityBase {
 
     private CadastrarContagem cadastrarContagem;
     private PesquisarContagem pesquisarContagem;
+
+    public TelaContador() {
+        super(new String[]{"Pesquisar", "Cadastrar"});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +27,5 @@ public class TelaContador extends ActivityBase {
         pesquisarContagem = new PesquisarContagem();
 
         setViewPagerTabLayout(pesquisarContagem, cadastrarContagem);
-    }
-
-    @Override
-    protected void setManagers() {
-
     }
 }

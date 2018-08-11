@@ -19,13 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-public class TelaProduto extends ActivityBase {
+public class TelaProduto extends TabLayoutActivityBase {
 
     private CadastrarProduto cadastrarProduto;
     private PesquisarProduto pesquisarProduto;
@@ -36,11 +36,13 @@ public class TelaProduto extends ActivityBase {
 
     private static TextView txtProgressStatus;
 
-    String myLog = "Contador";
-
     private static final int ESCOLHER_ARQUIVO = 1;
     private static final int ESCOLHER_DIRETORIO = 2;
     private static final int PEDIDO_PERMISSAO_READ = 3;
+
+    public TelaProduto() {
+        super(new String[] { "Pesquisar", "Cadastrar" });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +59,6 @@ public class TelaProduto extends ActivityBase {
         txtProgressStatus = findViewById(R.id.txtProgressStatus);
 
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
-    }
-
-    @Override
-    protected void setManagers() {
-
     }
 
     @Override
@@ -131,7 +128,7 @@ public class TelaProduto extends ActivityBase {
                 if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
 
-                    ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
+                    ManipulaExcel manipulaExcel = new ManipulaExcel(getConn());
 
                     boolean result = manipulaExcel.ExportaFornecedor(diretorio);
 

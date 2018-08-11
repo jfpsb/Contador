@@ -7,14 +7,9 @@ import android.view.ViewStub;
 import android.widget.Button;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
-/**
- * Created by jfpsb on 15/02/2018.
- */
-
-public abstract class AlterarDeletarEntidade extends ActivityBase {
+public abstract class AlterarDeletarEntidade<T> extends ActivityBase {
     protected Button btnAtualizar;
     protected Button btnDeletar;
     protected AlertDialog.Builder alertBuilderDeletar;
@@ -33,10 +28,12 @@ public abstract class AlterarDeletarEntidade extends ActivityBase {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
+        T objeto = (T) bundle.getSerializable(bundle.getString("entidade"));
+
         setBtnAtualizar();
         setBtnDeletar();
-        setAlertBuilderAtualizar();
-        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar(objeto);
+        setAlertBuilderDeletar(objeto);
     }
 
     protected void setBtnAtualizar() {
@@ -59,6 +56,6 @@ public abstract class AlterarDeletarEntidade extends ActivityBase {
         });
     }
 
-    protected abstract void setAlertBuilderDeletar();
-    protected abstract void setAlertBuilderAtualizar();
+    protected abstract void setAlertBuilderDeletar(T entidade);
+    protected abstract void setAlertBuilderAtualizar(T entidade);
 }

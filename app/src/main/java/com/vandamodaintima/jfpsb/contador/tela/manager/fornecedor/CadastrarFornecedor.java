@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 
 import java.io.BufferedInputStream;
@@ -61,7 +61,7 @@ public class CadastrarFornecedor extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
+        fornecedorManager = new FornecedorManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -269,7 +269,7 @@ public class CadastrarFornecedor extends FragmentBase {
     protected void aposCadastro(Fornecedor fornecedor) {
         try {
             // Atualiza lista em aba de pesquisa
-            Fragment fragment = ((ActivityBase) (getActivity())).getAdapter().getItem(0);
+            Fragment fragment = ((TabLayoutActivityBase) (getActivity())).getPagerAdapter().getItem(0);
             ((PesquisarFornecedor) fragment).populaListView();
 
             txtCnpj.setText("");

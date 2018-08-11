@@ -13,8 +13,10 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+
+import java.util.Date;
 
 public class CadastrarMarca extends FragmentBase {
 
@@ -22,10 +24,6 @@ public class CadastrarMarca extends FragmentBase {
     private Button btnCadastrar;
 
     private MarcaManager marcaManager;
-
-    public CadastrarMarca() {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +37,7 @@ public class CadastrarMarca extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        marcaManager = new MarcaManager(((ActivityBase) getActivity()).getConn());
+        marcaManager = new MarcaManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -64,6 +62,7 @@ public class CadastrarMarca extends FragmentBase {
 
                     Marca marca = new Marca();
 
+                    marca.setId(new Date().getTime());
                     marca.setNome(nome.toUpperCase());
 
                     boolean result = marcaManager.inserir(marca);
@@ -76,7 +75,7 @@ public class CadastrarMarca extends FragmentBase {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Marca", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Log.e("Contador", e.getMessage(), e);
+                    Log.e(LOG, e.getMessage(), e);
                 }
             }
         });
@@ -88,7 +87,7 @@ public class CadastrarMarca extends FragmentBase {
     protected void aposCadastro(Marca marca) {
         try {
             // Atualiza lista em aba de pesquisa
-            Fragment fragment = ((ActivityBase) (getActivity())).getAdapter().getItem(0);
+            Fragment fragment = ((TabLayoutActivityBase) (getActivity())).getPagerAdapter().getItem(0);
             ((PesquisarMarca) fragment).populaListView();
 
             txtNome.setText("");

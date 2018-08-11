@@ -16,6 +16,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 

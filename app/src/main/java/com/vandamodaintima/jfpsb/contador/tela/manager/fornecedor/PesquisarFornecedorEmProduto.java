@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 /**
  * Usado em TelaFornecedorForResult

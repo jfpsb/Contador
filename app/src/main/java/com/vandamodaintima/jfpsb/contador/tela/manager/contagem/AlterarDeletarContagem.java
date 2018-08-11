@@ -30,7 +30,7 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.util.Date;
 
-public class AlterarDeletarContagem extends AlterarDeletarEntidade {
+public class AlterarDeletarContagem extends AlterarDeletarEntidade<Contagem> {
 
     private Contagem contagem;
     private EditText txtData;
@@ -114,10 +114,10 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilderAtualizar() {
+    protected void setAlertBuilderAtualizar(Contagem entidade) {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Contagem");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Finalizar Esta Contagem?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Alterar o Status Desta Contagem?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -152,7 +152,7 @@ public class AlterarDeletarContagem extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilderDeletar() {
+    protected void setAlertBuilderDeletar(Contagem entidade) {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Contagem");
         alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Contagem?");

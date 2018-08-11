@@ -14,6 +14,7 @@ import com.vandamodaintima.jfpsb.contador.R;
  */
 public abstract class FragmentBase extends Fragment {
     protected static View viewInflate;
+    public static final String LOG = "Contador";
 
     public FragmentBase() {
         // Required empty public constructor

@@ -15,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,7 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.tela.manager.marca.TelaMarcaForResult;
@@ -66,7 +65,7 @@ public class CadastrarProduto extends FragmentBase {
 
     @Override
     protected void setManagers() {
-        produtoManager = new ProdutoManager(((ActivityBase) getActivity()).getConn());
+        produtoManager = new ProdutoManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -75,7 +74,6 @@ public class CadastrarProduto extends FragmentBase {
         txtPreco = viewInflate.findViewById(R.id.txtPreco);
         txtFornecedor = viewInflate.findViewById(R.id.txtFornecedor);
         txtMarca = viewInflate.findViewById(R.id.txtMarca);
-        txtCodBarraFornecedor = viewInflate.findViewById(R.id.txtCodBarraFornecedor);
         lblCodRepetido = viewInflate.findViewById(R.id.lblCnpjRepetido);
 
         setBtnEscolherFornecedor();
@@ -166,7 +164,7 @@ public class CadastrarProduto extends FragmentBase {
                     if (result) {
                         Toast.makeText(viewInflate.getContext(), "O Produto " + produto.getDescricao() + " Foi Inserido com Sucesso!", Toast.LENGTH_SHORT).show();
 
-                        Fragment fragment = ((ActivityBase) getActivity()).getAdapter().getItem(0);
+                        Fragment fragment = ((TabLayoutActivityBase) getActivity()).getPagerAdapter().getItem(0);
                         ((PesquisarProduto) fragment).populaListView();
 
                         txtPreco.getText().clear();

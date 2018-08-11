@@ -24,7 +24,7 @@ import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
@@ -60,8 +60,8 @@ public class PesquisarContagem extends TelaPesquisa {
 
     @Override
     protected void setManagers() {
-        contagemManager = new ContagemManager(((ActivityBase) getActivity()).getConn());
-        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
+        contagemManager = new ContagemManager(((TabLayoutActivityBase) getActivity()).getConn());
+        lojaManager = new LojaManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override

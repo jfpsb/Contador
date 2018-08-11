@@ -1,12 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.entidade;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class CodBarraFornecedor implements Serializable {
     private Produto produto;
     private String codigo;
 
-    private static final String[] colunas = new String[] { "ROWID as _id", "produto", "codigo" };
+    private static final String[] colunas = new String[] { "rowid as _id", "produto", "codigo" };
 
     public Produto getProduto() {
         return produto;
@@ -26,5 +27,20 @@ public class CodBarraFornecedor implements Serializable {
 
     public static String[] getColunas() {
         return colunas;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof CodBarraFornecedor && ((CodBarraFornecedor) o).getCodigo().equals(codigo) && ((CodBarraFornecedor) o).getProduto().getCod_barra().equals(produto.getCod_barra())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(produto, codigo);
     }
 }

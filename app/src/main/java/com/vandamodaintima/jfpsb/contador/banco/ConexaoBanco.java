@@ -11,7 +11,7 @@ import android.util.Log;
 public class ConexaoBanco {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 3;
+    private static final int VERSAO_BANCO = 4;
     private SQLiteHelper sqLiteHelper;
 
     public ConexaoBanco(Context context) {

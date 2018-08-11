@@ -20,10 +20,8 @@ import com.vandamodaintima.jfpsb.contador.FornecedorCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
-import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.AlterarDeletarFornecedor;
-import com.vandamodaintima.jfpsb.contador.util.EditTextMask;
 
 
 /**
@@ -49,7 +47,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
     @Override
     protected void setManagers() {
-        fornecedorManager = new FornecedorManager(((ActivityBase) getActivity()).getConn());
+        fornecedorManager = new FornecedorManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override

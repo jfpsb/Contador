@@ -13,15 +13,19 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
+import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
+import com.vandamodaintima.jfpsb.contador.tela.manager.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.tela.manager.marca.TelaMarcaForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
-public class AlterarDeletarProduto extends AlterarDeletarEntidade {
+import java.util.ArrayList;
+
+public class AlterarDeletarProduto extends AlterarDeletarEntidade<Produto> {
 
     private Produto produto = new Produto();
     private EditText txtCodBarra;
@@ -31,6 +35,9 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     private EditText txtMarca;
     private Button btnEscolherFornecedor;
     private Button btnEscolherMarca;
+    private Button btnGerenciarCodBarraFornecedor;
+    private Button btnRemoverFornecedor;
+    private Button btnRemoverMarca;
 
     private Fornecedor fornecedor;
     private Marca marca;
@@ -39,27 +46,30 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
-    private static final String SEM_FORNECEDOR = "Sem Fornecedor";
-    private static final String SEM_MARCA = "Sem Marca";
+    private static final int TELA_COD_BARRA_FORNECEDOR = 3;
+
+    private AlertDialog.Builder alertaRemoverFornecedor;
+    private AlertDialog.Builder alertaRemoverMarca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState == null)
+        if (savedInstanceState == null)
             savedInstanceState = new Bundle();
 
         savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_produto);
 
-        super.onCreate(savedInstanceState);
-
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
+
+        savedInstanceState.putString("entidade", "produto");
+        savedInstanceState.putSerializable("produto", produto);
+
+        super.onCreate(savedInstanceState);
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
-        btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
-        btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
 
         txtCodBarra.setText(produto.getCod_barra());
         txtDescricao.setText(produto.getDescricao());
@@ -68,22 +78,21 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         if (produto.getFornecedor() != null) {
             txtFornecedor.setText(produto.getFornecedor().getNome());
             fornecedor = produto.getFornecedor();
-        } else {
-            txtFornecedor.setText(SEM_FORNECEDOR);
         }
 
-        if(produto.getMarca() != null) {
+        if (produto.getMarca() != null) {
             txtMarca.setText(produto.getMarca().getNome());
             marca = produto.getMarca();
         }
-        else {
-            txtMarca.setText(SEM_MARCA);
-        }
 
-        //TODO: listar codigos
+        setAlertaRemoverFornecedor();
+        setAlertaRemoverMarca();
 
-        setBtnAlterarFornecedor();
+        setBtnEscolherFornecedor();
         setBtnEscolherMarca();
+        setBtnRemoverFornecedor();
+        setBtnRemoverMarca();
+        setBtnGerenciarCodBarraFornecedor();
     }
 
     @Override
@@ -91,7 +100,8 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
         produtoManager = new ProdutoManager(conn);
     }
 
-    private void setBtnAlterarFornecedor() {
+    private void setBtnEscolherFornecedor() {
+        btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
         btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,11 +112,52 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     }
 
     private void setBtnEscolherMarca() {
+        btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
         btnEscolherMarca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlterarDeletarProduto.this, TelaMarcaForResult.class);
                 startActivityForResult(intent, ESCOLHER_MARCA);
+            }
+        });
+    }
+
+    private void setBtnGerenciarCodBarraFornecedor() {
+        btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
+        btnGerenciarCodBarraFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TelaCodBarraFornecedor.class);
+                intent.putExtra("produto", produto);
+                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
+            }
+        });
+    }
+
+    private void setBtnRemoverFornecedor() {
+        btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
+        btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(fornecedor != null) {
+                    alertaRemoverFornecedor.show();
+                } else {
+                    Toast.makeText(AlterarDeletarProduto.this, "Produto Não Possui Fornecedor", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void setBtnRemoverMarca() {
+        btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
+        btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(marca != null) {
+                    alertaRemoverMarca.show();
+                } else {
+                    Toast.makeText(AlterarDeletarProduto.this, "Produto Não Possui Marca", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -118,7 +169,7 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 if (resultCode == RESULT_OK) {
                     fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
 
-                    if(fornecedor != null) {
+                    if (fornecedor != null) {
                         txtFornecedor.setText(fornecedor.getNome());
                         Toast.makeText(this, "Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.", Toast.LENGTH_SHORT).show();
                     }
@@ -127,31 +178,42 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                 }
                 break;
             case ESCOLHER_MARCA:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     marca = (Marca) data.getSerializableExtra("marca");
 
-                    if(marca != null) {
+                    if (marca != null) {
                         txtMarca.setText(marca.getNome());
                         Toast.makeText(this, "Marca Escolhida. Aperte em \"Atualizar\" para Salvar", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case TELA_COD_BARRA_FORNECEDOR:
+                if (resultCode == RESULT_OK) {
+                    ArrayList<CodBarraFornecedor> codigos = (ArrayList<CodBarraFornecedor>) data.getSerializableExtra("codigos");
+
+                    if (codigos.equals(produto.getCod_barra_fornecedor())) {
+                        Toast.makeText(this, "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
+                    } else {
+                        produto.setCod_barra_fornecedor(codigos);
+                        Toast.makeText(this, "A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"", Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
         }
     }
 
     @Override
-    protected void setAlertBuilderDeletar() {
+    protected void setAlertBuilderDeletar(final Produto entidade) {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Produto");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + entidade.getCod_barra() + " - " + entidade.getDescricao() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean result = produtoManager.deletar(produto.getCod_barra());
+                boolean result = produtoManager.deletar(entidade.getCod_barra());
 
                 if (result) {
                     Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
@@ -172,10 +234,10 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
     }
 
     @Override
-    protected void setAlertBuilderAtualizar() {
+    protected void setAlertBuilderAtualizar(final Produto entidade) {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Produto");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + entidade.getCod_barra() + " - " + entidade.getDescricao() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -200,8 +262,9 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
                     toUpdate.setPreco(Double.parseDouble(preco));
                     toUpdate.setFornecedor(fornecedor);
                     toUpdate.setMarca(marca);
+                    toUpdate.setCod_barra_fornecedor(produto.getCod_barra_fornecedor());
 
-                    boolean result = produtoManager.atualizar(toUpdate, produto.getCod_barra());
+                    boolean result = produtoManager.atualizar(toUpdate, entidade.getCod_barra());
 
                     if (result) {
                         Toast.makeText(AlterarDeletarProduto.this, "Produto Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
@@ -222,6 +285,50 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setAlertaRemoverFornecedor() {
+        alertaRemoverFornecedor = new AlertDialog.Builder(this);
+        alertaRemoverFornecedor.setTitle("Remover Fornecedor");
+        alertaRemoverFornecedor.setMessage("Tem Certeza Que Deseja Remover o Fornecedor Deste Produto?");
+
+        alertaRemoverFornecedor.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fornecedor = null;
+                txtFornecedor.getText().clear();
+                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alertaRemoverFornecedor.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Não Foi Removido", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setAlertaRemoverMarca() {
+        alertaRemoverMarca = new AlertDialog.Builder(this);
+        alertaRemoverMarca.setTitle("Remover Marca");
+        alertaRemoverMarca.setMessage("Tem Certeza Que Deseja Remover a Marca Deste Produto?");
+
+        alertaRemoverMarca.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                marca = null;
+                txtMarca.getText().clear();
+                Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alertaRemoverMarca.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AlterarDeletarProduto.this, "Marca Não Foi Removida", Toast.LENGTH_SHORT).show();
             }
         });
     }

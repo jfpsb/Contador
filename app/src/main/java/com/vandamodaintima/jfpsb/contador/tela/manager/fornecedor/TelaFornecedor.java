@@ -14,16 +14,13 @@ import android.view.ViewStub;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.CadastrarFornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.CadastrarFornecedorSemInternetContainer;
-import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.PesquisarFornecedor;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-public class TelaFornecedor extends ActivityBase {
+public class TelaFornecedor extends TabLayoutActivityBase {
 
     private CadastrarFornecedor cadastrarFornecedor;
     private PesquisarFornecedor pesquisarFornecedor;
@@ -31,6 +28,10 @@ public class TelaFornecedor extends ActivityBase {
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
     private static final int CADASTRAR_SEM_INTERNET = 3;
+
+    public TelaFornecedor() {
+        super(new String[]{"Pesquisar", "Cadastrar"});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class TelaFornecedor extends ActivityBase {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PEDIDO_PERMISSAO_READ:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
                     AbrirEscolhaDiretorioActivity();
                 }
@@ -105,24 +106,23 @@ public class TelaFornecedor extends ActivityBase {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case ESCOLHER_DIRETORIO:
-                if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
 
                     ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
 
                     boolean result = manipulaExcel.ExportaFornecedor(diretorio);
 
-                    if(result) {
+                    if (result) {
                         Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
 
             case CADASTRAR_SEM_INTERNET:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     pesquisarFornecedor.populaListView();
                 }
                 break;

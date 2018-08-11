@@ -20,6 +20,7 @@ public class DAOMarca extends DAO<Marca> {
         try {
             ContentValues contentValues = new ContentValues();
 
+            contentValues.put("id", objeto.getId());
             contentValues.put("nome", objeto.getNome());
 
             return conn.insertOrThrow(TABELA, "", contentValues);

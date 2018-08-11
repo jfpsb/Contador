@@ -3,9 +3,18 @@ package com.vandamodaintima.jfpsb.contador.entidade;
 import java.io.Serializable;
 
 public class Marca implements Serializable {
+    private long id;
     private String nome;
 
-    private static final String[] colunas = new String[]{"nome as _id"};
+    private static final String[] colunas = new String[]{"id as _id", "nome"};
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;

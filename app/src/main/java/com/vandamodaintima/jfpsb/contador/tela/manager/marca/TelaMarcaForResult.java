@@ -6,11 +6,15 @@ import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 
-public class TelaMarcaForResult extends ActivityBase {
+public class TelaMarcaForResult extends TabLayoutActivityBase {
     private CadastrarMarca cadastrarMarca;
     private PesquisarMarca pesquisarMarca;
+
+    public TelaMarcaForResult() {
+        super(new String[]{"Pesquisar", "Cadastrar"});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

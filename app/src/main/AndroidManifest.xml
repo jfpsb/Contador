@@ -63,7 +63,7 @@
             android:label="@string/title_activity_visualizar_produtos_contagem"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.ActivityBase"
+            android:name=".tela.TabLayoutActivityBase"
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
@@ -97,6 +97,10 @@
 
         <activity android:name=".tela.manager.marca.TelaMarcaForResult"
             android:label="Escolher Marca"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity android:name=".tela.manager.codbarrafornecedor.TelaCodBarraFornecedor"
+            android:label="Cód. de Barras de Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
     </application>

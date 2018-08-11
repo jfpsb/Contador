@@ -10,16 +10,20 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 
 /**
  * Pesquisa e cadastra fornecedor e ao final retorna o fornecedor cadastrado ou escolhido
  */
-public class TelaFornecedorForResult extends ActivityBase {
+public class TelaFornecedorForResult extends TabLayoutActivityBase {
     private CadastrarFornecedor cadastrarFornecedor;
     private PesquisarFornecedor pesquisarFornecedor;
 
     private static final int CADASTRAR_SEM_INTERNET = 3;
+
+    public TelaFornecedorForResult() {
+        super(new String[]{"Pesquisar", "Cadastrar"});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,6 @@ public class TelaFornecedorForResult extends ActivityBase {
         pesquisarFornecedor = new PesquisarFornecedorEmProduto();
 
         setViewPagerTabLayout(pesquisarFornecedor, cadastrarFornecedor);
-    }
-
-    @Override
-    protected void setManagers() {
-
     }
 
     @Override
@@ -65,7 +64,7 @@ public class TelaFornecedorForResult extends ActivityBase {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CADASTRAR_SEM_INTERNET:
-                if(resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     Fornecedor fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
                     setResultado(fornecedor);
                 }

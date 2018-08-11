@@ -20,7 +20,7 @@ import com.vandamodaintima.jfpsb.contador.LojaCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Loja;
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
 /**
@@ -32,10 +32,6 @@ public class PesquisarLoja extends TelaPesquisa {
     private ListView listView;
     private static LojaCursorAdapter lojaCursorAdapter;
     private EditText txtNome;
-
-    public PesquisarLoja() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +46,7 @@ public class PesquisarLoja extends TelaPesquisa {
 
     @Override
     protected void setManagers() {
-        lojaManager = new LojaManager(((ActivityBase) getActivity()).getConn());
+        lojaManager = new LojaManager(((TabLayoutActivityBase) getActivity()).getConn());
     }
 
     @Override
@@ -148,7 +144,7 @@ public class PesquisarLoja extends TelaPesquisa {
             cursorPesquisa = lojaManager.listarCursor();
 
             if(cursorPesquisa.getCount() == 0)
-                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
 
             lojaCursorAdapter.changeCursor(cursorPesquisa);
         }catch (Exception e) {

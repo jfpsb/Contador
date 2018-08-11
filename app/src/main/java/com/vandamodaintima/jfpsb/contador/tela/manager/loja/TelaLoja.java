@@ -3,15 +3,17 @@ package com.vandamodaintima.jfpsb.contador.tela.manager.loja;
 import android.os.Bundle;
 import android.view.ViewStub;
 
-import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.manager.loja.CadastrarLoja;
+import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.manager.loja.PesquisarLoja;
 
-public class TelaLoja extends ActivityBase {
+public class TelaLoja extends TabLayoutActivityBase {
 
     private CadastrarLoja telaCadastrarLoja;
     private PesquisarLoja telaPesquisarLoja;
+
+    public TelaLoja() {
+        super(new String[]{"Pesquisar", "Cadastrar"});
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
