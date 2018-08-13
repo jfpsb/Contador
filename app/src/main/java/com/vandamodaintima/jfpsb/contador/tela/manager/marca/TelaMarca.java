@@ -20,7 +20,7 @@ public class TelaMarca extends TabLayoutActivityBase {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_loja);
+        stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
         cadastrarMarca = new CadastrarMarca();

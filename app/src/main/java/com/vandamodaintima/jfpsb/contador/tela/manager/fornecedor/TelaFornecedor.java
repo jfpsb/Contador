@@ -38,7 +38,7 @@ public class TelaFornecedor extends TabLayoutActivityBase {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_fornecedor);
+        stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
         cadastrarFornecedor = new CadastrarFornecedor();

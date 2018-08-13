@@ -2,11 +2,11 @@ package com.vandamodaintima.jfpsb.contador.tela.manager.codbarrafornecedor;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,7 +19,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
 
-public class PesquisarCodBarraFornecedor extends TelaPesquisa {
+public class ListarCodBarraFornecedor extends TelaPesquisa {
     private Produto produto;
 
     private ListView listView;
@@ -50,13 +50,20 @@ public class PesquisarCodBarraFornecedor extends TelaPesquisa {
 
     @Override
     protected void setViews() {
-        txtQuantCodigos = viewInflate.findViewById(R.id.txtQuantCodigos);
-        txtCodBarra = viewInflate.findViewById(R.id.txtCodBarra);
-        txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
-        listView = viewInflate.findViewById(R.id.listViewCodigos);
+        if (produto.getCod_barra() != null && produto.getDescricao() != null) {
+            ViewStub stub = viewInflate.findViewById(R.id.inserirCodBarraFornecedorStub);
+            stub.setLayoutResource(R.layout.dado_produto_cod_barra_fornecedor);
+            stub.inflate();
 
-        txtCodBarra.setText(produto.getCod_barra());
-        txtDescricao.setText(produto.getDescricao());
+            txtCodBarra = viewInflate.findViewById(R.id.txtCodBarraProduto);
+            txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
+
+            txtCodBarra.setText(produto.getCod_barra());
+            txtDescricao.setText(produto.getDescricao());
+        }
+
+        txtQuantCodigos = viewInflate.findViewById(R.id.txtQuantCodigos);
+        listView = viewInflate.findViewById(R.id.listViewCodigos);
 
         setListView();
     }
@@ -67,8 +74,8 @@ public class PesquisarCodBarraFornecedor extends TelaPesquisa {
             arrayAdapter = new CodBarraFornecedorArrayAdapter(getContext(), produto.getCod_barra_fornecedor());
             listView.setAdapter(arrayAdapter);
 
-            if (produto.getCod_barra_fornecedor().size() == 0) {
-                Toast.makeText(getContext(), "Não Há Códigos de Barras de Fornecedor Neste Produto", Toast.LENGTH_LONG).show();
+            if (produto.getDescricao() != null && produto.getCod_barra() != null && produto.getCod_barra_fornecedor().size() == 0) {
+                Toast.makeText(getContext(), "Não Há Códigos de Barras de Fornecedor Neste Produto", Toast.LENGTH_SHORT).show();
             }
 
             txtQuantCodigos.setText(String.valueOf(produto.getCod_barra_fornecedor().size()));

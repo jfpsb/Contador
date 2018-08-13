@@ -25,25 +25,28 @@ import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.tela.manager.marca.TelaMarcaForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
 public class CadastrarProduto extends FragmentBase {
-
     private Button btnCadastrar;
     private Button btnEscolherFornecedor;
     private Button btnEscolherMarca;
+    private Button btnGerenciarCodBarraFornecedor;
+    private Button btnRemoverFornecedor;
+    private Button btnRemoverMarca;
     private EditText txtCodBarra;
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
     private EditText txtMarca;
-    private EditText txtCodBarraFornecedor;
     private TextView lblCodRepetido;
 
     private ProdutoManager produtoManager;
 
+    private Produto produto = new Produto();
     private Fornecedor fornecedor;
     private Marca marca;
 
@@ -51,10 +54,10 @@ public class CadastrarProduto extends FragmentBase {
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
+    private static final int TELA_COD_BARRA_FORNECEDOR = 3;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (savedInstanceState == null)
             savedInstanceState = new Bundle();
 
@@ -78,6 +81,9 @@ public class CadastrarProduto extends FragmentBase {
 
         setBtnEscolherFornecedor();
         setBtnEscolherMarca();
+        setBtnGerenciarCodBarraFornecedor();
+        setBtnRemoverFornecedor();
+        setBtnRemoverMarca();
         setBtnCadastrar();
         setTxtCodBarra();
     }
@@ -106,6 +112,43 @@ public class CadastrarProduto extends FragmentBase {
         });
     }
 
+    private void setBtnGerenciarCodBarraFornecedor() {
+        btnGerenciarCodBarraFornecedor = viewInflate.findViewById(R.id.btnGerenciarCodBarraFornecedor);
+        btnGerenciarCodBarraFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
+                intent.putExtra("produto", produto);
+
+                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
+            }
+        });
+    }
+
+    private void setBtnRemoverFornecedor() {
+        btnRemoverFornecedor = viewInflate.findViewById(R.id.btnRemoverFornecedor);
+        btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fornecedor = null;
+                txtFornecedor.getText().clear();
+                Toast.makeText(getContext(), "Fornecedor Foi Removido Deste Produto", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setBtnRemoverMarca() {
+        btnRemoverMarca = viewInflate.findViewById(R.id.btnRemoverMarca);
+        btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                marca = null;
+                txtMarca.getText().clear();
+                Toast.makeText(getContext(), "Marca Foi Removida Deste Produto", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -127,17 +170,26 @@ public class CadastrarProduto extends FragmentBase {
                     }
                 }
                 break;
+            case TELA_COD_BARRA_FORNECEDOR:
+                if (resultCode == Activity.RESULT_OK) {
+                    Produto produtoAlterado = (Produto) data.getSerializableExtra("produto");
+
+                    if (produtoAlterado.equals(produto)) {
+                        Toast.makeText(getContext(), "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
+                    } else {
+                        produto = produtoAlterado;
+                        Toast.makeText(getContext(), "A Lista de Códigos Será Consolidada ao Apertar em \"Cadastrar\"", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
     }
 
     private void setBtnCadastrar() {
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
-
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Produto produto = new Produto();
-
                 try {
                     String cod_barra = txtCodBarra.getText().toString();
                     String descricao = txtDescricao.getText().toString();
@@ -153,7 +205,6 @@ public class CadastrarProduto extends FragmentBase {
                         throw new Exception("Digite um Valor de Preço Válido!");
 
                     produto.setCod_barra(cod_barra);
-                    //TODO: lista codigos
                     produto.setPreco(Double.parseDouble(preco));
                     produto.setDescricao(descricao.toUpperCase());
                     produto.setFornecedor(fornecedor);
@@ -170,14 +221,13 @@ public class CadastrarProduto extends FragmentBase {
                         txtPreco.getText().clear();
                         txtDescricao.getText().clear();
                         txtCodBarra.getText().clear();
-                        txtCodBarraFornecedor.getText().clear();
                         txtFornecedor.getText().clear();
                         txtMarca.getText().clear();
                     } else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Log.e("Contador", e.getMessage(), e);
+                    Log.e(LOG, e.getMessage(), e);
                     Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }

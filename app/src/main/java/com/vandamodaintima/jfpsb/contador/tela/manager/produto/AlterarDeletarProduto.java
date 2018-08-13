@@ -191,12 +191,12 @@ public class AlterarDeletarProduto extends AlterarDeletarEntidade<Produto> {
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
-                    ArrayList<CodBarraFornecedor> codigos = (ArrayList<CodBarraFornecedor>) data.getSerializableExtra("codigos");
+                    Produto produtoAlterado = (Produto) data.getSerializableExtra("produto");
 
-                    if (codigos.equals(produto.getCod_barra_fornecedor())) {
+                    if (produtoAlterado.getCod_barra_fornecedor().equals(produto.getCod_barra_fornecedor())) {
                         Toast.makeText(this, "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
                     } else {
-                        produto.setCod_barra_fornecedor(codigos);
+                        produto.setCod_barra_fornecedor(produtoAlterado.getCod_barra_fornecedor());
                         Toast.makeText(this, "A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"", Toast.LENGTH_LONG).show();
                     }
                 }

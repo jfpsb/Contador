@@ -34,7 +34,7 @@ public class TelaProduto extends TabLayoutActivityBase {
     private AlphaAnimation outAnimation;
     private LinearLayout progressBarHolder;
 
-    private static TextView txtProgressStatus;
+    private TextView txtProgressStatus;
 
     private static final int ESCOLHER_ARQUIVO = 1;
     private static final int ESCOLHER_DIRETORIO = 2;
@@ -49,8 +49,12 @@ public class TelaProduto extends TabLayoutActivityBase {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_produto);
+        stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
+
+        ViewStub stub2 = findViewById(R.id.telaLayoutViewStub);
+        stub2.setLayoutResource(R.layout.content_tela_produto);
+        stub2.inflate();
 
         cadastrarProduto = new CadastrarProduto();
         pesquisarProduto = new PesquisarProduto();

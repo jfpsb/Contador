@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class CadastrarCodBarraFornecedor extends FragmentBase {
         if(savedInstanceState == null)
             savedInstanceState = new Bundle();
 
-        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_cod_barra_fornecedor);
+        savedInstanceState.putInt("layout", R.layout.fragment_inserir_cod_barra_fornecedor);
 
         produto = (Produto) getArguments().getSerializable("produto");
 
@@ -43,12 +44,19 @@ public class CadastrarCodBarraFornecedor extends FragmentBase {
 
     @Override
     protected void setViews() {
-        txtCodBarraProduto = viewInflate.findViewById(R.id.txtCodBarraProduto);
-        txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
-        txtCodBarra = viewInflate.findViewById(R.id.txtCodBarra);
+        if(produto.getCod_barra() != null && produto.getDescricao() != null) {
+            ViewStub stub = viewInflate.findViewById(R.id.inserirCodBarraFornecedorStub);
+            stub.setLayoutResource(R.layout.dado_produto_cod_barra_fornecedor);
+            stub.inflate();
 
-        txtCodBarraProduto.setText(produto.getCod_barra());
-        txtDescricao.setText(produto.getDescricao());
+            txtCodBarraProduto = viewInflate.findViewById(R.id.txtCodBarraProduto);
+            txtDescricao = viewInflate.findViewById(R.id.txtDescricao);
+
+            txtCodBarraProduto.setText(produto.getCod_barra());
+            txtDescricao.setText(produto.getDescricao());
+        }
+
+        txtCodBarra = viewInflate.findViewById(R.id.txtCodBarra);
 
         setBtnInserir();
     }
@@ -62,7 +70,7 @@ public class CadastrarCodBarraFornecedor extends FragmentBase {
                 String cod_barra_fornecedor = txtCodBarra.getText().toString();
 
                 try {
-                    if(cod_barra_fornecedor.isEmpty())
+                    if (cod_barra_fornecedor.isEmpty())
                         throw new Exception("Campo de Código de Barras de Fornecedor Não Pode Ficar Vazio!");
 
                     CodBarraFornecedor codBarraFornecedor = new CodBarraFornecedor();
@@ -70,7 +78,7 @@ public class CadastrarCodBarraFornecedor extends FragmentBase {
                     codBarraFornecedor.setProduto(produto);
                     codBarraFornecedor.setCodigo(cod_barra_fornecedor);
 
-                    if(produto.getCod_barra_fornecedor().contains(codBarraFornecedor))
+                    if (produto.getCod_barra_fornecedor().contains(codBarraFornecedor))
                         throw new Exception("Este Código Já Foi Adicionado");
 
                     produto.getCod_barra_fornecedor().add(codBarraFornecedor);
@@ -78,12 +86,11 @@ public class CadastrarCodBarraFornecedor extends FragmentBase {
                     Toast.makeText(getContext(), "Código de Barras de Fornecedor Adicionado à Lista", Toast.LENGTH_SHORT).show();
 
                     Fragment fragment = ((TabLayoutActivityBase) getActivity()).getPagerAdapter().getItem(0);
-                    ((PesquisarCodBarraFornecedor) fragment).populaListView();
+                    ((ListarCodBarraFornecedor) fragment).populaListView();
 
                     txtCodBarra.getText().clear();
-                }
-                catch (Exception e) {
-                    Log.e("Contador", e.getMessage(), e);
+                } catch (Exception e) {
+                    Log.e(LOG, e.getMessage(), e);
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }

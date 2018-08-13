@@ -10,7 +10,7 @@ import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 
 public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
     private CadastrarCodBarraFornecedor inserirCodBarraFornecedor;
-    private PesquisarCodBarraFornecedor listarCodBarraFornecedor;
+    private ListarCodBarraFornecedor listarCodBarraFornecedor;
 
     private Bundle bundle;
 
@@ -23,14 +23,16 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_loja);
+        stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
         inserirCodBarraFornecedor = new CadastrarCodBarraFornecedor();
-        listarCodBarraFornecedor = new PesquisarCodBarraFornecedor();
+        listarCodBarraFornecedor = new ListarCodBarraFornecedor();
+
+        Produto produto = (Produto) getIntent().getSerializableExtra("produto");
 
         bundle = new Bundle();
-        bundle.putSerializable("produto", getIntent().getSerializableExtra("produto"));
+        bundle.putSerializable("produto", produto);
 
         inserirCodBarraFornecedor.setArguments(bundle);
         listarCodBarraFornecedor.setArguments(bundle);
@@ -39,17 +41,11 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
     }
 
     @Override
-    protected void setManagers() {
-
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         Produto produto = (Produto) bundle.getSerializable("produto");
 
         Intent intent = new Intent();
-
-        intent.putExtra("codigos", produto.getCod_barra_fornecedor());
+        intent.putExtra("produto", produto);
 
         setResult(RESULT_OK, intent);
 

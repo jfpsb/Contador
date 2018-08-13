@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 /**
  * Created by jfpsb on 09/02/2018.
@@ -22,28 +23,30 @@ public class DAOProduto extends DAO<Produto> {
     @Override
     public long inserir(Produto objeto) {
         try {
-            ContentValues contentValues = new ContentValues();
+            conn.beginTransaction();
 
-            contentValues.put("cod_barra", objeto.getCod_barra());
-            contentValues.put("marca", objeto.getMarca().getNome());
-            contentValues.put("descricao", objeto.getDescricao());
-            contentValues.put("preco", objeto.getPreco());
+            ContentValues contentValues = getContentValues(objeto);
 
-            if (objeto.getFornecedor() != null) {
-                contentValues.put("fornecedor", objeto.getFornecedor().getCnpj());
-            } else {
-                contentValues.putNull("fornecedor");
+            conn.insertOrThrow(TABELA, null, contentValues);
+
+            for (int i = 0; i < objeto.getCod_barra_fornecedor().size(); i++) {
+                CodBarraFornecedor codigo = objeto.getCod_barra_fornecedor().get(i);
+
+                ContentValues content = new ContentValues();
+
+                content.put("produto", codigo.getProduto().getCod_barra());
+                content.put("codigo", codigo.getCodigo());
+
+                conn.insertOrThrow("cod_barra_fornecedor", null, content);
             }
 
-            if (objeto.getMarca() != null) {
-                contentValues.put("marca", objeto.getMarca().getNome());
-            } else {
-                contentValues.putNull("marca");
-            }
+            conn.setTransactionSuccessful();
 
-            return conn.insertOrThrow(TABELA, "", contentValues);
+            return 1;
         } catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
+            Log.e(ActivityBase.LOG, e.getMessage(), e);
+        } finally {
+            conn.endTransaction();
         }
 
         return -1;
@@ -80,12 +83,12 @@ public class DAOProduto extends DAO<Produto> {
         try {
             conn.beginTransaction();
 
-            ContentValues contentValues = getContentValuesAtualizar(objeto);
+            ContentValues contentValues = getContentValues(objeto);
             conn.update(TABELA, contentValues, "cod_barra = ?", new String[]{String.valueOf(chaves[0])});
 
-            conn.delete("cod_barra_fornecedor", "produto = ?", new String[] { String.valueOf(chaves[0]) });
+            conn.delete("cod_barra_fornecedor", "produto = ?", new String[]{String.valueOf(chaves[0])});
 
-            for(int i = 0; i < objeto.getCod_barra_fornecedor().size(); i++) {
+            for (int i = 0; i < objeto.getCod_barra_fornecedor().size(); i++) {
                 CodBarraFornecedor codBarraFornecedor = objeto.getCod_barra_fornecedor().get(i);
 
                 ContentValues contentCodBarraFornecedor = new ContentValues();
@@ -99,7 +102,7 @@ public class DAOProduto extends DAO<Produto> {
 
             return 1;
         } catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
+            Log.e(ActivityBase.LOG, e.getMessage(), e);
         } finally {
             conn.endTransaction();
         }
@@ -107,23 +110,24 @@ public class DAOProduto extends DAO<Produto> {
         return -1;
     }
 
-    private ContentValues getContentValuesAtualizar(Produto toUpdate) {
+    private ContentValues getContentValues(Produto produto) {
         ContentValues contentValues = new ContentValues();
 
-        if (toUpdate.getFornecedor() != null) {
-            contentValues.put("fornecedor", toUpdate.getFornecedor().getCnpj());
+        contentValues.put("cod_barra", produto.getCod_barra());
+        contentValues.put("descricao", produto.getDescricao());
+        contentValues.put("preco", produto.getPreco());
+
+        if (produto.getFornecedor() != null) {
+            contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
         } else {
             contentValues.putNull("fornecedor");
         }
 
-        if (toUpdate.getMarca() != null) {
-            contentValues.put("marca", toUpdate.getMarca().getNome());
+        if (produto.getMarca() != null) {
+            contentValues.put("marca", produto.getMarca().getNome());
         } else {
             contentValues.putNull("marca");
         }
-
-        contentValues.put("descricao", toUpdate.getDescricao());
-        contentValues.put("preco", toUpdate.getPreco());
 
         return contentValues;
     }
@@ -133,7 +137,7 @@ public class DAOProduto extends DAO<Produto> {
         try {
             return conn.delete(TABELA, "cod_barra = ?", new String[]{String.valueOf(chaves[0])});
         } catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
+            Log.e(ActivityBase.LOG, e.getMessage(), e);
         }
 
         return -1;
@@ -144,7 +148,7 @@ public class DAOProduto extends DAO<Produto> {
         try {
             return conn.query(TABELA, Produto.getColunas(), selection, selectionArgs, groupBy, having, orderBy, limit);
         } catch (Exception e) {
-            Log.e("Contador", e.getMessage(), e);
+            Log.e(ActivityBase.LOG, e.getMessage(), e);
         }
 
         return null;

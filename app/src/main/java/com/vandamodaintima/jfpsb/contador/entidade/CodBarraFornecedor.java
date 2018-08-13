@@ -31,8 +31,16 @@ public class CodBarraFornecedor implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof CodBarraFornecedor && ((CodBarraFornecedor) o).getCodigo().equals(codigo) && ((CodBarraFornecedor) o).getProduto().getCod_barra().equals(produto.getCod_barra())) {
-            return true;
+        if(o instanceof CodBarraFornecedor) {
+            if(((CodBarraFornecedor) o).getProduto() != null && ((CodBarraFornecedor) o).getProduto().getCod_barra() != null) {
+                if(((CodBarraFornecedor) o).getCodigo().equals(codigo) && ((CodBarraFornecedor) o).getProduto().getCod_barra().equals(produto.getCod_barra())) {
+                    return true;
+                }
+            } else {
+                if(((CodBarraFornecedor) o).getCodigo().equals(codigo)) {
+                    return true;
+                }
+            }
         }
 
         return false;

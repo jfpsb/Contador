@@ -8,55 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableRow>
+        <ViewStub
+            android:id="@+id/inserirCodBarraFornecedorStub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Dados do Produto"
-                android:textSize="26sp" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cód. de Barras:"
-                android:textSize="22sp" />
-        </TableRow>
-
-        <TableRow>
-
-            <EditText
-                android:id="@+id/txtCodBarra"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Descrição:"
-                android:textSize="22sp" />
-        </TableRow>
-
-        <TableRow>
-
-            <EditText
-                android:id="@+id/txtDescricao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false" />
-        </TableRow>
+        </ViewStub>
 
         <TableRow android:layout_marginTop="5dip">
 

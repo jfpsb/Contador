@@ -69,4 +69,22 @@ public class Produto implements Serializable {
     public static String[] getHeaders() {
         return headers;
     }
+
+    /**
+     * Cria cópia do produto passado como parâmetro
+     * @param p Produto a ser copiado para novo objeto
+     * @return Cópia do produto em novo objeto
+     */
+    public static Produto criar(Produto p) {
+        Produto produto = new Produto();
+
+        produto.setCod_barra(p.getCod_barra());
+        produto.setDescricao(p.getDescricao());
+        produto.setFornecedor(p.getFornecedor());
+        produto.setPreco(p.getPreco());
+        produto.setCod_barra_fornecedor(p.getCod_barra_fornecedor());
+        produto.setMarca(p.getMarca());
+
+        return produto;
+    }
 }

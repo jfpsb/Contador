@@ -20,7 +20,7 @@ public class TelaContador extends TabLayoutActivityBase {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_contador);
+        stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
         cadastrarContagem = new CadastrarContagem();
