@@ -90,9 +90,9 @@ public class CadastrarMarca extends FragmentBase {
             Fragment fragment = ((TabLayoutActivityBase) (getActivity())).getPagerAdapter().getItem(0);
             ((PesquisarMarca) fragment).populaListView();
 
-            txtNome.setText("");
+            txtNome.getText().clear();
         } catch (Exception e) {
-            Log.i("Contador", e.getMessage(), e);
+            Log.i(LOG, e.getMessage(), e);
         }
     }
 }

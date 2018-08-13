@@ -124,7 +124,7 @@ public class DAOProduto extends DAO<Produto> {
         }
 
         if (produto.getMarca() != null) {
-            contentValues.put("marca", produto.getMarca().getNome());
+            contentValues.put("marca", produto.getMarca().getId());
         } else {
             contentValues.putNull("marca");
         }

@@ -11,7 +11,7 @@ public class CadastrarMarcaEmProduto extends CadastrarMarca {
             ((TelaMarcaForResult) (getActivity())).setResultado(marca);
         }
         catch (Exception e) {
-            Log.i("Contador", e.getMessage(), e);
+            Log.i(LOG, e.getMessage(), e);
         }
     }
 }

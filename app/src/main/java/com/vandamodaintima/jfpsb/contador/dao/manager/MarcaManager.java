@@ -57,9 +57,9 @@ public class MarcaManager extends Manager<Marca> {
 
     @Override
     public Cursor listarCursorPorChave(Object... chaves) {
-        String nome = String.valueOf(chaves[0]);
+        long id = (long) chaves[0];
 
-        return daoEntidade.select("id = ?", new String[]{nome}, null, null, "nome", null);
+        return daoEntidade.select("id = ?", new String[]{String.valueOf(id)}, null, null, "nome", null);
     }
 
     public Cursor listarCursorPorNome(String nome) {

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.dao.manager;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.CodBarraFornecedorArrayAdapter;
@@ -10,6 +11,7 @@ import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 import java.util.ArrayList;
 
@@ -105,7 +107,7 @@ public class ProdutoManager extends Manager<Produto> {
             Fornecedor fornecedor = fornecedorManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("fornecedor")));
             produto.setFornecedor(fornecedor);
 
-            Marca marca = marcaManager.listarPorChave(c.getString(c.getColumnIndexOrThrow("marca")));
+            Marca marca = marcaManager.listarPorChave(c.getLong(c.getColumnIndexOrThrow("marca")));
             produto.setMarca(marca);
 
             produto.setDescricao(c.getString(c.getColumnIndexOrThrow("descricao")));
