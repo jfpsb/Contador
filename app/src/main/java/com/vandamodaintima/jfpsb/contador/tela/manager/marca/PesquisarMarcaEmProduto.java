@@ -33,7 +33,8 @@ public class PesquisarMarcaEmProduto extends PesquisarMarca {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
                 Marca marca = new Marca();
-                marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 setAlertaEscolha(marca);
             }

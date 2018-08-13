@@ -1,4 +1,4 @@
-CREATE TABLE produto1 AS SELECT cod_barra, cod_barra_fornecedor, nome as marca_nome, fornecedor, descricao, preco FROM produto, marca WHERE marca = id OR marca IS NULL OR marca = 0;
+CREATE TABLE produto1 AS SELECT cod_barra, cod_barra_fornecedor, fornecedor, nome as marca_nome, marca, descricao, preco FROM produto LEFT JOIN marca ON produto.marca = marca.id;
 
 CREATE TABLE marca1 AS SELECT * FROM marca;
 
