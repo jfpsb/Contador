@@ -223,6 +223,10 @@ public class CadastrarProduto extends FragmentBase {
                         txtCodBarra.getText().clear();
                         txtFornecedor.getText().clear();
                         txtMarca.getText().clear();
+
+                        fornecedor = null;
+                        marca = null;
+                        produto = new Produto();
                     } else {
                         Toast.makeText(viewInflate.getContext(), "Erro ao Cadastrar Produto.", Toast.LENGTH_SHORT).show();
                     }

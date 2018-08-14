@@ -41,7 +41,7 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
+    public void onBackPressed() {
         Produto produto = (Produto) bundle.getSerializable("produto");
 
         Intent intent = new Intent();
@@ -49,6 +49,6 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
 
         setResult(RESULT_OK, intent);
 
-        return super.onSupportNavigateUp();
+        super.onBackPressed();
     }
 }
