@@ -9,6 +9,9 @@ import android.util.Log;
 import com.vandamodaintima.jfpsb.contador.entidade.CodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
+import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
+
+import java.util.ArrayList;
 
 /**
  * Created by jfpsb on 09/02/2018.
@@ -34,7 +37,7 @@ public class DAOProduto extends DAO<Produto> {
 
                 ContentValues content = new ContentValues();
 
-                content.put("produto", codigo.getProduto().getCod_barra());
+                content.put("produto", objeto.getCod_barra());
                 content.put("codigo", codigo.getCodigo());
 
                 conn.insertOrThrow("cod_barra_fornecedor", null, content);
@@ -52,27 +55,39 @@ public class DAOProduto extends DAO<Produto> {
         return -1;
     }
 
-    public long inserirBulk(Produto produto) {
+    public long inserirBulk(ArrayList<Produto> produtos, TelaProduto.Tarefa.Progresso progresso) {
         try {
-            ContentValues contentValues = new ContentValues();
+            if (produtos.size() == 0)
+                throw new Exception("Não Há Produtos");
 
-            contentValues.put("cod_barra", produto.getCod_barra());
-            contentValues.put("descricao", produto.getDescricao());
-            contentValues.put("preco", produto.getPreco());
+            conn.beginTransaction();
 
-            if (produto.getMarca() != null) {
-                contentValues.put("marca", produto.getMarca().getNome());
+            for (Produto produto : produtos) {
+                ContentValues contentValues = getContentValues(produto);
+
+                conn.insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+                for (CodBarraFornecedor codigo : produto.getCod_barra_fornecedor()) {
+                    ContentValues contentCodBarraFornecedor = new ContentValues();
+
+                    contentCodBarraFornecedor.put("produto", produto.getCod_barra());
+                    contentCodBarraFornecedor.put("codigo", codigo.getCodigo());
+
+                    conn.insertWithOnConflict("cod_barra_fornecedor", null, contentCodBarraFornecedor, SQLiteDatabase.CONFLICT_IGNORE);
+                }
+
+                progresso.publish("Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + " Cadastrado");
             }
 
-            if (produto.getFornecedor() != null) {
-                contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
-            } else {
-                contentValues.putNull("fornecedor");
-            }
+            conn.setTransactionSuccessful();
 
-            return conn.insertWithOnConflict(TABELA, "", contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            return 1;
         } catch (SQLException e) {
             Log.e("Contador", e.getMessage(), e);
+        } catch (Exception ex) {
+            Log.e("Contador", ex.getMessage(), ex);
+        } finally {
+            conn.endTransaction();
         }
 
         return -1;

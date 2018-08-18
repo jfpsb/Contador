@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -58,7 +59,7 @@ public class ManipulaExcel {
     public int ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
         daoProduto = new DAOProduto(conexaoBanco.conexao());
 
-        Produto[] produtos = null;
+        ArrayList<Produto> produtos = new ArrayList<>();
 
         InputStream inputStream = null;
 
@@ -79,6 +80,7 @@ public class ManipulaExcel {
 
             Row auxRow = arquivoExcel.getPlanilha().getRow(0);
 
+            //TODO: Checar quantidade e nomes de headers
             if (auxRow.getPhysicalNumberOfCells() != 3) {
                 throw new Exception("Planilha Configurada de Forma Errada. A Planilha Deve Conter Três Colunas contendo Cód. de Barras do Produto, Descrição e Preço.");
             }
@@ -86,8 +88,6 @@ public class ManipulaExcel {
             int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
 
             progresso.publish(rows + " Produto(s) Encontrado(s)");
-
-            produtos = new Produto[rows - 1];
 
             try {
 
@@ -122,18 +122,15 @@ public class ManipulaExcel {
                         produto.setFornecedor(null);
 
                         if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null) {
-                            produtos[i - 1] = produto;
+                            produtos.add(produto);
                         }
                     }
                 }
 
-                for (int i = 0; i < produtos.length; i++) {
-                    long result = daoProduto.inserirBulk(produtos[i]);
+                long result = daoProduto.inserirBulk(produtos, progresso);
 
-                    if (result != -1) {
-                        progresso.publish("Produto com Cód. " + produtos[i].getCod_barra() + " Cadastrado");
-                        ProdutosCadastrados++;
-                    }
+                if(result == 1) {
+                    progresso.publish("Produtos Cadastrados com Sucesso");
                 }
             } catch (Exception e) {
                 Log.e("Contador", e.getMessage(), e);
