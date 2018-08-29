@@ -41,7 +41,7 @@ public class TelaProduto extends TabLayoutActivityBase {
     private static final int PEDIDO_PERMISSAO_READ = 3;
 
     public TelaProduto() {
-        super(new String[] { "Pesquisar", "Cadastrar" });
+        super(new String[]{"Pesquisar", "Cadastrar"});
     }
 
     @Override
@@ -97,7 +97,7 @@ public class TelaProduto extends TabLayoutActivityBase {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PEDIDO_PERMISSAO_READ:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
                     AbrirEscolhaDiretorioActivity();
                 }
@@ -129,17 +129,16 @@ public class TelaProduto extends TabLayoutActivityBase {
                 }
                 break;
             case ESCOLHER_DIRETORIO:
-                if(resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
+                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
 
                     ManipulaExcel manipulaExcel = new ManipulaExcel(getConn());
 
                     boolean result = manipulaExcel.ExportaFornecedor(diretorio);
 
-                    if(result) {
+                    if (result) {
                         Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -147,7 +146,7 @@ public class TelaProduto extends TabLayoutActivityBase {
         }
     }
 
-    public class Tarefa extends AsyncTask<Void, String, Integer> {
+    public class Tarefa extends AsyncTask<Void, String, Boolean> {
         public class Progresso {
             private Tarefa tarefa;
 
@@ -159,12 +158,14 @@ public class TelaProduto extends TabLayoutActivityBase {
                 tarefa.publishProgress(mensagem);
             }
         }
+
         private Uri uri;
         private Progresso progresso = new Progresso(this);
 
         public Tarefa(Uri uri) {
             this.uri = uri;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -180,30 +181,26 @@ public class TelaProduto extends TabLayoutActivityBase {
         }
 
         @Override
-        protected void onPostExecute(Integer result) {
+        protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             outAnimation = new AlphaAnimation(1f, 0f);
             outAnimation.setDuration(500);
             progressBarHolder.setAnimation(outAnimation);
             progressBarHolder.setVisibility(View.GONE);
 
-            if(result == 0) {
-                Toast.makeText(TelaProduto.this, "Nem Um Produto Foi Cadastrado. Talvez Todos Já Estejam No Banco de Dados", Toast.LENGTH_SHORT).show();
-            }
-            else if(result > 0) {
-                Toast.makeText(TelaProduto.this, result + " Produtos Cadastrados com Sucesso!", Toast.LENGTH_SHORT).show();
+            if (result) {
+                Toast.makeText(TelaProduto.this, "Cadastro de Produtos Por Excel Realiza Com Sucesso", Toast.LENGTH_SHORT).show();
                 pesquisarProduto.populaListView();
-            }
-            else {
+            } else {
                 Toast.makeText(TelaProduto.this, "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
+        protected Boolean doInBackground(Void... voids) {
             ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
 
-            int result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
+            boolean result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
 
             return result;
         }

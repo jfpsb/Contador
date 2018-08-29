@@ -60,12 +60,22 @@ public class DAOContagem extends DAO<Contagem> {
     @Override
     public long deletar(Object... chaves) {
         try {
+            conn.beginTransaction();
+
             String cnpj = ((Loja) chaves[0]).getCnpj();
             String data = TrataDisplayData.getDataFormatoBD((Date) chaves[1]);
 
-            return conn.delete(TABELA, "loja = ? AND data = ?", new String[]{ cnpj, data });
+            conn.delete("contagem_produto", "contagem_loja = ? AND contagem_data = ?", new String[]{ cnpj, data });
+
+            conn.delete(TABELA, "loja = ? AND data = ?", new String[]{ cnpj, data });
+
+            conn.setTransactionSuccessful();
+
+            return 1;
         } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
+        } finally {
+            conn.endTransaction();
         }
 
         return -1;

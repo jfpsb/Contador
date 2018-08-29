@@ -55,7 +55,7 @@ public class DAOProduto extends DAO<Produto> {
         return -1;
     }
 
-    public long inserirBulk(ArrayList<Produto> produtos, TelaProduto.Tarefa.Progresso progresso) {
+    public long inserirVarios(ArrayList<Produto> produtos, TelaProduto.Tarefa.Progresso progresso) {
         try {
             if (produtos.size() == 0)
                 throw new Exception("Não Há Produtos");

@@ -20,6 +20,8 @@ import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
+import java.util.Date;
+
 public class AdicionarContagemProduto extends ActivityBase {
 
     private ProdutoManager produtoManager;
@@ -92,6 +94,7 @@ public class AdicionarContagemProduto extends ActivityBase {
                     if(! TestaIO.isValidInt(quant))
                         throw new Exception("O Valor em Quantidade é Inválido!");
 
+                    contagem_produto.setId(new Date().getTime());
                     contagem_produto.setContagem(contagem);
                     contagem_produto.setProduto(produto);
                     contagem_produto.setQuant(Integer.parseInt(quant));
