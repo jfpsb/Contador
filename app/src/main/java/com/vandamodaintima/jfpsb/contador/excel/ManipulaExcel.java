@@ -4,27 +4,31 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.dao.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
 import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.entidade.Marca;
 import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
+import org.apache.poi.hssf.record.HeaderRecord;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,9 +47,26 @@ public class ManipulaExcel {
     private ContagemProdutoManager contagemProdutoManager;
     private FornecedorManager fornecedorManager;
     private ProdutoManager produtoManager;
+    private MarcaManager marcaManager;
     private AsyncTask task;
-    private int ProdutosCadastrados = 0;
     private ConexaoBanco conexaoBanco;
+
+    private enum Headers {
+        COD_BARRA("Código de Barra"),
+        FORNECEDOR("Fornecedor (CNPJ)"),
+        COD_BARRA_FORNECEDOR("Códigos de Barra de Fornecedor"),
+        DESCRICAO("Descrição"),
+        MARCA("Marca (Nome)"),
+        PRECO("Preço");
+
+        public String texto;
+
+        Headers(String texto) {
+            this.texto = texto;
+        }
+    }
+
+
 
     public ManipulaExcel(ConexaoBanco conexao) {
         conexaoBanco = conexao;
@@ -56,8 +77,10 @@ public class ManipulaExcel {
         conexaoBanco = conexao;
     }
 
-    public int ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
+    public boolean ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
         daoProduto = new DAOProduto(conexaoBanco.conexao());
+        marcaManager = new MarcaManager(conexaoBanco);
+        fornecedorManager = new FornecedorManager(conexaoBanco);
 
         ArrayList<Produto> produtos = new ArrayList<>();
 
@@ -78,69 +101,138 @@ public class ManipulaExcel {
 
             ArquivoExcel arquivoExcel = new ArquivoExcel(inputStream);
 
-            Row auxRow = arquivoExcel.getPlanilha().getRow(0);
+            Row headerRow = arquivoExcel.getPlanilha().getRow(0);
 
-            //TODO: Checar quantidade e nomes de headers
-            if (auxRow.getPhysicalNumberOfCells() != 3) {
-                throw new Exception("Planilha Configurada de Forma Errada. A Planilha Deve Conter Três Colunas contendo Cód. de Barras do Produto, Descrição e Preço.");
+            if (headerRow.getPhysicalNumberOfCells() != 6) {
+                throw new Exception("Planilha Configurada de Forma Errada");
+            }
+
+            if(! headerRow.getCell(Headers.COD_BARRA.ordinal()).getStringCellValue().equals(Headers.COD_BARRA.texto)) {
+                throw new Exception("Cabeçalho da Primeira Coluna Está Errado");
+            }
+
+            if(! headerRow.getCell(Headers.FORNECEDOR.ordinal()).getStringCellValue().equals(Headers.FORNECEDOR.texto)) {
+                throw new Exception("Cabeçalho da Segunda Coluna Está Errado");
+            }
+
+            if(! headerRow.getCell(Headers.COD_BARRA_FORNECEDOR.ordinal()).getStringCellValue().equals(Headers.COD_BARRA_FORNECEDOR.texto)) {
+                throw new Exception("Cabeçalho da Terceira Coluna Está Errado");
+            }
+
+            if(! headerRow.getCell(Headers.DESCRICAO.ordinal()).getStringCellValue().equals(Headers.DESCRICAO.texto)) {
+                throw new Exception("Cabeçalho da Quarta Coluna Está Errado");
+            }
+
+            if(! headerRow.getCell(Headers.MARCA.ordinal()).getStringCellValue().equals(Headers.MARCA.texto)) {
+                throw new Exception("Cabeçalho da Quinta Coluna Está Errado");
+            }
+
+            if(! headerRow.getCell(Headers.PRECO.ordinal()).getStringCellValue().equals(Headers.PRECO.texto)) {
+                throw new Exception("Cabeçalho da Sexta Coluna Está Errado");
             }
 
             int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
 
             progresso.publish(rows + " Produto(s) Encontrado(s)");
 
-            try {
+            for (int i = 1; i < rows; i++) {
+                Row row = arquivoExcel.getPlanilha().getRow(i);
 
-                for (int i = 1; i < rows; i++) {
-                    Row row = arquivoExcel.getPlanilha().getRow(i);
+                Produto produto = new Produto();
 
-                    int cells = row.getPhysicalNumberOfCells();
+                Cell cod_barra = row.getCell(Headers.COD_BARRA.ordinal());
+                Cell fornecedor = row.getCell(Headers.FORNECEDOR.ordinal());
+                Cell cod_barra_fornecedor = row.getCell(Headers.COD_BARRA_FORNECEDOR.ordinal());
+                Cell descricao = row.getCell(Headers.DESCRICAO.ordinal());
+                Cell marca = row.getCell(Headers.MARCA.ordinal());
+                Cell preco = row.getCell(Headers.PRECO.ordinal());
 
-                    Produto produto = new Produto();
+                if(! isCellEmpty(cod_barra)) {
+                    if(cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                        produto.setCod_barra(String.format("%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
+                    } else if(cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
+                        produto.setCod_barra(cod_barra.getStringCellValue());
+                    } else {
+                        throw new Exception("Formato de Código de Barras Errado. A Célula Precisa Ser do Tipo \"Texto\" ou \"Número\"");
+                    }
+                } else {
+                    throw new Exception("A Célula de Código de Barras Não Pode Estar Vazia");
+                }
 
-                    for (int j = 0; j < cells; j++) {
-                        Cell cell = row.getCell(j);
+                if(! isCellEmpty(fornecedor)) {
+                    if(fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
+                        Fornecedor f = fornecedorManager.listarPorChave(fornecedor.getStringCellValue());
 
-                        CellValue cellValue = arquivoExcel.getFormulaEvaluator().evaluate(cell);
-
-                        if (cellValue == null)
-                            continue;
-
-                        switch (cellValue.getCellType()) {
-                            case Cell.CELL_TYPE_NUMERIC:
-                                produto.setPreco(cell.getNumericCellValue());
-                                break;
-                            case Cell.CELL_TYPE_STRING:
-                                if (cell.getColumnIndex() == 0) {
-                                    produto.setCod_barra(cell.getStringCellValue());
-                                } else if (cell.getColumnIndex() == 1) {
-                                    produto.setDescricao(cell.getStringCellValue());
-                                }
-                                break;
+                        if(f != null) {
+                            produto.setFornecedor(f);
+                        } else {
+                            throw new Exception("Fornecedor " + fornecedor.getStringCellValue() + "Informado Não Encontrado");
                         }
+                    } else {
+                        throw new Exception("Formato de CNPJ de Fornecedor Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
+                    }
+                } else {
+                    produto.setFornecedor(null);
+                }
 
-                        produto.setFornecedor(null);
-
-                        if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null) {
-                            produtos.add(produto);
-                        }
+                if(! isCellEmpty(cod_barra_fornecedor)) {
+                    if(cod_barra_fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
+                        //TODO: Separar códigos e inserir
+                    } else {
+                        throw new Exception("Formato de Código de Barras de Fornecedor Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
                     }
                 }
 
-                long result = daoProduto.inserirBulk(produtos, progresso);
-
-                if(result == 1) {
-                    progresso.publish("Produtos Cadastrados com Sucesso");
+                if(! isCellEmpty(descricao)) {
+                    if(descricao.getCellType() == Cell.CELL_TYPE_STRING) {
+                        produto.setDescricao(descricao.getStringCellValue());
+                    } else {
+                        throw new Exception("Formato de Descrição do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
+                    }
+                } else {
+                    throw new Exception("A Célula de Descrição Não Pode Estar Vazia");
                 }
-            } catch (Exception e) {
-                Log.e("Contador", e.getMessage(), e);
+
+                if(! isCellEmpty(marca)) {
+                    if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
+                        Marca m = marcaManager.listarPorNome(marca.getStringCellValue());
+
+                        if (m != null) {
+                            produto.setMarca(m);
+                        } else {
+                            throw new Exception("Marca " + marca.getStringCellValue() + " Não Encontrada");
+                        }
+                    } else {
+                        throw new Exception("Formato de Marca do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
+                    }
+                } else {
+                    produto.setMarca(null);
+                }
+
+                if(! isCellEmpty(preco)) {
+                    if(preco.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                        produto.setPreco(preco.getNumericCellValue());
+                    } else {
+                        throw new Exception("Formato de Preço do Produto Está Errado. A Célula Precisa ser do Tipo \"Número\"");
+                    }
+                } else {
+                    throw new Exception("A Célula de Preço Não Pode Estar Vazia");
+                }
+
+                if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null && produto.getPreco() != null) {
+                    produtos.add(produto);
+                }
             }
 
-            return ProdutosCadastrados;
+            long result = daoProduto.inserirVarios(produtos, progresso);
+
+            if(result == 1) {
+                progresso.publish("Produtos Cadastrados com Sucesso");
+                return true;
+            }
         } catch (Exception e) {
             Log.i("Contador", e.getMessage());
             progresso.publish(e.getMessage());
-            return -1;
         } finally {
             if (inputStream != null) {
                 try {
@@ -150,6 +242,20 @@ public class ManipulaExcel {
                 }
             }
         }
+
+        return false;
+    }
+
+    private boolean isCellEmpty(Cell cell) {
+        if(cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+            return true;
+        }
+
+        if (cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getStringCellValue().isEmpty()) {
+            return true;
+        }
+
+        return false;
     }
 
     //TODO: Tentar simplificar. Estilizar planilha

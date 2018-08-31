@@ -62,6 +62,22 @@ public class MarcaManager extends Manager<Marca> {
         return daoEntidade.select("id = ?", new String[]{String.valueOf(id)}, null, null, "nome", null);
     }
 
+    public Marca listarPorNome(String nome) {
+        Marca marca = null;
+
+        Cursor c = listarCursorPorNome(nome);
+
+        if(c.getCount() > 0) {
+            c.moveToFirst();
+
+            marca = new Marca();
+            marca.setId(c.getLong(c.getColumnIndexOrThrow("_id")));
+            marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+        }
+
+        return marca;
+    }
+
     public Cursor listarCursorPorNome(String nome) {
         return daoEntidade.select("nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, "nome", null);
     }

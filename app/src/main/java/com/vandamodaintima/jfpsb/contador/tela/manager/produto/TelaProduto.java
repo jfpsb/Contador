@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -171,8 +172,23 @@ public class TelaProduto extends TabLayoutActivityBase {
             super.onPreExecute();
             inAnimation = new AlphaAnimation(0f, 1f);
             inAnimation.setDuration(300);
+            inAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    progressBarHolder.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             progressBarHolder.setAnimation(inAnimation);
-            progressBarHolder.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -184,9 +200,24 @@ public class TelaProduto extends TabLayoutActivityBase {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(500);
+            outAnimation.setDuration(5000);
+            outAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    progressBarHolder.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             progressBarHolder.setAnimation(outAnimation);
-            progressBarHolder.setVisibility(View.GONE);
 
             if (result) {
                 Toast.makeText(TelaProduto.this, "Cadastro de Produtos Por Excel Realiza Com Sucesso", Toast.LENGTH_SHORT).show();
