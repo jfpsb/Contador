@@ -19,16 +19,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
 import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
-
-import java.util.Date;
 
 public class AlterarDeletarContagem extends AlterarDeletarEntidade<Contagem> {
 

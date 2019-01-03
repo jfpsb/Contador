@@ -7,17 +7,17 @@ import android.view.ViewStub;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.ProdutoContagemCursorAdapter;
+import com.vandamodaintima.jfpsb.contador.controller.produtocontagem.ProdutoContagemAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
 
 public class VisualizarProdutosContagem extends ActivityBase {
     private Contagem contagem;
     private ContagemProdutoManager contagemProdutoManager;
     private ListView listViewProdutoContagem;
-    private ProdutoContagemCursorAdapter produtoContagemCursorAdapter;
+    private ProdutoContagemAdapter produtoContagemCursorAdapter;
 
     Cursor cursor = null;
 
@@ -45,7 +45,7 @@ public class VisualizarProdutosContagem extends ActivityBase {
         try {
             cursor = contagemProdutoManager.listarPorContagemCursor(contagem);
 
-            produtoContagemCursorAdapter = new ProdutoContagemCursorAdapter(getApplicationContext(), cursor);
+            produtoContagemCursorAdapter = new ProdutoContagemAdapter(getApplicationContext(), cursor);
 
             listViewProdutoContagem.setAdapter(produtoContagemCursorAdapter);
         } catch (Exception e) {

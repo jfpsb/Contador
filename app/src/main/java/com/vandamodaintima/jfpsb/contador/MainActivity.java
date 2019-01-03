@@ -10,7 +10,7 @@ import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.tela.manager.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.tela.manager.marca.TelaMarca;
-import com.vandamodaintima.jfpsb.contador.tela.manager.produto.TelaProduto;
+import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -9,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.AdicionarContagemProduto;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.manager.produto.PesquisarProduto;
 
 public class PesquisaContagemProduto extends PesquisarProduto {
@@ -32,7 +31,7 @@ public class PesquisaContagemProduto extends PesquisarProduto {
 
     @Override
     protected void setListOnItemClickListener() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewProduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 try {

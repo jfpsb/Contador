@@ -9,14 +9,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemProdutoManager;
-import com.vandamodaintima.jfpsb.contador.dao.manager.ProdutoManager;
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.ContagemProduto;
-import com.vandamodaintima.jfpsb.contador.entidade.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.entidade.Produto;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.ProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoContagem;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.tela.ActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 
@@ -36,7 +35,7 @@ public class AdicionarContagemProduto extends ActivityBase {
     private Fornecedor fornecedor = new Fornecedor();
     private Produto produto;
     private Contagem contagem;
-    private ContagemProduto contagem_produto = new ContagemProduto();
+    private ProdutoContagem contagem_produto = new ProdutoContagem();
     private Boolean addFornecedorFlag = false;
 
     private static final int ALTERAR_FORNECEDOR = 1;

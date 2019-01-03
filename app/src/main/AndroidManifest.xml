@@ -27,7 +27,7 @@
             android:label="Gerenciar Contagens"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.produto.TelaProduto"
+            android:name=".view.produto.TelaProduto"
             android:label="Gerenciar Produtos"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
@@ -49,10 +49,6 @@
         <activity
             android:name=".tela.manager.loja.AlterarDeletarLoja"
             android:label="@string/title_activity_alterar_deletar_loja"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
-            android:name=".tela.manager.produto.AlterarDeletarProduto"
-            android:label="@string/title_activity_alterar_deletar_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
             android:name=".tela.manager.contagem.AdicionarContagemProduto"

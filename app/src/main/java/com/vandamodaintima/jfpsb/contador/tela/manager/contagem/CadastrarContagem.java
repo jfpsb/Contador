@@ -15,12 +15,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.dao.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.dao.manager.LojaManager;
-import com.vandamodaintima.jfpsb.contador.entidade.Contagem;
-import com.vandamodaintima.jfpsb.contador.entidade.Loja;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.dao.manager.LojaManager;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
-import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.util.ManipulaCursor;
 import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
