@@ -59,11 +59,6 @@ public class DAOFornecedor implements DAO<Fornecedor> {
     }
 
     @Override
-    public ArrayList<Fornecedor> listar(String selection, String[] args) {
-        return null;
-    }
-
-    @Override
     public Fornecedor listarPorId(Object... ids) {
         Fornecedor fornecedor = null;
 

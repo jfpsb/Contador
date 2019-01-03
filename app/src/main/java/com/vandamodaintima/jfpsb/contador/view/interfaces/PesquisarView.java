@@ -9,4 +9,6 @@ public interface PesquisarView {
     void mensagemAoUsuario(String mensagem);
 
     void populaLista(ArrayAdapter adapter);
+
+    void realizarPesquisa(String... termos);
 }

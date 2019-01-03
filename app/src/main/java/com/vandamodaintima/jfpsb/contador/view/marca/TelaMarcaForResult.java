@@ -20,7 +20,7 @@ public class TelaMarcaForResult extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.contentStub);
+        ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 

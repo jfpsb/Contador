@@ -2,13 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.fornecedor.CadastrarFornecedor">
+    tools:context="com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dip" >
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp">
+
         <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cadastro de Fornecedor"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -17,32 +33,48 @@
                 android:textColor="#000000"
                 android:textSize="22sp" />
         </TableRow>
+
         <TableRow>
+
             <EditText
                 android:id="@+id/txtCnpj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="number"
                 android:textColor="#000000"
-                android:textSize="20sp"
-                android:inputType="number" />
+                android:textSize="20sp" />
         </TableRow>
+
         <TableRow>
-            <TextView android:id="@+id/lblCnpjRepetido"
+
+            <TextView
+                android:id="@+id/lblCnpjRepetido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:text="CNPJ Já Existe No Sistema"
                 android:textColor="#FF0000"
-                android:visibility="gone"
-                android:text="CNPJ Já Existe No Sistema" />
+                android:textSize="18sp"
+                android:visibility="gone" />
         </TableRow>
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_margin="15dip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:height="70sp"
+            android:background="@drawable/botao_active"
             android:text="Cadastrar"
             android:textSize="24sp"
             android:textStyle="bold" />
-    </TableLayout>
+    </RelativeLayout>
 
 </FrameLayout>

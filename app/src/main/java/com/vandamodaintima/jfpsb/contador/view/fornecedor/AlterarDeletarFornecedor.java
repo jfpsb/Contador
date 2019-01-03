@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
+import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
-public class AlterarDeletarFornecedor extends AlterarDeletarEntidade<Fornecedor> {
+public class AlterarDeletarFornecedor extends TelaAlterarDeletar<Fornecedor> {
 
     private EditText txtCnpj;
     private EditText txtNome;
@@ -42,11 +42,6 @@ public class AlterarDeletarFornecedor extends AlterarDeletarEntidade<Fornecedor>
         if (!fornecedor.getFantasia().isEmpty()) {
             txtFantasia.setText(fornecedor.getFantasia());
         }
-    }
-
-    @Override
-    protected void setManagers() {
-//        fornecedorManager = new FornecedorManager(conn);
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 
 public class TelaContador extends TabLayoutActivityBase {
@@ -27,5 +29,11 @@ public class TelaContador extends TabLayoutActivityBase {
         pesquisarContagem = new PesquisarContagem();
 
         setViewPagerTabLayout(pesquisarContagem, cadastrarContagem);
+    }
+
+    public void showDatePicker(View v) {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setView(v);
+        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 }

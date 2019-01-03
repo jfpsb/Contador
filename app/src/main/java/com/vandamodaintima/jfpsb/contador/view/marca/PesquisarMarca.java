@@ -16,41 +16,22 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.TelaPesquisa;
+import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarMarca extends TelaPesquisa {
     private EditText txtNome;
     protected ListView listView;
-    private SimpleCursorAdapter simpleCursorAdapter;
-
-//    private MarcaManager marcaManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            savedInstanceState = new Bundle();
+        view = inflater.inflate(R.layout.fragment_pesquisar_marca, container, false);
 
-        savedInstanceState.putInt("layout", R.layout.fragment_pesquisar_marca);
+        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
 
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_ALTERAR_DELETAR:
-                if (resultCode == Activity.RESULT_OK) {
-                    populaListView();
-                } else {
-                    Toast.makeText(viewInflate.getContext(), "A Marca Não Foi Alterada", Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-    }
-
-    private void setTxtNome() {
-        txtNome = viewInflate.findViewById(R.id.txtNome);
+        txtNome = view.findViewById(R.id.txtNome);
+        listView = view.findViewById(R.id.listViewMarca);
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -65,31 +46,10 @@ public class PesquisarMarca extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable s) {
-                populaListView(txtNome.getText().toString());
+//                populaListView(txtNome.getText().toString());
             }
         });
-    }
 
-    @Override
-    protected void setListView() {
-        listView = viewInflate.findViewById(R.id.listViewMarca);
-
-//        if (cursorPesquisa != null)
-//            cursorPesquisa.close();
-//
-//        try {
-//            cursorPesquisa = marcaManager.listarCursor();
-//            simpleCursorAdapter = new SimpleCursorAdapter(viewInflate.getContext(), R.layout.item_lista_marca, cursorPesquisa, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
-//            listView.setAdapter(simpleCursorAdapter);
-//
-//            setListOnItemClickListener();
-//        } catch (Exception e) {
-//            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-    }
-
-    @Override
-    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,40 +68,20 @@ public class PesquisarMarca extends TelaPesquisa {
                 startActivityForResult(intent, TELA_ALTERAR_DELETAR);
             }
         });
+
+        return view;
     }
 
-    /**
-     * Popula a lista novamente
-     */
-    public void populaListView() {
-        if (cursorPesquisa != null)
-            cursorPesquisa.close();
-
-        try {
-//            cursorPesquisa = marcaManager.listarCursor();
-
-            if (cursorPesquisa.getCount() == 0)
-                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
-
-            simpleCursorAdapter.changeCursor(cursorPesquisa);
-        } catch (Exception e) {
-            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void populaListView(String nome) {
-        if (cursorPesquisa != null)
-            cursorPesquisa.close();
-
-        try {
-//            cursorPesquisa = marcaManager.listarCursorPorNome(nome);
-
-            if (cursorPesquisa.getCount() == 0)
-                Toast.makeText(viewInflate.getContext(), "A Pesquisa Não Retornou Dados", Toast.LENGTH_SHORT).show();
-
-            simpleCursorAdapter.changeCursor(cursorPesquisa);
-        } catch (Exception e) {
-            Toast.makeText(viewInflate.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if (resultCode == Activity.RESULT_OK) {
+                    //populaListView();
+                } else {
+                    Toast.makeText(getContext(), "A Marca Não Foi Alterada", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 }

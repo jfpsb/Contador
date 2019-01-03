@@ -8,8 +8,9 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-public class TabLayoutActivityBase extends ActivityBase {
+public class TabLayoutActivityBase extends ActivityBaseView {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private MyPagerAdapter adapter;
@@ -18,6 +19,7 @@ public class TabLayoutActivityBase extends ActivityBase {
 
     /**
      * Construtor para activities que possuem abas (TabLayout)
+     *
      * @param headers Nomes das abas, na ordem em que devem aparecer
      */
     public TabLayoutActivityBase(String[] headers) {
@@ -31,10 +33,10 @@ public class TabLayoutActivityBase extends ActivityBase {
 
     protected void setViewPagerTabLayout(Fragment... fragments) {
         try {
-            if(headers == null)
+            if (headers == null)
                 throw new Exception("Informe no Construtor os Nomes da Abas!");
 
-            if(headers.length != fragments.length)
+            if (headers.length != fragments.length)
                 throw new Exception("O Número de Fragments a Serem Adicionadas Não Correspondem ao Número Informado de Nomes de Abas");
 
             viewPager = findViewById(R.id.viewPager);
@@ -42,7 +44,7 @@ public class TabLayoutActivityBase extends ActivityBase {
 
             adapter = new MyPagerAdapter(getSupportFragmentManager());
 
-            for(int i = 0; i < headers.length; i++) {
+            for (int i = 0; i < headers.length; i++) {
                 TabLayout.Tab tab = tabLayout.newTab();
                 tab.setText(headers[i]);
                 tabLayout.addTab(tab);
@@ -70,18 +72,12 @@ public class TabLayoutActivityBase extends ActivityBase {
 
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(LOG, e.getMessage(), e);
         }
     }
 
     public MyPagerAdapter getPagerAdapter() {
         return adapter;
-    }
-
-    @Override
-    protected void setManagers() {
-
     }
 }

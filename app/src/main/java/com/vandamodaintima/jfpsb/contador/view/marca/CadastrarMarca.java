@@ -10,31 +10,25 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.FragmentBase;
 import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.Date;
 
-public class CadastrarMarca extends FragmentBase {
+public class CadastrarMarca extends TelaCadastro {
 
     private EditText txtNome;
     private Button btnCadastrar;
 
-//    private MarcaManager marcaManager;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            savedInstanceState = new Bundle();
+        view = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
 
-        savedInstanceState.putInt("layout", R.layout.fragment_cadastrar_marca);
+        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
 
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    private void setBtnCadastrar() {
-        btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
+        btnCadastrar = view.findViewById(R.id.btnCadastrar);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +55,12 @@ public class CadastrarMarca extends FragmentBase {
 //                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Marca", Toast.LENGTH_SHORT).show();
 //                    }
                 } catch (Exception e) {
-                    Log.e(LOG, e.getMessage(), e);
+                    //Log.e(LOG, e.getMessage(), e);
                 }
             }
         });
+
+        return view;
     }
 
     /**
@@ -74,11 +70,11 @@ public class CadastrarMarca extends FragmentBase {
         try {
             // Atualiza lista em aba de pesquisa
             Fragment fragment = ((TabLayoutActivityBase) (getActivity())).getPagerAdapter().getItem(0);
-            ((PesquisarMarca) fragment).populaListView();
+            //((PesquisarMarca) fragment).populaListView();
 
             txtNome.getText().clear();
         } catch (Exception e) {
-            Log.i(LOG, e.getMessage(), e);
+//            Log.i(LOG, e.getMessage(), e);
         }
     }
 }

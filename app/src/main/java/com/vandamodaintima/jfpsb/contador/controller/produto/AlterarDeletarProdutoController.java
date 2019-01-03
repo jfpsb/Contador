@@ -19,6 +19,16 @@ public class AlterarDeletarProdutoController {
     }
 
     public void atualizar(Produto produto) {
+        if(produto.getDescricao().isEmpty()) {
+            view.mensagemAoUsuario("Descrição do Produto Não Pode Ser Vazia");
+            return;
+        }
+
+        if(produto.getPreco() == 0) {
+            view.mensagemAoUsuario("Preço do Produto Não Pode Ser Zero");
+            return;
+        }
+
         Boolean result = daoProduto.atualizar(produto, produto.getCod_barra());
 
         if(result) {

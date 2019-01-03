@@ -81,11 +81,6 @@ public class DAOLoja implements DAO<Loja> {
     }
 
     @Override
-    public ArrayList<Loja> listar(String selection, String[] args) {
-        return null;
-    }
-
-    @Override
     public Loja listarPorId(Object... ids) {
         Loja loja = null;
 

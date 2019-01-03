@@ -1,16 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp">
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dip"
             android:stretchColumns="1">
 
             <TableRow>
@@ -19,10 +20,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cadastrar Produto"
+                    android:text="Cadastro de Produto"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textSize="24sp"
+                    android:textSize="26sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -51,7 +52,7 @@
             <TableRow>
 
                 <TextView
-                    android:id="@+id/lblCnpjRepetido"
+                    android:id="@+id/lblCodRepetido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -66,7 +67,7 @@
                 <Button
                     android:id="@+id/btnGerenciarCodBarraFornecedor"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Gerenciar Cód. de Barras de Fornecedor"
                     android:textColor="#000"
@@ -104,7 +105,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Escolher Fornecedor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/btnRemoverFornecedor"
@@ -113,7 +114,7 @@
                     android:layout_weight="1"
                     android:text="Remover Fornecedor"
                     android:textColor="#ff00"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </TableRow>
 
             <TableRow>
@@ -144,10 +145,10 @@
                 <Button
                     android:id="@+id/btnEscolherMarca"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Escolher Marca"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/btnRemoverMarca"
@@ -156,7 +157,7 @@
                     android:layout_weight="1"
                     android:text="Remover Marca"
                     android:textColor="#ff00"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </TableRow>
 
             <TableRow>
@@ -206,14 +207,29 @@
             <TableRow>
 
                 <Button
-                    android:id="@+id/btnCadastrar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Cadastrar"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:layout_height="80sp"
+                    android:visibility="invisible" />
             </TableRow>
         </TableLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnCadastrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:height="70sp"
+            android:background="@drawable/botao_active"
+            android:text="Cadastrar"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</RelativeLayout>

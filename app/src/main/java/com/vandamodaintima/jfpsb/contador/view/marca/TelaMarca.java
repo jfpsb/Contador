@@ -19,7 +19,7 @@ public class TelaMarca extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.contentStub);
+        ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
@@ -27,10 +27,5 @@ public class TelaMarca extends TabLayoutActivityBase {
         pesquisarMarca = new PesquisarMarca();
 
         setViewPagerTabLayout(pesquisarMarca, cadastrarMarca);
-    }
-
-    @Override
-    protected void setManagers() {
-
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="opcoes_pesquisa_produto">
+        <item>Descrição</item>
+        <item>Código de Barra</item>
+        <item>Fornecedor</item>
+        <item>Marca</item>
+    </string-array>
+</resources>

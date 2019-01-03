@@ -14,7 +14,5 @@ public interface DAO<T> {
 
     ArrayList<T> listar();
 
-    ArrayList<T> listar(String selection, String[] args);
-
     T listarPorId(Object... ids);
 }

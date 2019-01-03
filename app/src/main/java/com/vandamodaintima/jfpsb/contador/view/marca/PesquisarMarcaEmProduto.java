@@ -22,11 +22,6 @@ public class PesquisarMarcaEmProduto extends PesquisarMarca {
     private AlertDialog.Builder alertaEscolha;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    protected void setListOnItemClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -39,6 +34,7 @@ public class PesquisarMarcaEmProduto extends PesquisarMarca {
                 setAlertaEscolha(marca);
             }
         });
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private void setAlertaEscolha(final Marca marca) {

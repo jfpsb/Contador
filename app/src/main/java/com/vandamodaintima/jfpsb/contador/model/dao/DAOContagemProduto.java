@@ -37,11 +37,6 @@ public class DAOContagemProduto implements DAO<ProdutoContagem> {
     }
 
     @Override
-    public ArrayList<ProdutoContagem> listar(String selection, String[] args) {
-        return null;
-    }
-
-    @Override
     public ProdutoContagem listarPorId(Object... ids) {
         return null;
     }

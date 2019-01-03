@@ -1,16 +1,10 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.util.TrataDisplayData;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by jfpsb on 08/02/2018.
@@ -42,11 +36,6 @@ public class DAOContagem implements DAO<Contagem> {
 
     @Override
     public ArrayList<Contagem> listar() {
-        return null;
-    }
-
-    @Override
-    public ArrayList<Contagem> listar(String selection, String[] args) {
         return null;
     }
 

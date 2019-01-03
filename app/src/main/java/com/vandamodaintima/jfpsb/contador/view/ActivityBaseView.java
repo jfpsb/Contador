@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,12 +8,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 
-import org.apache.poi.ss.formula.eval.NotImplementedException;
-
-public class ActivityBase extends AppCompatActivity {
-    protected ConexaoBanco conn;
+public class ActivityBaseView extends AppCompatActivity {
     public static final String LOG = "Contador";
 
     @Override
@@ -29,18 +26,6 @@ public class ActivityBase extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        conn = new ConexaoBanco(getApplicationContext());
-
-        setManagers();
-    }
-
-    protected void setManagers() {
-        throw new NotImplementedException("Sobrescreva setManagers nesta Activity!");
-    }
-
-    public ConexaoBanco getConn() {
-        return conn;
     }
 
     public void showDatePicker(View v) {
@@ -53,31 +38,5 @@ public class ActivityBase extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    @Override
-    public void onDestroy() {
-        conn.fechar();
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        if (!conn.conexao().isOpen()) {
-            conn = new ConexaoBanco(getApplicationContext());
-            setManagers();
-        }
-
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        if (!conn.conexao().isOpen()) {
-            conn = new ConexaoBanco(getApplicationContext());
-            setManagers();
-        }
-
-        super.onResume();
     }
 }

@@ -13,10 +13,10 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
+import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
-public class AlterarDeletarLoja extends AlterarDeletarEntidade<Loja> implements AlterarDeletarView {
+public class AlterarDeletarLoja extends TelaAlterarDeletar<Loja> implements AlterarDeletarView {
 
     private EditText txtCnpj;
     private EditText txtNome;
@@ -46,11 +46,6 @@ public class AlterarDeletarLoja extends AlterarDeletarEntidade<Loja> implements 
 
         txtCnpj.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
-    }
-
-    @Override
-    protected void setManagers() {
-//        lojaManager = new LojaManager(conn);
     }
 
     @Override

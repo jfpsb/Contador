@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dip"
     android:orientation="vertical">
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp">
 
         <TableRow>
 
@@ -15,10 +16,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cadastrar Marca"
+                android:text="Cadastro de Marca"
                 android:textAlignment="center"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="26sp"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow>
@@ -43,17 +45,26 @@
                 android:textSize="20sp" />
         </TableRow>
 
-        <TableRow>
-
-            <Button
-                android:id="@+id/btnCadastrar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cadastrar"
-                android:textColor="#000"
-                android:textSize="24sp" />
-        </TableRow>
     </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnCadastrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cadastrar"
+            android:background="@drawable/botao_active"
+            android:height="70sp"
+            android:layout_margin="10sp"
+            android:textColor="#000"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

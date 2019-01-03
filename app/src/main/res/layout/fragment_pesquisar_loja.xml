@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="5dip"
     android:orientation="vertical"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.loja.PesquisarLoja">
+    tools:context="com.vandamodaintima.jfpsb.contador.view.loja.PesquisarLoja">
 
     <TableLayout
         android:layout_width="match_parent"

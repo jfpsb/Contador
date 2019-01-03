@@ -17,8 +17,6 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
-import com.vandamodaintima.jfpsb.contador.util.TestaIO;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.util.Date;
@@ -94,12 +92,6 @@ public class PesquisarContagem extends TelaPesquisa {
         });
 
         return view;
-    }
-
-    public void showDatePicker(View v) {
-        DatePickerFragment datePickerFragment = new DatePickerFragment();
-        datePickerFragment.setView(v);
-        datePickerFragment.show(getFragmentManager(), "datePicker");
     }
 
     @Override

@@ -55,10 +55,6 @@
             android:label="@string/title_activity_adicionar_contagem_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.contagem.VisualizarProdutosContagem"
-            android:label="@string/title_activity_visualizar_produtos_contagem"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
             android:name=".tela.TabLayoutActivityBase"
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar" />
@@ -71,11 +67,6 @@
         <activity
             android:name=".tela.manager.fornecedor.CadastrarFornecedorSemInternetContainer"
             android:label="Cadastrar Fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity
-            android:name=".tela.manager.contagem.PesquisaContagemProdutoContainer"
-            android:label="@string/title_activity_pesquisa_contagem_produto_container"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity

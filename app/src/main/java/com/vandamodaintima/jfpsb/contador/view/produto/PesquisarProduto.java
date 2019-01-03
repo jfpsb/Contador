@@ -1,11 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.view.produto;
 
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -16,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,34 +22,34 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
+import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
-public class PesquisarProduto extends Fragment implements PesquisarView {
+public class PesquisarProduto extends TelaPesquisa {
 
     protected Spinner spinnerPesquisa;
     protected EditText txtPesquisaProduto;
     protected ListView listView;
     protected TextView txtQuantProdutosCadastrados;
 
-    private static int PESQUISA = 0;
     private static final int DESCRICAO = 0;
     private static final int COD_DE_BARRA = 1;
     private static final int FORNECEDOR = 2;
     private static final int MARCA = 3;
 
-    private SQLiteDatabase sqLiteDatabase;
+    private static int PESQUISA = DESCRICAO;
+
     private PesquisarProdutoController pesquisarProdutoController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
+        view = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
         pesquisarProdutoController = new PesquisarProdutoController(this, sqLiteDatabase, getContext());
 
-        listView = viewInflate.findViewById(R.id.listViewProduto);
-        spinnerPesquisa = viewInflate.findViewById(R.id.spinnerPesquisa);
-        txtPesquisaProduto = viewInflate.findViewById(R.id.txtPesquisaProduto);
+        listView = view.findViewById(R.id.listViewProduto);
+        spinnerPesquisa = view.findViewById(R.id.spinnerPesquisa);
+        txtPesquisaProduto = view.findViewById(R.id.txtPesquisaProduto);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -117,30 +114,26 @@ public class PesquisarProduto extends Fragment implements PesquisarView {
             @Override
             public void afterTextChanged(Editable editable) {
                 String termo = txtPesquisaProduto.getText().toString();
-
-                switch (PESQUISA) {
-                    case DESCRICAO:
-                        pesquisarProdutoController.pesquisarPorDescricao(termo);
-                        break;
-                    case COD_DE_BARRA:
-                        pesquisarProdutoController.pesquisarPorCodBarra(termo);
-                        break;
-                    case FORNECEDOR:
-                        pesquisarProdutoController.pesquisarPorFornecedor(termo);
-                        break;
-                    case MARCA:
-                        pesquisarProdutoController.pesquisarPorMarca(termo);
-                        break;
-                }
+                realizarPesquisa(termo);
             }
         });
 
-        return viewInflate;
+        return view;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if (resultCode == Activity.RESULT_OK) {
+                    String termo = txtPesquisaProduto.getText().toString();
+                    realizarPesquisa(termo);
+                } else {
+                    mensagemAoUsuario("Produto Não Foi Alterado");
+                }
 
+                break;
+        }
     }
 
     @Override
@@ -152,5 +145,25 @@ public class PesquisarProduto extends Fragment implements PesquisarView {
     public void populaLista(ArrayAdapter adapter) {
         listView.setAdapter(null);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void realizarPesquisa(String... termos) {
+        String termo = String.valueOf(termos[0]);
+
+        switch (PESQUISA) {
+            case DESCRICAO:
+                pesquisarProdutoController.pesquisarPorDescricao(termo);
+                break;
+            case COD_DE_BARRA:
+                pesquisarProdutoController.pesquisarPorCodBarra(termo);
+                break;
+            case FORNECEDOR:
+                pesquisarProdutoController.pesquisarPorFornecedor(termo);
+                break;
+            case MARCA:
+                pesquisarProdutoController.pesquisarPorMarca(termo);
+                break;
+        }
     }
 }

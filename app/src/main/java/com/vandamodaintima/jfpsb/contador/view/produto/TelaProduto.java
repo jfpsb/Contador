@@ -133,15 +133,15 @@ public class TelaProduto extends TabLayoutActivityBase {
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
 
-                    ManipulaExcel manipulaExcel = new ManipulaExcel(getConn());
+                    //ManipulaExcel manipulaExcel = new ManipulaExcel(getConn());
 
-                    boolean result = manipulaExcel.ExportaFornecedor(diretorio);
-
-                    if (result) {
-                        Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
-                    }
+//                    boolean result = manipulaExcel.ExportaFornecedor(diretorio);
+//
+//                    if (result) {
+//                        Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
+//                    }
                 }
                 break;
         }
@@ -221,7 +221,7 @@ public class TelaProduto extends TabLayoutActivityBase {
 
             if (result) {
                 Toast.makeText(TelaProduto.this, "Cadastro de Produtos Por Excel Realiza Com Sucesso", Toast.LENGTH_SHORT).show();
-                pesquisarProduto.populaListView();
+                //pesquisarProduto.populaListView();
             } else {
                 Toast.makeText(TelaProduto.this, "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir", Toast.LENGTH_SHORT).show();
             }
@@ -229,11 +229,13 @@ public class TelaProduto extends TabLayoutActivityBase {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
+//            ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
+//
+//            boolean result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
+//
+//            return result;
 
-            boolean result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
-
-            return result;
+            return false;
         }
     }
 }

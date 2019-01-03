@@ -9,9 +9,9 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.manager.AlterarDeletarEntidade;
+import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
-public class AlterarDeletarMarca extends AlterarDeletarEntidade<Marca> {
+public class AlterarDeletarMarca extends TelaAlterarDeletar<Marca> {
     private EditText txtNome;
 
     private Marca marca;
@@ -35,11 +35,6 @@ public class AlterarDeletarMarca extends AlterarDeletarEntidade<Marca> {
         txtNome = findViewById(R.id.txtNome);
 
         txtNome.setText(marca.getNome());
-    }
-
-    @Override
-    protected void setManagers() {
-//        marcaManager = new MarcaManager(conn);
     }
 
     @Override

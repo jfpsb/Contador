@@ -1,20 +1,39 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.loja.CadastrarLoja">
+    android:orientation="vertical"
+    tools:context="com.vandamodaintima.jfpsb.contador.view.loja.CadastrarLoja">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dip">
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp">
+
         <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cadastro de Loja"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
             <TextView
                 android:text="CNPJ:"
-                android:textSize="24sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textSize="24sp" />
         </TableRow>
+
         <TableRow>
+
             <EditText
                 android:id="@+id/txtCnpj"
                 android:layout_width="match_parent"
@@ -22,33 +41,63 @@
                 android:layout_weight="1"
                 android:inputType="number" />
         </TableRow>
+
         <TableRow>
+
             <TextView
-                android:text="Nome:"
-                android:textSize="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#000000"/>
+                android:text="Nome:"
+                android:textColor="#000000"
+                android:textSize="24dp" />
         </TableRow>
+
         <TableRow>
+
             <EditText
                 android:id="@+id/txtNome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </TableRow>
+
         <TableRow>
 
-            <Button
-                android:id="@+id/btnCadastrar"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cadastrar"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:text="Matriz:"
+                android:textColor="#000000"
+                android:textSize="24dp" />
         </TableRow>
+
+        <Spinner
+            android:id="@+id/spinnerMatrizes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></Spinner>
+
     </TableLayout>
 
-</FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnCadastrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:layout_weight="1"
+            android:height="70sp"
+            android:background="@drawable/botao_active"
+            android:text="Cadastrar"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

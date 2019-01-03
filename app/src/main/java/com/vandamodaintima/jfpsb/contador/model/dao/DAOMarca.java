@@ -55,6 +55,8 @@ public class DAOMarca implements DAO<Marca> {
             marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
+        cursor.close();
+
         return marca;
     }
 

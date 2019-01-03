@@ -3,15 +3,12 @@ package com.vandamodaintima.jfpsb.contador.view;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
-public class TelaPesquisa extends Fragment implements PesquisarView {
-    protected ListView listView;
+public class TelaCadastro extends Fragment implements CadastrarView {
     protected View view;
     protected SQLiteDatabase sqLiteDatabase;
 
@@ -22,26 +19,20 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
     }
 
     @Override
-    public void mensagemAoUsuario(String mensagem) {
-        Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void populaLista(ArrayAdapter adapter) {
-        listView.setAdapter(null);
-        listView.setAdapter(adapter);
-    }
-
-    @Override
-    public void realizarPesquisa(String... termos) {
+    public void limparCampos() {
         try {
-            throw new Exception("Sobreescreva na fragment");
+            throw new Exception("Sobrescreva na fragment");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void showDatePicker(View v) {
+    @Override
+    public void mensagemAoUsuario(String mensagem) {
+        Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void showDatePicker(View v) {
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setView(v);
         datePickerFragment.show(getFragmentManager(), "datePicker");
