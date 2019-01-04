@@ -2,8 +2,6 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
@@ -31,7 +29,7 @@ public class PesquisarContagemController {
             return;
         }
 
-        ArrayList<Contagem> contagens = daoContagem.listar("loja = ? AND data BETWEEN ? AND ?", new String[]{loja, Contagem.getDataSQLite(dataInicial), Contagem.getDataSQLite(dataFinal)});
+        ArrayList<Contagem> contagens = daoContagem.listarPorLojaPeriodo(loja, dataInicial, dataFinal);
 
         if (contagens.size() == 0) {
             view.mensagemAoUsuario("Contagens Não Encontradas");

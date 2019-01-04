@@ -1,9 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
@@ -20,17 +20,19 @@ public class PesquisarProdutoController {
         this.view = view;
         this.context = context;
         daoProduto = new DAOProduto(sqLiteDatabase);
+
+        produtoAdapter = new ProdutoAdapter(context, null);
+
+        view.setListViewAdapter(produtoAdapter);
     }
 
     public void pesquisarPorDescricao(String termo) {
-        ArrayList<Produto> produtos = daoProduto.listarPorDescricao(termo);
+        Cursor cursor = daoProduto.listarPorDescricaoCursor(termo);
 
-        if (produtos.size() == 0) {
-            view.mensagemAoUsuario("Produtos Não Encontrados");
-        }
+        produtoAdapter.changeCursor(cursor);
+        produtoAdapter.notifyDataSetChanged();
 
-        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
-        view.populaLista(produtoAdapter);
+        view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
     public void pesquisarPorCodBarra(String termo) {
@@ -40,7 +42,7 @@ public class PesquisarProdutoController {
             view.mensagemAoUsuario("Produtos Não Encontrados");
         }
 
-        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
+        //produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
         view.populaLista(produtoAdapter);
     }
 
@@ -51,7 +53,7 @@ public class PesquisarProdutoController {
             view.mensagemAoUsuario("Produtos Não Encontrados");
         }
 
-        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
+//        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
         view.populaLista(produtoAdapter);
     }
 
@@ -62,7 +64,7 @@ public class PesquisarProdutoController {
             view.mensagemAoUsuario("Produtos Não Encontrados");
         }
 
-        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
+//        produtoAdapter = new ProdutoAdapter(context, R.layout.item_pesquisa_produto, produtos);
         view.populaLista(produtoAdapter);
     }
 }

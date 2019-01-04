@@ -10,7 +10,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
-public class AlterarDeletarFornecedor extends TelaAlterarDeletar<Fornecedor> {
+public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
@@ -45,10 +45,10 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar<Fornecedor> {
     }
 
     @Override
-    protected void setAlertBuilderAtualizar(final Fornecedor entidade) {
+    public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Fornecedor");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + entidade.getCnpj() + " - " + entidade.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -91,10 +91,10 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar<Fornecedor> {
     }
 
     @Override
-    protected void setAlertBuilderDeletar(final Fornecedor entidade) {
+    public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Fornecedor");
-        alertBuilderDeletar.setMessage("Tem certeza que deseja delete o fornecedor " + entidade.getCnpj() + " - " + entidade.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem certeza que deseja delete o fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override

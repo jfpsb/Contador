@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
@@ -38,7 +37,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private Fornecedor fornecedor;
     private Marca marca;
 
-    SQLiteDatabase sqLiteDatabase;
     AlterarDeletarProdutoController alterarDeletarProdutoController;
 
     private static final int ESCOLHER_FORNECEDOR = 1;
@@ -61,8 +59,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
 
-        btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnDeletar = findViewById(R.id.btnDeletar);
+        inicializaBotoes();
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
@@ -83,22 +80,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             txtMarca.setText(produto.getMarca().getNome());
             marca = produto.getMarca();
         }
-
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
-        });
-
-        btnDeletar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderDeletar.create();
-                alertDialog.show();
-            }
-        });
 
         setAlertaRemoverFornecedor();
         setAlertaRemoverMarca();
@@ -152,7 +133,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 if (fornecedor != null) {
                     alertaRemoverFornecedor.show();
                 } else {
-                    Toast.makeText(AlterarDeletarProduto.this, "Produto Não Possui Fornecedor", Toast.LENGTH_SHORT).show();
+                    mensagemAoUsuario("Produto Não Possui Fornecedor");
                 }
             }
         });
@@ -166,7 +147,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 if (marca != null) {
                     alertaRemoverMarca.show();
                 } else {
-                    Toast.makeText(AlterarDeletarProduto.this, "Produto Não Possui Marca", Toast.LENGTH_SHORT).show();
+                    mensagemAoUsuario("Produto Não Possui Marca");
                 }
             }
         });
@@ -181,10 +162,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
                     if (fornecedor != null) {
                         txtFornecedor.setText(fornecedor.getNome());
-                        Toast.makeText(this, "Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.", Toast.LENGTH_SHORT).show();
+                        mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
                     }
                 } else {
-                    Toast.makeText(this, "Fornecedor Não Foi Escolhido", Toast.LENGTH_SHORT).show();
+                    mensagemAoUsuario("Fornecedor Não Foi Escolhido");
                 }
                 break;
             case ESCOLHER_MARCA:
@@ -193,10 +174,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
                     if (marca != null) {
                         txtMarca.setText(marca.getNome());
-                        Toast.makeText(this, "Marca Escolhida. Aperte em \"Atualizar\" para Salvar", Toast.LENGTH_SHORT).show();
+                        mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                     }
                 } else {
-                    Toast.makeText(this, "Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+                    mensagemAoUsuario("Marca Não Foi Escolhida");
                 }
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
@@ -204,10 +185,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                     Produto produtoAlterado = (Produto) data.getSerializableExtra("produto");
 
                     if (produtoAlterado.getCod_barra_fornecedor().equals(produto.getCod_barra_fornecedor())) {
-                        Toast.makeText(this, "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
+                        mensagemAoUsuario("Cód. de Barras de Fornecedores Não Foram Alterados");
                     } else {
                         produto.setCod_barra_fornecedor(produtoAlterado.getCod_barra_fornecedor());
-                        Toast.makeText(this, "A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"", Toast.LENGTH_LONG).show();
+                        mensagemAoUsuario("A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"");
                     }
                 }
                 break;

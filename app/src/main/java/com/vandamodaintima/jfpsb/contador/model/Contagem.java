@@ -10,20 +10,11 @@ import java.util.Date;
  */
 
 public class Contagem implements Serializable {
-    private int rowid;
     private Loja loja;
     private Date data;
     private Boolean finalizada;
 
-    private static final String[] colunas = new String[] { "rowid as _id", "loja", "data", "finalizada" };
-
-    public int getRowid() {
-        return rowid;
-    }
-
-    public void setRowid(int rowid) {
-        this.rowid = rowid;
-    }
+    private static final String[] colunas = new String[] { "loja", "data", "finalizada" };
 
     public Loja getLoja() {
         return loja;

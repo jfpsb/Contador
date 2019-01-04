@@ -16,7 +16,7 @@ import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
-public class AlterarDeletarLoja extends TelaAlterarDeletar<Loja> implements AlterarDeletarView {
+public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
@@ -55,10 +55,10 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar<Loja> implements Alte
     }
 
     @Override
-    protected void setAlertBuilderDeletar(Loja entidade) {
+    public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Loja");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + entidade.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + loja.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -76,10 +76,10 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar<Loja> implements Alte
     }
 
     @Override
-    protected void setAlertBuilderAtualizar(Loja entidade) {
+    public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Loja");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + entidade.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + loja.getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override

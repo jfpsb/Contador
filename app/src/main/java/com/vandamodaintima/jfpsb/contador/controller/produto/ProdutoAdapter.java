@@ -1,60 +1,88 @@
+//package com.vandamodaintima.jfpsb.contador.controller.produto;
+//
+//import android.content.Context;
+//import android.support.annotation.NonNull;
+//import android.support.annotation.Nullable;
+//import android.view.LayoutInflater;
+//import android.view.View;
+//import android.view.ViewGroup;
+//import android.widget.ArrayAdapter;
+//import android.widget.TextView;
+//
+//import com.vandamodaintima.jfpsb.contador.R;
+//import com.vandamodaintima.jfpsb.contador.model.Produto;
+//
+//import java.util.List;
+//
+//public class ProdutoAdapter extends ArrayAdapter<Produto> {
+//    private int resourceLayout;
+//
+//    public ProdutoAdapter(Context context, int resource, List<Produto> objects) {
+//        super(context, resource, objects);
+//        this.resourceLayout = resource;
+//    }
+//
+//    @NonNull
+//    @Override
+//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+//        View v = convertView;
+//
+//        if (v == null) {
+//            LayoutInflater vi;
+//            vi = LayoutInflater.from(getContext());
+//            v = vi.inflate(resourceLayout, null);
+//        }
+//
+//        Produto p = getItem(position);
+//
+//        if (p != null) {
+//            TextView tt1 = v.findViewById(R.id.labelCodBarra);
+//            TextView tt2 = v.findViewById(R.id.labelDescricao);
+//            TextView tt3 = v.findViewById(R.id.labelPreco);
+//
+//            tt1.setText(p.getCod_barra());
+//            tt2.setText(p.getDescricao());
+//            tt3.setText(p.getPreco().toString());
+//        }
+//
+//        return v;
+//    }
+//}
+
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
 
-import java.util.List;
-
-public class ProdutoAdapter extends ArrayAdapter<Produto> {
-    private int resourceLayout;
-    private Context mContext;
-
-    public ProdutoAdapter(Context context, int resource, List<Produto> objects) {
-        super(context, resource, objects);
-        this.resourceLayout = resource;
-        this.mContext = context;
+public class ProdutoAdapter extends CursorAdapter {
+    public ProdutoAdapter(Context context, Cursor c) {
+        super(context, c, 0);
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View v = convertView;
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return LayoutInflater.from(context).inflate(R.layout.item_pesquisa_produto, parent,false);
+    }
 
-        if (v == null) {
-            LayoutInflater vi;
-            vi = LayoutInflater.from(mContext);
-            v = vi.inflate(resourceLayout, null);
-        }
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        TextView labelCodBarra = view.findViewById(R.id.labelCodBarra);
+        TextView labelDescricao = view.findViewById(R.id.labelDescricao);
+        TextView labelPreco = view.findViewById(R.id.labelPreco);
 
-        Produto p = getItem(position);
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
+        Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
 
-        if (p != null) {
-            TextView tt1 = (TextView) v.findViewById(R.id.labelCodBarra);
-            TextView tt2 = (TextView) v.findViewById(R.id.labelDescricao);
-            TextView tt3 = (TextView) v.findViewById(R.id.labelPreco);
-
-            if (tt1 != null) {
-                tt1.setText(p.getCod_barra());
-            }
-
-            if (tt2 != null) {
-                tt2.setText(p.getDescricao());
-            }
-
-            if (tt3 != null) {
-                tt3.setText(p.getPreco().toString());
-            }
-        }
-
-        return v;
+        labelCodBarra.setText(id);
+        labelDescricao.setText(descricao);
+        labelPreco.setText(String.valueOf(preco));
     }
 }

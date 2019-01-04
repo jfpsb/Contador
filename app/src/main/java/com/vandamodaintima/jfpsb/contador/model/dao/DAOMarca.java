@@ -37,15 +37,10 @@ public class DAOMarca implements DAO<Marca> {
     }
 
     @Override
-    public ArrayList<Marca> listar(String selection, String[] args) {
-        return null;
-    }
-
-    @Override
     public Marca listarPorId(Object... ids) {
         Marca marca = null;
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, null, "codigo = ?", new String[] { String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = sqLiteDatabase.query(TABELA, null, "id = ?", new String[] { String.valueOf(ids[0])}, null, null, null, null);
 
         if(cursor.getCount() > 0) {
             marca = new Marca();

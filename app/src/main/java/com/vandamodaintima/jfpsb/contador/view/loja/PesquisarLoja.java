@@ -4,7 +4,6 @@ package com.vandamodaintima.jfpsb.contador.view.loja;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,12 +19,9 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.PesquisarLojaController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
+import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class PesquisarLoja extends Fragment implements PesquisarView {
+public class PesquisarLoja extends TelaPesquisa {
 
     private ListView listView;
     private EditText txtNome;

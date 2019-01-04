@@ -20,13 +20,14 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.PesquisarFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PesquisarFornecedor extends Fragment implements PesquisarView {
+public class PesquisarFornecedor extends TelaPesquisa {
 
     protected ListView listView;
     private EditText txtPesquisaFornecedor;
@@ -37,13 +38,13 @@ public class PesquisarFornecedor extends Fragment implements PesquisarView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View viewInflate = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
+        view = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
         pesquisarFornecedorController = new PesquisarFornecedorController(this, sqLiteDatabase, getContext());
 
-        txtPesquisaFornecedor = viewInflate.findViewById(R.id.txtPesquisaFornecedor);
-        listView = viewInflate.findViewById(R.id.listViewLoja);
+        txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
+        listView = view.findViewById(R.id.listViewLoja);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -78,7 +79,7 @@ public class PesquisarFornecedor extends Fragment implements PesquisarView {
             }
         });
 
-        return viewInflate;
+        return view;
     }
 
     @Override

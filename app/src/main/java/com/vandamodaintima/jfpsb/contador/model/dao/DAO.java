@@ -1,6 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
-import java.util.ArrayList;
+import android.database.Cursor;
 
 public interface DAO<T> {
 
@@ -12,7 +12,7 @@ public interface DAO<T> {
 
     Boolean deletar(Object... chaves);
 
-    ArrayList<T> listar();
+    Cursor listar(String selection, String[] args, String groupBy, String having, String orderBy, String limit);
 
     T listarPorId(Object... ids);
 }

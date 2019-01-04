@@ -31,24 +31,8 @@
             android:label="Gerenciar Produtos"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.fornecedor.TelaFornecedor"
-            android:label="Gerenciar Fornecedores"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
-            android:name=".tela.manager.loja.TelaLoja"
-            android:label="Gerenciar Lojas"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
             android:name=".tela.manager.contagem.AlterarDeletarContagem"
             android:label="@string/title_activity_alterar_deletar_contagem"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
-            android:name=".tela.manager.fornecedor.AlterarDeletarFornecedor"
-            android:label="@string/title_activity_alterar_deletar_fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-        <activity
-            android:name=".tela.manager.loja.AlterarDeletarLoja"
-            android:label="@string/title_activity_alterar_deletar_loja"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
             android:name=".tela.manager.contagem.AdicionarContagemProduto"
@@ -60,36 +44,13 @@
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
+        <activity android:name=".view.produto.AlterarDeletarProduto"
+            android:label="Alterar/Deletar Produto"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
-
-        <activity
-            android:name=".tela.manager.fornecedor.CadastrarFornecedorSemInternetContainer"
-            android:label="Cadastrar Fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity
-            android:name=".tela.manager.fornecedor.TelaFornecedorForResult"
-            android:label="Escolher Fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity android:name=".tela.manager.marca.TelaMarca"
-            android:label="Gerenciar Marcas"
-            android:theme="@style/TabAppTheme.NoActionBar"  />
-
-        <activity android:name=".tela.manager.marca.AlterarDeletarMarca"
-            android:label="Marca: alterar ou deletar"
-            android:theme="@style/TabAppTheme.NoActionBar"/>
-
-        <activity android:name=".tela.manager.marca.TelaMarcaForResult"
-            android:label="Escolher Marca"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity android:name=".tela.manager.codbarrafornecedor.TelaCodBarraFornecedor"
-            android:label="Cód. de Barras de Fornecedor"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
     </application>
 
 </manifest>

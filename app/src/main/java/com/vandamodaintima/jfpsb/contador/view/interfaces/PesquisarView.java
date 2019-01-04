@@ -1,6 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view.interfaces;
 
-import android.widget.ArrayAdapter;
+import android.support.v4.widget.CursorAdapter;
 
 public interface PesquisarView {
 
@@ -8,7 +8,14 @@ public interface PesquisarView {
 
     void mensagemAoUsuario(String mensagem);
 
-    void populaLista(ArrayAdapter adapter);
+    void setListViewAdapter(CursorAdapter adapter);
+
+    /**
+     * Se na tela tiver um campo pra mostrar quantidade de registros retornados na pesquisa
+     * vai ser setado aqui
+     * @param quantidade
+     */
+    void setTextoQuantidadeBusca(int quantidade);
 
     void realizarPesquisa(String... termos);
 }

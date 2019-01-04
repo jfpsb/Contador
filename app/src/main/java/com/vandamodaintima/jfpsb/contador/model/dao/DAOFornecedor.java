@@ -28,9 +28,9 @@ public class DAOFornecedor implements DAO<Fornecedor> {
             contentValues.put("nome", fornecedor.getNome());
 
             if (fornecedor.getFantasia() != null) {
-                contentValues.put("nome_fantasia", fornecedor.getFantasia());
+                contentValues.put("fantasia", fornecedor.getFantasia());
             } else {
-                contentValues.putNull("nome_fantasia");
+                contentValues.putNull("fantasia");
             }
 
             sqLiteDatabase.insertOrThrow(TABELA, null, contentValues);
@@ -68,9 +68,9 @@ public class DAOFornecedor implements DAO<Fornecedor> {
             fornecedor = new Fornecedor();
             cursor.moveToFirst();
 
-            fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+            fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
             fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-            fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("nome_fantasia")));
+            fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
         }
 
         cursor.close();
@@ -97,7 +97,7 @@ public class DAOFornecedor implements DAO<Fornecedor> {
 
                 fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("nome_fantasia")));
+                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
 
                 fornecedores.add(fornecedor);
             }

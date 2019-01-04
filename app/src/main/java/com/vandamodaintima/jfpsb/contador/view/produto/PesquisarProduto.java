@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
+import com.vandamodaintima.jfpsb.contador.controller.produto.ProdutoAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
@@ -50,6 +51,7 @@ public class PesquisarProduto extends TelaPesquisa {
         listView = view.findViewById(R.id.listViewProduto);
         spinnerPesquisa = view.findViewById(R.id.spinnerPesquisa);
         txtPesquisaProduto = view.findViewById(R.id.txtPesquisaProduto);
+        txtQuantProdutosCadastrados = view.findViewById(R.id.txtQuantProdutosCadastrados);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -145,6 +147,13 @@ public class PesquisarProduto extends TelaPesquisa {
     public void populaLista(ArrayAdapter adapter) {
         listView.setAdapter(null);
         listView.setAdapter(adapter);
+
+        txtQuantProdutosCadastrados.setText(String.valueOf(adapter.getCount()));
+    }
+
+    public void populaLista(ProdutoAdapter adapter) {
+        listView.setAdapter(adapter);
+        txtQuantProdutosCadastrados.setText(String.valueOf(adapter.getCount()));
     }
 
     @Override

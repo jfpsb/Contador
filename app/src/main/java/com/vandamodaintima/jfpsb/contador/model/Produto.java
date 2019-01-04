@@ -11,7 +11,7 @@ public class Produto implements Serializable {
     private String descricao;
     private Double preco;
 
-    private static final String[] colunas = new String[]{"cod_barra as _id", "fornecedor", "marca", "descricao", "preco"};
+    private static final String[] colunas = new String[]{"cod_barra", "fornecedor", "marca", "descricao", "preco"};
     private static String[] headers = new String[]{"Cód. de Barras", "Cód. de Barras Fornecedor", "Fornecedor", "Marca", "Descrição", "Preço"};
 
     public ArrayList<String> getCod_barra_fornecedor() {

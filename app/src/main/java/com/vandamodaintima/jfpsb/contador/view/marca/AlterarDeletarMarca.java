@@ -11,7 +11,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
-public class AlterarDeletarMarca extends TelaAlterarDeletar<Marca> {
+public class AlterarDeletarMarca extends TelaAlterarDeletar {
     private EditText txtNome;
 
     private Marca marca;
@@ -38,7 +38,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar<Marca> {
     }
 
     @Override
-    protected void setAlertBuilderDeletar(Marca entidade) {
+    public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Marca");
 
@@ -68,7 +68,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar<Marca> {
     }
 
     @Override
-    protected void setAlertBuilderAtualizar(Marca entidade) {
+    public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Marca");
         alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Marca?");
