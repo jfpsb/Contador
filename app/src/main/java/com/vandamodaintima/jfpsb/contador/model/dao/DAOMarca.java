@@ -32,21 +32,21 @@ public class DAOMarca implements DAO<Marca> {
     }
 
     @Override
-    public ArrayList<Marca> listar() {
-        return null;
+    public Cursor listar() {
+        return sqLiteDatabase.query(TABELA, null, null, null, null, null, null, null);
     }
 
     @Override
     public Marca listarPorId(Object... ids) {
         Marca marca = null;
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, null, "id = ?", new String[] { String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = sqLiteDatabase.query(TABELA, Marca.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             marca = new Marca();
             cursor.moveToFirst();
 
-            marca.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+            marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
             marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
@@ -55,7 +55,28 @@ public class DAOMarca implements DAO<Marca> {
         return marca;
     }
 
+    public Cursor listarPorNomeCursor(String nome) {
+        return sqLiteDatabase.query(TABELA, Marca.getColunas(), "nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, null, null);
+    }
+
     public ArrayList<Marca> listarPorNome(String nome) {
-        return null;
+        ArrayList<Marca> marcas = new ArrayList<>();
+
+        Cursor cursor = listarPorNomeCursor(nome);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Marca marca = new Marca();
+
+                marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+
+                marcas.add(marca);
+            }
+        }
+
+        cursor.close();
+
+        return marcas;
     }
 }

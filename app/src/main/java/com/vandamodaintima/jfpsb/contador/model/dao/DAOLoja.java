@@ -36,9 +36,6 @@ public class DAOLoja implements DAO<Loja> {
             }
 
             sqLiteDatabase.insertOrThrow(TABELA, "", contentLoja);
-
-            ArrayList<Produto> produtos = new DAOProduto(sqLiteDatabase).listar();
-
             sqLiteDatabase.setTransactionSuccessful();
 
             return true;
@@ -76,7 +73,7 @@ public class DAOLoja implements DAO<Loja> {
     }
 
     @Override
-    public ArrayList<Loja> listar() {
+    public Cursor listar() {
         return null;
     }
 
@@ -99,10 +96,14 @@ public class DAOLoja implements DAO<Loja> {
         return loja;
     }
 
-    public ArrayList<Loja> selectByNomeCnpj(String termo) {
+    public Cursor listarPorNomeCnpjCursor(String termo) {
+        return sqLiteDatabase.query(TABELA, null, "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+    }
+
+    public ArrayList<Loja> listarPorNomeCnpj(String termo) {
         ArrayList<Loja> lojas = new ArrayList<>();
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, null, "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+        Cursor cursor = listarPorNomeCnpjCursor(termo);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -121,7 +122,7 @@ public class DAOLoja implements DAO<Loja> {
         return lojas;
     }
 
-    public ArrayList<Loja> selectMatrizes() {
+    public ArrayList<Loja> listarMatrizes() {
         ArrayList<Loja> lojas = new ArrayList<>();
 
         Cursor cursor = sqLiteDatabase.query(TABELA, null, "matriz IS NULL", null, null, null, null, null);

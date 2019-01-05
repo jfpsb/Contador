@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
+package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 
 import android.app.Activity;
@@ -39,7 +39,7 @@ public class PesquisarContagem extends TelaPesquisa {
         pesquisarContagemController = new PesquisarContagemController(this, sqLiteDatabase, getContext());
 
         txtData = view.findViewById(R.id.txtData);
-        listView = view.findViewById(R.id.listViewLoja);
+        listView = view.findViewById(R.id.listViewFornecedor);
         btnPesquisar = view.findViewById(R.id.btnPesquisar);
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 

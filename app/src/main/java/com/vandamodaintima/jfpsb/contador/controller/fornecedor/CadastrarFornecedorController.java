@@ -19,9 +19,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class CadastrarFornecedorController {
-    private CadastrarFornecedor view;
+    protected CadastrarFornecedor view;
     DAOFornecedor daoFornecedor;
-    private Context context;
+    protected Context context;
 
     public CadastrarFornecedorController(CadastrarView view, SQLiteDatabase sqLiteDatabase, Context context) {
         this.view = (CadastrarFornecedor) view;
@@ -29,15 +29,18 @@ public class CadastrarFornecedorController {
         daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
-    public void cadastrar(Fornecedor fornecedor) {
+    public boolean cadastrar(Fornecedor fornecedor) {
         Boolean result = daoFornecedor.inserir(fornecedor);
 
         if(result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
             view.limparCampos();
+            return true;
         } else {
             view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
         }
+
+        return false;
     }
 
     public void pesquisarNaReceita(String cnpj) {
@@ -143,7 +146,7 @@ public class CadastrarFornecedorController {
                 Toast.makeText(context, "Erro ao Retornar Empresa", Toast.LENGTH_SHORT).show();
             } else if (object instanceof Fornecedor) {
                 Fornecedor fornecedor = (Fornecedor) object;
-                view.setAlertaCadastro(fornecedor, toast);
+                view.setAlertaCadastro(fornecedor);
             } else {
                 String mensagem = (String) object;
                 toast.setText("Erro ao Inserir Fornecedor: " + mensagem);

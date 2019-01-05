@@ -6,8 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
-import com.vandamodaintima.jfpsb.contador.tela.manager.contagem.TelaContador;
+import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;

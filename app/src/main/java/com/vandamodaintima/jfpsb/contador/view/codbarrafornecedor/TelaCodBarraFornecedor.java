@@ -6,7 +6,7 @@ import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
     private CadastrarCodBarraFornecedor inserirCodBarraFornecedor;

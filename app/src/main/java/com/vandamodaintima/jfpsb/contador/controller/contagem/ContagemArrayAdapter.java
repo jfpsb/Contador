@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
+package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,21 +10,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 
 import java.util.List;
 
-public class FornecedorAdapter extends ArrayAdapter<Fornecedor> {
+public class ContagemArrayAdapter extends ArrayAdapter<Contagem> {
     private int resourceLayout;
     private Context mContext;
 
-    public FornecedorAdapter(Context context, int resource, List<Fornecedor> objects) {
+    public ContagemArrayAdapter(Context context, int resource, List<Contagem> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
     }
 
-    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
@@ -35,24 +34,14 @@ public class FornecedorAdapter extends ArrayAdapter<Fornecedor> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Fornecedor p = getItem(position);
+        Contagem c = getItem(position);
 
-        if (p != null) {
-            TextView tt1 = v.findViewById(R.id.listaFornecedorCnpj);
-            TextView tt2 = v.findViewById(R.id.listaFornecedorNome);
-            TextView tt3 = v.findViewById(R.id.listaFornecedorFantasia);
+        if (c != null) {
+            TextView labelLojaNome = v.findViewById(R.id.labelLojaNome);
+            TextView labelDataInicial = v.findViewById(R.id.labelDataInicial);
 
-            if (tt1 != null) {
-                tt1.setText(p.getCnpj());
-            }
-
-            if (tt2 != null) {
-                tt2.setText(p.getNome());
-            }
-
-            if (tt3 != null) {
-                tt3.setText(p.getFantasia());
-            }
+            labelLojaNome.setText(c.getLoja().getNome());
+            labelDataInicial.setText(c.getDataString());
         }
 
         return v;

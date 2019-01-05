@@ -19,8 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.excel.ManipulaExcel;
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;

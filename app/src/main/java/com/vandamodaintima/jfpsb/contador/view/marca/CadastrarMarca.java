@@ -1,7 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.view.marca;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,51 +12,42 @@ import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.marca.CadastrarMarcaController;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.Date;
 
+import static com.vandamodaintima.jfpsb.contador.view.ActivityBaseView.LOG;
+
 public class CadastrarMarca extends TelaCadastro {
 
+    protected AlertDialog.Builder alertaCadastro;
     private EditText txtNome;
     private Button btnCadastrar;
+    protected CadastrarMarcaController cadastrarMarcaController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-
+        txtNome = view.findViewById(R.id.txtNome);
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
+
+        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
+        cadastrarMarcaController = new CadastrarMarcaController(this, sqLiteDatabase, getContext());
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    String nome = txtNome.getText().toString();
-
-                    if (nome.isEmpty()) {
-                        throw new Exception("Campo de Nome Não Pode Estar Vazio!");
-                    }
-
                     Marca marca = new Marca();
-
                     marca.setId(new Date().getTime());
-                    marca.setNome(nome.toUpperCase());
+                    marca.setNome(txtNome.getText().toString().toUpperCase());
 
-//                    boolean result = marcaManager.inserir(marca);
-//
-//                    if (result) {
-//                        Toast.makeText(getContext(), "Inserção de Marca " + marca.getNome() + " Efetuada Com Sucesso.", Toast.LENGTH_SHORT).show();
-//
-//                        aposCadastro(marca);
-//                    } else {
-//                        Toast.makeText(viewInflate.getContext(), "Erro ao Inserir Marca", Toast.LENGTH_SHORT).show();
-//                    }
+                    setAlertaCadastro(marca);
                 } catch (Exception e) {
-                    //Log.e(LOG, e.getMessage(), e);
+                    Log.e(LOG, e.getMessage(), e);
                 }
             }
         });
@@ -63,18 +55,27 @@ public class CadastrarMarca extends TelaCadastro {
         return view;
     }
 
-    /**
-     * Operação para ser feita após cadastro efetuado com sucesso
-     */
-    protected void aposCadastro(Marca marca) {
-        try {
-            // Atualiza lista em aba de pesquisa
-            Fragment fragment = ((TabLayoutActivityBase) (getActivity())).getPagerAdapter().getItem(0);
-            //((PesquisarMarca) fragment).populaListView();
+    public void setAlertaCadastro(final Marca marca) {
+        alertaCadastro = new AlertDialog.Builder(getContext());
+        alertaCadastro.setTitle("Cadastrar Marca");
 
-            txtNome.getText().clear();
-        } catch (Exception e) {
-//            Log.i(LOG, e.getMessage(), e);
-        }
+        String mensagem = "Deseja Cadastrar a Marca " + marca.getNome() + "?";
+        alertaCadastro.setMessage(mensagem);
+
+        alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cadastrarMarcaController.cadastrar(marca);
+            }
+        });
+
+        alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mensagemAoUsuario("Marca Não Foi Cadastrada");
+            }
+        });
+
+        alertaCadastro.show();
     }
 }

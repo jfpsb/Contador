@@ -14,10 +14,10 @@
 //
 //import java.util.List;
 //
-//public class ProdutoAdapter extends ArrayAdapter<Produto> {
+//public class ProdutoCursorAdapter extends ArrayAdapter<Produto> {
 //    private int resourceLayout;
 //
-//    public ProdutoAdapter(Context context, int resource, List<Produto> objects) {
+//    public ProdutoCursorAdapter(Context context, int resource, List<Produto> objects) {
 //        super(context, resource, objects);
 //        this.resourceLayout = resource;
 //    }
@@ -61,8 +61,8 @@ import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
 
-public class ProdutoAdapter extends CursorAdapter {
-    public ProdutoAdapter(Context context, Cursor c) {
+public class ProdutoCursorAdapter extends CursorAdapter {
+    public ProdutoCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 

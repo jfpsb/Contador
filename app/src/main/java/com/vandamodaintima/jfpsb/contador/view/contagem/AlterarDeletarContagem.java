@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela.manager.contagem;
+package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.Manifest;
 import android.app.AlertDialog;

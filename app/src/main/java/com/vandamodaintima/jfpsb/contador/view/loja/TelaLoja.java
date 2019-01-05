@@ -5,7 +5,7 @@ import android.view.ViewStub;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 public class TelaLoja extends TabLayoutActivityBase {
 

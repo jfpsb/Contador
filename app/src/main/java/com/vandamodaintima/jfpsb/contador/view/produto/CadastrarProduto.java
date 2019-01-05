@@ -24,6 +24,7 @@ import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
+import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 
 public class CadastrarProduto extends TelaCadastro {
@@ -76,8 +77,8 @@ public class CadastrarProduto extends TelaCadastro {
         btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
-//                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
+                Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
+                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
             }
         });
 

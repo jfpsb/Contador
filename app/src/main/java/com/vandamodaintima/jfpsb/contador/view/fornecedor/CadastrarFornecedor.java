@@ -2,9 +2,7 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,19 +19,14 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class CadastrarFornecedor extends Fragment implements CadastrarView {
+public class CadastrarFornecedor extends TelaCadastro {
     protected Button btnCadastrar;
     protected EditText txtCnpj;
     protected TextView lblCnpjRepetido;
 
-    private SQLiteDatabase sqLiteDatabase;
-    private CadastrarFornecedorController cadastrarFornecedorController;
+    protected CadastrarFornecedorController cadastrarFornecedorController;
 
     protected AlertDialog.Builder alertaCadastro;
 
@@ -93,7 +86,7 @@ public class CadastrarFornecedor extends Fragment implements CadastrarView {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
     }
 
-    public void setAlertaCadastro(final Fornecedor fornecedor, final Toast toast) {
+    public void setAlertaCadastro(final Fornecedor fornecedor) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Fornecedor");
 
@@ -118,8 +111,7 @@ public class CadastrarFornecedor extends Fragment implements CadastrarView {
         alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                toast.setText("Fornecedor Não Foi Cadastrado");
-                toast.show();
+                mensagemAoUsuario("Fornecedor Não Foi Cadastrado");
             }
         });
 

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -14,13 +15,15 @@ import java.util.Date;
 public class PesquisarContagemController {
     private PesquisarView view;
     private DAOContagem daoContagem;
-    private ContagemAdapter contagemAdapter;
+    private ContagemCursorAdapter contagemCursorAdapter;
     private Context context;
 
     public PesquisarContagemController(PesquisarView view, SQLiteDatabase sqLiteDatabase, Context context) {
         this.view = view;
         this.context = context;
         daoContagem = new DAOContagem(sqLiteDatabase);
+        contagemCursorAdapter = new ContagemCursorAdapter(context, null);
+        view.setListViewAdapter(contagemCursorAdapter);
     }
 
     public void pesquisar(String loja, Date dataInicial, Date dataFinal) {
@@ -29,14 +32,15 @@ public class PesquisarContagemController {
             return;
         }
 
-        ArrayList<Contagem> contagens = daoContagem.listarPorLojaPeriodo(loja, dataInicial, dataFinal);
+        Cursor cursor = daoContagem.listarPorLojaPeriodoCursor(loja, dataInicial, dataFinal);
 
-        if (contagens.size() == 0) {
+        if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Contagens Não Encontradas");
         }
 
-        contagemAdapter = new ContagemAdapter(context, R.layout.item_pesquisa_id_nome, contagens);
+        contagemCursorAdapter.changeCursor(cursor);
+        contagemCursorAdapter.notifyDataSetChanged();
 
-        view.populaLista(contagemAdapter);
+        view.setTextoQuantidadeBusca(cursor.getCount());
     }
 }

@@ -27,6 +27,9 @@ public class TelaAlterarDeletar extends ActivityBaseView implements AlterarDelet
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
+        setAlertBuilderAtualizar();
+        setAlertBuilderDeletar();
+
         btnAtualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

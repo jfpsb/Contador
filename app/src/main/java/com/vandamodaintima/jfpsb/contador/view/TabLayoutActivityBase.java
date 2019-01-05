@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 public class TabLayoutActivityBase extends ActivityBaseView {
     private ViewPager viewPager;
@@ -16,6 +15,10 @@ public class TabLayoutActivityBase extends ActivityBaseView {
     private MyPagerAdapter adapter;
 
     private String[] headers;
+
+    public TabLayoutActivityBase() {
+        //default constructor
+    }
 
     /**
      * Construtor para activities que possuem abas (TabLayout)

@@ -1,6 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.view.interfaces;
 
+import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.widget.AdapterView;
 
 public interface PesquisarView {
 
@@ -18,4 +20,6 @@ public interface PesquisarView {
     void setTextoQuantidadeBusca(int quantidade);
 
     void realizarPesquisa(String... termos);
+
+    void cliqueEmItemLista(AdapterView<?> adapterView, int i);
 }

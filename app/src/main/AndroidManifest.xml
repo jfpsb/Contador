@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".tela.manager.contagem.TelaContador"
+            android:name=".view.contagem.TelaContador"
             android:label="Gerenciar Contagens"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
@@ -31,21 +31,32 @@
             android:label="Gerenciar Produtos"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.contagem.AlterarDeletarContagem"
+            android:name=".view.contagem.AlterarDeletarContagem"
             android:label="@string/title_activity_alterar_deletar_contagem"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.manager.contagem.AdicionarContagemProduto"
+            android:name=".view.contagem.AdicionarContagemProduto"
             android:label="@string/title_activity_adicionar_contagem_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".tela.TabLayoutActivityBase"
+            android:name=".view.TabLayoutActivityBase"
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
-        <activity android:name=".view.produto.AlterarDeletarProduto"
+        <activity
+            android:name=".view.produto.AlterarDeletarProduto"
             android:label="Alterar/Deletar Produto"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.fornecedor.TelaFornecedorForResult"
+            android:label="Fornecedor Para Produto"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.marca.TelaMarcaForResult"
+            android:label="Marca Para Produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <meta-data

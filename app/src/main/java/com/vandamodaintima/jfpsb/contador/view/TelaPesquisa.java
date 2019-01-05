@@ -2,12 +2,13 @@ package com.vandamodaintima.jfpsb.contador.view;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class TelaPesquisa extends Fragment implements PesquisarView {
@@ -17,7 +18,11 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
 
     @Override
     public void onDestroy() {
+        CursorAdapter cursor = (CursorAdapter) listView.getAdapter();
+        cursor.getCursor().close();
+
         sqLiteDatabase.close();
+
         super.onDestroy();
     }
 
@@ -27,13 +32,26 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
     }
 
     @Override
-    public void populaLista(ArrayAdapter adapter) {
-        listView.setAdapter(null);
+    public void setListViewAdapter(CursorAdapter adapter) {
         listView.setAdapter(adapter);
     }
 
     @Override
+    public void setTextoQuantidadeBusca(int quantidade) {
+        Log.i("Contador", "Sobreescreva na fragment se precisar informar a quantidade de itens retornados na pesquisa");
+    }
+
+    @Override
     public void realizarPesquisa(String... termos) {
+        try {
+            throw new Exception("Sobreescreva na fragment");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         try {
             throw new Exception("Sobreescreva na fragment");
         } catch (Exception e) {

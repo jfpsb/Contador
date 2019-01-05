@@ -1,10 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.vandamodaintima.jfpsb.contador.model.ProdutoContagem;
-
-import java.util.ArrayList;
 
 public class DAOContagemProduto implements DAO<ProdutoContagem> {
     private static final String TABELA = "contagem_produto";
@@ -32,7 +31,7 @@ public class DAOContagemProduto implements DAO<ProdutoContagem> {
     }
 
     @Override
-    public ArrayList<ProdutoContagem> listar() {
+    public Cursor listar() {
         return null;
     }
 

@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.contagem;
+package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,20 +10,21 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 
 import java.util.List;
 
-public class ContagemAdapter extends ArrayAdapter<Contagem> {
+public class FornecedorArrayAdapter extends ArrayAdapter<Fornecedor> {
     private int resourceLayout;
     private Context mContext;
 
-    public ContagemAdapter(Context context, int resource, List<Contagem> objects) {
+    public FornecedorArrayAdapter(Context context, int resource, List<Fornecedor> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
@@ -34,14 +35,24 @@ public class ContagemAdapter extends ArrayAdapter<Contagem> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Contagem c = getItem(position);
+        Fornecedor p = getItem(position);
 
-        if (c != null) {
-            TextView labelLojaNome = v.findViewById(R.id.labelLojaNome);
-            TextView labelDataInicial = v.findViewById(R.id.labelDataInicial);
+        if (p != null) {
+            TextView tt1 = v.findViewById(R.id.listaFornecedorCnpj);
+            TextView tt2 = v.findViewById(R.id.listaFornecedorNome);
+            TextView tt3 = v.findViewById(R.id.listaFornecedorFantasia);
 
-            labelLojaNome.setText(c.getLoja().getNome());
-            labelDataInicial.setText(c.getDataString());
+            if (tt1 != null) {
+                tt1.setText(p.getCnpj());
+            }
+
+            if (tt2 != null) {
+                tt2.setText(p.getNome());
+            }
+
+            if (tt3 != null) {
+                tt3.setText(p.getFantasia());
+            }
         }
 
         return v;

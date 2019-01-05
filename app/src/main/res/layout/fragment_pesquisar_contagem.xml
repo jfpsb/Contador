@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="7dip"
     android:orientation="vertical"
-    tools:context="com.vandamodaintima.jfpsb.contador.tela.manager.contagem.PesquisarContagem">
+    tools:context="com.vandamodaintima.jfpsb.contador.view.contagem.PesquisarContagem">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listViewLoja"
+        android:id="@+id/listViewFornecedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"></ListView>

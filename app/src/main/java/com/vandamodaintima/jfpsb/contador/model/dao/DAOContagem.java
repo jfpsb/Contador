@@ -8,10 +8,6 @@ import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * Created by jfpsb on 08/02/2018.
- */
-
 public class DAOContagem implements DAO<Contagem> {
     private static final String TABELA = "contagem";
 
@@ -37,7 +33,7 @@ public class DAOContagem implements DAO<Contagem> {
     }
 
     @Override
-    public ArrayList<Contagem> listar() {
+    public Cursor listar() {
         return null;
     }
 
@@ -46,12 +42,16 @@ public class DAOContagem implements DAO<Contagem> {
         return null;
     }
 
+    public Cursor listarPorLojaPeriodoCursor(String loja, Date dataInicial, Date dataFinal) {
+        return sqLiteDatabase.query(TABELA, null, "loja = ? AND data BETWEEN ? AND ?", new String[]{loja, Contagem.getDataSQLite(dataInicial), Contagem.getDataSQLite(dataFinal)}, null, null, null, null);
+    }
+
     public ArrayList<Contagem> listarPorLojaPeriodo(String loja, Date dataInicial, Date dataFinal) {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, null, "loja = ? AND data BETWEEN ? AND ?", new String[]{loja, Contagem.getDataSQLite(dataInicial), Contagem.getDataSQLite(dataFinal)}, null, null, null, null);
+        Cursor cursor = listarPorLojaPeriodoCursor(loja, dataInicial, dataFinal);
 
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Contagem contagem = new Contagem();
 

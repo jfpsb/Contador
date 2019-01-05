@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.tela.DatePickerFragment;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class TelaCadastro extends Fragment implements CadastrarView {

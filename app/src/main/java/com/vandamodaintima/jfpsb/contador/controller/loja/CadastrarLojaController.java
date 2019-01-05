@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
@@ -40,6 +39,6 @@ public class CadastrarLojaController {
     }
 
     public ArrayList<Loja> getMatrizes() {
-        return daoLoja.selectMatrizes();
+        return daoLoja.listarMatrizes();
     }
 }

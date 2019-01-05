@@ -14,16 +14,16 @@ import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.tela.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class TelaFornecedor extends TabLayoutActivityBase {
 
-    private CadastrarFornecedor cadastrarFornecedor;
-    private PesquisarFornecedor pesquisarFornecedor;
+    protected CadastrarFornecedor cadastrarFornecedor;
+    protected PesquisarFornecedor pesquisarFornecedor;
 
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
@@ -41,8 +41,7 @@ public class TelaFornecedor extends TabLayoutActivityBase {
         stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
-        cadastrarFornecedor = new CadastrarFornecedor();
-        pesquisarFornecedor = new PesquisarFornecedor();
+        setFragments();
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
@@ -124,5 +123,10 @@ public class TelaFornecedor extends TabLayoutActivityBase {
                 }
                 break;
         }
+    }
+
+    public void setFragments() {
+        cadastrarFornecedor = new CadastrarFornecedor();
+        pesquisarFornecedor = new PesquisarFornecedor();
     }
 }

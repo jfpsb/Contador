@@ -12,7 +12,7 @@ public interface DAO<T> {
 
     Boolean deletar(Object... chaves);
 
-    Cursor listar(String selection, String[] args, String groupBy, String having, String orderBy, String limit);
+    Cursor listar();
 
     T listarPorId(Object... ids);
 }

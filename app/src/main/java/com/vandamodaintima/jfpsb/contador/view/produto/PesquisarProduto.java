@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -21,7 +22,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
-import com.vandamodaintima.jfpsb.contador.controller.produto.ProdutoAdapter;
+import com.vandamodaintima.jfpsb.contador.controller.produto.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
@@ -29,7 +30,6 @@ public class PesquisarProduto extends TelaPesquisa {
 
     protected Spinner spinnerPesquisa;
     protected EditText txtPesquisaProduto;
-    protected ListView listView;
     protected TextView txtQuantProdutosCadastrados;
 
     private static final int DESCRICAO = 0;
@@ -45,27 +45,21 @@ public class PesquisarProduto extends TelaPesquisa {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarProdutoController = new PesquisarProdutoController(this, sqLiteDatabase, getContext());
-
         listView = view.findViewById(R.id.listViewProduto);
         spinnerPesquisa = view.findViewById(R.id.spinnerPesquisa);
         txtPesquisaProduto = view.findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = view.findViewById(R.id.txtQuantProdutosCadastrados);
 
+        // Não pode ser antes de instanciar as views
+        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
+        pesquisarProdutoController = new PesquisarProdutoController(this, sqLiteDatabase, getContext());
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Produto produto = (Produto) adapterView.getItemAtPosition(i);
-
-                Intent intent = new Intent(getContext(), AlterarDeletarProduto.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("produto", produto);
-
-                intent.putExtras(bundle);
-
-                startActivity(intent);
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                Intent intent = pesquisarProdutoController.abrirTelaAlterarDeletar(cursor);
+                startActivityForResult(intent, TELA_ALTERAR_DELETAR);
             }
         });
 
@@ -115,8 +109,7 @@ public class PesquisarProduto extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String termo = txtPesquisaProduto.getText().toString();
-                realizarPesquisa(termo);
+                realizarPesquisa(txtPesquisaProduto.getText().toString());
             }
         });
 
@@ -144,16 +137,8 @@ public class PesquisarProduto extends TelaPesquisa {
     }
 
     @Override
-    public void populaLista(ArrayAdapter adapter) {
-        listView.setAdapter(null);
-        listView.setAdapter(adapter);
-
-        txtQuantProdutosCadastrados.setText(String.valueOf(adapter.getCount()));
-    }
-
-    public void populaLista(ProdutoAdapter adapter) {
-        listView.setAdapter(adapter);
-        txtQuantProdutosCadastrados.setText(String.valueOf(adapter.getCount()));
+    public void setTextoQuantidadeBusca(int quantidade) {
+        txtQuantProdutosCadastrados.setText(String.valueOf(quantidade));
     }
 
     @Override

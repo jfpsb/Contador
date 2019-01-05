@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.tela;
+package com.vandamodaintima.jfpsb.contador.view;
 
 import android.app.Dialog;
 import android.os.Bundle;

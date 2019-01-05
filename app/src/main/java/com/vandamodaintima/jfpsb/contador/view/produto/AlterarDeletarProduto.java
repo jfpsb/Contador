@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -18,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
+import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 
 public class AlterarDeletarProduto extends TelaAlterarDeletar {
@@ -59,8 +59,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
 
-        inicializaBotoes();
-
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
@@ -81,8 +79,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             marca = produto.getMarca();
         }
 
-        setAlertaRemoverFornecedor();
+        inicializaBotoes();
+
         setAlertaRemoverMarca();
+        setAlertaRemoverFornecedor();
 
         setBtnEscolherFornecedor();
         setBtnEscolherMarca();
@@ -96,8 +96,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(AlterarDeletarProduto.this, TelaFornecedorForResult.class);
-                //startActivityForResult(intent, ESCOLHER_FORNECEDOR);
+                Intent intent = new Intent(AlterarDeletarProduto.this, TelaFornecedorForResult.class);
+                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
             }
         });
     }
@@ -205,15 +205,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 alterarDeletarProdutoController.deletar(produto);
-//                boolean result = produtoManager.deletar(entidade.getCod_barra());
-//
-//                if (result) {
-//                    Toast.makeText(AlterarDeletarProduto.this, "Produto Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
-//                    setResult(Activity.RESULT_OK, null);
-//                    finish();
-//                } else {
-//                    Toast.makeText(AlterarDeletarProduto.this, "Erro ao Deletar Produto", Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 

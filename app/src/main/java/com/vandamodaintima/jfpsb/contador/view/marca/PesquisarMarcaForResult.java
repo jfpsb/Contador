@@ -1,58 +1,54 @@
 package com.vandamodaintima.jfpsb.contador.view.marca;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 
-/**
- * Usado em TelaMarcaForResult
- * Lista as marcas e permite que o usuário escolha uma ao clicar nela
- * e atribuir ao produto
- * Isso é uma Fragment
- */
-public class PesquisarMarcaEmProduto extends PesquisarMarca {
-    private AlertDialog.Builder alertaEscolha;
+public class PesquisarMarcaForResult extends PesquisarMarca {
+    AlertDialog.Builder alertaEscolha;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
                 Marca marca = new Marca();
+
                 marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 setAlertaEscolha(marca);
             }
         });
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private void setAlertaEscolha(final Marca marca) {
         alertaEscolha = new AlertDialog.Builder(getContext());
         alertaEscolha.setTitle("Escolher Marca");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Escolher a Marca " + marca.getNome() + "?");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar A Marca " + marca.getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((TelaMarcaForResult) getActivity()).setResultado(marca);
+                Intent intent = new Intent();
+                intent.putExtra("marca", marca);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
             }
         });
 
         alertaEscolha.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getContext(), "Marca Não Foi Escolhida", Toast.LENGTH_SHORT).show();
+                mensagemAoUsuario("Marca Não Foi Escolhida");
             }
         });
 

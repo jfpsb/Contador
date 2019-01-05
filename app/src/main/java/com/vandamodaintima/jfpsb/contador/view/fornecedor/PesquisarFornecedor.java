@@ -1,17 +1,15 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
-
+import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,44 +19,27 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.PesquisarFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PesquisarFornecedor extends TelaPesquisa {
-
-    protected ListView listView;
     private EditText txtPesquisaFornecedor;
 
     private PesquisarFornecedorController pesquisarFornecedorController;
-    private SQLiteDatabase sqLiteDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
+        txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
+        listView = view.findViewById(R.id.listViewFornecedor);
+
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
         pesquisarFornecedorController = new PesquisarFornecedorController(this, sqLiteDatabase, getContext());
-
-        txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
-        listView = view.findViewById(R.id.listViewLoja);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Fornecedor fornecedor = (Fornecedor) adapterView.getItemAtPosition(i);
-
-                Intent intent = new Intent(getContext(), AlterarDeletarFornecedor.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("fornecedor", fornecedor);
-
-                intent.putExtras(bundle);
-
-                startActivity(intent);
+                cliqueEmItemLista(adapterView, i);
             }
         });
 
@@ -84,7 +65,15 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        switch (requestCode) {
+            case TELA_ALTERAR_DELETAR:
+                if (resultCode == Activity.RESULT_OK) {
+                    realizarPesquisa(txtPesquisaFornecedor.getText().toString());
+                } else {
+                    mensagemAoUsuario("O Fornecedor Não Foi Alterado");
+                }
+                break;
+        }
     }
 
     @Override
@@ -93,8 +82,16 @@ public class PesquisarFornecedor extends TelaPesquisa {
     }
 
     @Override
-    public void populaLista(ArrayAdapter adapter) {
-        listView.setAdapter(null);
-        listView.setAdapter(adapter);
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
+        Fornecedor fornecedor = (Fornecedor) adapterView.getItemAtPosition(i);
+
+        Intent intent = new Intent(getContext(), AlterarDeletarFornecedor.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("fornecedor", fornecedor);
+
+        intent.putExtras(bundle);
+
+        startActivity(intent);
     }
 }

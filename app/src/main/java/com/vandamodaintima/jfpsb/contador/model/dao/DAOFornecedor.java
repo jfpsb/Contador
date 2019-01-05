@@ -54,8 +54,8 @@ public class DAOFornecedor implements DAO<Fornecedor> {
     }
 
     @Override
-    public ArrayList<Fornecedor> listar() {
-        return null;
+    public Cursor listar() {
+        return sqLiteDatabase.query(TABELA, null, null, null, null, null, null, null);
     }
 
     @Override
@@ -78,18 +78,44 @@ public class DAOFornecedor implements DAO<Fornecedor> {
         return fornecedor;
     }
 
+    public Cursor listarPorNomeCursor(String nome) {
+        return sqLiteDatabase.query(TABELA, null, "nome LIKE ?", new String[] { "%" + nome + "%" }, null, null, null, null);
+    }
+
     public ArrayList<Fornecedor> listarPorNome(String nome) {
-        return null;
+        ArrayList<Fornecedor> fornecedores = new ArrayList<>();
+
+        Cursor cursor = listarPorNomeCursor(nome);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Fornecedor fornecedor = new Fornecedor();
+
+                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+
+                fornecedores.add(fornecedor);
+            }
+        }
+
+        cursor.close();
+
+        return fornecedores;
     }
 
     public ArrayList<Fornecedor> listarPorFantasia(String fantasia) {
         return null;
     }
 
+    public Cursor listarPorCnpjNomeFantasiaCursor(String termo) {
+        return sqLiteDatabase.query(TABELA, Fornecedor.getColunas(), "cnpj LIKE ? OR nome LIKE ? OR fantasia LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+    }
+
     public ArrayList<Fornecedor> listarPorCnpjNomeFantasia(String termo) {
         ArrayList<Fornecedor> fornecedores = new ArrayList<>();
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, null, "cnpj LIKE ? OR nome LIKE ? OR nome_fantasia LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+        Cursor cursor = listarPorCnpjNomeFantasiaCursor(termo);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

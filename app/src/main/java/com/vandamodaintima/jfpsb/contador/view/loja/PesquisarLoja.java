@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,7 +36,7 @@ public class PesquisarLoja extends TelaPesquisa {
         pesquisarLojaController = new PesquisarLojaController(this, sqLiteDatabase, getContext());
 
         txtNome = viewInflate.findViewById(R.id.txtNome);
-        listView = viewInflate.findViewById(R.id.listViewLoja);
+        listView = viewInflate.findViewById(R.id.listViewFornecedor);
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,11 +81,5 @@ public class PesquisarLoja extends TelaPesquisa {
     @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void populaLista(ArrayAdapter adapter) {
-        listView.setAdapter(null);
-        listView.setAdapter(adapter);
     }
 }
