@@ -154,13 +154,13 @@ public class DAOProduto implements DAO<Produto> {
             produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
             produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
 
-            Cursor cursorCodigoBarraFornecedor = sqLiteDatabase.query("cod_barra_fornecedor", null, "produto = ?", new String[]{produto.getCod_barra()}, null, null, null, null);
+            Cursor cursorCodigoBarraFornecedor = sqLiteDatabase.query("cod_barra_fornecedor", new String[] { "ROWID as _id", "codigo", "produto"}, "produto = ?", new String[]{produto.getCod_barra()}, null, null, null, null);
 
             if (cursorCodigoBarraFornecedor.getCount() > 0) {
                 ArrayList<String> codigos = new ArrayList<>();
 
                 while (cursorCodigoBarraFornecedor.moveToNext()) {
-                    codigos.add(cursor.getString(cursor.getColumnIndexOrThrow("codigo")));
+                    codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
                 }
 
                 produto.setCod_barra_fornecedor(codigos);

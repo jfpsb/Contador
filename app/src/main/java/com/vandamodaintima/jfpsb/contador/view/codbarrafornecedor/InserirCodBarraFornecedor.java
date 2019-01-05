@@ -48,7 +48,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
 
                 if (getUserVisibleHint()) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
-                        String cod_barra_fornecedor = txtCodBarra.getText().toString();
+                        String cod_barra_fornecedor = txtCodBarra.getText().toString().replace("\n", "");
                         inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produto);
                         return true;
                     }
