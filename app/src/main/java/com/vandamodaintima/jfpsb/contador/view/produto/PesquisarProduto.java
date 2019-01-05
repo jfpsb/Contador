@@ -109,7 +109,7 @@ public class PesquisarProduto extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                realizarPesquisa(txtPesquisaProduto.getText().toString());
+                realizarPesquisa();
             }
         });
 
@@ -121,8 +121,7 @@ public class PesquisarProduto extends TelaPesquisa {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
                 if (resultCode == Activity.RESULT_OK) {
-                    String termo = txtPesquisaProduto.getText().toString();
-                    realizarPesquisa(termo);
+                    realizarPesquisa();
                 } else {
                     mensagemAoUsuario("Produto Não Foi Alterado");
                 }
@@ -142,8 +141,8 @@ public class PesquisarProduto extends TelaPesquisa {
     }
 
     @Override
-    public void realizarPesquisa(String... termos) {
-        String termo = String.valueOf(termos[0]);
+    public void realizarPesquisa() {
+        String termo = txtPesquisaProduto.getText().toString();
 
         switch (PESQUISA) {
             case DESCRICAO:

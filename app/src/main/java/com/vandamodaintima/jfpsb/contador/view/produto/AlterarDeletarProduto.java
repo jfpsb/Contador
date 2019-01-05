@@ -17,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
+import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 
@@ -118,9 +119,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnGerenciarCodBarraFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), TelaCodBarraFornecedor.class);
-//                intent.putExtra("produto", produto);
-//                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
+                Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
+                intent.putExtra("produto", produto);
+
+                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
         });
     }

@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.loja;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ import com.vandamodaintima.jfpsb.contador.controller.loja.CadastrarLojaControlle
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.ArrayList;
 
-public class CadastrarLoja extends Fragment implements CadastrarView {
+public class CadastrarLoja extends TelaCadastro {
     private Button btnCadastrar;
     private EditText txtNome;
     private EditText txtCnpj;

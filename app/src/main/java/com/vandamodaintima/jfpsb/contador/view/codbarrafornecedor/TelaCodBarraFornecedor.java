@@ -2,6 +2,8 @@ package com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -9,13 +11,13 @@ import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
-    private CadastrarCodBarraFornecedor inserirCodBarraFornecedor;
+    private InserirCodBarraFornecedor inserirCodBarraFornecedor;
     private ListarCodBarraFornecedor listarCodBarraFornecedor;
 
     private Bundle bundle;
 
     public TelaCodBarraFornecedor() {
-        super(new String[] { "Listagem", "Inserção" });
+        super(new String[]{"Listagem", "Inserção"});
     }
 
     @Override
@@ -26,7 +28,7 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
         stub.setLayoutResource(R.layout.content_tela_tablayout);
         stub.inflate();
 
-        inserirCodBarraFornecedor = new CadastrarCodBarraFornecedor();
+        inserirCodBarraFornecedor = new InserirCodBarraFornecedor();
         listarCodBarraFornecedor = new ListarCodBarraFornecedor();
 
         Produto produto = (Produto) getIntent().getSerializableExtra("produto");
@@ -34,10 +36,23 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
         bundle = new Bundle();
         bundle.putSerializable("produto", produto);
 
-//        inserirCodBarraFornecedor.setArguments(bundle);
-//        listarCodBarraFornecedor.setArguments(bundle);
-//
-//        setViewPagerTabLayout(listarCodBarraFornecedor, inserirCodBarraFornecedor);
+        inserirCodBarraFornecedor.setArguments(bundle);
+        listarCodBarraFornecedor.setArguments(bundle);
+
+        View view = findViewById(R.id.tela_tablayout);
+
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_ENTER) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        setViewPagerTabLayout(listarCodBarraFornecedor, inserirCodBarraFornecedor);
     }
 
     @Override
@@ -51,4 +66,6 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
 
         super.onBackPressed();
     }
+
+
 }

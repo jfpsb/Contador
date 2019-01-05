@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <ViewStub
-            android:id="@+id/inserirCodBarraFornecedorStub"
+            android:id="@+id/dados_produto_cod_barra_fornecedor_stub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

@@ -4,4 +4,8 @@ public interface CadastrarView {
     void limparCampos();
 
     void mensagemAoUsuario(String mensagem);
+
+    void aposCadastro();
+
+    void focoEmTxt();
 }

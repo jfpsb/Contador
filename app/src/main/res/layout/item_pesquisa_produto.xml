@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/labelCodBarra"
+        android:id="@+id/text1"
         android:minHeight="50dp"
         android:textSize="18dp"
         android:textColor="#000000"

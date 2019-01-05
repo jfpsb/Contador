@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class TelaAlterarDeletar extends ActivityBaseView implements AlterarDelet
 
     @Override
     public void fecharTela() {
+        setResult(Activity.RESULT_OK);
         finish();
     }
 

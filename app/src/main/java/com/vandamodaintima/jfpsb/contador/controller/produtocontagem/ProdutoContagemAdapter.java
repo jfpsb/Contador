@@ -37,7 +37,7 @@ public class ProdutoContagemAdapter extends ArrayAdapter<ProdutoContagem> {
         ProdutoContagem pc = getItem(position);
 
         if (pc != null) {
-            TextView labelCodBarra = v.findViewById(R.id.labelCodBarra);
+            TextView labelCodBarra = v.findViewById(R.id.text1);
             TextView labelDescricao = v.findViewById(R.id.labelDescricao);
             TextView labelQuant = v.findViewById(R.id.labelQuant);
 

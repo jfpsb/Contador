@@ -68,7 +68,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
                 if (resultCode == Activity.RESULT_OK) {
-                    realizarPesquisa(txtPesquisaFornecedor.getText().toString());
+                    realizarPesquisa();
                 } else {
                     mensagemAoUsuario("O Fornecedor Não Foi Alterado");
                 }
@@ -93,5 +93,10 @@ public class PesquisarFornecedor extends TelaPesquisa {
         intent.putExtras(bundle);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void realizarPesquisa() {
+        pesquisarFornecedorController.pesquisa(txtPesquisaFornecedor.getText().toString());
     }
 }

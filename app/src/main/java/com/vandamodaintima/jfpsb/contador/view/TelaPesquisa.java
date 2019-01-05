@@ -1,11 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,10 +20,17 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
 
     @Override
     public void onDestroy() {
-        CursorAdapter cursor = (CursorAdapter) listView.getAdapter();
-        cursor.getCursor().close();
+        ListAdapter listAdapter = listView.getAdapter();
 
-        sqLiteDatabase.close();
+        if (listAdapter instanceof CursorAdapter) {
+            CursorAdapter cursorAdapter = (CursorAdapter) listAdapter;
+            Cursor cursor = cursorAdapter.getCursor();
+            if (cursor != null)
+                cursor.close();
+        }
+
+        if(sqLiteDatabase != null && sqLiteDatabase.isOpen())
+            sqLiteDatabase.close();
 
         super.onDestroy();
     }
@@ -32,7 +41,7 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
     }
 
     @Override
-    public void setListViewAdapter(CursorAdapter adapter) {
+    public void setListViewAdapter(ListAdapter adapter) {
         listView.setAdapter(adapter);
     }
 
@@ -42,7 +51,7 @@ public class TelaPesquisa extends Fragment implements PesquisarView {
     }
 
     @Override
-    public void realizarPesquisa(String... termos) {
+    public void realizarPesquisa() {
         try {
             throw new Exception("Sobreescreva na fragment");
         } catch (Exception e) {

@@ -59,6 +59,11 @@
             android:label="Marca Para Produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
+        <activity
+            android:name=".view.codbarrafornecedor.TelaCodBarraFornecedor"
+            android:label="Códigos de Barra de Fornecedor"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
