@@ -63,7 +63,7 @@ public class CadastrarContagem extends TelaCadastro {
                     contagem.setData(Contagem.getData(dataInicial));
                     contagem.setLoja(loja);
 
-//                    boolean result = contagemManager.inserir(contagem);
+//                    boolean result = contagemManager.importarDeExcel(contagem);
 //
 //                    if(result) {
 //                        Toast.makeText(view.getContext(), "Contagem Inserida Com Data " + TrataDisplayData.getDataFormatoDisplay(contagem.getData()), Toast.LENGTH_SHORT).show();

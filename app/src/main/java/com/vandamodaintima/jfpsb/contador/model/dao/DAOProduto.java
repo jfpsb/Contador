@@ -5,9 +5,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
 import java.util.ArrayList;
 
@@ -60,6 +60,61 @@ public class DAOProduto implements DAO<Produto> {
                 content.put("codigo", codigo);
 
                 sqLiteDatabase.insertOrThrow("cod_barra_fornecedor", null, content);
+            }
+
+            sqLiteDatabase.setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            sqLiteDatabase.endTransaction();
+        }
+
+        return false;
+    }
+
+    public Boolean importarDeExcel(ArrayList<Produto> produtos, TelaProduto.ImportarProdutoAsyncTask.Progresso progresso) {
+        try {
+            if(produtos.size() == 0) {
+                throw new Exception("Lista de Produtos Está Vazia");
+            }
+
+            sqLiteDatabase.beginTransaction();
+
+            for (Produto produto : produtos) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("cod_barra", produto.getCod_barra());
+                contentValues.put("descricao", produto.getDescricao());
+                contentValues.put("preco", produto.getPreco());
+
+                if (produto.getFornecedor() != null) {
+                    contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
+                } else {
+                    contentValues.putNull("fornecedor");
+                }
+
+                if (produto.getMarca() != null) {
+                    contentValues.put("marca", produto.getMarca().getId());
+                } else {
+                    contentValues.putNull("marca");
+                }
+
+                sqLiteDatabase.insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+                for (int i = 0; i < produto.getCod_barra_fornecedor().size(); i++) {
+                    String codigo = produto.getCod_barra_fornecedor().get(i);
+
+                    ContentValues content = new ContentValues();
+
+                    content.put("produto", produto.getCod_barra());
+                    content.put("codigo", codigo);
+
+                    sqLiteDatabase.insertWithOnConflict("cod_barra_fornecedor", null, content, SQLiteDatabase.CONFLICT_IGNORE);
+                }
+
+                progresso.publish("Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + " Cadastrado");
             }
 
             sqLiteDatabase.setTransactionSuccessful();
@@ -136,8 +191,47 @@ public class DAOProduto implements DAO<Produto> {
     }
 
     @Override
-    public Cursor listar() {
+    public Cursor listarCursor() {
         return sqLiteDatabase.query(TABELA, null, null, null, null, null, null, null);
+    }
+
+    public ArrayList<Produto> listar() {
+        ArrayList<Produto> produtos = new ArrayList<>();
+
+        Cursor cursor = listarCursor();
+
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Produto produto = new Produto();
+
+                produto.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
+                produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
+                produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+
+                Cursor cursorCodigoBarraFornecedor = sqLiteDatabase.query("cod_barra_fornecedor", null, "produto = ?", new String[]{produto.getCod_barra()}, null, null, null, null);
+
+                if (cursorCodigoBarraFornecedor.getCount() > 0) {
+                    ArrayList<String> codigos = new ArrayList<>();
+
+                    while (cursorCodigoBarraFornecedor.moveToNext()) {
+                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
+                    }
+
+                    produto.setCod_barra_fornecedor(codigos);
+                }
+
+                cursorCodigoBarraFornecedor.close();
+
+                produto.setMarca(daoMarca.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+
+                produtos.add(produto);
+            }
+        }
+
+        cursor.close();
+
+        return produtos;
     }
 
     @Override
@@ -154,7 +248,7 @@ public class DAOProduto implements DAO<Produto> {
             produto.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
             produto.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
 
-            Cursor cursorCodigoBarraFornecedor = sqLiteDatabase.query("cod_barra_fornecedor", new String[] { "ROWID as _id", "codigo", "produto"}, "produto = ?", new String[]{produto.getCod_barra()}, null, null, null, null);
+            Cursor cursorCodigoBarraFornecedor = sqLiteDatabase.query("cod_barra_fornecedor", new String[]{"ROWID as _id", "codigo", "produto"}, "produto = ?", new String[]{produto.getCod_barra()}, null, null, null, null);
 
             if (cursorCodigoBarraFornecedor.getCount() > 0) {
                 ArrayList<String> codigos = new ArrayList<>();
@@ -200,7 +294,7 @@ public class DAOProduto implements DAO<Produto> {
                     ArrayList<String> codigos = new ArrayList<>();
 
                     while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursor.getString(cursor.getColumnIndexOrThrow("codigo")));
+                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
                     }
 
                     produto.setCod_barra_fornecedor(codigos);
@@ -247,7 +341,7 @@ public class DAOProduto implements DAO<Produto> {
                     ArrayList<String> codigos = new ArrayList<>();
 
                     while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursor.getString(cursor.getColumnIndexOrThrow("codigo")));
+                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
                     }
 
                     produto.setCod_barra_fornecedor(codigos);
@@ -294,7 +388,7 @@ public class DAOProduto implements DAO<Produto> {
                     ArrayList<String> codigos = new ArrayList<>();
 
                     while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursor.getString(cursor.getColumnIndexOrThrow("codigo")));
+                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
                     }
 
                     produto.setCod_barra_fornecedor(codigos);
@@ -339,7 +433,7 @@ public class DAOProduto implements DAO<Produto> {
                     ArrayList<String> codigos = new ArrayList<>();
 
                     while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursor.getString(cursor.getColumnIndexOrThrow("codigo")));
+                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
                     }
 
                     produto.setCod_barra_fornecedor(codigos);

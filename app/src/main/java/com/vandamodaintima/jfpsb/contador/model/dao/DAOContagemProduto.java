@@ -31,7 +31,7 @@ public class DAOContagemProduto implements DAO<ProdutoContagem> {
     }
 
     @Override
-    public Cursor listar() {
+    public Cursor listarCursor() {
         return null;
     }
 

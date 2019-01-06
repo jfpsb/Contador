@@ -7,6 +7,10 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
@@ -22,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -29,7 +34,9 @@ import java.util.Date;
  */
 
 public class ManipulaExcel {
+    private static DAOFornecedor daoFornecedor;
     private static DAOProduto daoProduto;
+    private static DAOMarca daoMarca;
     private AsyncTask task;
     private ConexaoBanco conexaoBanco;
 
@@ -59,173 +66,6 @@ public class ManipulaExcel {
         conexaoBanco = conexao;
     }
 
-    public boolean ImportaProduto(final ContentResolver contentResolver, Uri filepath, TelaProduto.Tarefa.Progresso progresso) {
-        daoProduto = new DAOProduto(conexaoBanco.conexao());
-
-        ArrayList<Produto> produtos = new ArrayList<>();
-
-        InputStream inputStream = null;
-
-        progresso.publish("Iniciando Cadastro");
-
-        try {
-            if (task == null) {
-                throw new Exception("Você precisa passar um objeto AsyncTask no construtor!");
-            }
-
-            inputStream = Arquivo.getInputStreamFromUri(contentResolver, filepath);
-
-            if (inputStream == null) {
-                throw new Exception("InputStream de arquivo Excel escolhido voltou nula");
-            }
-
-            ArquivoExcel arquivoExcel = new ArquivoExcel(inputStream);
-
-            Row headerRow = arquivoExcel.getPlanilha().getRow(0);
-
-            if (headerRow.getPhysicalNumberOfCells() != 6) {
-                throw new Exception("Planilha Configurada de Forma Errada");
-            }
-
-            if(! headerRow.getCell(Headers.COD_BARRA.ordinal()).getStringCellValue().equals(Headers.COD_BARRA.texto)) {
-                throw new Exception("Cabeçalho da Primeira Coluna Está Errado");
-            }
-
-            if(! headerRow.getCell(Headers.FORNECEDOR.ordinal()).getStringCellValue().equals(Headers.FORNECEDOR.texto)) {
-                throw new Exception("Cabeçalho da Segunda Coluna Está Errado");
-            }
-
-            if(! headerRow.getCell(Headers.COD_BARRA_FORNECEDOR.ordinal()).getStringCellValue().equals(Headers.COD_BARRA_FORNECEDOR.texto)) {
-                throw new Exception("Cabeçalho da Terceira Coluna Está Errado");
-            }
-
-            if(! headerRow.getCell(Headers.DESCRICAO.ordinal()).getStringCellValue().equals(Headers.DESCRICAO.texto)) {
-                throw new Exception("Cabeçalho da Quarta Coluna Está Errado");
-            }
-
-            if(! headerRow.getCell(Headers.MARCA.ordinal()).getStringCellValue().equals(Headers.MARCA.texto)) {
-                throw new Exception("Cabeçalho da Quinta Coluna Está Errado");
-            }
-
-            if(! headerRow.getCell(Headers.PRECO.ordinal()).getStringCellValue().equals(Headers.PRECO.texto)) {
-                throw new Exception("Cabeçalho da Sexta Coluna Está Errado");
-            }
-
-            int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
-
-            progresso.publish(rows + " Produto(s) Encontrado(s)");
-
-            for (int i = 1; i < rows; i++) {
-                Row row = arquivoExcel.getPlanilha().getRow(i);
-
-                Produto produto = new Produto();
-
-                Cell cod_barra = row.getCell(Headers.COD_BARRA.ordinal());
-                Cell fornecedor = row.getCell(Headers.FORNECEDOR.ordinal());
-                Cell cod_barra_fornecedor = row.getCell(Headers.COD_BARRA_FORNECEDOR.ordinal());
-                Cell descricao = row.getCell(Headers.DESCRICAO.ordinal());
-                Cell marca = row.getCell(Headers.MARCA.ordinal());
-                Cell preco = row.getCell(Headers.PRECO.ordinal());
-
-                if(! isCellEmpty(cod_barra)) {
-                    if(cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        produto.setCod_barra(String.format("%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
-                    } else if(cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
-                        produto.setCod_barra(cod_barra.getStringCellValue());
-                    } else {
-                        throw new Exception("Formato de Código de Barras Errado. A Célula Precisa Ser do Tipo \"Texto\" ou \"Número\"");
-                    }
-                } else {
-                    throw new Exception("A Célula de Código de Barras Não Pode Estar Vazia");
-                }
-
-                if(! isCellEmpty(fornecedor)) {
-//                    if(fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-//                        //Fornecedor f = fornecedorManager.listarPorChave(fornecedor.getStringCellValue());
-//
-//                        if(f != null) {
-//                            produto.setFornecedor(f);
-//                        } else {
-//                            throw new Exception("Fornecedor " + fornecedor.getStringCellValue() + "Informado Não Encontrado");
-//                        }
-//                    } else {
-//                        throw new Exception("Formato de CNPJ de Fornecedor Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
-//                    }
-                } else {
-                    produto.setFornecedor(null);
-                }
-
-                if(! isCellEmpty(cod_barra_fornecedor)) {
-                    if(cod_barra_fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-                        //TODO: Separar códigos e inserir
-                    } else {
-                        throw new Exception("Formato de Código de Barras de Fornecedor Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
-                    }
-                }
-
-                if(! isCellEmpty(descricao)) {
-                    if(descricao.getCellType() == Cell.CELL_TYPE_STRING) {
-                        produto.setDescricao(descricao.getStringCellValue());
-                    } else {
-                        throw new Exception("Formato de Descrição do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
-                    }
-                } else {
-                    throw new Exception("A Célula de Descrição Não Pode Estar Vazia");
-                }
-
-//                if(! isCellEmpty(marca)) {
-//                    if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
-//                        Marca m = marcaManager.listarPorNome(marca.getStringCellValue());
-//
-//                        if (m != null) {
-//                            produto.setMarca(m);
-//                        } else {
-//                            throw new Exception("Marca " + marca.getStringCellValue() + " Não Encontrada");
-//                        }
-//                    } else {
-//                        throw new Exception("Formato de Marca do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
-//                    }
-//                } else {
-//                    produto.setMarca(null);
-//                }
-
-                if(! isCellEmpty(preco)) {
-                    if(preco.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        produto.setPreco(preco.getNumericCellValue());
-                    } else {
-                        throw new Exception("Formato de Preço do Produto Está Errado. A Célula Precisa ser do Tipo \"Número\"");
-                    }
-                } else {
-                    throw new Exception("A Célula de Preço Não Pode Estar Vazia");
-                }
-
-                if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null && produto.getPreco() != null) {
-                    produtos.add(produto);
-                }
-            }
-
-            //long result = daoProduto.inserirVarios(produtos, progresso);
-
-//            if(result == 1) {
-//                progresso.publish("Produtos Cadastrados com Sucesso");
-//                return true;
-//            }
-        } catch (Exception e) {
-            Log.i("Contador", e.getMessage());
-            progresso.publish(e.getMessage());
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    Log.e("Contador", "Ao tentar fechar InputStream: " + e.getMessage(), e);
-                }
-            }
-        }
-
-        return false;
-    }
-
     private boolean isCellEmpty(Cell cell) {
         if(cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
             return true;
@@ -241,14 +81,14 @@ public class ManipulaExcel {
     //TODO: Tentar simplificar. Estilizar planilha
     public boolean ExportaContagem(Contagem contagem, String diretorio) {
 
-        Date dataAtual = new Date();
-        ArquivoExcel arquivoExcel = new ArquivoExcel();
-        int rowIndex = 1; //Inicia após cabeçalho
-        OutputStream outputStream = null;
-
-        setCabecalhoContagem(arquivoExcel);
-
-        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
+//        Date dataAtual = new Date();
+//        ArquivoExcel arquivoExcel = new ArquivoExcel();
+//        int rowIndex = 1; //Inicia após cabeçalho
+//        OutputStream outputStream = null;
+//
+//        setCabecalhoContagem(arquivoExcel);
+//
+//        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
         //ArrayList<ProdutoContagem> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
 
@@ -317,7 +157,7 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 //
-//        ArrayList<Fornecedor> fornecedores = fornecedorManager.listar();
+//        ArrayList<Fornecedor> fornecedores = fornecedorManager.listarCursor();
 //
 //        try {
 //            if (fornecedores.size() == 0)
@@ -384,7 +224,7 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 //
-//        ArrayList<Produto> produtos = produtoManager.listar();
+//        ArrayList<Produto> produtos = produtoManager.listarCursor();
 //
 //        try {
 //            if (produtos.size() == 0)
@@ -447,90 +287,56 @@ public class ManipulaExcel {
     }
 
     private void setCabecalhoContagem(ArquivoExcel arquivoExcel) {
-        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
-
-        Font font = arquivoExcel.getPastaTrabalho().createFont();
-        font.setFontName("Arial");
-        font.setFontHeightInPoints((short) 16);
-        font.setBold(true);
-
-        cabecalhoStyle.setFont(font);
-        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
-
-        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
-
-        Cell cab1 = cabecalho.createCell(0);
-        cab1.setCellValue("Cód. de Barra");
-
-        Cell cab2 = cabecalho.createCell(1);
-        cab2.setCellValue("Descrição");
-
-        Cell cab3 = cabecalho.createCell(2);
-        cab3.setCellValue("Quantidade");
-
-        cab1.setCellStyle(cabecalhoStyle);
-        cab2.setCellStyle(cabecalhoStyle);
-        cab3.setCellStyle(cabecalhoStyle);
+//        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+//
+//        Font font = arquivoExcel.getPastaTrabalho().createFont();
+//        font.setFontName("Arial");
+//        font.setFontHeightInPoints((short) 16);
+//        font.setBold(true);
+//
+//        cabecalhoStyle.setFont(font);
+//        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
+//
+//        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
+//
+//        Cell cab1 = cabecalho.createCell(0);
+//        cab1.setCellValue("Cód. de Barra");
+//
+//        Cell cab2 = cabecalho.createCell(1);
+//        cab2.setCellValue("Descrição");
+//
+//        Cell cab3 = cabecalho.createCell(2);
+//        cab3.setCellValue("Quantidade");
+//
+//        cab1.setCellStyle(cabecalhoStyle);
+//        cab2.setCellStyle(cabecalhoStyle);
+//        cab3.setCellStyle(cabecalhoStyle);
     }
 
     private void setCabecalhoFornecedor(ArquivoExcel arquivoExcel) {
-        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
-
-        Font font = arquivoExcel.getPastaTrabalho().createFont();
-        font.setFontName("Arial");
-        font.setFontHeightInPoints((short) 16);
-        font.setBold(true);
-
-        cabecalhoStyle.setFont(font);
-        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
-
-        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
-
-        Cell cab1 = cabecalho.createCell(0);
-        cab1.setCellValue("CNPJ");
-
-        Cell cab2 = cabecalho.createCell(1);
-        cab2.setCellValue("Nome");
-
-        Cell cab3 = cabecalho.createCell(2);
-        cab3.setCellValue("Nome Fantasia");
-
-        cab1.setCellStyle(cabecalhoStyle);
-        cab2.setCellStyle(cabecalhoStyle);
-        cab3.setCellStyle(cabecalhoStyle);
-    }
-
-    private void setCabecalhoProduto(ArquivoExcel arquivoExcel) {
-        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
-
-        Font font = arquivoExcel.getPastaTrabalho().createFont();
-        font.setFontName("Arial");
-        font.setFontHeightInPoints((short) 16);
-        font.setBold(true);
-
-        cabecalhoStyle.setFont(font);
-        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
-
-        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
-
-        for (int i = 0; i < Produto.getHeaders().length; i++) {
-            Cell header = cabecalho.createCell(i);
-            header.setCellValue(Produto.getHeaders()[i]);
-            header.setCellStyle(cabecalhoStyle);
-        }
-    }
-
-    private CellStyle CellStylePadrao(ArquivoExcel arquivoExcel) {
-        CellStyle cellStyle = arquivoExcel.getPastaTrabalho().createCellStyle();
-
-        Font font = arquivoExcel.getPastaTrabalho().createFont();
-        font.setFontHeightInPoints((short) 12);
-
-        cellStyle.setFont(font);
-
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
-
-        return cellStyle;
+//        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+//
+//        Font font = arquivoExcel.getPastaTrabalho().createFont();
+//        font.setFontName("Arial");
+//        font.setFontHeightInPoints((short) 16);
+//        font.setBold(true);
+//
+//        cabecalhoStyle.setFont(font);
+//        cabecalhoStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
+//
+//        Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
+//
+//        Cell cab1 = cabecalho.createCell(0);
+//        cab1.setCellValue("CNPJ");
+//
+//        Cell cab2 = cabecalho.createCell(1);
+//        cab2.setCellValue("Nome");
+//
+//        Cell cab3 = cabecalho.createCell(2);
+//        cab3.setCellValue("Nome Fantasia");
+//
+//        cab1.setCellStyle(cabecalhoStyle);
+//        cab2.setCellStyle(cabecalhoStyle);
+//        cab3.setCellStyle(cabecalhoStyle);
     }
 }

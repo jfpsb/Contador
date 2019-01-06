@@ -73,7 +73,7 @@ public class DAOLoja implements DAO<Loja> {
     }
 
     @Override
-    public Cursor listar() {
+    public Cursor listarCursor() {
         return null;
     }
 

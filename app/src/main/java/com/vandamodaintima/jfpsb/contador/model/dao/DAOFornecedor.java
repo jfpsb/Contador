@@ -54,7 +54,7 @@ public class DAOFornecedor implements DAO<Fornecedor> {
     }
 
     @Override
-    public Cursor listar() {
+    public Cursor listarCursor() {
         return sqLiteDatabase.query(TABELA, null, null, null, null, null, null, null);
     }
 

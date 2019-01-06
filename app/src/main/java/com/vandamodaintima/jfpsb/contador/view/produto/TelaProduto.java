@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,13 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.produto.TelaProdutoController;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class TelaProduto extends TabLayoutActivityBase {
+
+    private SQLiteDatabase sqLiteDatabase;
 
     private CadastrarProduto cadastrarProduto;
     private PesquisarProduto pesquisarProduto;
@@ -35,6 +40,8 @@ public class TelaProduto extends TabLayoutActivityBase {
     private LinearLayout progressBarHolder;
 
     private TextView txtProgressStatus;
+
+    private TelaProdutoController telaProdutoController;
 
     private static final int ESCOLHER_ARQUIVO = 1;
     private static final int ESCOLHER_DIRETORIO = 2;
@@ -63,6 +70,9 @@ public class TelaProduto extends TabLayoutActivityBase {
         txtProgressStatus = findViewById(R.id.txtProgressStatus);
 
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
+
+        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
+        telaProdutoController = new TelaProdutoController(this, sqLiteDatabase);
     }
 
     @Override
@@ -81,7 +91,7 @@ public class TelaProduto extends TabLayoutActivityBase {
                 intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);
                 return true;
-            case R.id.itemExportarFornecedorExcel:
+            case R.id.itemExportarProdutoExcel:
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PEDIDO_PERMISSAO_READ);
                 } else {
@@ -109,7 +119,7 @@ public class TelaProduto extends TabLayoutActivityBase {
         Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
 
         DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Produto Em Excel").allowReadOnlyDirectory(true).
+                newDirectoryName("Contador - Produtos Em Excel").allowReadOnlyDirectory(true).
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
@@ -118,51 +128,44 @@ public class TelaProduto extends TabLayoutActivityBase {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Se não chamar não executa o onActivityResult das fragments em TelaFornecedorForResult
-        super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case ESCOLHER_ARQUIVO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
-                    new Tarefa(uri).execute();
+                    new ImportarProdutoAsyncTask(uri).execute();
                 }
                 break;
             case ESCOLHER_DIRETORIO:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-
-                    //ManipulaExcel manipulaExcel = new ManipulaExcel(getConn());
-
-//                    boolean result = manipulaExcel.ExportaFornecedor(diretorio);
-//
-//                    if (result) {
-//                        Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
-//                    }
+//                    telaProdutoController.exportarProdutosEmExcel(diretorio);
+                    new ExportarProdutoEmExcel().execute(diretorio);
                 }
                 break;
         }
     }
 
-    public class Tarefa extends AsyncTask<Void, String, Boolean> {
-        public class Progresso {
-            private Tarefa tarefa;
+    public void mensagemAoUsuario(String mensagem) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+    }
 
-            public Progresso(Tarefa tarefa) {
-                this.tarefa = tarefa;
+    public class ImportarProdutoAsyncTask extends AsyncTask<Void, String, Boolean> {
+        public class Progresso {
+            private ImportarProdutoAsyncTask importarProdutoAsyncTask;
+
+            public Progresso(ImportarProdutoAsyncTask tarefa) {
+                this.importarProdutoAsyncTask = tarefa;
             }
 
             public void publish(String mensagem) {
-                tarefa.publishProgress(mensagem);
+                importarProdutoAsyncTask.publishProgress(mensagem);
             }
         }
 
         private Uri uri;
         private Progresso progresso = new Progresso(this);
 
-        public Tarefa(Uri uri) {
+        public ImportarProdutoAsyncTask(Uri uri) {
             this.uri = uri;
         }
 
@@ -219,22 +222,47 @@ public class TelaProduto extends TabLayoutActivityBase {
             progressBarHolder.setAnimation(outAnimation);
 
             if (result) {
-                Toast.makeText(TelaProduto.this, "Cadastro de Produtos Por Excel Realiza Com Sucesso", Toast.LENGTH_SHORT).show();
-                //pesquisarProduto.populaListView();
+                mensagemAoUsuario("Cadastro de Produtos Por Excel Realiza Com Sucesso");
+                pesquisarProduto.realizarPesquisa();
             } else {
-                Toast.makeText(TelaProduto.this, "Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir", Toast.LENGTH_SHORT).show();
+                mensagemAoUsuario("Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir");
             }
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-//            ManipulaExcel manipulaExcel = new ManipulaExcel(this, conn);
-//
-//            boolean result = manipulaExcel.ImportaProduto(getContentResolver(), uri, progresso);
-//
-//            return result;
+            telaProdutoController.setTask(this);
+            return telaProdutoController.importarDeArquivoExcel(getContentResolver(), uri, progresso);
+        }
+    }
 
-            return false;
+    public class ExportarProdutoEmExcel extends AsyncTask<String, String, Void> {
+
+        public class Progresso {
+            private ExportarProdutoEmExcel exportarProdutoEmExcel;
+
+            public Progresso(ExportarProdutoEmExcel exportarProdutoEmExcel) {
+                this.exportarProdutoEmExcel = exportarProdutoEmExcel;
+            }
+
+            public void publish(String mensagem) {
+                exportarProdutoEmExcel.publishProgress(mensagem);
+            }
+        }
+
+        private Progresso progresso = new Progresso(this);
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            String mensagem = values[0];
+            mensagemAoUsuario(mensagem);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String diretorio = strings[0];
+            telaProdutoController.exportarProdutosEmExcel(diretorio, progresso);
+            return null;
         }
     }
 }

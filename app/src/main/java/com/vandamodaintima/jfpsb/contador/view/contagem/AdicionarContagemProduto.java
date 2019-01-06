@@ -81,7 +81,7 @@ public class AdicionarContagemProduto extends ActivityBaseView {
                     contagem_produto.setProduto(produto);
                     contagem_produto.setQuant(Integer.parseInt(quant));
 
-//                    boolean result = contagemProdutoManager.inserir(contagem_produto);
+//                    boolean result = contagemProdutoManager.importarDeExcel(contagem_produto);
 
 //                    if (result) {
 //                        Toast.makeText(AdicionarContagemProduto.this, "Contagem de Produto Inserida com Sucesso!", Toast.LENGTH_SHORT).show();

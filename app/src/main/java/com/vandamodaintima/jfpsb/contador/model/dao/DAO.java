@@ -12,7 +12,7 @@ public interface DAO<T> {
 
     Boolean deletar(Object... chaves);
 
-    Cursor listar();
+    Cursor listarCursor();
 
     T listarPorId(Object... ids);
 }

@@ -33,7 +33,7 @@ public class DAOContagem implements DAO<Contagem> {
     }
 
     @Override
-    public Cursor listar() {
+    public Cursor listarCursor() {
         return null;
     }
 
