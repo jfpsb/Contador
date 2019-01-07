@@ -22,7 +22,7 @@ public class FornecedorCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item_lista_fornecedor, parent,false);
+        return LayoutInflater.from(context).inflate(R.layout.item_pesquisa_fornecedor, parent,false);
     }
 
     @Override

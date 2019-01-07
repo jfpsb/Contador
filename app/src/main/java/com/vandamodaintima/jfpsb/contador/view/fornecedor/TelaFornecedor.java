@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -27,7 +25,7 @@ public class TelaFornecedor extends TabLayoutActivityBase {
 
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
-    private static final int CADASTRAR_SEM_INTERNET = 3;
+    private static final int CADASTRAR_MANUALMENTE = 3;
 
     public TelaFornecedor() {
         super(new String[]{"Pesquisar", "Cadastrar"});
@@ -37,8 +35,7 @@ public class TelaFornecedor extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_tablayout);
+        stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
         setFragments();
@@ -59,9 +56,9 @@ public class TelaFornecedor extends TabLayoutActivityBase {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.itemCadastrarFornecedorSemInternet:
-                //Intent intent = new Intent(this, CadastrarFornecedorSemInternetContainer.class);
-                //startActivityForResult(intent, CADASTRAR_SEM_INTERNET);
+            case R.id.itemCadastrarFornecedorManualmente:
+                Intent intent = new Intent(this, CadastrarFornecedorManualmente.class);
+                startActivityForResult(intent, CADASTRAR_MANUALMENTE);
                 return true;
             case R.id.itemExportarFornecedorExcel:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -117,12 +114,12 @@ public class TelaFornecedor extends TabLayoutActivityBase {
                 }
                 break;
 
-            case CADASTRAR_SEM_INTERNET:
-                if (resultCode == Activity.RESULT_OK) {
-                    //pesquisarFornecedor.populaListView();
-                }
+            case CADASTRAR_MANUALMENTE:
+                pesquisarFornecedor.realizarPesquisa();
                 break;
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void setFragments() {

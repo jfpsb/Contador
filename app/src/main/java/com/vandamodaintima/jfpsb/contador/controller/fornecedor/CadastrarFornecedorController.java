@@ -143,7 +143,7 @@ public class CadastrarFornecedorController {
         @Override
         protected void onPostExecute(Object object) {
             if (object == null) {
-                Toast.makeText(context, "Erro ao Retornar Empresa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
             } else if (object instanceof Fornecedor) {
                 Fornecedor fornecedor = (Fornecedor) object;
                 view.setAlertaCadastro(fornecedor);

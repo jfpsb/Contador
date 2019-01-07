@@ -69,7 +69,7 @@
             <TableRow>
 
                 <EditText
-                    android:id="@+id/txtData"
+                    android:id="@+id/txtDataInicial"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -30,7 +30,6 @@ public class CadastrarLoja extends TelaCadastro {
 
     private SQLiteDatabase sqLiteDatabase;
     private CadastrarLojaController cadastrarLojaController;
-    private DAOLoja daoLoja;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -51,7 +50,7 @@ public class CadastrarLoja extends TelaCadastro {
                 Loja loja = new Loja();
 
                 loja.setCnpj(txtCnpj.getText().toString());
-                loja.setNome(txtNome.getText().toString().toUpperCase());
+                loja.setNome(txtNome.getText().toString().trim().toUpperCase());
 
                 Loja matriz = (Loja) spinnerMatrizes.getSelectedItem();
                 if (!matriz.getCnpj().equals("0")) {
@@ -84,5 +83,10 @@ public class CadastrarLoja extends TelaCadastro {
     @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void focoEmViewInicial() {
+        txtCnpj.requestFocus();
     }
 }

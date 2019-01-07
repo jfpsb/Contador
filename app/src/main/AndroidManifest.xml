@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/TabAppTheme"
         tools:replace="android:theme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Contador">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,6 +62,31 @@
         <activity
             android:name=".view.codbarrafornecedor.TelaCodBarraFornecedor"
             android:label="Códigos de Barra de Fornecedor"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.fornecedor.TelaFornecedor"
+            android:label="Gerenciar Fornecedores"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.fornecedor.AlterarDeletarFornecedor"
+            android:label="Fornecedor: alterar ou deletar"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.loja.TelaLoja"
+            android:label="Gerenciar Lojas"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.loja.AlterarDeletarLoja"
+            android:label="Loja: alterar ou deletar"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.fornecedor.CadastrarFornecedorManualmente"
+            android:label="Cadastrar Fornecedor Manualmente"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <meta-data

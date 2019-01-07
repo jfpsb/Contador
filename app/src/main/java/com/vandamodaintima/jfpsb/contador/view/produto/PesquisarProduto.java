@@ -12,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
-import com.vandamodaintima.jfpsb.contador.controller.produto.ProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
@@ -53,15 +50,6 @@ public class PesquisarProduto extends TelaPesquisa {
         // Não pode ser antes de instanciar as views
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
         pesquisarProdutoController = new PesquisarProdutoController(this, sqLiteDatabase, getContext());
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                Intent intent = pesquisarProdutoController.abrirTelaAlterarDeletar(cursor);
-                startActivityForResult(intent, TELA_ALTERAR_DELETAR);
-            }
-        });
 
         spinnerPesquisa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -113,7 +101,7 @@ public class PesquisarProduto extends TelaPesquisa {
             }
         });
 
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -158,5 +146,22 @@ public class PesquisarProduto extends TelaPesquisa {
                 pesquisarProdutoController.pesquisarPorMarca(termo);
                 break;
         }
+    }
+
+    @Override
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+
+        Produto produto = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("produto", produto);
+
+        Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
+        alterarProduto.putExtras(bundle);
+
+        startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
     }
 }

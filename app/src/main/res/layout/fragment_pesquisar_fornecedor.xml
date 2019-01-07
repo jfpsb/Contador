@@ -36,7 +36,7 @@
         </TableRow>
         <TableRow
             android:layout_weight="2"
-            android:background="@drawable/tablerow_bottom_border">
+            android:background="@drawable/item_lista_linha_inferior">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
     </TableLayout>
 
     <ListView
-        android:id="@+id/listViewFornecedor"
+        android:id="@+id/listViewLoja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="textStart">

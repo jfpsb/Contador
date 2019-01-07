@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 import java.util.ArrayList;
 
@@ -74,7 +73,7 @@ public class DAOLoja implements DAO<Loja> {
 
     @Override
     public Cursor listarCursor() {
-        return null;
+        return sqLiteDatabase.query(TABELA, Loja.getColunas(), null, null, null, null, null);
     }
 
     @Override
@@ -97,7 +96,7 @@ public class DAOLoja implements DAO<Loja> {
     }
 
     public Cursor listarPorNomeCnpjCursor(String termo) {
-        return sqLiteDatabase.query(TABELA, null, "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+        return sqLiteDatabase.query(TABELA, Loja.getColunas(), "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
     }
 
     public ArrayList<Loja> listarPorNomeCnpj(String termo) {

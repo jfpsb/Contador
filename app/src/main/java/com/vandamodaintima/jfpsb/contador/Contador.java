@@ -11,12 +11,12 @@ import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
-public class MainActivity extends AppCompatActivity {
+public class Contador extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_contador);
 
         Button btnContador = findViewById(R.id.btnContador);
         Button btnProduto = findViewById(R.id.btnProduto);
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         btnContador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(MainActivity.this, TelaContador.class);
+                Intent it = new Intent(Contador.this, TelaContador.class);
                 startActivity(it);
             }
         });
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         btnProduto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(MainActivity.this, TelaProduto.class);
+                Intent it = new Intent(Contador.this, TelaProduto.class);
                 startActivity(it);
             }
         });
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         btnFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(MainActivity.this, TelaFornecedor.class);
+                Intent it = new Intent(Contador.this, TelaFornecedor.class);
                 startActivity(it);
             }
         });
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         btnLoja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(MainActivity.this, TelaLoja.class);
+                Intent it = new Intent(Contador.this, TelaLoja.class);
                 startActivity(it);
             }
         });

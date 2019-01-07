@@ -55,12 +55,11 @@ public class TelaProduto extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_tablayout);
+        stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
         ViewStub stub2 = findViewById(R.id.telaLayoutViewStub);
-        stub2.setLayoutResource(R.layout.content_tela_produto);
+        stub2.setLayoutResource(R.layout.activity_tela_produto);
         stub2.inflate();
 
         cadastrarProduto = new CadastrarProduto();
@@ -138,11 +137,12 @@ public class TelaProduto extends TabLayoutActivityBase {
             case ESCOLHER_DIRETORIO:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-//                    telaProdutoController.exportarProdutosEmExcel(diretorio);
                     new ExportarProdutoEmExcel().execute(diretorio);
                 }
                 break;
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void mensagemAoUsuario(String mensagem) {

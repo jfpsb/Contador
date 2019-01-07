@@ -2,12 +2,16 @@ package com.vandamodaintima.jfpsb.contador.view.marca;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.marca.AlterarDeletarMarcaController;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
@@ -16,23 +20,24 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
 
     private Marca marca;
 
-//    private MarcaManager marcaManager;
+    private SQLiteDatabase sqLiteDatabase;
+    private AlterarDeletarMarcaController alterarDeletarMarcaController;
 
     @Override
     protected void onCreate(Bundle bundle) {
-        if (bundle == null)
-            bundle = new Bundle();
+        super.onCreate(bundle);
 
-        bundle.putInt("layout", R.layout.content_alterar_deletar_marca);
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_marca);
+        stub.inflate();
 
         marca = (Marca) getIntent().getExtras().getSerializable("marca");
 
-        bundle.putString("entidade", "marca");
-        bundle.putSerializable("marca", marca);
-
-        super.onCreate(bundle);
-
         txtNome = findViewById(R.id.txtNome);
+
+        inicializaBotoes();
+
+        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
+        alterarDeletarMarcaController = new AlterarDeletarMarcaController(this, sqLiteDatabase);
 
         txtNome.setText(marca.getNome());
     }
@@ -47,22 +52,14 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                boolean result = marcaManager.deletar(marca.getId());
-//
-//                if (result) {
-//                    Toast.makeText(getApplicationContext(), "Marca Deletada Com Sucesso", Toast.LENGTH_SHORT).show();
-//                    setResult(RESULT_OK);
-//                    finish();
-//                } else {
-//                    Toast.makeText(AlterarDeletarMarca.this, "Erro ao Deletar Marca", Toast.LENGTH_SHORT).show();
-//                }
+                alterarDeletarMarcaController.deletar(marca);
             }
         });
 
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarMarca.this, "Marca Não foi Deletada", Toast.LENGTH_SHORT).show();
+                mensagemAoUsuario("Marca Não foi Deletada");
             }
         });
     }
@@ -79,23 +76,9 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
                 try {
                     String nome = txtNome.getText().toString();
 
-                    if (nome.isEmpty())
-                        throw new Exception("O Nome Não Pode Ficar Vazio!");
+                    marca.setNome(nome);
 
-                    Marca toUpdate = new Marca();
-                    toUpdate.setId(marca.getId());
-                    toUpdate.setNome(nome);
-
-//                    boolean result = marcaManager.atualizar(toUpdate, marca.getId());
-
-//                    if(result) {
-//                        Toast.makeText(AlterarDeletarMarca.this, "Marca Atualizada Com Sucesso", Toast.LENGTH_SHORT).show();
-//                        setResult(RESULT_OK);
-//                        finish();
-//                    }
-//                    else {
-//                        Toast.makeText(AlterarDeletarMarca.this, "Erro ao Atualizar Marca", Toast.LENGTH_SHORT).show();
-//                    }
+                    alterarDeletarMarcaController.atualizar(marca);
                 } catch (Exception e) {
                     Log.e(LOG, e.getMessage(), e);
                     Toast.makeText(AlterarDeletarMarca.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -106,7 +89,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarMarca.this, "Marca Não Foi Alterada", Toast.LENGTH_SHORT).show();
+                mensagemAoUsuario("Marca Não Foi Alterada");
             }
         });
     }

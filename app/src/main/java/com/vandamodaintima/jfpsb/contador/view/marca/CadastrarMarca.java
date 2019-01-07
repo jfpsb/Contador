@@ -43,7 +43,7 @@ public class CadastrarMarca extends TelaCadastro {
                 try {
                     Marca marca = new Marca();
                     marca.setId(new Date().getTime());
-                    marca.setNome(txtNome.getText().toString().toUpperCase());
+                    marca.setNome(txtNome.getText().toString().trim().toUpperCase());
 
                     setAlertaCadastro(marca);
                 } catch (Exception e) {
@@ -55,7 +55,7 @@ public class CadastrarMarca extends TelaCadastro {
         return view;
     }
 
-    public void setAlertaCadastro(final Marca marca) {
+    protected void setAlertaCadastro(final Marca marca) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Marca");
 
@@ -77,5 +77,15 @@ public class CadastrarMarca extends TelaCadastro {
         });
 
         alertaCadastro.show();
+    }
+
+    @Override
+    public void limparCampos() {
+        txtNome.getText().clear();
+    }
+
+    @Override
+    public void focoEmViewInicial() {
+        txtNome.requestFocus();
     }
 }

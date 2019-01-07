@@ -7,7 +7,8 @@
         android:id="@+id/labelMarcaNome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:minHeight="30sp"
+        android:textAlignment="center"
         android:textColor="#000"
-        android:minHeight="40dp" />
+        android:textSize="20sp" />
 </LinearLayout>

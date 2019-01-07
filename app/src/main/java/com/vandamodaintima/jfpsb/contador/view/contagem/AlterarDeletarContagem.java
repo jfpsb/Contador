@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -44,21 +43,22 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_contagem);
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
         stub.inflate();
-
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        alterarDeletarContagemController = new AlterarDeletarContagemController(this, sqLiteDatabase, getApplicationContext());
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
-        txtData = findViewById(R.id.txtData);
+        txtData = findViewById(R.id.txtDataInicial);
         txtLoja = findViewById(R.id.txtLoja);
         checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
-        txtData.setText(contagem.getDataString());
+        inicializaBotoes();
+
+        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
+        alterarDeletarContagemController = new AlterarDeletarContagemController(this, sqLiteDatabase, getApplicationContext());
+
+        txtData.setText(contagem.getFullDataString());
         txtLoja.setText(contagem.getLoja().getNome());
 
         setBtnAdicionar();

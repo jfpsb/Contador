@@ -51,12 +51,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_alterar_deletar_produto);
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_produto);
         stub.inflate();
-
-        sqLiteDatabase = new ConexaoBanco(this).conexao();
-        alterarDeletarProdutoController = new AlterarDeletarProdutoController(this, sqLiteDatabase, getApplicationContext());
 
         produto = (Produto) getIntent().getExtras().getSerializable("produto");
 
@@ -65,6 +61,11 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
+
+        inicializaBotoes();
+
+        sqLiteDatabase = new ConexaoBanco(this).conexao();
+        alterarDeletarProdutoController = new AlterarDeletarProdutoController(this, sqLiteDatabase);
 
         txtCodBarra.setText(produto.getCod_barra());
         txtDescricao.setText(produto.getDescricao());
@@ -79,8 +80,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             txtMarca.setText(produto.getMarca().getNome());
             marca = produto.getMarca();
         }
-
-        inicializaBotoes();
 
         setAlertaRemoverMarca();
         setAlertaRemoverFornecedor();

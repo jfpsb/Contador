@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dip"
+    android:layout_margin="15dip"
     android:orientation="vertical"
     tools:context="com.vandamodaintima.jfpsb.contador.view.loja.PesquisarLoja">
 
@@ -42,7 +42,7 @@
                 android:textSize="22sp" />
         </TableRow>
 
-        <TableRow android:layout_weight="2">
+        <TableRow>
 
             <TextView
                 android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:layout_weight="1"
                 android:text="CNPJ"
                 android:textAlignment="center"
-                android:textColor="#000000"
+                android:textColor="#000"
                 android:textSize="20sp" />
 
             <TextView
@@ -59,14 +59,14 @@
                 android:layout_weight="1"
                 android:text="Nome"
                 android:textAlignment="center"
-                android:textColor="#000000"
+                android:textColor="#000"
                 android:textSize="20sp" />
         </TableRow>
 
         <TableRow>
 
             <ListView
-                android:id="@+id/listViewFornecedor"
+                android:id="@+id/listViewLoja"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"></ListView>

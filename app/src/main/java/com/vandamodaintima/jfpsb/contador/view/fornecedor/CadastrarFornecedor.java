@@ -86,6 +86,11 @@ public class CadastrarFornecedor extends TelaCadastro {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void focoEmViewInicial() {
+        txtCnpj.requestFocus();
+    }
+
     public void setAlertaCadastro(final Fornecedor fornecedor) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Fornecedor");

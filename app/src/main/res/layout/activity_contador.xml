@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.vandamodaintima.jfpsb.contador.Contador">
+
+    <Button
+        android:id="@+id/btnContador"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2sp"
+        android:background="@drawable/botao_active"
+        android:drawableLeft="@drawable/estoque"
+        android:padding="30sp"
+        android:text="Contador"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnProduto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2sp"
+        android:background="@drawable/botao_active"
+        android:drawableLeft="@drawable/produto_small"
+        android:padding="30sp"
+        android:text="Produto"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnFornecedor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2sp"
+        android:background="@drawable/botao_active"
+        android:drawableLeft="@drawable/fornecedor_small"
+        android:padding="30sp"
+        android:text="Fornecedor"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnLoja"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2sp"
+        android:background="@drawable/botao_active"
+        android:drawableLeft="@drawable/loja_small"
+        android:padding="30sp"
+        android:text="Loja"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
@@ -24,8 +23,7 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_tablayout);
+        stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
         inserirCodBarraFornecedor = new InserirCodBarraFornecedor();
@@ -66,6 +64,4 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
 
         super.onBackPressed();
     }
-
-
 }

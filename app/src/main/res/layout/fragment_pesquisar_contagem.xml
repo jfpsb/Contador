@@ -14,21 +14,18 @@
         <TableRow>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Loja:"
                 android:textColor="#000000"
                 android:textSize="24sp" />
-        </TableRow>
-
-        <TableRow>
 
             <Spinner
                 android:id="@+id/spinnerLoja"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
         </TableRow>
 
         <TableRow>
@@ -45,11 +42,29 @@
         <TableRow>
 
             <EditText
-                android:id="@+id/txtData"
+                android:id="@+id/txtDataInicial"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:focusable="false" />
+                android:focusable="false"
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="a"
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/txtDataFinal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:textAlignment="center"
+                android:textColor="#000" />
         </TableRow>
 
         <TableRow>
@@ -60,6 +75,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Pesquisar"
+                android:background="@drawable/botao_active"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -68,8 +84,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
-        android:weightSum="2">
+        android:layout_marginTop="10dip">
 
         <TextView
             android:layout_width="0dp"
@@ -78,20 +93,21 @@
             android:text="Loja"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Data Inicial"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:textColor="#000000"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
+
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listViewFornecedor"
+        android:id="@+id/listViewLoja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"></ListView>

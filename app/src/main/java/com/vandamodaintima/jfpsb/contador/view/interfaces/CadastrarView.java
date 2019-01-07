@@ -7,5 +7,5 @@ public interface CadastrarView {
 
     void aposCadastro();
 
-    void focoEmTxt();
+    void focoEmViewInicial();
 }

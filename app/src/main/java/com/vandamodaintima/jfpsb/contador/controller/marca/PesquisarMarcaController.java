@@ -19,7 +19,7 @@ public class PesquisarMarcaController {
         this.view = view;
         this.context = context;
         daoMarca = new DAOMarca(sqLiteDatabase);
-        marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_lista_marca, null, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
+        marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_pesquisa_marca, null, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
         view.setListViewAdapter(marcaAdapter);
     }
 

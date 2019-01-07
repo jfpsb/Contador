@@ -3,30 +3,35 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.SimpleCursorAdapter;
 
-import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.view.contagem.PesquisarContagem;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class PesquisarContagemController {
     private PesquisarView view;
     private DAOContagem daoContagem;
+    private DAOLoja daoLoja;
+    private SimpleCursorAdapter spinnerLojaAdapter;
     private ContagemCursorAdapter contagemCursorAdapter;
-    private Context context;
 
     public PesquisarContagemController(PesquisarView view, SQLiteDatabase sqLiteDatabase, Context context) {
         this.view = view;
-        this.context = context;
         daoContagem = new DAOContagem(sqLiteDatabase);
+        daoLoja = new DAOLoja(sqLiteDatabase);
         contagemCursorAdapter = new ContagemCursorAdapter(context, null);
+        spinnerLojaAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_spinner_dropdown_item, null, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
         view.setListViewAdapter(contagemCursorAdapter);
+        ((PesquisarContagem) view).setSpinnerLojaAdapter(spinnerLojaAdapter);
     }
 
-    public void pesquisar(String loja, Date dataInicial, Date dataFinal) {
+    public void pesquisar(String loja, Calendar dataInicial, Calendar dataFinal) {
         if (loja == "0" || loja.isEmpty()) {
             view.mensagemAoUsuario("Loja Inválida");
             return;
@@ -42,5 +47,20 @@ public class PesquisarContagemController {
         contagemCursorAdapter.notifyDataSetChanged();
 
         view.setTextoQuantidadeBusca(cursor.getCount());
+    }
+
+    public void popularSpinnerLoja() {
+        Cursor cursor = daoLoja.listarCursor();
+
+        spinnerLojaAdapter.changeCursor(cursor);
+        spinnerLojaAdapter.notifyDataSetChanged();
+    }
+
+    public Loja retornaLojaEscolhidaSpinner(String cnpj) {
+        return daoLoja.listarPorId(cnpj);
+    }
+
+    public Contagem retornaContagemEscolhidaListView(String loja, String data) {
+        return daoContagem.listarPorId(loja, data);
     }
 }

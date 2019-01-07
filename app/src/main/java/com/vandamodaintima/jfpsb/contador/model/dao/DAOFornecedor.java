@@ -45,12 +45,29 @@ public class DAOFornecedor implements DAO<Fornecedor> {
 
     @Override
     public Boolean atualizar(Fornecedor fornecedor, Object... chaves) {
-        return null;
+        String cnpj = String.valueOf(chaves[0]);
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nome", fornecedor.getNome());
+        contentValues.put("fantasia", fornecedor.getFantasia());
+
+        long result = sqLiteDatabase.update(TABELA, contentValues, "cnpj = ?", new String[] { cnpj });
+
+        if(result > 0)
+            return true;
+
+        return false;
     }
 
     @Override
     public Boolean deletar(Object... chaves) {
-        return null;
+        long result = sqLiteDatabase.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
+
+        if(result > 0)
+            return true;
+
+        return false;
     }
 
     @Override

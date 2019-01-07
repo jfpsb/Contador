@@ -2,7 +2,7 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -31,7 +30,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
         view = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
         txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
-        listView = view.findViewById(R.id.listViewFornecedor);
+        listView = view.findViewById(R.id.listViewLoja);
 
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
         pesquisarFornecedorController = new PesquisarFornecedorController(this, sqLiteDatabase, getContext());
@@ -60,7 +59,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
             }
         });
 
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -82,8 +81,17 @@ public class PesquisarFornecedor extends TelaPesquisa {
     }
 
     @Override
+    public void setTextoQuantidadeBusca(int quantidade) {
+
+    }
+
+    @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        Fornecedor fornecedor = (Fornecedor) adapterView.getItemAtPosition(i);
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+        String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+
+        Fornecedor fornecedor = pesquisarFornecedorController.retornaFornecedorEscolhidoListView(cnpj);
 
         Intent intent = new Intent(getContext(), AlterarDeletarFornecedor.class);
 
@@ -92,7 +100,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
         intent.putExtras(bundle);
 
-        startActivity(intent);
+        startActivityForResult(intent, TELA_ALTERAR_DELETAR);
     }
 
     @Override

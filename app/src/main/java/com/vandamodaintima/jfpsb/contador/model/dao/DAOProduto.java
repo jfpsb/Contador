@@ -272,7 +272,11 @@ public class DAOProduto implements DAO<Produto> {
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
-        return sqLiteDatabase.query(TABELA, Produto.getColunas(), "cod_barra LIKE ?", new String[]{"%" + cod_barra + "%"}, null, null, null, null);
+        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN cod_barra_fornecedor ON produto.cod_barra = cod_barra_fornecedor.produto WHERE produto.cod_barra LIKE ? OR cod_barra_fornecedor.codigo LIKE ? ORDER BY cod_barra";
+
+        String[] selection = new String[] { "%" + cod_barra + "%", "%" + cod_barra + "%" };
+
+        return sqLiteDatabase.rawQuery(sql, selection);
     }
 
     public ArrayList<Produto> listarPorCodBarra(String cod_barra) {

@@ -1,15 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
-import com.vandamodaintima.jfpsb.contador.view.produto.AlterarDeletarProduto;
 
 public class PesquisarProdutoController {
     private PesquisarView view;
@@ -31,16 +28,31 @@ public class PesquisarProdutoController {
     }
 
     public void pesquisarPorCodBarra(String termo) {
+        if (termo.isEmpty()) {
+            pesquisarPorDescricao(termo);
+            return;
+        }
+
         Cursor cursor = daoProduto.listarPorCodBarraCursor(termo);
         mudarAdapter(cursor);
     }
 
     public void pesquisarPorFornecedor(String termo) {
+        if (termo.isEmpty()) {
+            pesquisarPorDescricao(termo);
+            return;
+        }
+
         Cursor cursor = daoProduto.listarPorFornecedorCursor(termo);
         mudarAdapter(cursor);
     }
 
     public void pesquisarPorMarca(String termo) {
+        if (termo.isEmpty()) {
+            pesquisarPorDescricao(termo);
+            return;
+        }
+
         Cursor cursor = daoProduto.listarPorMarcaCursor(termo);
         mudarAdapter(cursor);
     }
@@ -56,15 +68,7 @@ public class PesquisarProdutoController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public Intent abrirTelaAlterarDeletar(Cursor cursor) {
-        Produto produto = daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("produto", produto);
-
-        Intent alterarProduto = new Intent(context, AlterarDeletarProduto.class);
-        alterarProduto.putExtras(bundle);
-
-        return alterarProduto;
+    public Produto retornaProdutoEscolhidoListView(String cod_barra) {
+        return daoProduto.listarPorId(cod_barra);
     }
 }

@@ -54,14 +54,6 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
         listarCodBarraFornecedorController = new ListarCodBarraFornecedorController(this, getContext());
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String codigo = (String) parent.getItemAtPosition(position);
-                setAlertaRemoverLista(codigo, position);
-            }
-        });
-
         realizarPesquisa();
 
         listView.setOnKeyListener(new View.OnKeyListener() {
@@ -76,7 +68,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
             }
         });
 
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public void setAlertaRemoverLista(String codigo, final int index) {
@@ -90,7 +82,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
                 Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(1);
                 if (fragment instanceof InserirCodBarraFornecedor) {
-                    ((InserirCodBarraFornecedor) fragment).focoEmTxt();
+                    ((InserirCodBarraFornecedor) fragment).focoEmViewInicial();
                 }
 
                 realizarPesquisa();
@@ -110,6 +102,12 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
     @Override
     public void realizarPesquisa() {
         listarCodBarraFornecedorController.pesquisar(produto);
+    }
+
+    @Override
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
+        String codigo = (String) adapterView.getItemAtPosition(i);
+        setAlertaRemoverLista(codigo, i);
     }
 
     @Override

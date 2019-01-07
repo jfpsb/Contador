@@ -39,7 +39,7 @@ public class AdicionarContagemProduto extends ActivityBaseView {
         super.onCreate(savedInstanceState);
 
         ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_adicionar_contagem_produto);
+        stub.setLayoutResource(R.layout.activity_adicionar_contagem_produto);
         stub.inflate();
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");

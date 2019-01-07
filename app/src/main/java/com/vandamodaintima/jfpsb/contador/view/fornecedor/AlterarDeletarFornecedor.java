@@ -3,10 +3,13 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.fornecedor.AlterarDeletarFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
@@ -16,25 +19,26 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     private EditText txtNome;
     private EditText txtFantasia;
     private Fornecedor fornecedor;
-//    private FornecedorManager fornecedorManager;
+
+    private AlterarDeletarFornecedorController alterarDeletarFornecedorController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            savedInstanceState = new Bundle();
+        super.onCreate(savedInstanceState);
 
-        savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_fornecedor);
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_fornecedor);
+        stub.inflate();
 
         fornecedor = (Fornecedor) getIntent().getExtras().getSerializable("fornecedor");
-
-        savedInstanceState.putString("entidade", "fornecedor");
-        savedInstanceState.putSerializable("fornecedor", fornecedor);
-
-        super.onCreate(savedInstanceState);
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
+
+        inicializaBotoes();
+
+        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
+        alterarDeletarFornecedorController = new AlterarDeletarFornecedorController(this, sqLiteDatabase);
 
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());
@@ -54,28 +58,11 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    String cnpj = txtCnpj.getText().toString();
                     String nome = txtNome.getText().toString();
 
-                    if (cnpj.isEmpty())
-                        throw new Exception("O campo de cnpj não pode ficar vazio!");
+                    fornecedor.setNome(nome);
 
-                    if (nome.isEmpty())
-                        throw new Exception("O campo de nome não pode ficar vazio!");
-
-                    Fornecedor toUpdate = new Fornecedor();
-                    toUpdate.setNome(nome.toUpperCase());
-
-//                    boolean result = fornecedorManager.atualizar(toUpdate, entidade.getCnpj());
-
-//                    if(result) {
-//                        Toast.makeText(AlterarDeletarFornecedor.this, "O Fornecedor Foi Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
-//                        setResult(RESULT_OK);
-//                        finish();
-//                    }
-//                    else {
-//                        Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Atualizar Fornecedor", Toast.LENGTH_SHORT).show();
-//                    }
+                    alterarDeletarFornecedorController.atualizar(fornecedor);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -94,21 +81,12 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Fornecedor");
-        alertBuilderDeletar.setMessage("Tem certeza que deseja delete o fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-//                boolean result = fornecedorManager.deletar(entidade.getCnpj());
-
-//                if(result) {
-//                    Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Deletado Com Sucesso", Toast.LENGTH_SHORT).show();
-//                    setResult(RESULT_OK);
-//                    finish();
-//                }
-//                else {
-//                    Toast.makeText(AlterarDeletarFornecedor.this, "Erro ao Deletar Fornecedor", Toast.LENGTH_SHORT).show();
-//                }
+                alterarDeletarFornecedorController.deletar(fornecedor);
             }
         });
 

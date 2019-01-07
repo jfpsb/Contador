@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Cadastrar Fornecedor Sem Internet"
-        android:id="@+id/itemCadastrarFornecedorSemInternet" />
+        android:title="Cadastrar Fornecedor Manualmente"
+        android:id="@+id/itemCadastrarFornecedorManualmente" />
     <item
         android:title="Exportar Fornecedores Para Excel"
         android:id="@+id/itemExportarFornecedorExcel" />

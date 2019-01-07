@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
-public class TelaAlterarDeletar extends ActivityBaseView implements AlterarDeletarView {
+public abstract class TelaAlterarDeletar extends ActivityBaseView implements AlterarDeletarView {
     protected Button btnAtualizar;
     protected Button btnDeletar;
     protected AlertDialog.Builder alertBuilderDeletar;
@@ -50,7 +50,9 @@ public class TelaAlterarDeletar extends ActivityBaseView implements AlterarDelet
 
     @Override
     protected void onDestroy() {
-        sqLiteDatabase.close();
+        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+            sqLiteDatabase.close();
+
         super.onDestroy();
     }
 
@@ -63,23 +65,5 @@ public class TelaAlterarDeletar extends ActivityBaseView implements AlterarDelet
     public void fecharTela() {
         setResult(Activity.RESULT_OK);
         finish();
-    }
-
-    @Override
-    public void setAlertBuilderDeletar() {
-        try {
-            throw new Exception("Sobrescreva na fragment");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void setAlertBuilderAtualizar() {
-        try {
-            throw new Exception("Sobrescreva na fragment");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

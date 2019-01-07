@@ -24,6 +24,7 @@ public class AlterarDeletarLojaController {
 
         if(result) {
             view.mensagemAoUsuario("Loja Deletada Com Sucesso");
+            view.fecharTela();
         } else {
             view.mensagemAoUsuario("Erro ao Atualizar Loja");
         }
@@ -34,6 +35,7 @@ public class AlterarDeletarLojaController {
 
         if(result) {
             view.mensagemAoUsuario("Loja Deletada Com Sucesso");
+            view.fecharTela();
         } else {
             view.mensagemAoUsuario("Erro ao Deletar Loja");
         }

@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,7 +16,6 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
@@ -26,23 +27,20 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            savedInstanceState = new Bundle();
+        super.onCreate(savedInstanceState);
 
-        savedInstanceState.putInt("layout", R.layout.content_alterar_deletar_loja);
-
-        sqLiteDatabase = new ConexaoBanco(this).conexao();
-        alterarDeletarLojaController = new AlterarDeletarLojaController(this, sqLiteDatabase, getApplicationContext());
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_loja);
+        stub.inflate();
 
         loja = (Loja) getIntent().getExtras().getSerializable("loja");
 
-        savedInstanceState.putString("entidade", "loja");
-        savedInstanceState.putSerializable("loja", loja);
-
-        super.onCreate(savedInstanceState);
-
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
+
+        inicializaBotoes();
+
+        sqLiteDatabase = new ConexaoBanco(this).conexao();
+        alterarDeletarLojaController = new AlterarDeletarLojaController(this, sqLiteDatabase, getApplicationContext());
 
         txtCnpj.setText(String.valueOf(loja.getCnpj()));
         txtNome.setText(loja.getNome());
@@ -106,10 +104,5 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void fecharTela() {
-        finish();
     }
 }

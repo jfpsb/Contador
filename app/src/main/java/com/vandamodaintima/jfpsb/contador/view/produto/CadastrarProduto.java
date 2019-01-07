@@ -122,7 +122,7 @@ public class CadastrarProduto extends TelaCadastro {
             @Override
             public void onClick(View view) {
                 produto.setCod_barra(txtCodBarra.getText().toString());
-                produto.setDescricao(txtDescricao.getText().toString());
+                produto.setDescricao(txtDescricao.getText().toString().trim().toUpperCase());
                 produto.setPreco(Double.parseDouble(txtPreco.getText().toString()));
                 produto.setFornecedor(fornecedor);
                 produto.setMarca(marca);
@@ -203,6 +203,11 @@ public class CadastrarProduto extends TelaCadastro {
     @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void focoEmViewInicial() {
+        txtCodBarra.requestFocus();
     }
 
     public void bloqueiaCampos() {

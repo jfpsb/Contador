@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!--Desenha primeiro retângulo com bordas pretas e fundo transparente-->
     <item>
         <shape
@@ -20,7 +21,7 @@
             android:shape="rectangle">
             <stroke
                 android:width="1sp"
-                android:color="#ffffff" />
+                android:color="#FAFAFA" />
             <solid
                 android:color="#00000000" />
         </shape>

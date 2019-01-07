@@ -82,7 +82,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
     }
 
     @Override
-    public void focoEmTxt() {
+    public void focoEmViewInicial() {
         txtCodBarra.clearFocus();
         txtCodBarra.requestFocus();
     }

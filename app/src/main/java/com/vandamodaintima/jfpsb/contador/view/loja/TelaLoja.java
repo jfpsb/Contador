@@ -20,8 +20,7 @@ public class TelaLoja extends TabLayoutActivityBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
-        stub.setLayoutResource(R.layout.content_tela_tablayout);
+        stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
         telaCadastrarLoja = new CadastrarLoja();

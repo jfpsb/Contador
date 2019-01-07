@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
@@ -32,5 +33,9 @@ public class PesquisarLojaController {
         lojaCursorAdapter.notifyDataSetChanged();
 
         view.setTextoQuantidadeBusca(cursor.getCount());
+    }
+
+    public Loja retornaLojaEscolhidaListView(String cnpj) {
+        return daoLoja.listarPorId(cnpj);
     }
 }

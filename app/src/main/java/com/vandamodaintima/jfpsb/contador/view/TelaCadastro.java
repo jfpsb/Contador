@@ -8,23 +8,16 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
-public class TelaCadastro extends Fragment implements CadastrarView {
+public abstract class TelaCadastro extends Fragment implements CadastrarView {
     protected View view;
     protected SQLiteDatabase sqLiteDatabase;
 
     @Override
     public void onDestroy() {
-        sqLiteDatabase.close();
-        super.onDestroy();
-    }
+        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
+            sqLiteDatabase.close();
 
-    @Override
-    public void limparCampos() {
-        try {
-            throw new Exception("Sobrescreva na fragment");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super.onDestroy();
     }
 
     @Override
@@ -38,15 +31,8 @@ public class TelaCadastro extends Fragment implements CadastrarView {
 
         if (fragment instanceof PesquisarView)
             ((PesquisarView) fragment).realizarPesquisa();
-    }
 
-    @Override
-    public void focoEmTxt() {
-        try {
-            throw new Exception("Sobrescreva na fragment");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        focoEmViewInicial();
     }
 
     protected void showDatePicker(View v) {

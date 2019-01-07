@@ -1,7 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 
@@ -18,17 +20,48 @@ public class DAOMarca implements DAO<Marca> {
 
     @Override
     public Boolean inserir(Marca marca) {
-        return null;
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("id", marca.getId());
+            contentValues.put("nome", marca.getNome());
+
+            sqLiteDatabase.insertOrThrow(TABELA, null, contentValues);
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        }
+
+        return false;
     }
 
     @Override
     public Boolean atualizar(Marca marca, Object... chaves) {
-        return null;
+        String id = String.valueOf(chaves[0]);
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nome", marca.getNome());
+
+        long result = sqLiteDatabase.update(TABELA, contentValues, "id = ?", new String[]{id});
+
+        if (result > 0)
+            return true;
+
+        return false;
     }
 
     @Override
     public Boolean deletar(Object... chaves) {
-        return null;
+        String id = String.valueOf(chaves[0]);
+
+        long result = sqLiteDatabase.delete(TABELA, "id = ?", new String[]{id});
+
+        if (result > 0)
+            return true;
+
+        return false;
     }
 
     @Override

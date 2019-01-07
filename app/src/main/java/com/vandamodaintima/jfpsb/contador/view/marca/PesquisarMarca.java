@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -48,18 +46,11 @@ public class PesquisarMarca extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable s) {
-                pesquisarMarcaController.pesquisar(txtNome.getText().toString());
+                realizarPesquisa();
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cliqueEmItemLista(parent, position);
-            }
-        });
-
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -67,21 +58,31 @@ public class PesquisarMarca extends TelaPesquisa {
         switch (requestCode) {
             case TELA_ALTERAR_DELETAR:
                 if (resultCode == Activity.RESULT_OK) {
-                    pesquisarMarcaController.pesquisar(txtNome.getText().toString());
+                    realizarPesquisa();
                 } else {
-                    Toast.makeText(getContext(), "A Marca Não Foi Alterada", Toast.LENGTH_SHORT).show();
+                    mensagemAoUsuario("A Marca Não Foi Alterada");
                 }
                 break;
         }
     }
 
     @Override
+    public void setTextoQuantidadeBusca(int quantidade) {
+
+    }
+
+    @Override
+    public void realizarPesquisa() {
+        pesquisarMarcaController.pesquisar(txtNome.getText().toString());
+    }
+
+    @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        Cursor c = (Cursor) adapterView.getItemAtPosition(i);
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
         Marca marca = new Marca();
-        marca.setId(c.getLong(c.getColumnIndexOrThrow("_id")));
-        marca.setNome(c.getString(c.getColumnIndexOrThrow("nome")));
+        marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+        marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("marca", marca);
