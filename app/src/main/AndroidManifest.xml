@@ -89,6 +89,16 @@
             android:label="Cadastrar Fornecedor Manualmente"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
+        <activity
+            android:name=".view.produto.TelaProdutoForContagemForResult"
+            android:label="Selecionar Produto Para Contagem"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.contagem.VisualizarProdutosContagem"
+            android:label="Produtos Em Contagem"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />

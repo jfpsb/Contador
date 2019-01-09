@@ -16,7 +16,7 @@ public interface AdicionarContagemProdutoView {
 
     void cliqueEmItemLista(AdapterView<?> adapterView, int i);
 
-    void abrirTelaProdutoForResult();
+    void abreProdutoNaoEncontradoDialog();
 
     void abrirTelaEscolhaProdutoDialog(ListAdapter adapter);
 

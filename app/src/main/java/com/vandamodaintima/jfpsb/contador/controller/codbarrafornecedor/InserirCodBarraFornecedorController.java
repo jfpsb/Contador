@@ -25,7 +25,7 @@ public class InserirCodBarraFornecedorController {
         produto.getCod_barra_fornecedor().add(cod_barra_fornecedor);
 
         view.mensagemAoUsuario("Código de Barras de Fornecedor Adicionado à Lista");
-        view.limparCampos();
         view.aposCadastro();
+        view.limparCampos();
     }
 }

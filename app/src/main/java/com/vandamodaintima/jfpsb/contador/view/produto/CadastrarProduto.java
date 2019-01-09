@@ -43,11 +43,11 @@ public class CadastrarProduto extends TelaCadastro {
 
     private Animation slidedown;
 
-    private Produto produto = new Produto();
+    protected Produto produto = new Produto();
     private Fornecedor fornecedor;
     private Marca marca;
 
-    CadastrarProdutoController cadastrarProdutoController;
+    protected CadastrarProdutoController cadastrarProdutoController;
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;

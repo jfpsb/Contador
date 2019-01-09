@@ -37,8 +37,8 @@ public class CadastrarProdutoController {
 
         if (result) {
             view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
+            view.aposCadastro(produto);
             view.limparCampos();
-            view.aposCadastro();
         } else {
             view.mensagemAoUsuario("Produto Não Foi Cadastrado");
         }

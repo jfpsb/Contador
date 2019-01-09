@@ -74,7 +74,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
     }
 
     @Override
-    public void aposCadastro() {
+    public void aposCadastro(Object... args) {
         Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
 
         if (fragment instanceof ListarCodBarraFornecedor)

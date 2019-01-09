@@ -32,6 +32,7 @@ public class CadastrarMarcaController {
 
         if(result) {
             view.mensagemAoUsuario("Marca Cadastrada Com Sucesso");
+            view.aposCadastro();
             view.limparCampos();
             return true;
         } else {

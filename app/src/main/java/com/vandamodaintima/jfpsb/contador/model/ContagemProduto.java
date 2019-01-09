@@ -6,7 +6,7 @@ public class ContagemProduto {
     private Produto produto;
     private int quant;
 
-    private static final String[] colunas = new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant", "cod_barra", "descricao" };
+    private static final String[] colunas = new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant" };
 
     public long getId() {
         return id;

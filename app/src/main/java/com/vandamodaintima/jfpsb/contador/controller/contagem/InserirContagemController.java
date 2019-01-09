@@ -36,8 +36,8 @@ public class InserirContagemController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem Cadastrada Com Sucesso");
-            view.limparCampos();
             view.aposCadastro();
+            view.limparCampos();
         } else {
             view.mensagemAoUsuario("Erro Ao Cadastrar Contagem");
         }

@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,14 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
         TextView lblCodBarra = view.findViewById(R.id.lblCodBarra);
         TextView lblDescricao = view.findViewById(R.id.lblDescricao);
         TextView lblQuantidade = view.findViewById(R.id.lblQuantidade);
+        TextView lblQuantidadeAdicionada = view.findViewById(R.id.lblQuantidadeAdicionada);
+
+        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/century_gothic.ttf");
+
+        lblCodBarra.setTypeface(type);
+        lblDescricao.setTypeface(type);
+        lblQuantidade.setTypeface(type);
+        lblQuantidadeAdicionada.setTypeface(type);
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));

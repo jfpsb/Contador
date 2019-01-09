@@ -36,7 +36,7 @@ public class PesquisarProduto extends TelaPesquisa {
 
     private static int PESQUISA = DESCRICAO;
 
-    private PesquisarProdutoController pesquisarProdutoController;
+    protected PesquisarProdutoController pesquisarProdutoController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

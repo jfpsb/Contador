@@ -38,6 +38,7 @@ public class AdicionarContagemProdutoController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
@@ -48,6 +49,7 @@ public class AdicionarContagemProdutoController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Deletada Com Sucesso");
+            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro ao Deletar Contagem de Produto");
         }
@@ -69,7 +71,7 @@ public class AdicionarContagemProdutoController {
             ArrayList<Produto> produtos = daoProduto.listarPorCodBarra(cod_barra);
 
             if (produtos.size() == 0) {
-                view.abrirTelaProdutoForResult();
+                view.abreProdutoNaoEncontradoDialog();
             } else if (produtos.size() == 1) {
                 view.retornarProdutoEncontrado(produtos.get(0));
             } else {

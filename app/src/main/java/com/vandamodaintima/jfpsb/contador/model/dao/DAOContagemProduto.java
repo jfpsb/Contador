@@ -73,7 +73,10 @@ public class DAOContagemProduto implements DAO<ContagemProduto> {
 
         String id = String.valueOf(ids[0]);
 
-        Cursor cursor = sqLiteDatabase.query(TABELA, ContagemProduto.getColunas(), "id = ?", new String[]{id}, null, null, null, null);
+        String sql = "SELECT id as _id, produto, contagem_loja, contagem_data, quant, cod_barra, descricao FROM contagem_produto, produto WHERE produto = cod_barra AND id = ?";
+        String[] selection = new String[]{id};
+
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, selection);
 
         if (cursor.getCount() > 0) {
             contagemProduto = new ContagemProduto();
@@ -105,8 +108,9 @@ public class DAOContagemProduto implements DAO<ContagemProduto> {
         String loja = contagem.getLoja().getCnpj();
         String data = contagem.getSQLiteData();
 
-        String sql = "SELECT id as _id, SUM(quant) as quant * FROM contagem_produto, produto WHERE produto = cod_barra GROUP BY produto";
+        String sql = "SELECT id as _id, SUM(quant) as quant, cod_barra, descricao FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
+        String[] selection = new String[]{loja, data};
 
-        return sqLiteDatabase.query(TABELA, ContagemProduto.getColunas(), "contagem_loja = ? AND contagem_data = ?", new String[]{loja, data}, null, null, null, null);
+        return sqLiteDatabase.rawQuery(sql, selection);
     }
 }

@@ -32,8 +32,8 @@ public class CadastrarLojaController {
 
         if (result) {
             view.mensagemAoUsuario("Loja Cadastrada Com Sucesso!");
-            view.limparCampos();
             view.aposCadastro();
+            view.limparCampos();
         } else {
             view.mensagemAoUsuario("Erro Ao Cadastrar Loja");
         }

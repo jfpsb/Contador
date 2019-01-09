@@ -5,7 +5,7 @@ public interface CadastrarView {
 
     void mensagemAoUsuario(String mensagem);
 
-    void aposCadastro();
+    void aposCadastro(Object... args);
 
     void focoEmViewInicial();
 }

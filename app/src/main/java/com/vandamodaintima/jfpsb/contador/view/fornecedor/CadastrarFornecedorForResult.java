@@ -8,6 +8,7 @@ import android.content.Intent;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 
 public class CadastrarFornecedorForResult extends CadastrarFornecedor {
+    private Fornecedor fornecedor;
     @Override
     public void setAlertaCadastro(final Fornecedor fornecedor) {
         alertaCadastro = new AlertDialog.Builder(getContext());
@@ -27,14 +28,8 @@ public class CadastrarFornecedorForResult extends CadastrarFornecedor {
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Boolean result = cadastrarFornecedorController.cadastrar(fornecedor);
-
-                if (result) {
-                    Intent intent = new Intent();
-                    intent.putExtra("fornecedor", fornecedor);
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
-                }
+                CadastrarFornecedorForResult.this.fornecedor = fornecedor;
+                cadastrarFornecedorController.cadastrar(fornecedor);
             }
         });
 
@@ -46,5 +41,13 @@ public class CadastrarFornecedorForResult extends CadastrarFornecedor {
         });
 
         alertaCadastro.show();
+    }
+
+    @Override
+    public void aposCadastro(Object... args) {
+        Intent intent = new Intent();
+        intent.putExtra("fornecedor", fornecedor);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }

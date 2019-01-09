@@ -66,7 +66,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     }
 
     @Override
-    public void aposCadastro() {
+    public void aposCadastro(Object... args) {
 
     }
 

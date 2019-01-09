@@ -76,11 +76,9 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         switch (id) {
             case R.id.itemVerProdutos:
-//                Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("contagem", contagem);
-//                visualizarContagem.putExtras(bundle);
-//                startActivity(visualizarContagem);
+                Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
+                visualizarContagem.putExtra("contagem", contagem);
+                startActivity(visualizarContagem);
                 return true;
             case R.id.itemExportarContagemExcel:
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

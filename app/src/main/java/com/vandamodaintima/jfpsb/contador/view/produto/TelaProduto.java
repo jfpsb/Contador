@@ -32,8 +32,8 @@ public class TelaProduto extends TabLayoutActivityBase {
 
     private SQLiteDatabase sqLiteDatabase;
 
-    private CadastrarProduto cadastrarProduto;
-    private PesquisarProduto pesquisarProduto;
+    protected CadastrarProduto cadastrarProduto;
+    protected PesquisarProduto pesquisarProduto;
 
     private AlphaAnimation inAnimation;
     private AlphaAnimation outAnimation;
@@ -62,8 +62,7 @@ public class TelaProduto extends TabLayoutActivityBase {
         stub2.setLayoutResource(R.layout.activity_tela_produto);
         stub2.inflate();
 
-        cadastrarProduto = new CadastrarProduto();
-        pesquisarProduto = new PesquisarProduto();
+        setFragments();
 
         progressBarHolder = findViewById(R.id.progressBarHolder);
         txtProgressStatus = findViewById(R.id.txtProgressStatus);
@@ -72,6 +71,11 @@ public class TelaProduto extends TabLayoutActivityBase {
 
         sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
         telaProdutoController = new TelaProdutoController(this, sqLiteDatabase);
+    }
+
+    protected void setFragments() {
+        cadastrarProduto = new CadastrarProduto();
+        pesquisarProduto = new PesquisarProduto();
     }
 
     @Override

@@ -29,18 +29,16 @@ public class CadastrarFornecedorController {
         daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
-    public boolean cadastrar(Fornecedor fornecedor) {
+    public void cadastrar(Fornecedor fornecedor) {
         Boolean result = daoFornecedor.inserir(fornecedor);
 
         if(result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
+            view.aposCadastro();
             view.limparCampos();
-            return true;
         } else {
             view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
         }
-
-        return false;
     }
 
     public void pesquisarNaReceita(String cnpj) {

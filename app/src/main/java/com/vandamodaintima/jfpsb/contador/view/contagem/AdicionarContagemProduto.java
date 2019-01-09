@@ -1,7 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +23,7 @@ import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AdicionarContagemProdutoView;
+import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
 import java.util.Date;
 
@@ -37,6 +40,8 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     private Contagem contagem;
     private Produto produto;
+
+    private static final int TELA_SELECIONAR_PRODUTO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,14 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
         adicionarContagemProdutoController = new AdicionarContagemProdutoController(this, sqLiteDatabase, getApplicationContext());
 
-        adicionarContagemProdutoController.pesquisar(contagem);
+        realizarPesquisa();
+
+        listViewContagemProduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                cliqueEmItemLista(adapterView, i);
+            }
+        });
 
         txtCodBarra.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -71,6 +83,8 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
                 return false;
             }
         });
+
+        txtCodBarra.setShowSoftInputOnFocus(false);
     }
 
     @Override
@@ -79,13 +93,24 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
     }
 
     @Override
-    public void setListViewAdapter(ListAdapter adapter) {
+    public void setListViewAdapter(final ListAdapter adapter) {
+        adapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                //Move para o último item da lista sempre que o adapter for modificado
+                int lastIndex = adapter.getCount() - 1;
+                listViewContagemProduto.smoothScrollToPosition(lastIndex);
+            }
+        });
+
         listViewContagemProduto.setAdapter(adapter);
     }
 
     @Override
     public void realizarPesquisa() {
-
+        adicionarContagemProdutoController.pesquisar(contagem);
     }
 
     @Override
@@ -102,13 +127,13 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         ContagemProduto contagemProduto = adicionarContagemProdutoController.retornarContagemProduto(String.valueOf(id));
 
         if (contagemProduto != null) {
-            abreDeletarContagemProdutoDialog(contagemProduto);
+            abrirDeletarContagemProdutoDialog(contagemProduto);
         }
     }
 
-    @Override
-    public void abrirTelaProdutoForResult() {
-
+    private void abrirTelaProdutoForResult() {
+        Intent intent = new Intent(this, TelaProdutoForContagemForResult.class);
+        startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
     }
 
     @Override
@@ -167,7 +192,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
     }
 
-    public void setProdutoNaoEncontradoDialog() {
+    private void setProdutoNaoEncontradoDialog() {
         produtoNaoEncontradoDialog = new AlertDialog.Builder(AdicionarContagemProduto.this);
         produtoNaoEncontradoDialog.setTitle("Produto Não Encontrado");
         produtoNaoEncontradoDialog.setMessage("Nenhum Produto Foi Encontrado Com o Código Informado. Deseja Pesquisar na Tela de Produtos ou Cadastrar Um Novo Produto?");
@@ -201,7 +226,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
     }
 
-    private void abreDeletarContagemProdutoDialog(final ContagemProduto contagemProduto) {
+    private void abrirDeletarContagemProdutoDialog(final ContagemProduto contagemProduto) {
         deletarContagemProdutoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -210,5 +235,34 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
 
         deletarContagemProdutoDialog.show();
+    }
+
+    @Override
+    public void abreProdutoNaoEncontradoDialog() {
+        produtoNaoEncontradoDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case TELA_SELECIONAR_PRODUTO:
+                if (resultCode == RESULT_OK) {
+                    produto = (Produto) data.getSerializableExtra("produto");
+                    int quantidade = (int) data.getSerializableExtra("quantidade");
+
+                    ContagemProduto contagemProduto = new ContagemProduto();
+
+                    contagemProduto.setId(new Date().getTime());
+                    contagemProduto.setProduto(produto);
+                    contagemProduto.setContagem(contagem);
+                    contagemProduto.setQuant(quantidade);
+
+                    adicionarContagemProdutoController.cadastrar(contagemProduto);
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
