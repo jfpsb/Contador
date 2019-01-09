@@ -1,147 +1,214 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewStub;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoContagem;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.AdicionarContagemProdutoView;
 
 import java.util.Date;
 
-public class AdicionarContagemProduto extends ActivityBaseView {
+public class AdicionarContagemProduto extends ActivityBaseView implements AdicionarContagemProdutoView {
 
     private EditText txtCodBarra;
-    private EditText txtFornecedor;
-    private EditText txtQuantidade;
-    private EditText txtDescricao;
-    private Button btnAdicionar;
-    private Button btnAlterarFornecedor;
+    private ListView listViewContagemProduto;
+    private AlertDialog.Builder escolhaProdutoDialog;
+    private AlertDialog.Builder produtoNaoEncontradoDialog;
+    private AlertDialog.Builder deletarContagemProdutoDialog;
 
-    private Fornecedor fornecedor = new Fornecedor();
-    private Produto produto;
+    private SQLiteDatabase sqLiteDatabase;
+    private AdicionarContagemProdutoController adicionarContagemProdutoController;
+
     private Contagem contagem;
-    private ProdutoContagem contagem_produto = new ProdutoContagem();
-    private Boolean addFornecedorFlag = false;
-
-    private static final int ALTERAR_FORNECEDOR = 1;
+    private Produto produto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewStub stub = findViewById(R.id.layoutStub);
         stub.setLayoutResource(R.layout.activity_adicionar_contagem_produto);
         stub.inflate();
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
-        produto = (Produto) getIntent().getExtras().getSerializable("produto");
 
-        txtCodBarra = findViewById(R.id.txtCodBarra);
-        txtFornecedor = findViewById(R.id.txtFornecedor);
-        txtQuantidade = findViewById(R.id.txtQuantidade);
-        txtDescricao = findViewById(R.id.txtDescricao);
-        btnAdicionar = findViewById(R.id.btnAdicionar);
-        btnAlterarFornecedor = findViewById(R.id.btnEscolherFornecedor);
+        txtCodBarra = findViewById(R.id.txtCodigoBarra);
+        listViewContagemProduto = findViewById(R.id.listViewAdicionarContagem);
 
-        txtCodBarra.setText(String.valueOf(produto.getCod_barra()));
+        setProdutoNaoEncontradoDialog();
+        setEscolhaProdutoDialog();
+        setDeletarContagemProdutoDialog();
 
-        if (produto.getFornecedor() != null) {
-            txtFornecedor.setText(produto.getFornecedor().getNome());
-        } else {
-            txtFornecedor.setText("Não Possui");
-        }
+        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
+        adicionarContagemProdutoController = new AdicionarContagemProdutoController(this, sqLiteDatabase, getApplicationContext());
 
-        txtDescricao.setText(produto.getDescricao());
+        adicionarContagemProdutoController.pesquisar(contagem);
 
-        setBtnAdicionar();
-        setBtnAlterarFornecedor();
-    }
-
-    private void setBtnAdicionar() {
-        btnAdicionar.setOnClickListener(new View.OnClickListener() {
+        txtCodBarra.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View view) {
-                try {
-                    String quant = txtQuantidade.getText().toString();
-
-                    if (quant.isEmpty())
-                        throw new Exception("O Campo de Quantidade Não Pode Estar Vazio!");
-
-                    contagem_produto.setId(new Date().getTime());
-                    contagem_produto.setContagem(contagem);
-                    contagem_produto.setProduto(produto);
-                    contagem_produto.setQuant(Integer.parseInt(quant));
-
-//                    boolean result = contagemProdutoManager.importarDeExcel(contagem_produto);
-
-//                    if (result) {
-//                        Toast.makeText(AdicionarContagemProduto.this, "Contagem de Produto Inserida com Sucesso!", Toast.LENGTH_SHORT).show();
-//
-//                        if (addFornecedorFlag) {
-//
-//                            produto.setFornecedor(fornecedor);
-//
-//                            //boolean resultProduto = produtoManager.atualizar(produto, produto.getCod_barra());
-//
-//                            if (resultProduto) {
-//                                Toast.makeText(AdicionarContagemProduto.this, "Fornecedor de Produto Atualizado com Sucesso!", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(AdicionarContagemProduto.this, "Houve um Erro ao Atualizar Fornecedor de Produto", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        finish();
-//                    } else {
-//                        Toast.makeText(AdicionarContagemProduto.this, "Erro ao Inserir Contagem!", Toast.LENGTH_SHORT).show();
-//                    }
-                } catch (Exception e) {
-                    Toast.makeText(AdicionarContagemProduto.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
+                    String cod_barra = txtCodBarra.getText().toString().replace("\n", "");
+                    adicionarContagemProdutoController.pesquisarProduto(cod_barra);
+                    return true;
                 }
-            }
-        });
-    }
 
-    private void setBtnAlterarFornecedor() {
-        btnAlterarFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (produto.getFornecedor() == null) {
-//                    Intent intent = new Intent(AdicionarContagemProduto.this, TelaFornecedorForResult.class);
-//                    startActivityForResult(intent, ALTERAR_FORNECEDOR);
-                } else {
-                    Toast.makeText(AdicionarContagemProduto.this, "Somente Altere o Fornecedor Nesta Tela Se O Produto Não Possuir Um", Toast.LENGTH_LONG).show();
-                }
+                return false;
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case ALTERAR_FORNECEDOR:
-                if (resultCode == RESULT_OK) {
-                    fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+    public void mensagemAoUsuario(String mensagem) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+    }
 
-                    if (fornecedor != null) {
-                        txtFornecedor.setText(fornecedor.getNome());
-                        addFornecedorFlag = true;
-                        Toast.makeText(this, "Fornecedor Escolhido. Dados Serão Salvos ao Adicionar Contagem de Produto", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(this, "O Fornecedor Não Foi Escolhido", Toast.LENGTH_SHORT).show();
-                    fornecedor = null;
-                    addFornecedorFlag = false;
-                }
-                break;
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+        listViewContagemProduto.setAdapter(adapter);
+    }
+
+    @Override
+    public void realizarPesquisa() {
+
+    }
+
+    @Override
+    public void limparCampos() {
+        txtCodBarra.getText().clear();
+    }
+
+    @Override
+    public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
+
+        ContagemProduto contagemProduto = adicionarContagemProdutoController.retornarContagemProduto(String.valueOf(id));
+
+        if (contagemProduto != null) {
+            abreDeletarContagemProdutoDialog(contagemProduto);
         }
+    }
+
+    @Override
+    public void abrirTelaProdutoForResult() {
+
+    }
+
+    @Override
+    public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter) {
+        escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
+        escolhaProdutoDialog.show();
+    }
+
+    @Override
+    public void retornarProdutoEncontrado(Produto produto) {
+        ContagemProduto contagemProduto = new ContagemProduto();
+
+        contagemProduto.setId(new Date().getTime());
+        contagemProduto.setProduto(produto);
+        contagemProduto.setContagem(contagem);
+        contagemProduto.setQuant(1);
+
+        adicionarContagemProdutoController.cadastrar(contagemProduto);
+    }
+
+    private void setEscolhaProdutoDialog() {
+        escolhaProdutoDialog = new AlertDialog.Builder(AdicionarContagemProduto.this);
+        escolhaProdutoDialog.setTitle("Selecione Abaixo");
+
+        escolhaProdutoDialog.setNegativeButton("O Produto Não Está Lista", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                produto = null;
+                abrirTelaProdutoForResult();
+            }
+        });
+
+        escolhaProdutoDialog.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ListView lw = ((AlertDialog) dialogInterface).getListView();
+                produto = (Produto) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+
+                ContagemProduto contagemProduto = new ContagemProduto();
+
+                contagemProduto.setId(new Date().getTime());
+                contagemProduto.setProduto(produto);
+                contagemProduto.setContagem(contagem);
+                contagemProduto.setQuant(1);
+
+                adicionarContagemProdutoController.cadastrar(contagemProduto);
+            }
+        });
+
+        escolhaProdutoDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                produto = null;
+                mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
+            }
+        });
+    }
+
+    public void setProdutoNaoEncontradoDialog() {
+        produtoNaoEncontradoDialog = new AlertDialog.Builder(AdicionarContagemProduto.this);
+        produtoNaoEncontradoDialog.setTitle("Produto Não Encontrado");
+        produtoNaoEncontradoDialog.setMessage("Nenhum Produto Foi Encontrado Com o Código Informado. Deseja Pesquisar na Tela de Produtos ou Cadastrar Um Novo Produto?");
+
+        produtoNaoEncontradoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                produto = null;
+                abrirTelaProdutoForResult();
+            }
+        });
+
+        produtoNaoEncontradoDialog.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
+            }
+        });
+    }
+
+    private void setDeletarContagemProdutoDialog() {
+        deletarContagemProdutoDialog = new AlertDialog.Builder(AdicionarContagemProduto.this);
+        deletarContagemProdutoDialog.setTitle("Deletar Contagem de Produto");
+        deletarContagemProdutoDialog.setMessage("Deletar Esta Contagem de Produto?");
+
+        deletarContagemProdutoDialog.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mensagemAoUsuario("A Contagem de Produto Não Foi Deletada");
+            }
+        });
+    }
+
+    private void abreDeletarContagemProdutoDialog(final ContagemProduto contagemProduto) {
+        deletarContagemProdutoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                adicionarContagemProdutoController.deletar(String.valueOf(contagemProduto.getId()));
+            }
+        });
+
+        deletarContagemProdutoDialog.show();
     }
 }

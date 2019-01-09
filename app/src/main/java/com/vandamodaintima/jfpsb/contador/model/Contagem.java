@@ -29,6 +29,11 @@ public class Contagem implements Serializable {
         return simpleDateFormat.format(data);
     }
 
+    public String getSQLiteData() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(data);
+    }
+
     public Date getData() {
         return data;
     }

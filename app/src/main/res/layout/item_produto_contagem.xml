@@ -2,42 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:weightSum="5">
+    android:background="@drawable/item_lista_linha_inferior"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text1"
-        android:minHeight="50dp"
-        android:textSize="18dp"
-        android:textColor="#000000"
-        android:padding="10dp"
-        android:textAlignment="center"
-        android:layout_weight="1"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelDescricao"
-        android:minHeight="50dp"
-        android:textSize="18dp"
-        android:textColor="#000000"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textAlignment="center"
-        android:layout_weight="3"/>
+        <TextView
+            android:id="@+id/lblCodBarra"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="50dp"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp" />
 
-    <TextView
-        android:layout_width="0dp"
+        <TextView
+            android:id="@+id/lblDescricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:minHeight="50dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/labelQuant"
-        android:minHeight="50dp"
-        android:textSize="18dp"
-        android:textColor="#000000"
-        android:padding="10dp"
-        android:textAlignment="center"
-        android:layout_weight="1"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="50dp"
+            android:padding="10dp"
+            android:text="Quantidade Adicionada:"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/lblQuantidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="50dp"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 </LinearLayout>

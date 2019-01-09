@@ -1,12 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-public class ProdutoContagem {
+public class ContagemProduto {
     private long id;
     private Contagem contagem;
     private Produto produto;
     private int quant;
 
-    private static final String[] colunas = new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant" };
+    private static final String[] colunas = new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant", "cod_barra", "descricao" };
 
     public long getId() {
         return id;

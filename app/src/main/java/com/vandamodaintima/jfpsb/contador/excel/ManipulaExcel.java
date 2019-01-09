@@ -90,7 +90,7 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        //ArrayList<ProdutoContagem> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
+        //ArrayList<ContagemProduto> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
 
 //        try {
 //            if (contagemproduto.size() == 0)
@@ -99,7 +99,7 @@ public class ManipulaExcel {
 //            for (int i = rowIndex; i <= contagemproduto.size(); i++) {
 //                Row row = arquivoExcel.getPlanilha().createRow(i);
 //
-//                ProdutoContagem contagemProduto = contagemproduto.get(i - 1);
+//                ContagemProduto contagemProduto = contagemproduto.get(i - 1);
 //
 //                Cell cod_barra = row.createCell(0);
 //                cod_barra.setCellValue(contagemProduto.getProduto().getCod_barra());

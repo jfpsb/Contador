@@ -155,15 +155,14 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent pesquisaContagemProduto = new Intent(AlterarDeletarContagem.this, PesquisaContagemProdutoContainer.class);
-//
-//                Bundle bundle = new Bundle();
-//
-//                bundle.putSerializable("contagem", contagem);
-//
-//                pesquisaContagemProduto.putExtras(bundle);
-//
-//                startActivity(pesquisaContagemProduto);
+                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("contagem", contagem);
+
+                intent.putExtras(bundle);
+
+                startActivity(intent);
             }
         });
     }

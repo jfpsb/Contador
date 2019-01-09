@@ -21,5 +21,9 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
     </style>
+    
+    <style name="AlertDialogProduto" parent="@android:style/Theme.Dialog">
+        <item name="android:fontFamily">@font/century_gothic</item>
+    </style>
 
 </resources>

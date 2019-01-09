@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.produtocontagem;
+package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,20 +10,21 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoContagem;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 import java.util.List;
 
-public class ProdutoContagemAdapter extends ArrayAdapter<ProdutoContagem> {
+public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
     private int resourceLayout;
     private Context mContext;
 
-    public ProdutoContagemAdapter(Context context, int resource, List<ProdutoContagem> objects) {
+    public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
@@ -34,16 +35,14 @@ public class ProdutoContagemAdapter extends ArrayAdapter<ProdutoContagem> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        ProdutoContagem pc = getItem(position);
+        Produto p = getItem(position);
 
-        if (pc != null) {
-            TextView labelCodBarra = v.findViewById(R.id.text1);
-            TextView labelDescricao = v.findViewById(R.id.labelDescricao);
-            TextView labelQuant = v.findViewById(R.id.labelQuant);
+        if (p != null) {
+            TextView text1 = v.findViewById(R.id.txtProdutoDialog);
 
-            labelCodBarra.setText(pc.getProduto().getCod_barra());
-            labelDescricao.setText(pc.getProduto().getDescricao());
-            labelQuant.setText(String.valueOf(pc.getQuant()));
+            if (text1 != null) {
+                text1.setText(p.getCod_barra() + " - " + p.getDescricao());
+            }
         }
 
         return v;

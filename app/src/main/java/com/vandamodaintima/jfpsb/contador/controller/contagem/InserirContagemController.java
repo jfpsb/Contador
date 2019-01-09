@@ -12,13 +12,13 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.view.contagem.CadastrarContagem;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
-public class CadastrarContagemController {
+public class InserirContagemController {
     private CadastrarView view;
     private DAOContagem daoContagem;
     private DAOLoja daoLoja;
     private SimpleCursorAdapter spinnerLojaAdapter;
 
-    public CadastrarContagemController(CadastrarView view, SQLiteDatabase sqLiteDatabase, Context context) {
+    public InserirContagemController(CadastrarView view, SQLiteDatabase sqLiteDatabase, Context context) {
         this.view = view;
         daoContagem = new DAOContagem(sqLiteDatabase);
         daoLoja = new DAOLoja(sqLiteDatabase);

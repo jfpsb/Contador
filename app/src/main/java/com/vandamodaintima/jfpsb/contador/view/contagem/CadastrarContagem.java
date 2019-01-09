@@ -14,7 +14,7 @@ import android.widget.SpinnerAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.CadastrarContagemController;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemController;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
@@ -29,7 +29,7 @@ public class CadastrarContagem extends TelaCadastro {
     private Loja loja;
 
     private SQLiteDatabase sqLiteDatabase;
-    private CadastrarContagemController cadastrarContagemController;
+    private InserirContagemController cadastrarContagemController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class CadastrarContagem extends TelaCadastro {
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 
         sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarContagemController = new CadastrarContagemController(this, sqLiteDatabase, getContext());
+        cadastrarContagemController = new InserirContagemController(this, sqLiteDatabase, getContext());
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
