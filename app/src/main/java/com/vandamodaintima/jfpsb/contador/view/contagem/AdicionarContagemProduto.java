@@ -40,6 +40,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     private Contagem contagem;
     private Produto produto;
+    private String cod_barra = null;
 
     private static final int TELA_SELECIONAR_PRODUTO = 1;
 
@@ -75,7 +76,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
-                    String cod_barra = txtCodBarra.getText().toString().replace("\n", "");
+                    cod_barra = txtCodBarra.getText().toString().replace("\n", "");
                     adicionarContagemProdutoController.pesquisarProduto(cod_barra);
                     return true;
                 }
@@ -133,6 +134,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     private void abrirTelaProdutoForResult() {
         Intent intent = new Intent(this, TelaProdutoForContagemForResult.class);
+        intent.putExtra("codigo", cod_barra);
         startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
     }
 

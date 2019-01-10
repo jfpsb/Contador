@@ -17,11 +17,16 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
+    private String codigo;
     private Produto produto;
     private AlertDialog.Builder alertaQuantidadeProduto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        //Código de barras usado na pesquisa inicial
+        codigo = getArguments().getString("codigo");
+
         setAlertaQuantidadeProduto();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -59,6 +64,9 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                         mensagemAoUsuario("Informe Uma Quantidade Válida");
                         return;
                     }
+
+                    produto.getCod_barra_fornecedor().add(codigo);
+                    pesquisarProdutoController.atualizar(produto);
 
                     Intent intent = new Intent();
                     intent.putExtra("produto", produto);

@@ -71,4 +71,15 @@ public class PesquisarProdutoController {
     public Produto retornaProdutoEscolhidoListView(String cod_barra) {
         return daoProduto.listarPorId(cod_barra);
     }
+
+    //Utilizado apenas na tela de pesquisar produto para adicionar contagem
+    public void atualizar(Produto produto) {
+        Boolean result = daoProduto.atualizar(produto, produto.getCod_barra());
+
+        if(result) {
+            view.mensagemAoUsuario("Produto Foi Atualizado Com Código de Barras");
+        } else {
+            view.mensagemAoUsuario("Erro ao Atualizar Produto Com Código de Barras");
+        }
+    }
 }

@@ -20,7 +20,12 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //Coloca o código da pesquisa no produto a ser cadastrado
+        String codigo = getArguments().getString("codigo");
+        produto.getCod_barra_fornecedor().add(codigo);
+
         setAlertaQuantidadeProduto();
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

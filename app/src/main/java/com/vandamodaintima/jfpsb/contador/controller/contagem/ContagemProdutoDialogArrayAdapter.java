@@ -4,10 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.CheckedTextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
     private int resourceLayout;
     private Context mContext;
+    private int index = 0;
 
     public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
         super(context, resource, objects);
@@ -38,11 +40,23 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
         Produto p = getItem(position);
 
         if (p != null) {
-            TextView text1 = v.findViewById(R.id.txtProdutoDialog);
+            final CheckedTextView text1 = v.findViewById(R.id.txtProdutoDialog);
+            text1.setChecked(position == index);
+            text1.setTag(position);
 
-            if (text1 != null) {
-                text1.setText(p.getCod_barra() + " - " + p.getDescricao());
-            }
+            //Lida com a seleção do radiobutton pq por algum motivo parou de funcionar sozinho
+            //então fiz manualmente.
+            //Se sobreescrever o onClickListener não funciona então tem que usar esse ai
+            text1.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    index = (int) view.getTag();
+                    notifyDataSetChanged();
+                    return false;
+                }
+            });
+
+            text1.setText(p.getCod_barra() + " - " + p.getDescricao());
         }
 
         return v;
