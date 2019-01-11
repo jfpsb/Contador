@@ -226,7 +226,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                produto.setDescricao(txtDescricao.getText().toString());
+                produto.setDescricao(txtDescricao.getText().toString().toUpperCase());
                 produto.setFornecedor(fornecedor);
                 produto.setMarca(marca);
                 produto.setPreco(Double.parseDouble(txtPreco.getText().toString()));

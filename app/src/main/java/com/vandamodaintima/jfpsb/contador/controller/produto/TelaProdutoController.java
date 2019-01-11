@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class TelaProdutoController {
-    private TelaProduto telaProduto;
     private SQLiteDatabase sqLiteDatabase;
     private DAOProduto daoProduto;
     private DAOFornecedor daoFornecedor;
@@ -42,10 +41,10 @@ public class TelaProdutoController {
 
     private enum Headers {
         COD_BARRA("Código de Barra"),
-        FORNECEDOR("Fornecedor (CNPJ)"),
+        FORNECEDOR("Fornecedor"),
         COD_BARRA_FORNECEDOR("Códigos de Barra de Fornecedor"),
         DESCRICAO("Descrição"),
-        MARCA("Marca (Nome)"),
+        MARCA("Marca"),
         PRECO("Preço");
 
         public String texto;
@@ -55,8 +54,7 @@ public class TelaProdutoController {
         }
     }
 
-    public TelaProdutoController(TelaProduto telaProduto, SQLiteDatabase sqLiteDatabase) {
-        this.telaProduto = telaProduto;
+    public TelaProdutoController(SQLiteDatabase sqLiteDatabase) {
         this.sqLiteDatabase = sqLiteDatabase;
         daoProduto = new DAOProduto(sqLiteDatabase);
         daoFornecedor = new DAOFornecedor(sqLiteDatabase);
@@ -72,7 +70,7 @@ public class TelaProdutoController {
 
         try {
             if (task == null) {
-                throw new Exception("Você precisa passar setar o AsyncTask!");
+                throw new Exception("Você precisa setar o AsyncTask!");
             }
 
             inputStream = Arquivo.getInputStreamFromUri(contentResolver, filepath);
@@ -143,7 +141,7 @@ public class TelaProdutoController {
 
                 if (!isCellEmpty(fornecedor)) {
                     if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-                        Fornecedor f = daoFornecedor.listarPorId(fornecedor.getStringCellValue());
+                        Fornecedor f = daoFornecedor.listarPorIdOuNome(fornecedor.getStringCellValue());
 
                         if (f != null) {
                             produto.setFornecedor(f);
@@ -259,7 +257,7 @@ public class TelaProdutoController {
             for (int i = rowIndex; i <= rows.length; i++) {
                 Row row = arquivoExcel.getPlanilha().createRow(i);
 
-                for (int j = 0; j < Produto.getHeaders().length; j++) {
+                for (int j = 0; j < Headers.values().length; j++) {
                     Cell cell = row.createCell(j);
                     cell.setCellStyle(cellStyle);
                 }
@@ -270,7 +268,13 @@ public class TelaProdutoController {
             for (int i = 0; i < rows.length; i++) {
                 Produto produto = produtos.get(i);
 
-                rows[i].getCell(0).setCellValue(produto.getCod_barra());
+                rows[i].getCell(Headers.COD_BARRA.ordinal()).setCellValue(produto.getCod_barra());
+
+                if (produto.getFornecedor() != null) {
+                    rows[i].getCell(Headers.FORNECEDOR.ordinal()).setCellValue(produto.getFornecedor().getNome());
+                } else {
+                    rows[i].getCell(Headers.FORNECEDOR.ordinal()).setCellValue("Não Possui");
+                }
 
                 String codbarrafornecedor = "";
 
@@ -282,41 +286,38 @@ public class TelaProdutoController {
                     }
                 }
 
-                rows[i].getCell(1).setCellValue(codbarrafornecedor);
-                if (produto.getFornecedor() != null) {
-                    rows[i].getCell(2).setCellValue(produto.getFornecedor().getNome());
-                } else {
-                    rows[i].getCell(2).setCellValue("Não Possui");
-                }
+                rows[i].getCell(Headers.COD_BARRA_FORNECEDOR.ordinal()).setCellValue(codbarrafornecedor);
+
+                rows[i].getCell(Headers.DESCRICAO.ordinal()).setCellValue(produto.getDescricao());
 
                 if (produto.getMarca() != null) {
-                    rows[i].getCell(3).setCellValue(produto.getMarca().getNome());
+                    rows[i].getCell(Headers.MARCA.ordinal()).setCellValue(produto.getMarca().getNome());
                 } else {
-                    rows[i].getCell(3).setCellValue("Não Possui");
+                    rows[i].getCell(Headers.MARCA.ordinal()).setCellValue("Não Possui");
                 }
 
-                rows[i].getCell(4).setCellValue(produto.getDescricao());
-                rows[i].getCell(5).setCellValue(produto.getPreco());
+
+                rows[i].getCell(Headers.PRECO.ordinal()).setCellValue(produto.getPreco());
 
                 if (i % 100 == 0 && i > 99) {
                     progresso.publish(i + " Produtos Já Listados");
                 }
             }
 
-            arquivoExcel.getPlanilha().setColumnWidth(0, 25 * 256);
-            arquivoExcel.getPlanilha().setColumnWidth(1, 70 * 256);
-            arquivoExcel.getPlanilha().setColumnWidth(2, 40 * 256);
-            arquivoExcel.getPlanilha().setColumnWidth(3, 40 * 256);
-            arquivoExcel.getPlanilha().setColumnWidth(4, 40 * 256);
-            arquivoExcel.getPlanilha().setColumnWidth(5, 40 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.COD_BARRA.ordinal(), 25 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.COD_BARRA_FORNECEDOR.ordinal(), 70 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.FORNECEDOR.ordinal(), 45 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.MARCA.ordinal(), 40 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.DESCRICAO.ordinal(), 45 * 256);
+            arquivoExcel.getPlanilha().setColumnWidth(Headers.PRECO.ordinal(), 25 * 256);
 
-            String nomeArquivo = "Produtos " + new SimpleDateFormat("yyyy-MM-dd HHmmss").format(dataAtual) + ".xlsx";
+            String nomeArquivo = "Produtos " + new SimpleDateFormat("dd-MM-yyyy HH.mm.ss").format(dataAtual) + ".xlsx";
 
             File arquivo = new File(diretorio, nomeArquivo);
 
             outputStream = new FileOutputStream(arquivo.getAbsolutePath());
 
-            progresso.publish("Escrevendo Arquivo Em Disco");
+            progresso.publish("Escrevendo Arquivo Em Memória");
             arquivoExcel.getPastaTrabalho().write(outputStream);
 
             progresso.publish("Produtos Exportados Com Sucesso");
@@ -363,10 +364,11 @@ public class TelaProdutoController {
 
         Row cabecalho = arquivoExcel.getPlanilha().createRow(0);
 
-        for (int i = 0; i < Produto.getHeaders().length; i++) {
-            Cell header = cabecalho.createCell(i);
-            header.setCellValue(Produto.getHeaders()[i]);
-            header.setCellStyle(cabecalhoStyle);
+        for (Headers header : Headers.values()) {
+            Cell cell = cabecalho.createCell(header.ordinal());
+
+            cell.setCellValue(header.texto);
+            cell.setCellStyle(cabecalhoStyle);
         }
     }
 

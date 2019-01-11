@@ -52,9 +52,9 @@ public class DAOFornecedor implements DAO<Fornecedor> {
         contentValues.put("nome", fornecedor.getNome());
         contentValues.put("fantasia", fornecedor.getFantasia());
 
-        long result = sqLiteDatabase.update(TABELA, contentValues, "cnpj = ?", new String[] { cnpj });
+        long result = sqLiteDatabase.update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
 
-        if(result > 0)
+        if (result > 0)
             return true;
 
         return false;
@@ -64,7 +64,7 @@ public class DAOFornecedor implements DAO<Fornecedor> {
     public Boolean deletar(Object... chaves) {
         long result = sqLiteDatabase.delete(TABELA, "cnpj = ?", new String[]{String.valueOf(chaves[0])});
 
-        if(result > 0)
+        if (result > 0)
             return true;
 
         return false;
@@ -95,8 +95,28 @@ public class DAOFornecedor implements DAO<Fornecedor> {
         return fornecedor;
     }
 
+    public Fornecedor listarPorIdOuNome(String termo) {
+        Fornecedor fornecedor = null;
+
+        Cursor cursor = sqLiteDatabase.query(TABELA, null, "cnpj = ? OR nome = ?", new String[]{termo, termo}, null, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            fornecedor = new Fornecedor();
+
+            fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+            fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+            fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+        }
+
+        cursor.close();
+
+        return fornecedor;
+    }
+
     public Cursor listarPorNomeCursor(String nome) {
-        return sqLiteDatabase.query(TABELA, null, "nome LIKE ?", new String[] { "%" + nome + "%" }, null, null, null, null);
+        return sqLiteDatabase.query(TABELA, null, "nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, null, null);
     }
 
     public ArrayList<Fornecedor> listarPorNome(String nome) {

@@ -12,7 +12,6 @@ public class Produto implements Serializable {
     private Double preco;
 
     private static final String[] colunas = new String[]{"cod_barra as _id", "fornecedor", "marca", "descricao", "preco"};
-    private static String[] headers = new String[]{"Cód. de Barras", "Cód. de Barras Fornecedor", "Fornecedor", "Marca", "Descrição", "Preço"};
 
     public ArrayList<String> getCod_barra_fornecedor() {
         return cod_barra_fornecedor;
@@ -64,10 +63,6 @@ public class Produto implements Serializable {
 
     public static String[] getColunas() {
         return colunas;
-    }
-
-    public static String[] getHeaders() {
-        return headers;
     }
 
     /**

@@ -222,7 +222,7 @@ public class DAOProduto implements DAO<Produto> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                produto.setMarca(daoMarca.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setMarca(daoMarca.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
                 produto.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
                 produtos.add(produto);
@@ -306,7 +306,7 @@ public class DAOProduto implements DAO<Produto> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                produto.setMarca(daoMarca.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setMarca(daoMarca.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
                 produto.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
                 produtos.add(produto);
@@ -353,7 +353,7 @@ public class DAOProduto implements DAO<Produto> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                produto.setMarca(daoMarca.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setMarca(daoMarca.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
                 produto.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
         }
@@ -400,7 +400,7 @@ public class DAOProduto implements DAO<Produto> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                produto.setMarca(daoMarca.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setMarca(daoMarca.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
                 produto.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
         }
@@ -446,7 +446,7 @@ public class DAOProduto implements DAO<Produto> {
                 cursorCodigoBarraFornecedor.close();
 
                 produto.setFornecedor(new DAOFornecedor(sqLiteDatabase).listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                produto.setMarca(new DAOMarca(sqLiteDatabase).listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("marca"))));
+                produto.setMarca(new DAOMarca(sqLiteDatabase).listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
 
                 produtos.add(produto);
             }

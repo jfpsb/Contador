@@ -58,7 +58,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    String nome = txtNome.getText().toString();
+                    String nome = txtNome.getText().toString().toUpperCase();
 
                     fornecedor.setNome(nome);
 

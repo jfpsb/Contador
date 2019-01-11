@@ -70,7 +70,7 @@ public class TelaProduto extends TabLayoutActivityBase {
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
 
         sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        telaProdutoController = new TelaProdutoController(this, sqLiteDatabase);
+        telaProdutoController = new TelaProdutoController(sqLiteDatabase);
     }
 
     protected void setFragments() {

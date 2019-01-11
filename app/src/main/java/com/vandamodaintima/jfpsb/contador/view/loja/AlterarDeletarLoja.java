@@ -83,7 +83,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    loja.setNome(txtNome.getText().toString());
+                    loja.setNome(txtNome.getText().toString().toUpperCase());
 
                     alterarDeletarLojaController.atualizar(loja);
                 } catch (Exception e) {

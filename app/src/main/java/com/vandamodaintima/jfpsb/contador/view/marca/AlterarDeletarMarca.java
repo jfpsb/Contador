@@ -74,7 +74,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    String nome = txtNome.getText().toString();
+                    String nome = txtNome.getText().toString().toUpperCase();
 
                     marca.setNome(nome);
 
