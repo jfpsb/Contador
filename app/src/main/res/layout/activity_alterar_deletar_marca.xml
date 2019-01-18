@@ -14,7 +14,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alterar/Deletar Marca"
+                android:text="@string/alterar_deletar_marca"
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="24sp" />
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nome:"
+                android:text="@string/nome_dois_pontos"
                 android:textColor="#000"
                 android:textSize="22sp" />
         </TableRow>
@@ -49,7 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Atualizar"
+                android:text="@string/atualizar"
                 android:textColor="#000"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Deletar"
+                android:text="@string/deletar"
                 android:textColor="#FF0000"
                 android:textSize="24sp"
                 android:textStyle="bold" />

@@ -15,7 +15,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dip"
                 android:layout_weight="1"
-                android:text="Inserir Cód. de Barras de Fornecedor"
+                android:text="@string/inserir_cod_de_barras_de_fornecedor"
                 android:textAlignment="center"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Código de Barras:"
+                android:text="@string/cod_de_barras_dois_pontos"
                 android:textSize="22sp" />
         </TableRow>
 
@@ -54,7 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Inserir"
+                android:text="@string/inserir"
+                android:textStyle="bold"
                 android:textSize="24sp" />
         </TableRow>
     </TableLayout>

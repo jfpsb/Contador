@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Código de Barras do Produto:"
+            android:text="@string/cod_de_barras_dois_pontos"
             android:textSize="22sp" />
     </TableRow>
 
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:hint="A Definir"
+            android:hint="@string/hint_a_definir"
             android:textSize="20sp" />
     </TableRow>
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Descrição:"
+            android:text="@string/descricao_dois_pontos"
             android:textSize="22sp" />
     </TableRow>
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:hint="A Definir"
+            android:hint="@string/hint_a_definir"
             android:textSize="20sp" />
     </TableRow>
 </TableLayout>

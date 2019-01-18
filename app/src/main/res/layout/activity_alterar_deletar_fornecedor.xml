@@ -14,7 +14,7 @@
         android:layout_margin="10dip">
 
         <TableRow android:weightSum="1">
-            <TextView android:text="Dados De Fornecedor"
+            <TextView android:text="@string/dados_de_fornecedor"
                 android:textSize="28sp"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CNPJ:"
+                android:text="@string/cnpj_dois_pontos"
                 android:textAlignment="textStart"
                 android:textColor="#000"
                 android:textSize="22sp" />
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nome:"
+                android:text="@string/nome_dois_pontos"
                 android:textAlignment="textStart"
                 android:textColor="#000000"
                 android:textSize="22sp" />
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Fantasia:"
+                android:text="@string/fantasia_dois_pontos"
                 android:textAlignment="textStart"
                 android:textColor="#000000"
                 android:textSize="22sp" />
@@ -88,7 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Atualizar"
+                android:text="@string/atualizar"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -97,7 +97,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Deletar"
+                android:text="@string/deletar"
                 android:textColor="#FF0000"
                 android:textSize="24sp"
                 android:textStyle="bold" />

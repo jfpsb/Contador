@@ -5,10 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
@@ -18,20 +14,15 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                Fornecedor fornecedor = new Fornecedor();
+        Fornecedor fornecedor = new Fornecedor();
 
-                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+        fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+        fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+        fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
 
-                setAlertaEscolha(fornecedor);
-            }
-        });
+        setAlertaEscolha(fornecedor);
     }
 
     private void setAlertaEscolha(final Fornecedor fornecedor) {

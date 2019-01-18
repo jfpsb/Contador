@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dip"
                 android:layout_weight="1"
-                android:text="Cadastro de Contagem"
+                android:text="@string/cadastro_de_contagem"
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="26sp"
@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Loja: "
+                android:text="@string/loja_dois_pontos"
                 android:textColor="#000000"
                 android:textSize="22sp" />
 
@@ -53,10 +53,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
-            android:layout_weight="1"
             android:height="70sp"
             android:background="@drawable/botao_active"
-            android:text="Cadastrar"
+            android:text="@string/cadastrar"
             android:textSize="24sp"
             android:textStyle="bold" />
 

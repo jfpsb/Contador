@@ -7,7 +7,10 @@ import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -86,6 +89,38 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
 
         txtCodBarra.setShowSoftInputOnFocus(false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_tela_adicionar_contagem, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.itemAdicionarManualmente:
+                abrirTelaProdutoForResult();
+                return true;
+            case R.id.itemHabilitarCampo:
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                    txtCodBarra.setInputType(InputType.TYPE_NULL);
+                    txtCodBarra.setLongClickable(false);
+                    txtCodBarra.setHint(getString(R.string.hint_leia_cod_de_barra));
+                } else {
+                    item.setChecked(true);
+                    txtCodBarra.setInputType(InputType.TYPE_CLASS_TEXT);
+                    txtCodBarra.setLongClickable(true);
+                    txtCodBarra.setHint(getString(R.string.hint_leia_ou_escreva_cod_de_barra));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

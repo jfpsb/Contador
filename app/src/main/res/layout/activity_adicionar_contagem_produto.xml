@@ -15,7 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Inserir Contagem de Produto"
+                android:text="@string/inserir_contagem_de_produto"
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="22sp" />
@@ -32,7 +32,7 @@
                 android:longClickable="false"
                 android:lines="1"
                 android:maxLines="1"
-                android:hint="Leia o Código de Barras do Produto"
+                android:hint="@string/leia_o_cod_de_barras_do_produto"
                 android:textAlignment="center" />
         </TableRow>
 
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cód. de Barra"
+                android:text="@string/cod_de_barra"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Descrição"
+                android:text="@string/descricao"
                 android:textAlignment="center"
                 android:textSize="18sp" />
         </TableRow>

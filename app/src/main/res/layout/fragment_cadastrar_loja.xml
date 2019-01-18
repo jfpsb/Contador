@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cadastro de Loja"
+                android:text="@string/cadastro_de_loja"
                 android:textAlignment="center"
                 android:textColor="#000"
                 android:textSize="26sp"
@@ -27,7 +27,7 @@
         <TableRow>
 
             <TextView
-                android:text="CNPJ:"
+                android:text="@string/cnpj_dois_pontos"
                 android:textColor="#000000"
                 android:textSize="24sp" />
         </TableRow>
@@ -48,9 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nome:"
+                android:text="@string/nome_dois_pontos"
                 android:textColor="#000000"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
         </TableRow>
 
         <TableRow>
@@ -68,15 +68,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Matriz:"
+                android:text="@string/matriz_dois_pontos"
                 android:textColor="#000000"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
         </TableRow>
 
         <Spinner
             android:id="@+id/spinnerMatrizes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></Spinner>
+            android:layout_height="wrap_content" />
 
     </TableLayout>
 
@@ -91,10 +91,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
-            android:layout_weight="1"
             android:height="70sp"
             android:background="@drawable/botao_active"
-            android:text="Cadastrar"
+            android:text="@string/cadastrar"
             android:textSize="24sp"
             android:textStyle="bold" />
 

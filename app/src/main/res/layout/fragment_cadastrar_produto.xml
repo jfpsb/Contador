@@ -11,7 +11,7 @@
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:stretchColumns="1">
 
             <TableRow>
@@ -20,7 +20,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cadastro de Produto"
+                    android:text="@string/cadastro_de_produto"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textSize="26sp"
@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Código De Barras: "
+                    android:text="@string/cod_de_barras_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Código De Barras Já Existe No Sistema"
+                    android:text="@string/cod_de_barras_ja_existe_no_sistema"
                     android:textColor="#FF0000"
                     android:textSize="18sp"
                     android:visibility="gone" />
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Gerenciar Cód. de Barras de Fornecedor"
+                    android:text="@string/gerenciar_cod_de_barras_de_fornecedor"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -80,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Fornecedor: "
+                    android:text="@string/fornecedor_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -104,7 +104,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Escolher Fornecedor"
+                    android:text="@string/escolher_fornecedor"
                     android:textSize="18sp" />
 
                 <Button
@@ -112,7 +112,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Remover Fornecedor"
+                    android:text="@string/remover_fornecedor"
                     android:textColor="#ff00"
                     android:textSize="18sp" />
             </TableRow>
@@ -123,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Marca:"
+                    android:text="@string/marca_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
-                    android:hint="Escolha No Botão Abaixo"
+                    android:hint="@string/escolha_no_botao_abaixo"
                     android:textSize="20sp" />
             </TableRow>
 
@@ -147,7 +147,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Escolher Marca"
+                    android:text="@string/escolher_marca"
                     android:textSize="18sp" />
 
                 <Button
@@ -155,7 +155,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Remover Marca"
+                    android:text="@string/remover_marca"
                     android:textColor="#ff00"
                     android:textSize="18sp" />
             </TableRow>
@@ -166,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Descrição: "
+                    android:text="@string/descricao_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -188,7 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Preço: "
+                    android:text="@string/preco_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -221,13 +221,13 @@
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10sp"
             android:layout_weight="1"
-            android:height="70sp"
+            android:height="60sp"
             android:background="@drawable/botao_active"
-            android:text="Cadastrar"
+            android:text="@string/cadastrar"
             android:textSize="24sp"
             android:textStyle="bold" />
 

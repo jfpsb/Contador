@@ -21,7 +21,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Quant. de Códigos"
+                android:text="@string/quant_de_cod"
                 android:textAlignment="center"
                 android:textSize="20sp" />
 
@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="0"
+                android:text="@string/zero"
                 android:textAlignment="center"
                 android:textSize="20sp" />
         </TableRow>
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Código"
+                android:text="@string/codigo"
                 android:textAlignment="center"
                 android:textSize="22sp" />
         </TableRow>

@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dados de Loja"
+                android:text="@string/dados_de_loja"
                 android:textSize="28sp"
                 android:textAlignment="center"
                 android:textColor="#000000"
@@ -27,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CNPJ:"
+                android:text="@string/cnpj_dois_pontos"
                 android:textAlignment="textStart"
                 android:textColor="#000"
                 android:textSize="22sp" />
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Nome:"
+                android:text="@string/nome_dois_pontos"
                 android:textAlignment="textStart"
                 android:textColor="#000"
                 android:textSize="22sp" />
@@ -67,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Atualizar"
+                android:text="@string/atualizar"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -76,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Deletar"
+                android:text="@string/deletar"
                 android:textColor="#FF0000"
                 android:textSize="24sp"
                 android:textStyle="bold" />

@@ -15,19 +15,14 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-                Marca marca = new Marca();
+        Marca marca = new Marca();
 
-                marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
-                marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+        marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+        marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
-                setAlertaEscolha(marca);
-            }
-        });
+        setAlertaEscolha(marca);
     }
 
     private void setAlertaEscolha(final Marca marca) {

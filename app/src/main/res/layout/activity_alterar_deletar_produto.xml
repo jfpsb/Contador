@@ -19,7 +19,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Dados de Produto"
+                    android:text="@string/dados_de_produto"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textSize="28sp" />
@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cód. de Barras:"
+                    android:text="@string/cod_de_barras_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Gerenciar Cód. de Barras de Fornecedor"
+                    android:text="@string/gerenciar_cod_de_barras_de_fornecedor"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Fornecedor Atual:"
+                    android:text="@string/fornecedor_atual_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
-                    android:hint="Escolha No Botão Abaixo"
+                    android:hint="@string/escolha_no_botao_abaixo"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -91,7 +91,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Escolher Fornecedor"
+                    android:text="@string/escolher_fornecedor"
                     android:textSize="20sp" />
 
                 <Button
@@ -99,7 +99,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Remover Fornecedor"
+                    android:text="@string/remover_fornecedor"
                     android:textColor="#ff00"
                     android:textSize="20sp" />
             </TableRow>
@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Marca:"
+                    android:text="@string/marca_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="false"
-                    android:hint="Escolha No Botão Abaixo"
+                    android:hint="@string/escolha_no_botao_abaixo"
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
@@ -135,7 +135,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Escolher Marca"
+                    android:text="@string/escolher_marca"
                     android:textSize="20sp" />
 
                 <Button
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Remover Marca"
+                    android:text="@string/remover_marca"
                     android:textColor="#ff00"
                     android:textSize="20sp" />
             </TableRow>
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Descrição:"
+                    android:text="@string/descricao"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -176,7 +176,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Preço:"
+                    android:text="@string/preco_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -200,7 +200,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Atualizar"
+                    android:text="@string/atualizar"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -209,7 +209,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Deletar"
+                    android:text="@string/deletar"
                     android:textColor="#FF0000"
                     android:textSize="24sp"
                     android:textStyle="bold" />

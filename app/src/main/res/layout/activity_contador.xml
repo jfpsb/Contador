@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="2sp"
         android:background="@drawable/botao_administracao"
-        android:drawableLeft="@drawable/estoque"
+        android:drawableStart="@drawable/estoque"
         android:padding="30sp"
-        android:text="Contador"
+        android:text="@string/contador"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -25,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="2sp"
         android:background="@drawable/botao_administracao"
-        android:drawableLeft="@drawable/produto_small"
+        android:drawableStart="@drawable/produto_small"
         android:padding="30sp"
-        android:text="Produto"
+        android:text="@string/produto"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -37,9 +37,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="2sp"
         android:background="@drawable/botao_administracao"
-        android:drawableLeft="@drawable/fornecedor_small"
+        android:drawableStart="@drawable/fornecedor_small"
         android:padding="30sp"
-        android:text="Fornecedor"
+        android:text="@string/fornecedor"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -49,9 +49,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="2sp"
         android:background="@drawable/botao_administracao"
-        android:drawableLeft="@drawable/loja_small"
+        android:drawableStart="@drawable/loja_small"
         android:padding="30sp"
-        android:text="Loja"
+        android:text="@string/loja"
         android:textSize="22sp"
         android:textStyle="bold" />
 

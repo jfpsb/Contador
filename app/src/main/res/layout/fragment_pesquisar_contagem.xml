@@ -17,7 +17,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Loja:"
+                android:text="@string/loja_dois_pontos"
                 android:textColor="#000000"
                 android:textSize="24sp" />
 
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Intervalo:"
+                android:text="@string/intervalo_dois_pontos"
                 android:textColor="#000000"
                 android:textSize="24sp" />
         </TableRow>
@@ -53,7 +53,7 @@
             <TextView
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:text="a"
+                android:text="@string/a"
                 android:textAlignment="center"
                 android:textColor="#000" />
 
@@ -74,8 +74,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Pesquisar"
                 android:background="@drawable/botao_active"
+                android:text="@string/pesquisar"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -90,7 +90,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Loja"
+            android:text="@string/loja"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="20sp" />
@@ -99,7 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Data Inicial"
+            android:text="@string/data_inicial"
             android:textAlignment="textStart"
             android:textColor="#000000"
             android:textSize="20sp" />
@@ -110,6 +110,6 @@
         android:id="@+id/listViewLoja"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip"></ListView>
+        android:layout_margin="10dip" />
 
 </LinearLayout>

@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:minHeight="35sp"
-            android:text="Finalizada: "
+            android:text="@string/finalizada_dois_pontos"
             android:textAlignment="center"
             android:textSize="18sp" />
 

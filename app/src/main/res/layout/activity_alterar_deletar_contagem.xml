@@ -20,7 +20,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dip"
                     android:layout_weight="1"
-                    android:text="Dados de Contagem"
+                    android:text="@string/dados_de_contagem"
                     android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="28sp"
@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Loja:"
+                    android:text="@string/loja_dois_pontos"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
                     android:textSize="22sp"
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Data:"
+                    android:text="@string/data_dois_pontos"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
                     android:textSize="22sp"
@@ -84,7 +84,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Finalizada:"
+                    android:text="@string/finalizada_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/century_gothic"
-                    android:text="Atualizar"
+                    android:text="@string/atualizar"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:typeface="normal" />
@@ -122,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/century_gothic"
-                    android:text="Deletar"
+                    android:text="@string/deletar"
                     android:textColor="#FF0000"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/century_gothic"
-                    android:text="Adicionar Contagem de Produtos"
+                    android:text="@string/adicionar_contagem_de_produtos"
                     android:textSize="24sp"
                     android:textStyle="bold" />
             </TableRow>
