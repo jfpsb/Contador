@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -37,6 +38,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
     private AlertDialog.Builder escolhaProdutoDialog;
     private AlertDialog.Builder produtoNaoEncontradoDialog;
     private AlertDialog.Builder deletarContagemProdutoDialog;
+    private MediaPlayer mediaPlayer;
 
     private SQLiteDatabase sqLiteDatabase;
     private AdicionarContagemProdutoController adicionarContagemProdutoController;
@@ -53,6 +55,8 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
         stub.setLayoutResource(R.layout.activity_adicionar_contagem_produto);
         stub.inflate();
+
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.buzzer);
 
         contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
 
@@ -111,11 +115,13 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
                     txtCodBarra.setInputType(InputType.TYPE_NULL);
                     txtCodBarra.setLongClickable(false);
                     txtCodBarra.setHint(getString(R.string.hint_leia_cod_de_barra));
+                    txtCodBarra.setShowSoftInputOnFocus(false);
                 } else {
                     item.setChecked(true);
                     txtCodBarra.setInputType(InputType.TYPE_CLASS_TEXT);
                     txtCodBarra.setLongClickable(true);
                     txtCodBarra.setHint(getString(R.string.hint_leia_ou_escreva_cod_de_barra));
+                    txtCodBarra.setShowSoftInputOnFocus(true);
                 }
                 return true;
             default:
@@ -175,6 +181,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     @Override
     public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter) {
+        mediaPlayer.start();
         escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
         escolhaProdutoDialog.show();
     }
@@ -276,12 +283,12 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     @Override
     public void abreProdutoNaoEncontradoDialog() {
+        mediaPlayer.start();
         produtoNaoEncontradoDialog.show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         switch (requestCode) {
             case TELA_SELECIONAR_PRODUTO:
                 if (resultCode == RESULT_OK) {
