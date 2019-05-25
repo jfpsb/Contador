@@ -154,23 +154,14 @@ public class TelaProduto extends TabLayoutActivityBase {
     }
 
     public class ImportarProdutoAsyncTask extends AsyncTask<Void, String, Boolean> {
-        public class Progresso {
-            private ImportarProdutoAsyncTask importarProdutoAsyncTask;
-
-            public Progresso(ImportarProdutoAsyncTask tarefa) {
-                this.importarProdutoAsyncTask = tarefa;
-            }
-
-            public void publish(String mensagem) {
-                importarProdutoAsyncTask.publishProgress(mensagem);
-            }
-        }
 
         private Uri uri;
-        private Progresso progresso = new Progresso(this);
-
         public ImportarProdutoAsyncTask(Uri uri) {
             this.uri = uri;
+        }
+
+        public Uri getUri() {
+            return uri;
         }
 
         @Override
@@ -223,6 +214,7 @@ public class TelaProduto extends TabLayoutActivityBase {
 
                 }
             });
+
             progressBarHolder.setAnimation(outAnimation);
 
             if (result) {
@@ -233,28 +225,17 @@ public class TelaProduto extends TabLayoutActivityBase {
             }
         }
 
+        public void publish(String mensagem) {
+            this.publishProgress(mensagem);
+        }
+
         @Override
         protected Boolean doInBackground(Void... voids) {
-            telaProdutoController.setTask(this);
-            return telaProdutoController.importarDeArquivoExcel(getContentResolver(), uri, progresso);
+            return telaProdutoController.importarDeArquivoExcel(this, getContentResolver());
         }
     }
 
     public class ExportarProdutoEmExcel extends AsyncTask<String, String, Void> {
-
-        public class Progresso {
-            private ExportarProdutoEmExcel exportarProdutoEmExcel;
-
-            public Progresso(ExportarProdutoEmExcel exportarProdutoEmExcel) {
-                this.exportarProdutoEmExcel = exportarProdutoEmExcel;
-            }
-
-            public void publish(String mensagem) {
-                exportarProdutoEmExcel.publishProgress(mensagem);
-            }
-        }
-
-        private Progresso progresso = new Progresso(this);
 
         @Override
         protected void onProgressUpdate(String... values) {
@@ -262,10 +243,14 @@ public class TelaProduto extends TabLayoutActivityBase {
             mensagemAoUsuario(mensagem);
         }
 
+        public void publish(String mensagem) {
+            this.publishProgress(mensagem);
+        }
+
         @Override
         protected Void doInBackground(String... strings) {
             String diretorio = strings[0];
-            telaProdutoController.exportarProdutosEmExcel(diretorio, progresso);
+            telaProdutoController.exportarProdutosEmExcel(this, diretorio);
             return null;
         }
     }

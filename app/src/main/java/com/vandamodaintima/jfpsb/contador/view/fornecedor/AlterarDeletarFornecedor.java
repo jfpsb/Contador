@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,8 +58,10 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     String nome = txtNome.getText().toString().toUpperCase();
+                    String fantasia = txtFantasia.getText().toString().toUpperCase();
 
                     fornecedor.setNome(nome);
+                    fornecedor.setFantasia(fantasia);
 
                     alterarDeletarFornecedorController.atualizar(fornecedor);
                 } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.controller.fornecedor.TelaFornecedorController;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -23,9 +25,12 @@ public class TelaFornecedor extends TabLayoutActivityBase {
     protected CadastrarFornecedor cadastrarFornecedor;
     protected PesquisarFornecedor pesquisarFornecedor;
 
-    private static final int ESCOLHER_DIRETORIO = 1;
-    private static final int PEDIDO_PERMISSAO_READ = 2;
-    private static final int CADASTRAR_MANUALMENTE = 3;
+    private TelaFornecedorController telaFornecedorController;
+
+    private static final int ESCOLHER_ARQUIVO = 1;
+    private static final int ESCOLHER_DIRETORIO = 2;
+    private static final int PEDIDO_PERMISSAO_READ = 3;
+    private static final int CADASTRAR_MANUALMENTE = 4;
 
     public TelaFornecedor() {
         super(new String[]{"Pesquisar", "Cadastrar"});
@@ -125,5 +130,39 @@ public class TelaFornecedor extends TabLayoutActivityBase {
     public void setFragments() {
         cadastrarFornecedor = new CadastrarFornecedor();
         pesquisarFornecedor = new PesquisarFornecedor();
+    }
+
+    public void mensagemAoUsuario(String mensagem) {
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+    }
+
+    public class ExportarFornecedorEmExcel extends AsyncTask<String, String, Void> {
+
+        public class Progresso {
+            private ExportarFornecedorEmExcel exportarFornecedorEmExcel;
+
+            public Progresso(ExportarFornecedorEmExcel exportarFornecedorEmExcel) {
+                this.exportarFornecedorEmExcel = exportarFornecedorEmExcel;
+            }
+
+            public void publish(String mensagem) {
+                exportarFornecedorEmExcel.publishProgress(mensagem);
+            }
+        }
+
+        private Progresso progresso = new Progresso(this);
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            String mensagem = values[0];
+            mensagemAoUsuario(mensagem);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String diretorio = strings[0];
+            //telaFornecedorController.exportarProdutosEmExcel(diretorio, progresso);
+            return null;
+        }
     }
 }

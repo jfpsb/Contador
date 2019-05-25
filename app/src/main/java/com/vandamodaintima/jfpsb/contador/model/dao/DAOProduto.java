@@ -74,7 +74,7 @@ public class DAOProduto implements DAO<Produto> {
         return false;
     }
 
-    public Boolean importarDeExcel(ArrayList<Produto> produtos, TelaProduto.ImportarProdutoAsyncTask.Progresso progresso) {
+    public Boolean importarDeExcel(ArrayList<Produto> produtos, TelaProduto.ImportarProdutoAsyncTask importarProdutoAsyncTask) {
         try {
             if(produtos.size() == 0) {
                 throw new Exception("Lista de Produtos Está Vazia");
@@ -114,7 +114,7 @@ public class DAOProduto implements DAO<Produto> {
                     sqLiteDatabase.insertWithOnConflict("cod_barra_fornecedor", null, content, SQLiteDatabase.CONFLICT_IGNORE);
                 }
 
-                progresso.publish("Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + " Cadastrado");
+                importarProdutoAsyncTask.publish("Produto " + produto.getCod_barra() + " - " + produto.getDescricao() + " Cadastrado");
             }
 
             sqLiteDatabase.setTransactionSuccessful();

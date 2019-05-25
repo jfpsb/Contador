@@ -31,13 +31,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 public class TelaProdutoController {
     private SQLiteDatabase sqLiteDatabase;
     private DAOProduto daoProduto;
     private DAOFornecedor daoFornecedor;
     private DAOMarca daoMarca;
-    private AsyncTask task;
 
     private enum Headers {
         COD_BARRA("Código de Barra"),
@@ -61,19 +61,15 @@ public class TelaProdutoController {
         daoMarca = new DAOMarca(sqLiteDatabase);
     }
 
-    public Boolean importarDeArquivoExcel(final ContentResolver contentResolver, Uri filepath, TelaProduto.ImportarProdutoAsyncTask.Progresso progresso) {
+    public Boolean importarDeArquivoExcel(TelaProduto.ImportarProdutoAsyncTask importarProdutoAsyncTask, final ContentResolver contentResolver) {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         InputStream inputStream = null;
 
-        progresso.publish("Iniciando Cadastro");
+        importarProdutoAsyncTask.publish("Iniciando Cadastro");
 
         try {
-            if (task == null) {
-                throw new Exception("Você precisa setar o AsyncTask!");
-            }
-
-            inputStream = Arquivo.getInputStreamFromUri(contentResolver, filepath);
+            inputStream = Arquivo.getInputStreamFromUri(contentResolver, importarProdutoAsyncTask.getUri());
 
             if (inputStream == null) {
                 throw new Exception("InputStream de arquivo Excel escolhido voltou nula");
@@ -113,7 +109,7 @@ public class TelaProdutoController {
 
             int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
 
-            progresso.publish(rows + " Produto(s) Encontrado(s)");
+            importarProdutoAsyncTask.publish(rows + " Produto(s) Encontrado(s)");
 
             for (int i = 1; i < rows; i++) {
                 Row row = arquivoExcel.getPlanilha().getRow(i);
@@ -129,7 +125,7 @@ public class TelaProdutoController {
 
                 if (!isCellEmpty(cod_barra)) {
                     if (cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        produto.setCod_barra(String.format("%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
+                        produto.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
                     } else if (cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
                         produto.setCod_barra(cod_barra.getStringCellValue());
                     } else {
@@ -207,20 +203,20 @@ public class TelaProdutoController {
                     throw new Exception("A Célula de Preço Não Pode Estar Vazia");
                 }
 
-                if (produto != null && produto.getDescricao() != null && produto.getCod_barra() != null && produto.getPreco() != null) {
+                if (produto.getDescricao() != null && produto.getCod_barra() != null && produto.getPreco() != null) {
                     produtos.add(produto);
                 }
             }
 
-            Boolean result = daoProduto.importarDeExcel(produtos, progresso);
+            Boolean result = daoProduto.importarDeExcel(produtos, importarProdutoAsyncTask);
 
             if (result) {
-                progresso.publish("Produtos Cadastrados com Sucesso");
+                importarProdutoAsyncTask.publish("Produtos Cadastrados com Sucesso");
                 return true;
             }
         } catch (Exception e) {
             Log.i("Contador", e.getMessage());
-            progresso.publish(e.getMessage());
+            importarProdutoAsyncTask.publish(e.getMessage());
         } finally {
             if (inputStream != null) {
                 try {
@@ -234,8 +230,8 @@ public class TelaProdutoController {
         return false;
     }
 
-    public void exportarProdutosEmExcel(String diretorio, TelaProduto.ExportarProdutoEmExcel.Progresso progresso) {
-        progresso.publish("Iniciando Exportação. Aguarde");
+    public void exportarProdutosEmExcel(TelaProduto.ExportarProdutoEmExcel exportarProdutoEmExcel, String diretorio) {
+        exportarProdutoEmExcel.publish("Iniciando Exportação. Aguarde");
 
         Date dataAtual = new Date();
         ArquivoExcel arquivoExcel = new ArquivoExcel();
@@ -300,7 +296,7 @@ public class TelaProdutoController {
                 rows[i].getCell(Headers.PRECO.ordinal()).setCellValue(produto.getPreco());
 
                 if (i % 100 == 0 && i > 99) {
-                    progresso.publish(i + " Produtos Já Listados");
+                    exportarProdutoEmExcel.publish(i + " Produtos Já Listados");
                 }
             }
 
@@ -317,10 +313,11 @@ public class TelaProdutoController {
 
             outputStream = new FileOutputStream(arquivo.getAbsolutePath());
 
-            progresso.publish("Escrevendo Arquivo Em Memória");
+            exportarProdutoEmExcel.publish("Escrevendo Arquivo Em Memória");
+
             arquivoExcel.getPastaTrabalho().write(outputStream);
 
-            progresso.publish("Produtos Exportados Com Sucesso");
+            exportarProdutoEmExcel.publish("Produtos Exportados Com Sucesso");
 
             return;
         } catch (Exception e) {
@@ -336,7 +333,7 @@ public class TelaProdutoController {
             }
         }
 
-        progresso.publish("Erro ao Exportar Produtos");
+        exportarProdutoEmExcel.publish("Erro ao Exportar Produtos");
     }
 
     private boolean isCellEmpty(Cell cell) {
@@ -384,9 +381,5 @@ public class TelaProdutoController {
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
         return cellStyle;
-    }
-
-    public void setTask(AsyncTask task) {
-        this.task = task;
     }
 }
