@@ -12,5 +12,17 @@ public interface IModel<T> {
     Boolean deletar();
     Cursor listarCursor();
     ArrayList<T> listar();
+
+    /**
+     * Retorna uma nova instância de uma entidade usando a(s) id(s)
+     * @param ids
+     * @return
+     */
     T listarPorId(Object... ids);
+
+    /**
+     * Carrega a entidade encontrada no modelo
+     * @param ids
+     */
+    void load(Object... ids);
 }

@@ -7,6 +7,8 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
+import java.util.ArrayList;
+
 public class ListarCodBarraFornecedorController {
     private ArrayAdapter<String> codigoAdapter;
     private PesquisarView view;
@@ -19,15 +21,15 @@ public class ListarCodBarraFornecedorController {
         view.setListViewAdapter(codigoAdapter);
     }
 
-    public void pesquisar(ProdutoModel produtoModel) {
+    public void pesquisar(ArrayList<String> codigos) {
         codigoAdapter.clear();
-        codigoAdapter.addAll(produtoModel.getCod_barra_fornecedor());
+        codigoAdapter.addAll(codigos);
         codigoAdapter.notifyDataSetChanged();
 
-        if (produtoModel.getCod_barra_fornecedor().size() == 0) {
-            view.mensagemAoUsuario("Não Há Códigos De FornecedorModel No ProdutoModel");
+        if (codigos.size() == 0) {
+            view.mensagemAoUsuario("Não Há Códigos De Fornecedor No Produto");
         }
 
-        view.setTextoQuantidadeBusca(produtoModel.getCod_barra_fornecedor().size());
+        view.setTextoQuantidadeBusca(codigos.size());
     }
 }

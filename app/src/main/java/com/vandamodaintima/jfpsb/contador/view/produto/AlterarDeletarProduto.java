@@ -20,6 +20,8 @@ import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFo
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 
+import java.util.ArrayList;
+
 public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
     private ProdutoModel produtoModel;
@@ -34,8 +36,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
 
-    private FornecedorModel fornecedor;
-    private MarcaModel marca;
+    private FornecedorModel fornecedorModel;
+    private MarcaModel marcaModel;
 
     AlterarDeletarProdutoController alterarDeletarProdutoController;
 
@@ -50,10 +52,19 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+
         stub.setLayoutResource(R.layout.activity_alterar_deletar_produto);
         stub.inflate();
 
-        produtoModel = (ProdutoModel) getIntent().getExtras().getSerializable("produtoModel");
+        String id = getIntent().getExtras().getString("produto");
+
+        produtoModel = new ProdutoModel(conexaoBanco);
+        fornecedorModel = new FornecedorModel(conexaoBanco);
+        marcaModel = new MarcaModel(conexaoBanco);
+
+        //Carrega dados de produto em modelo
+        produtoModel.load(id);
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
@@ -71,12 +82,12 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         if (produtoModel.getFornecedor() != null) {
             txtFornecedor.setText(produtoModel.getFornecedor().getNome());
-            fornecedor = produtoModel.getFornecedor();
+            fornecedorModel = produtoModel.getFornecedor();
         }
 
         if (produtoModel.getMarca() != null) {
             txtMarca.setText(produtoModel.getMarca().getNome());
-            marca = produtoModel.getMarca();
+            marcaModel = produtoModel.getMarca();
         }
 
         setAlertaRemoverMarca();
@@ -117,8 +128,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
-                intent.putExtra("produto", produtoModel);
-
+                intent.putExtra("codigos", produtoModel.getCod_barra_fornecedor());
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
         });
@@ -129,7 +139,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fornecedor != null) {
+                if (fornecedorModel != null) {
                     alertaRemoverFornecedor.show();
                 } else {
                     mensagemAoUsuario("Produto Não Possui Fornecedor");
@@ -143,7 +153,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (marca != null) {
+                if (marcaModel != null) {
                     alertaRemoverMarca.show();
                 } else {
                     mensagemAoUsuario("Produto Não Possui Marca");
@@ -157,36 +167,34 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
-                    fornecedor = (FornecedorModel) data.getSerializableExtra("fornecedor");
-
-                    if (fornecedor != null) {
-                        txtFornecedor.setText(fornecedor.getNome());
-                        mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
-                    }
+                    String id = data.getStringExtra("fornecedor");
+                    fornecedorModel.load(id);
+                    txtFornecedor.setText(fornecedorModel.getNome());
+                    mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
                 } else {
                     mensagemAoUsuario("Fornecedor Não Foi Escolhido");
                 }
                 break;
             case ESCOLHER_MARCA:
                 if (resultCode == RESULT_OK) {
-                    marca = (MarcaModel) data.getSerializableExtra("marca");
+                    String id = data.getStringExtra("marca");
 
-                    if (marca != null) {
-                        txtMarca.setText(marca.getNome());
-                        mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
-                    }
+                    marcaModel.load(id);
+
+                    txtMarca.setText(marcaModel.getNome());
+                    mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                 } else {
                     mensagemAoUsuario("Marca Não Foi Escolhida");
                 }
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
-                    ProdutoModel produtoAlterado = (ProdutoModel) data.getSerializableExtra("produto");
+                    ArrayList<String> codigos = (ArrayList<String>) data.getSerializableExtra("codigos");
 
-                    if (produtoAlterado.getCod_barra_fornecedor().equals(produtoModel.getCod_barra_fornecedor())) {
+                    if (produtoModel.getCod_barra_fornecedor().equals(codigos)) {
                         mensagemAoUsuario("Cód. de Barras de Fornecedores Não Foram Alterados");
                     } else {
-                        produtoModel.setCod_barra_fornecedor(produtoAlterado.getCod_barra_fornecedor());
+                        produtoModel.setCod_barra_fornecedor(codigos);
                         mensagemAoUsuario("A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"");
                     }
                 }
@@ -225,8 +233,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 produtoModel.setDescricao(txtDescricao.getText().toString().toUpperCase());
-                produtoModel.setFornecedor(fornecedor);
-                produtoModel.setMarca(marca);
+                produtoModel.setFornecedor(fornecedorModel);
+                produtoModel.setMarca(marcaModel);
                 produtoModel.setPreco(Double.parseDouble(txtPreco.getText().toString()));
 
                 alterarDeletarProdutoController.atualizar(produtoModel);
@@ -249,7 +257,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverFornecedor.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fornecedor = null;
+                fornecedorModel = null;
                 txtFornecedor.getText().clear();
                 Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
             }
@@ -271,7 +279,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverMarca.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                marca = null;
+                marcaModel = null;
                 txtMarca.getText().clear();
                 Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
             }

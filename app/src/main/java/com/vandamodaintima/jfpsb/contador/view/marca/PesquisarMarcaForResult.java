@@ -17,8 +17,6 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
         MarcaModel marca = new MarcaModel(conexaoBanco);
-
-        marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
         marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
         setAlertaEscolha(marca);

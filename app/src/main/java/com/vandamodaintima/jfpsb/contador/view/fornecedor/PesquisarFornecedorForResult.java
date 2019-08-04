@@ -17,12 +17,7 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
         FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
-
-        fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-        fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
-        fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
-        fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
-
+        fornecedor.load(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
         setAlertaEscolha(fornecedor);
     }
 
@@ -35,7 +30,7 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
-                intent.putExtra("fornecedor", fornecedor);
+                intent.putExtra("fornecedor", fornecedor.getCnpj());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
             }

@@ -197,6 +197,25 @@ public class ContagemModel implements Serializable, IModel<ContagemModel> {
         return contagem;
     }
 
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "loja = ? AND data = ?", new String[]{String.valueOf(ids[0]), String.valueOf(ids[1])}, null, null, null, null);
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            setLoja(loja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
+
+            String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
+            setData(convertStringToDate(d));
+
+            boolean f = cursor.getInt(cursor.getColumnIndexOrThrow("finalizada")) > 0;
+            setFinalizada(f);
+        }
+
+        cursor.close();
+    }
+
     public Cursor listarPorLojaPeriodoCursor(String loja, Calendar dataInicial, Calendar dataFinal) {
         String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
 

@@ -18,7 +18,7 @@ public class PesquisarMarcaController {
     public PesquisarMarcaController(PesquisarView view, ConexaoBanco conexaoBanco, Context context) {
         this.view = view;
         marcaModel = new MarcaModel(conexaoBanco);
-        marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_pesquisa_marca, null, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
+        marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_pesquisa_marca, null, new String[]{"_id"}, new int[]{R.id.labelMarcaNome}, 0);
         view.setListViewAdapter(marcaAdapter);
     }
 

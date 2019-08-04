@@ -183,6 +183,26 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
         return contagem_produto;
     }
 
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
+            setProduto(produto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
+
+            String contagem_loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
+            String contagem_data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
+            setContagem(contagem.listarPorId(contagem_loja, contagem_data));
+
+            setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+        }
+
+        cursor.close();
+    }
+
     public Cursor listarPorContagemCursor(ContagemModel contagem) {
         String loja = contagem.getLoja().getCnpj();
         String data = contagem.getDataParaSQLite();

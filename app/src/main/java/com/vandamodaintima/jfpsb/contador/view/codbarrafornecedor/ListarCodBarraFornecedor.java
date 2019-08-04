@@ -101,7 +101,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        listarCodBarraFornecedorController.pesquisar(produtoModel);
+        listarCodBarraFornecedorController.pesquisar(produtoModel.getCod_barra_fornecedor());
     }
 
     @Override

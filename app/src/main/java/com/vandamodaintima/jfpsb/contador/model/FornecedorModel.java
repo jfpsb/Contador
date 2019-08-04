@@ -170,6 +170,22 @@ public class FornecedorModel implements Serializable, IModel<FornecedorModel> {
         return fornecedor;
     }
 
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cnpj = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+            setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+            setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+            setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+        }
+
+        cursor.close();
+    }
+
     public FornecedorModel listarPorIdOuNome(String termo) {
         FornecedorModel fornecedor = null;
 

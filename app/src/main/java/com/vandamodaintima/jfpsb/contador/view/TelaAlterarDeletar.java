@@ -19,6 +19,8 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
     protected AlertDialog.Builder alertBuilderDeletar;
     protected AlertDialog.Builder alertBuilderAtualizar;
 
+    protected ConexaoBanco conexaoBanco;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

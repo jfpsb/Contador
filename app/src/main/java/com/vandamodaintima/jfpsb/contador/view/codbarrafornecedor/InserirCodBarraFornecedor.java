@@ -15,8 +15,10 @@ import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.InserirC
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
+import java.util.ArrayList;
+
 public class InserirCodBarraFornecedor extends Fragment implements CadastrarView {
-    private ProdutoModel produtoModel;
+    private ArrayList<String> codigos;
 
     private EditText txtCodBarra;
     private Button btnInserir;
@@ -32,24 +34,24 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
 
         inserirCodBarraFornecedorController = new InserirCodBarraFornecedorController(this);
 
-        produtoModel = (ProdutoModel) getArguments().getSerializable("produtoModel");
+        codigos = (ArrayList<String>) getArguments().getSerializable("codigos");
 
         btnInserir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String cod_barra_fornecedor = txtCodBarra.getText().toString();
-                inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produtoModel);
+                inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, codigos);
             }
         });
 
         txtCodBarra.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
+                //Só adiciona se a tela de inserir estiver visível
                 if (getUserVisibleHint()) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
                         String cod_barra_fornecedor = txtCodBarra.getText().toString().replace("\n", "");
-                        inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produtoModel);
+                        inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, codigos);
                         return true;
                     }
                 } else {

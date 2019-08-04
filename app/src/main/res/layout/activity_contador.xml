@@ -27,7 +27,7 @@
         android:background="@drawable/botao_administracao"
         android:drawableStart="@drawable/produto_small"
         android:padding="30sp"
-        android:text="@string/produtoModel"
+        android:text="@string/produto"
         android:textSize="22sp"
         android:textStyle="bold" />
 

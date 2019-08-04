@@ -20,7 +20,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Coloca o código da pesquisa no produtoModel a ser cadastrado
+        //Coloca o código da pesquisa no produto a ser cadastrado
         String codigo = getArguments().getString("codigo");
         produtoModel.getCod_barra_fornecedor().add(codigo);
 
@@ -31,7 +31,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
     @Override
     public void aposCadastro(Object... args) {
-        produtoCadastrado = (ProdutoModel) args[0];
+        produtoCadastrado = produtoModel.listarPorId(args[0]);
         alertaQuantidadeProduto.show();
     }
 
@@ -59,7 +59,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
                     }
 
                     Intent intent = new Intent();
-                    intent.putExtra("produtoModel", produtoCadastrado);
+                    intent.putExtra("produto", produtoCadastrado.getCod_barra());
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
@@ -70,7 +70,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
         alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A ContagemModel Não Foi Adicionada");
+                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
             }
         });
     }

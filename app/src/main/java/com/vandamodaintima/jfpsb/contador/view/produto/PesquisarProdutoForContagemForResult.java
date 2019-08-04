@@ -69,7 +69,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                     pesquisarProdutoController.atualizar(produtoModel);
 
                     Intent intent = new Intent();
-                    intent.putExtra("produtoModel", produtoModel);
+                    intent.putExtra("produto", produtoModel.getCod_barra());
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
@@ -80,7 +80,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A ContagemModel Não Foi Adicionada");
+                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
             }
         });
     }

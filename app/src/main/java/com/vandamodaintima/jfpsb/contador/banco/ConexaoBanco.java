@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.io.Serializable;
+
 /**
  * Created by jfpsb on 08/02/2018.
  */
@@ -11,7 +13,7 @@ import android.util.Log;
 public class ConexaoBanco {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 6;
+    private static final int VERSAO_BANCO = 7;
     private SQLiteHelper sqLiteHelper;
 
     public ConexaoBanco(Context context) {

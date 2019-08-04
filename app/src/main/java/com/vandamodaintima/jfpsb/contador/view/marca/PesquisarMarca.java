@@ -81,8 +81,7 @@ public class PesquisarMarca extends TelaPesquisa {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
         MarcaModel marca = new MarcaModel(conexaoBanco);
-        marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
-        marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+        marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("marca", marca);

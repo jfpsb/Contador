@@ -96,7 +96,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
             }
 
             if (getMarca() != null) {
-                contentValues.put("marca", getMarca().getId());
+                contentValues.put("marca", getMarca().getNome());
             } else {
                 contentValues.putNull("marca");
             }
@@ -148,7 +148,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
                 }
 
                 if (produtoModel.getMarca() != null) {
-                    contentValues.put("marca", produtoModel.getMarca().getId());
+                    contentValues.put("marca", produtoModel.getMarca().getNome());
                 } else {
                     contentValues.putNull("marca");
                 }
@@ -208,7 +208,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
             }
 
             if (getMarca() != null) {
-                contentValues.put("marca", getMarca().getId());
+                contentValues.put("marca", getMarca().getNome());
             } else {
                 contentValues.putNull("marca");
             }
@@ -313,6 +313,38 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
         cursor.close();
 
         return p;
+    }
+
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cod_barra = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
+            setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
+            setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+
+            Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", new String[]{"ROWID as _id", "codigo", "produto"}, "produto = ?", new String[]{getCod_barra()}, null, null, null, null);
+
+            if (cursorCodigoBarraFornecedor.getCount() > 0) {
+                ArrayList<String> codigos = new ArrayList<>();
+
+                while (cursorCodigoBarraFornecedor.moveToNext()) {
+                    codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
+                }
+
+                setCod_barra_fornecedor(codigos);
+            }
+
+            cursorCodigoBarraFornecedor.close();
+
+            setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+            setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+        }
+
+        cursor.close();
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {

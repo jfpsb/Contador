@@ -42,9 +42,7 @@ public class CadastrarMarca extends TelaCadastro {
             public void onClick(View v) {
                 try {
                     MarcaModel marca = new MarcaModel(conexaoBanco);
-                    marca.setId(new Date().getTime());
                     marca.setNome(txtNome.getText().toString().trim().toUpperCase());
-
                     setAlertaCadastro(marca);
                 } catch (Exception e) {
                     Log.e(LOG, e.getMessage(), e);

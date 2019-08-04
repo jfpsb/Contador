@@ -14,24 +14,11 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
     private static final String TABELA = "marca";
     private ConexaoBanco conexaoBanco;
 
-    private long id;
     private String nome;
-    private static final String[] colunas = new String[]{"id as _id", "nome"};
+    private static final String[] colunas = new String[]{"nome as _id"};
 
     public MarcaModel(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getIdString() {
-        return String.valueOf(getId());
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -53,7 +40,6 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", getId());
             contentValues.put("nome", getNome());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
@@ -78,7 +64,7 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
 
             contentValues.put("nome", getNome());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{getIdString()});
+            conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{getNome()});
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return true;
@@ -93,7 +79,7 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
 
     @Override
     public Boolean deletar() {
-        int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{getIdString()});
+        int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{getNome()});
 
         if(result > 0)
             return true;
@@ -115,8 +101,6 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
         if(cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 MarcaModel marca = new MarcaModel(conexaoBanco);
-
-                marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
                 marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 marcas.add(marca);
             }
@@ -129,17 +113,28 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
     public MarcaModel listarPorId(Object... ids) {
         MarcaModel marca = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cnpj = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "nome = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if(cursor.getCount() > 0) {
             cursor.moveToFirst();
             marca = new MarcaModel(conexaoBanco);
-            marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
             marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
         cursor.close();
         return marca;
+    }
+
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "nome = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+        }
+
+        cursor.close();
     }
 
     public Cursor listarPorNomeCursor(String nome) {
@@ -154,8 +149,6 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 MarcaModel marca = new MarcaModel(conexaoBanco);
-
-                marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 
                 marcas.add(marca);

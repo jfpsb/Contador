@@ -33,11 +33,17 @@ public class CadastrarProdutoController {
             return;
         }
 
+        if(produto.getFornecedor().getCnpj().isEmpty())
+            produto.setFornecedor(null);
+
+        if(produto.getMarca().getNome().isEmpty())
+            produto.setMarca(null);
+
         Boolean result = produto.inserir();
 
         if (result) {
             view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
-            view.aposCadastro(produtoModel);
+            view.aposCadastro(produto.getCod_barra());
             view.limparCampos();
         } else {
             view.mensagemAoUsuario("Produto Não Foi Cadastrado");

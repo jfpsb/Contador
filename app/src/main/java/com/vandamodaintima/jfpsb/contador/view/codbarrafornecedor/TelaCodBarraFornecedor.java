@@ -6,12 +6,17 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class TelaCodBarraFornecedor extends TabLayoutBaseView {
     private InserirCodBarraFornecedor inserirCodBarraFornecedor;
     private ListarCodBarraFornecedor listarCodBarraFornecedor;
+    private ArrayList<String> codigos;
 
     private Bundle bundle;
 
@@ -29,10 +34,10 @@ public class TelaCodBarraFornecedor extends TabLayoutBaseView {
         inserirCodBarraFornecedor = new InserirCodBarraFornecedor();
         listarCodBarraFornecedor = new ListarCodBarraFornecedor();
 
-        ProdutoModel produtoModel = (ProdutoModel) getIntent().getSerializableExtra("produtoModel");
+        codigos = (ArrayList<String>) getIntent().getSerializableExtra("codigos");
 
         bundle = new Bundle();
-        bundle.putSerializable("produtoModel", produtoModel);
+        bundle.putSerializable("codigos", codigos);
 
         inserirCodBarraFornecedor.setArguments(bundle);
         listarCodBarraFornecedor.setArguments(bundle);
@@ -55,10 +60,10 @@ public class TelaCodBarraFornecedor extends TabLayoutBaseView {
 
     @Override
     public void onBackPressed() {
-        ProdutoModel produtoModel = (ProdutoModel) bundle.getSerializable("produtoModel");
+        ArrayList<String> codigos = (ArrayList<String>) bundle.getSerializable("codigos");
 
         Intent intent = new Intent();
-        intent.putExtra("produtoModel", produtoModel);
+        intent.putExtra("codigos", codigos);
 
         setResult(RESULT_OK, intent);
 

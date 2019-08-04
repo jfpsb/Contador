@@ -55,9 +55,13 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         stub.setLayoutResource(R.layout.activity_adicionar_contagem_produto);
         stub.inflate();
 
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        contagem = new ContagemModel(conexaoBanco);
+
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.buzzer);
 
-        contagem = (ContagemModel) getIntent().getExtras().getSerializable("contagem");
+        String id = getIntent().getStringExtra("contagem");
+        contagem.load(id);
 
         txtCodBarra = findViewById(R.id.txtCodigoBarra);
         listViewContagemProduto = findViewById(R.id.listViewAdicionarContagem);
@@ -288,22 +292,21 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_SELECIONAR_PRODUTO:
-                if (resultCode == RESULT_OK) {
-                    produtoModel = (ProdutoModel) data.getSerializableExtra("produto");
-                    int quantidade = (int) data.getSerializableExtra("quantidade");
+        if (requestCode == TELA_SELECIONAR_PRODUTO) {
+            if (resultCode == RESULT_OK) {
+                String id = data.getStringExtra("produto");
+                produtoModel.load(id);
+                int quantidade = (int) data.getSerializableExtra("quantidade");
 
-                    ContagemProdutoModel contagemProduto = new ContagemProdutoModel(conexaoBanco);
+                ContagemProdutoModel contagemProduto = new ContagemProdutoModel(conexaoBanco);
 
-                    contagemProduto.setId(new Date().getTime());
-                    contagemProduto.setProduto(produtoModel);
-                    contagemProduto.setContagem(contagem);
-                    contagemProduto.setQuant(quantidade);
+                contagemProduto.setId(new Date().getTime());
+                contagemProduto.setProduto(produtoModel);
+                contagemProduto.setContagem(contagem);
+                contagemProduto.setQuant(quantidade);
 
-                    adicionarContagemProdutoController.cadastrar(contagemProduto);
-                }
-                break;
+                adicionarContagemProdutoController.cadastrar(contagemProduto);
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);

@@ -56,7 +56,7 @@ public class PesquisarProduto extends TelaPesquisa {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case DESCRICAO:
-                        txtPesquisaProduto.setHint("Digite a Descrição do ProdutoModel");
+                        txtPesquisaProduto.setHint("Digite a Descrição do Produto");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = DESCRICAO;
                         break;
@@ -66,12 +66,12 @@ public class PesquisarProduto extends TelaPesquisa {
                         PESQUISA = COD_DE_BARRA;
                         break;
                     case FORNECEDOR:
-                        txtPesquisaProduto.setHint("Digite o Nome do FornecedorModel");
+                        txtPesquisaProduto.setHint("Digite o Nome do Fornecedor");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = FORNECEDOR;
                         break;
                     case MARCA:
-                        txtPesquisaProduto.setHint("Digite o Nome da MarcaModel");
+                        txtPesquisaProduto.setHint("Digite o Nome da Marca");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = MARCA;
                         break;
@@ -111,7 +111,7 @@ public class PesquisarProduto extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("ProdutoModel Não Foi Alterado");
+                    mensagemAoUsuario("Produto Não Foi Alterado");
                 }
 
                 break;
@@ -157,7 +157,7 @@ public class PesquisarProduto extends TelaPesquisa {
         ProdutoModel produtoModel = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("produtoModel", produtoModel);
+        bundle.putString("produto", produtoModel.getCod_barra());
 
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
         alterarProduto.putExtras(bundle);

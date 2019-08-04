@@ -181,6 +181,25 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
         return loja;
     }
 
+    @Override
+    public void load(Object... ids) {
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cnpj = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+
+        if(cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+            setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+            setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
+
+            if(!cursor.isNull(cursor.getColumnIndexOrThrow("matriz"))) {
+                setMatriz(listarPorId(cursor.getColumnIndexOrThrow("matriz")));
+            }
+        }
+
+        cursor.close();
+    }
+
     public Cursor listarPorNomeCnpjCursor(String termo) {
         return conexaoBanco.conexao().query(TABELA, getColunas(), "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
     }
