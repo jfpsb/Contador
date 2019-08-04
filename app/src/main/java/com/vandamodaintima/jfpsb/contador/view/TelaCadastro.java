@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;

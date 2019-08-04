@@ -189,4 +189,30 @@ public class FornecedorModel implements Serializable, IModel<FornecedorModel> {
         cursor.close();
         return fornecedor;
     }
+
+    public Cursor listarPorCnpjNomeFantasiaCursor(String termo) {
+        return conexaoBanco.conexao().query(TABELA, getColunas(), "cnpj LIKE ? OR nome LIKE ? OR fantasia LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+    }
+
+    public ArrayList<FornecedorModel> listarPorCnpjNomeFantasia(String termo) {
+        ArrayList<FornecedorModel> fornecedores = new ArrayList<>();
+
+        Cursor cursor = listarPorCnpjNomeFantasiaCursor(termo);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
+
+                fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+                fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
+                fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+
+                fornecedores.add(fornecedor);
+            }
+        }
+
+        cursor.close();
+        return fornecedores;
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 
 import java.util.List;
 
@@ -17,11 +18,11 @@ import java.util.List;
  * Created by jfpsb on 09/02/2018.
  */
 
-public class LojaAdapter extends ArrayAdapter<Loja> {
+public class LojaAdapter extends ArrayAdapter<LojaModel> {
     private int resourceLayout;
     private Context mContext;
 
-    public LojaAdapter(Context context, int resource, List<Loja> objects) {
+    public LojaAdapter(Context context, int resource, List<LojaModel> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
@@ -38,11 +39,11 @@ public class LojaAdapter extends ArrayAdapter<Loja> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Loja p = getItem(position);
+        LojaModel p = getItem(position);
 
         if (p != null) {
-            TextView tt1 = (TextView) v.findViewById(R.id.labelId);
-            TextView tt2 = (TextView) v.findViewById(R.id.labelNome);
+            TextView tt1 = v.findViewById(R.id.labelId);
+            TextView tt2 = v.findViewById(R.id.labelNome);
 
             if (tt1 != null) {
                 tt1.setText(p.getCnpj());

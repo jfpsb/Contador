@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ContagemModel implements Serializable, IModel<ContagemModel> {
@@ -194,5 +195,47 @@ public class ContagemModel implements Serializable, IModel<ContagemModel> {
 
         cursor.close();
         return contagem;
+    }
+
+    public Cursor listarPorLojaPeriodoCursor(String loja, Calendar dataInicial, Calendar dataFinal) {
+        String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
+
+        dataInicial.set(Calendar.HOUR_OF_DAY, 0);
+        dataInicial.set(Calendar.MINUTE, 0);
+        dataInicial.set(Calendar.SECOND, 0);
+
+        dataFinal.set(Calendar.HOUR_OF_DAY, 23);
+        dataFinal.set(Calendar.MINUTE, 59);
+        dataFinal.set(Calendar.SECOND, 59);
+
+        String[] selection = new String[]{loja, getDataSQLite(dataInicial.getTime()), getDataSQLite(dataFinal.getTime())};
+
+        return conexaoBanco.conexao().rawQuery(sql, selection);
+    }
+
+    public ArrayList<ContagemModel> listarPorLojaPeriodo(String cnpj, Calendar dataInicial, Calendar dataFinal) {
+        ArrayList<ContagemModel> contagens = new ArrayList<>();
+
+        Cursor cursor = listarPorLojaPeriodoCursor(cnpj, dataInicial, dataFinal);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                ContagemModel contagem = new ContagemModel(conexaoBanco);
+
+                contagem.setLoja(loja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
+
+                String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
+                contagem.setData(convertStringToDate(d));
+
+                boolean f = cursor.getInt(cursor.getColumnIndexOrThrow("finalizada")) > 0;
+                contagem.setFinalizada(f);
+
+                contagens.add(contagem);
+            }
+        }
+
+        cursor.close();
+
+        return contagens;
     }
 }

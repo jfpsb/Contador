@@ -43,9 +43,9 @@ public class CadastrarProduto extends TelaCadastro {
 
     private Animation slidedown;
 
-    protected ProdutoModel produtoModel = new ProdutoModel();
-    private FornecedorModel fornecedor;
-    private MarcaModel marca;
+    protected ProdutoModel produtoModel;
+    private FornecedorModel fornecedorModel;
+    private MarcaModel marcaModel;
 
     protected CadastrarProdutoController cadastrarProdutoController;
 
@@ -58,7 +58,9 @@ public class CadastrarProduto extends TelaCadastro {
         view = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        cadastrarProdutoController = new CadastrarProdutoController(this, conexaoBanco.conexao());
+
+        produtoModel = new ProdutoModel(conexaoBanco);
+        cadastrarProdutoController = new CadastrarProdutoController(this, conexaoBanco);
 
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
         btnEscolherFornecedor = view.findViewById(R.id.btnEscolherFornecedor);
@@ -94,7 +96,7 @@ public class CadastrarProduto extends TelaCadastro {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
-                intent.putExtra("produtoModel", produtoModel);
+                intent.putExtra("produto", produtoModel);
 
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
@@ -103,18 +105,18 @@ public class CadastrarProduto extends TelaCadastro {
         btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fornecedor = null;
+                fornecedorModel = null;
                 txtFornecedor.getText().clear();
-                Toast.makeText(getContext(), "FornecedorModel Foi Removido Deste ProdutoModel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Fornecedor Foi Removido Deste Produto", Toast.LENGTH_SHORT).show();
             }
         });
 
         btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                marca = null;
+                marcaModel = null;
                 txtMarca.getText().clear();
-                Toast.makeText(getContext(), "MarcaModel Foi Removida Deste ProdutoModel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Marca Foi Removida Deste Produto", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -124,8 +126,8 @@ public class CadastrarProduto extends TelaCadastro {
                 produtoModel.setCod_barra(txtCodBarra.getText().toString());
                 produtoModel.setDescricao(txtDescricao.getText().toString().trim().toUpperCase());
                 produtoModel.setPreco(Double.parseDouble(txtPreco.getText().toString()));
-                produtoModel.setFornecedor(fornecedor);
-                produtoModel.setMarca(marca);
+                produtoModel.setFornecedor(fornecedorModel);
+                produtoModel.setMarca(marcaModel);
 
                 cadastrarProdutoController.cadastrar(produtoModel);
             }
@@ -156,19 +158,19 @@ public class CadastrarProduto extends TelaCadastro {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == Activity.RESULT_OK) {
-                    fornecedor = (FornecedorModel) data.getSerializableExtra("fornecedor");
+                    fornecedorModel = (FornecedorModel) data.getSerializableExtra("fornecedor");
 
-                    if (fornecedor != null) {
-                        txtFornecedor.setText(fornecedor.getNome());
+                    if (fornecedorModel != null) {
+                        txtFornecedor.setText(fornecedorModel.getNome());
                     }
                 }
                 break;
             case ESCOLHER_MARCA:
                 if (resultCode == Activity.RESULT_OK) {
-                    marca = (MarcaModel) data.getSerializableExtra("marca");
+                    marcaModel = (MarcaModel) data.getSerializableExtra("marca");
 
-                    if (marca != null) {
-                        txtMarca.setText(marca.getNome());
+                    if (marcaModel != null) {
+                        txtMarca.setText(marcaModel.getNome());
                     }
                 }
                 break;
@@ -195,9 +197,9 @@ public class CadastrarProduto extends TelaCadastro {
         txtMarca.getText().clear();
         txtFornecedor.getText().clear();
 
-        produtoModel = new ProdutoModel();
-        fornecedor = new FornecedorModel();
-        marca = new MarcaModel();
+        produtoModel = new ProdutoModel(conexaoBanco);
+        fornecedorModel = null;
+        marcaModel = null;
     }
 
     @Override

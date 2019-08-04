@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
+
 import java.util.List;
 
-public class SpinnerLojaAdapter extends ArrayAdapter<Loja> {
+public class SpinnerLojaAdapter extends ArrayAdapter<LojaModel> {
 
-    private List<Loja> objects;
-    private Context context;
+    private List<LojaModel> objects;
 
-    public SpinnerLojaAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<Loja> objects) {
+    public SpinnerLojaAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<LojaModel> objects) {
         super(context, resource, textViewResourceId, objects);
         this.objects = objects;
-        this.context = context;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SpinnerLojaAdapter extends ArrayAdapter<Loja> {
 
     private View getCustomView(final int position, View convertView, ViewGroup parent) {
         View layout = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-        final TextView label=(TextView)layout.findViewById(android.R.id.text1);
+        final TextView label= layout.findViewById(android.R.id.text1);
         label.setText(objects.get(position).getNome());
         return layout;
     }

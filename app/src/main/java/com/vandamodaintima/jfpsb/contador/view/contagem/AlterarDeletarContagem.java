@@ -55,8 +55,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         inicializaBotoes();
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        alterarDeletarContagemController = new AlterarDeletarContagemController(this, sqLiteDatabase, getApplicationContext());
+        alterarDeletarContagemController = new AlterarDeletarContagemController(this, getApplicationContext());
 
         txtData.setText(contagem.getFullDataString());
         txtLoja.setText(contagem.getLoja().getNome());
@@ -108,8 +107,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar ContagemModel");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Alterar o Status Desta ContagemModel?");
+        alertBuilderAtualizar.setTitle("Atualizar Contagem");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Alterar o Status Desta Contagem?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -123,7 +122,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarContagem.this, "ContagemModel Não Foi Atualizada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Atualizada", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -131,8 +130,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar ContagemModel");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a ContagemModel?");
+        alertBuilderDeletar.setTitle("Deletar Contagem");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Contagem?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -144,7 +143,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarContagem.this, "ContagemModel Não Foi Deletada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Deletada", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -169,7 +168,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
 
         DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - ContagemModel Em Excel").allowReadOnlyDirectory(true).
+                newDirectoryName("Contador - Contagem Em Excel").allowReadOnlyDirectory(true).
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);

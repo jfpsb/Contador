@@ -12,14 +12,15 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
-    private Loja loja;
-    SQLiteDatabase sqLiteDatabase;
+    private LojaModel lojaModel;
+    ConexaoBanco conexaoBanco;
     AlterarDeletarLojaController alterarDeletarLojaController;
 
     @Override
@@ -29,18 +30,18 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_loja);
         stub.inflate();
 
-        loja = (Loja) getIntent().getExtras().getSerializable("loja");
+        lojaModel = (LojaModel) getIntent().getExtras().getSerializable("loja");
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
 
         inicializaBotoes();
 
-        sqLiteDatabase = new ConexaoBanco(this).conexao();
-        alterarDeletarLojaController = new AlterarDeletarLojaController(this, sqLiteDatabase, getApplicationContext());
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        alterarDeletarLojaController = new AlterarDeletarLojaController(this);
 
-        txtCnpj.setText(String.valueOf(loja.getCnpj()));
-        txtNome.setText(loja.getNome());
+        txtCnpj.setText(String.valueOf(lojaModel.getCnpj()));
+        txtNome.setText(lojaModel.getNome());
     }
 
     @Override
@@ -53,12 +54,12 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Loja");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + loja.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + lojaModel.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                alterarDeletarLojaController.deletar(loja);
+                alterarDeletarLojaController.deletar(lojaModel);
             }
         });
 
@@ -74,15 +75,15 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Loja");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + loja.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + lojaModel.getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    loja.setNome(txtNome.getText().toString().toUpperCase());
+                    lojaModel.setNome(txtNome.getText().toString().toUpperCase());
 
-                    alterarDeletarLojaController.atualizar(loja);
+                    alterarDeletarLojaController.atualizar(lojaModel);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(LOG, e.getMessage(), e);

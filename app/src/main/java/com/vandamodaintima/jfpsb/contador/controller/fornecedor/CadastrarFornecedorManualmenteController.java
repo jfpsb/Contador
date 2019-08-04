@@ -7,11 +7,9 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorManualmenteController {
     private CadastrarView view;
-    private DAOFornecedor daoFornecedor;
 
-    public CadastrarFornecedorManualmenteController(CadastrarView view, SQLiteDatabase sqLiteDatabase) {
+    public CadastrarFornecedorManualmenteController(CadastrarView view) {
         this.view = view;
-        daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
     public void cadastrar(FornecedorModel fornecedor) {
@@ -20,13 +18,13 @@ public class CadastrarFornecedorManualmenteController {
             return;
         }
 
-        Boolean result = daoFornecedor.inserir(fornecedor);
+        Boolean result = fornecedor.inserir();
 
         if (result) {
-            view.mensagemAoUsuario("FornecedorModel Cadastrado Com Sucesso");
+            view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
             view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Erro ao Cadastrar FornecedorModel");
+            view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
         }
     }
 }

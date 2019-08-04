@@ -7,6 +7,7 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
@@ -16,20 +17,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class CadastrarFornecedorController {
     protected CadastrarFornecedor view;
-    DAOFornecedor daoFornecedor;
+    FornecedorModel fornecedorModel;
     protected Context context;
+    private ConexaoBanco conexaoBanco;
 
-    public CadastrarFornecedorController(CadastrarView view, SQLiteDatabase sqLiteDatabase, Context context) {
+    public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco, Context context) {
         this.view = (CadastrarFornecedor) view;
         this.context = context;
-        daoFornecedor = new DAOFornecedor(sqLiteDatabase);
+        this.conexaoBanco = conexaoBanco;
+        fornecedorModel = new FornecedorModel(conexaoBanco);
     }
 
     public void cadastrar(FornecedorModel fornecedor) {
-        Boolean result = daoFornecedor.inserir(fornecedor);
+        Boolean result = fornecedor.inserir();
 
         if(result) {
             view.mensagemAoUsuario("FornecedorModel Cadastrado Com Sucesso");
@@ -51,7 +55,7 @@ public class CadastrarFornecedorController {
 
     public void checaCnpj(String cnpj) {
         if (!cnpj.isEmpty()) {
-            FornecedorModel fornecedor = daoFornecedor.listarPorId(cnpj);
+            FornecedorModel fornecedor = fornecedorModel.listarPorId(cnpj);
 
             if (fornecedor != null) {
                 view.bloqueiaCampos();
@@ -85,7 +89,7 @@ public class CadastrarFornecedorController {
                 if (response == HttpURLConnection.HTTP_OK) {
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-                    jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+                    jsonReader = new JsonReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
                     String cnpj = strings[1];
                     String nome = null;
@@ -97,21 +101,25 @@ public class CadastrarFornecedorController {
                     while (jsonReader.hasNext()) {
                         String indice = jsonReader.nextName();
 
-                        if (indice.equals("nome")) {
-                            nome = jsonReader.nextString();
-                        } else if (indice.equals("fantasia")) {
-                            fantasia = jsonReader.nextString();
-                        } else if (indice.equals("message")) {
-                            message = jsonReader.nextString();
-                            return message;
-                        } else {
-                            jsonReader.skipValue();
+                        switch (indice) {
+                            case "nome":
+                                nome = jsonReader.nextString();
+                                break;
+                            case "fantasia":
+                                fantasia = jsonReader.nextString();
+                                break;
+                            case "message":
+                                message = jsonReader.nextString();
+                                return message;
+                            default:
+                                jsonReader.skipValue();
+                                break;
                         }
                     }
 
                     jsonReader.endObject();
 
-                    FornecedorModel fornecedor = new FornecedorModel();
+                    FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
 
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome);
@@ -140,13 +148,13 @@ public class CadastrarFornecedorController {
         @Override
         protected void onPostExecute(Object object) {
             if (object == null) {
-                Toast.makeText(context, "Erro ao Retornar FornecedorModel", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
             } else if (object instanceof FornecedorModel) {
                 FornecedorModel fornecedor = (FornecedorModel) object;
                 view.setAlertaCadastro(fornecedor);
             } else {
                 String mensagem = (String) object;
-                toast.setText("Erro ao Inserir FornecedorModel: " + mensagem);
+                toast.setText("Erro ao Inserir Fornecedor: " + mensagem);
                 toast.show();
             }
         }

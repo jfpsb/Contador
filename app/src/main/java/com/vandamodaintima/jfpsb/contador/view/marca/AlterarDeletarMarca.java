@@ -19,7 +19,6 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
 
     private MarcaModel marca;
 
-    private SQLiteDatabase sqLiteDatabase;
     private AlterarDeletarMarcaController alterarDeletarMarcaController;
 
     @Override
@@ -35,8 +34,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
 
         inicializaBotoes();
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        alterarDeletarMarcaController = new AlterarDeletarMarcaController(this, sqLiteDatabase);
+        alterarDeletarMarcaController = new AlterarDeletarMarcaController(this);
 
         txtNome.setText(marca.getNome());
     }

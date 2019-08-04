@@ -79,4 +79,5 @@
     <string name="digite_o_nome_dois_pontos">Digite o Nome:</string>
     <string name="informe_a_quantidade_a_ser_adicionada">Informe a Quantidade a Ser Adicionada:</string>
     <string name="quantidade_adicionada">Quantidade Adicionada:</string>
+    <string name="email_dois_pontos">Email:</string>
 </resources>

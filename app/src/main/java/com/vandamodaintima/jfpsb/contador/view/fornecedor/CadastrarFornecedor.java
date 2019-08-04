@@ -40,8 +40,8 @@ public class CadastrarFornecedor extends TelaCadastro {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_fornecedor, container, false);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarFornecedorController = new CadastrarFornecedorController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        cadastrarFornecedorController = new CadastrarFornecedorController(this, conexaoBanco, getContext());
 
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
@@ -93,16 +93,16 @@ public class CadastrarFornecedor extends TelaCadastro {
 
     public void setAlertaCadastro(final FornecedorModel fornecedor) {
         alertaCadastro = new AlertDialog.Builder(getContext());
-        alertaCadastro.setTitle("Cadastrar FornecedorModel");
+        alertaCadastro.setTitle("Cadastrar Fornecedor");
 
-        String mensagem = "Confirme os Dados do FornecedorModel Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
+        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
         mensagem += "Nome: " + fornecedor.getNome() + "\n\n";
 
         if (!fornecedor.getFantasia().isEmpty()) {
             mensagem += "Nome Fantasia: " + fornecedor.getFantasia() + "\n\n";
         }
 
-        mensagem += "Deseja Cadastrar Este FornecedorModel?";
+        mensagem += "Deseja Cadastrar Este Fornecedor?";
 
         alertaCadastro.setMessage(mensagem);
 
@@ -116,7 +116,7 @@ public class CadastrarFornecedor extends TelaCadastro {
         alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("FornecedorModel Não Foi Cadastrado");
+                mensagemAoUsuario("Fornecedor Não Foi Cadastrado");
             }
         });
 

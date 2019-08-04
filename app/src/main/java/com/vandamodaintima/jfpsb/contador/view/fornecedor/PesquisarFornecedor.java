@@ -32,8 +32,8 @@ public class PesquisarFornecedor extends TelaPesquisa {
         txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
         listView = view.findViewById(R.id.listViewLoja);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarFornecedorController = new PesquisarFornecedorController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        pesquisarFornecedorController = new PesquisarFornecedorController(this, conexaoBanco, getContext());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

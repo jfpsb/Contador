@@ -1,21 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
-import android.database.sqlite.SQLiteDatabase;
-
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;
 
 public class CadastrarLojaController {
     private CadastrarView view;
-    private DAOLoja daoLoja;
+    private LojaModel lojaModel;
 
-    public CadastrarLojaController(CadastrarView view, SQLiteDatabase sqLiteDatabase) {
+    public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        daoLoja = new DAOLoja(sqLiteDatabase);
+        lojaModel = new LojaModel(conexaoBanco);
     }
 
-    public void cadastrar(Loja loja) {
+    public void cadastrar(LojaModel loja) {
         if (loja.getCnpj().isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Estar Vazio");
             return;
@@ -26,7 +26,7 @@ public class CadastrarLojaController {
             return;
         }
 
-        Boolean result = daoLoja.inserir(loja);
+        Boolean result = loja.inserir();
 
         if (result) {
             view.mensagemAoUsuario("Loja Cadastrada Com Sucesso!");
@@ -37,7 +37,7 @@ public class CadastrarLojaController {
         }
     }
 
-    public ArrayList<Loja> getMatrizes() {
-        return daoLoja.listarMatrizes();
+    public ArrayList<LojaModel> getMatrizes() {
+        return lojaModel.listarMatrizes();
     }
 }

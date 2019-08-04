@@ -205,4 +205,25 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
         cursor.close();
         return lojas;
     }
+
+    public ArrayList<LojaModel> listarMatrizes() {
+        ArrayList<LojaModel> lojas = new ArrayList<>();
+
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "matriz IS NULL", null, null, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                LojaModel loja = new LojaModel(conexaoBanco);
+
+                loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+
+                lojas.add(loja);
+            }
+        }
+
+        cursor.close();
+
+        return lojas;
+    }
 }

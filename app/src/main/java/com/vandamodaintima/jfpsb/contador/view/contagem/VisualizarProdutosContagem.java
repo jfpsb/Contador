@@ -20,7 +20,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
 
     private ListView listViewProdutoContagem;
 
-    private SQLiteDatabase sqLiteDatabase;
+    private ConexaoBanco conexaoBanco;
 
     private VisualizarProdutosContagemController visualizarProdutosContagemController;
 
@@ -35,13 +35,13 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        visualizarProdutosContagemController = new VisualizarProdutosContagemController(this, sqLiteDatabase, getApplicationContext());
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
 
+        visualizarProdutosContagemController = new VisualizarProdutosContagemController(this, conexaoBanco, getApplicationContext());
         visualizarProdutosContagemController.pesquisar(contagem);
     }
 
-    public void setListVIewAdaper(ListAdapter adapter) {
+    public void setListViewAdaper(ListAdapter adapter) {
         listViewProdutoContagem.setAdapter(adapter);
     }
 
@@ -60,8 +60,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
                 cursor.close();
         }
 
-        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-            sqLiteDatabase.close();
+        conexaoBanco.close();
 
         super.onDestroy();
     }

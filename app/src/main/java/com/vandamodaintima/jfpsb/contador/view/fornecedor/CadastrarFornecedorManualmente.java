@@ -19,9 +19,10 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     private EditText txtCnpj;
     private EditText txtNome;
     private EditText txtFantasia;
+    private EditText txtEmail;
     private Button btnCadastrar;
+    private ConexaoBanco conexaoBanco;
 
-    private SQLiteDatabase sqLiteDatabase;
     private CadastrarFornecedorManualmenteController cadastrarFornecedorManualmenteController;
 
     @Override
@@ -34,19 +35,21 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
+        txtEmail = findViewById(R.id.txtEmail);
         btnCadastrar = findViewById(R.id.btnCadastrar);
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        cadastrarFornecedorManualmenteController = new CadastrarFornecedorManualmenteController(this, sqLiteDatabase);
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        cadastrarFornecedorManualmenteController = new CadastrarFornecedorManualmenteController(this);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FornecedorModel fornecedor = new FornecedorModel();
+                FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
 
                 fornecedor.setCnpj(txtCnpj.getText().toString());
                 fornecedor.setNome(txtNome.getText().toString());
                 fornecedor.setFantasia(txtFantasia.getText().toString());
+                fornecedor.setEmail(txtEmail.getText().toString());
 
                 cadastrarFornecedorManualmenteController.cadastrar(fornecedor);
             }
@@ -58,6 +61,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         txtCnpj.getText().clear();
         txtNome.getText().clear();
         txtFantasia.getText().clear();
+        txtEmail.getText().clear();
     }
 
     @Override

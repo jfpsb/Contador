@@ -36,8 +36,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
 
         inicializaBotoes();
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        alterarDeletarFornecedorController = new AlterarDeletarFornecedorController(this, sqLiteDatabase);
+        alterarDeletarFornecedorController = new AlterarDeletarFornecedorController(this);
 
         txtCnpj.setText(fornecedor.getCnpj());
         txtNome.setText(fornecedor.getNome());

@@ -1,43 +1,39 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarFornecedorController {
     private AlterarDeletarView view;
-    private DAOFornecedor daoFornecedor;
 
-    public AlterarDeletarFornecedorController(AlterarDeletarView view, SQLiteDatabase sqLiteDatabase) {
+    public AlterarDeletarFornecedorController(AlterarDeletarView view) {
         this.view = view;
-        daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
     public void atualizar(FornecedorModel fornecedor) {
         if (fornecedor.getNome().trim().isEmpty()) {
-            view.mensagemAoUsuario("Nome De FornecedorModel Não Pode Ser Vazio");
+            view.mensagemAoUsuario("Nome De Fornecedor Não Pode Ser Vazio");
             return;
         }
 
-        Boolean result = daoFornecedor.atualizar(fornecedor, fornecedor.getCnpj());
+        Boolean result = fornecedor.atualizar();
 
         if (result) {
-            view.mensagemAoUsuario("FornecedorModel Atualizado Com Sucesso");
+            view.mensagemAoUsuario("Fornecedor Atualizado Com Sucesso");
             view.fecharTela();
         } else {
-            view.mensagemAoUsuario("Erro ao Atualizar FornecedorModel");
+            view.mensagemAoUsuario("Erro ao Atualizar Fornecedor");
         }
     }
 
     public void deletar(FornecedorModel fornecedor) {
-        Boolean result = daoFornecedor.deletar(fornecedor.getCnpj());
+        Boolean result = fornecedor.deletar();
 
         if (result) {
-            view.mensagemAoUsuario("FornecedorModel Deletado Com Sucesso");
+            view.mensagemAoUsuario("Fornecedor Deletado Com Sucesso");
             view.fecharTela();
         } else {
-            view.mensagemAoUsuario("Erro ao Deletar FornecedorModel");
+            view.mensagemAoUsuario("Erro ao Deletar Fornecedor");
         }
     }
 }

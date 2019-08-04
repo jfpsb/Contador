@@ -34,14 +34,14 @@ public class CadastrarMarca extends TelaCadastro {
         txtNome = view.findViewById(R.id.txtNome);
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarMarcaController = new CadastrarMarcaController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        cadastrarMarcaController = new CadastrarMarcaController(this);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    MarcaModel marca = new MarcaModel();
+                    MarcaModel marca = new MarcaModel(conexaoBanco);
                     marca.setId(new Date().getTime());
                     marca.setNome(txtNome.getText().toString().trim().toUpperCase());
 
@@ -57,9 +57,9 @@ public class CadastrarMarca extends TelaCadastro {
 
     protected void setAlertaCadastro(final MarcaModel marca) {
         alertaCadastro = new AlertDialog.Builder(getContext());
-        alertaCadastro.setTitle("Cadastrar MarcaModel");
+        alertaCadastro.setTitle("Cadastrar Marca");
 
-        String mensagem = "Deseja Cadastrar a MarcaModel " + marca.getNome() + "?";
+        String mensagem = "Deseja Cadastrar a Marca " + marca.getNome() + "?";
         alertaCadastro.setMessage(mensagem);
 
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
@@ -72,7 +72,7 @@ public class CadastrarMarca extends TelaCadastro {
         alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("MarcaModel Não Foi Cadastrada");
+                mensagemAoUsuario("Marca Não Foi Cadastrada");
             }
         });
 

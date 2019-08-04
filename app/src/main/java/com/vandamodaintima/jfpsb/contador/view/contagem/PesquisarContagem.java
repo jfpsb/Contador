@@ -20,6 +20,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
 import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.text.ParseException;
@@ -35,7 +36,7 @@ public class PesquisarContagem extends TelaPesquisa {
     private EditText txtDataFinal;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
-    private Loja loja;
+    private LojaModel lojaModel;
 
     private PesquisarContagemController pesquisarContagemController;
 
@@ -52,8 +53,8 @@ public class PesquisarContagem extends TelaPesquisa {
         btnPesquisar = view.findViewById(R.id.btnPesquisar);
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarContagemController = new PesquisarContagemController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        pesquisarContagemController = new PesquisarContagemController(this, conexaoBanco, getContext());
 
         txtDataInicial.setText(txtDataParaCalendar.format(new Date()));
         txtDataInicial.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +79,7 @@ public class PesquisarContagem extends TelaPesquisa {
 
                 String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-                loja = pesquisarContagemController.retornaLojaEscolhidaSpinner(cnpj);
+                lojaModel = pesquisarContagemController.retornaLojaEscolhidaSpinner(cnpj);
             }
 
             @Override
@@ -106,7 +107,7 @@ public class PesquisarContagem extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("A ContagemModel Não Foi Alterada");
+                    mensagemAoUsuario("A Contagem Não Foi Alterada");
                 }
                 break;
         }
@@ -126,7 +127,7 @@ public class PesquisarContagem extends TelaPesquisa {
             dataInicial.setTime(txtDataParaCalendar.parse(txtDataInicial.getText().toString()));
             dataFinal.setTime(txtDataParaCalendar.parse(txtDataFinal.getText().toString()));
 
-            pesquisarContagemController.pesquisar(loja.getCnpj(), dataInicial, dataFinal);
+            pesquisarContagemController.pesquisar(lojaModel.getCnpj(), dataInicial, dataFinal);
         } catch (ParseException e) {
             Log.e(LOG, e.getMessage(), e);
         }

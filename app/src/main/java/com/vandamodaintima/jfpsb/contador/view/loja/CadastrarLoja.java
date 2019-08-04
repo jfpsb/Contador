@@ -16,6 +16,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.CadastrarLojaController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ public class CadastrarLoja extends TelaCadastro {
     private EditText txtCnpj;
     private Spinner spinnerMatrizes;
 
-    private SQLiteDatabase sqLiteDatabase;
     private CadastrarLojaController cadastrarLojaController;
 
     @Override
@@ -34,8 +34,8 @@ public class CadastrarLoja extends TelaCadastro {
                              Bundle savedInstanceState) {
         View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarLojaController = new CadastrarLojaController(this, sqLiteDatabase);
+        conexaoBanco = new ConexaoBanco(getContext());
+        cadastrarLojaController = new CadastrarLojaController(this, conexaoBanco);
 
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
@@ -45,12 +45,12 @@ public class CadastrarLoja extends TelaCadastro {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Loja loja = new Loja();
+                LojaModel loja = new LojaModel(conexaoBanco);
 
                 loja.setCnpj(txtCnpj.getText().toString());
                 loja.setNome(txtNome.getText().toString().trim().toUpperCase());
 
-                Loja matriz = (Loja) spinnerMatrizes.getSelectedItem();
+                LojaModel matriz = (LojaModel) spinnerMatrizes.getSelectedItem();
                 if (!matriz.getCnpj().equals("0")) {
                     loja.setMatriz(matriz);
                 }
@@ -59,8 +59,8 @@ public class CadastrarLoja extends TelaCadastro {
             }
         });
 
-        ArrayList<Loja> matrizes = new ArrayList<>();
-        Loja loja = new Loja();
+        ArrayList<LojaModel> matrizes = new ArrayList<>();
+        LojaModel loja = new LojaModel(conexaoBanco);
         loja.setCnpj("0");
         loja.setNome("SEM MATRIZ");
         matrizes.add(loja);

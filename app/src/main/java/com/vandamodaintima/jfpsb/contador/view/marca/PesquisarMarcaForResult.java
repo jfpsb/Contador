@@ -16,7 +16,7 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-        MarcaModel marca = new MarcaModel();
+        MarcaModel marca = new MarcaModel(conexaoBanco);
 
         marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
         marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
@@ -26,8 +26,8 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
 
     private void setAlertaEscolha(final MarcaModel marca) {
         alertaEscolha = new AlertDialog.Builder(getContext());
-        alertaEscolha.setTitle("Escolher MarcaModel");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar A MarcaModel " + marca.getNome() + " ao ProdutoModel?");
+        alertaEscolha.setTitle("Escolher Marca");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar A Marca " + marca.getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -42,7 +42,7 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
         alertaEscolha.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("MarcaModel Não Foi Escolhida");
+                mensagemAoUsuario("Marca Não Foi Escolhida");
             }
         });
 

@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.produto.CadastrarProduto;
@@ -9,14 +10,14 @@ import com.vandamodaintima.jfpsb.contador.view.produto.CadastrarProduto;
 public class CadastrarProdutoController {
 
     CadastrarProduto view;
-    DAOProduto daoProduto;
+    ProdutoModel produtoModel;
 
-    public CadastrarProdutoController(CadastrarView view, SQLiteDatabase sqLiteDatabase) {
+    public CadastrarProdutoController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarProduto) view;
-        daoProduto = new DAOProduto(sqLiteDatabase);
+        produtoModel = new ProdutoModel(conexaoBanco);
     }
 
-    public void cadastrar(ProdutoModel produtoModel) {
+    public void cadastrar(ProdutoModel produto) {
         if (produtoModel.getCod_barra().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
@@ -32,22 +33,22 @@ public class CadastrarProdutoController {
             return;
         }
 
-        Boolean result = daoProduto.inserir(produtoModel);
+        Boolean result = produto.inserir();
 
         if (result) {
-            view.mensagemAoUsuario("ProdutoModel Cadastro Com Sucesso");
+            view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
             view.aposCadastro(produtoModel);
             view.limparCampos();
         } else {
-            view.mensagemAoUsuario("ProdutoModel Não Foi Cadastrado");
+            view.mensagemAoUsuario("Produto Não Foi Cadastrado");
         }
     }
 
     public void checaCodigoBarra(String codigo) {
         if (!codigo.isEmpty()) {
-            ProdutoModel produtoModel = daoProduto.listarPorId(codigo);
+            ProdutoModel produto = produtoModel.listarPorId(codigo);
 
-            if (produtoModel != null) {
+            if (produto != null) {
                 view.bloqueiaCampos();
             } else {
                 view.liberaCampos();

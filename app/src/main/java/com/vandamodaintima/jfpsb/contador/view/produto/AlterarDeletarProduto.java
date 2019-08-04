@@ -63,8 +63,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         inicializaBotoes();
 
-        sqLiteDatabase = new ConexaoBanco(this).conexao();
-        alterarDeletarProdutoController = new AlterarDeletarProdutoController(this, sqLiteDatabase);
+        alterarDeletarProdutoController = new AlterarDeletarProdutoController(this);
 
         txtCodBarra.setText(produtoModel.getCod_barra());
         txtDescricao.setText(produtoModel.getDescricao());
@@ -118,7 +117,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
-                intent.putExtra("produtoModel", produtoModel);
+                intent.putExtra("produto", produtoModel);
 
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
@@ -133,7 +132,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 if (fornecedor != null) {
                     alertaRemoverFornecedor.show();
                 } else {
-                    mensagemAoUsuario("ProdutoModel Não Possui FornecedorModel");
+                    mensagemAoUsuario("Produto Não Possui Fornecedor");
                 }
             }
         });
@@ -147,7 +146,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 if (marca != null) {
                     alertaRemoverMarca.show();
                 } else {
-                    mensagemAoUsuario("ProdutoModel Não Possui MarcaModel");
+                    mensagemAoUsuario("Produto Não Possui Marca");
                 }
             }
         });
@@ -162,10 +161,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
                     if (fornecedor != null) {
                         txtFornecedor.setText(fornecedor.getNome());
-                        mensagemAoUsuario("FornecedorModel Escolhido. Aperte em \"Atualizar\" para Salvar.");
+                        mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
                     }
                 } else {
-                    mensagemAoUsuario("FornecedorModel Não Foi Escolhido");
+                    mensagemAoUsuario("Fornecedor Não Foi Escolhido");
                 }
                 break;
             case ESCOLHER_MARCA:
@@ -174,15 +173,15 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
                     if (marca != null) {
                         txtMarca.setText(marca.getNome());
-                        mensagemAoUsuario("MarcaModel Escolhida. Aperte em \"Atualizar\" para Salvar");
+                        mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                     }
                 } else {
-                    mensagemAoUsuario("MarcaModel Não Foi Escolhida");
+                    mensagemAoUsuario("Marca Não Foi Escolhida");
                 }
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
-                    ProdutoModel produtoAlterado = (ProdutoModel) data.getSerializableExtra("produtoModel");
+                    ProdutoModel produtoAlterado = (ProdutoModel) data.getSerializableExtra("produto");
 
                     if (produtoAlterado.getCod_barra_fornecedor().equals(produtoModel.getCod_barra_fornecedor())) {
                         mensagemAoUsuario("Cód. de Barras de Fornecedores Não Foram Alterados");
@@ -198,8 +197,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar ProdutoModel");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o ProdutoModel " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
+        alertBuilderDeletar.setTitle("Deletar Produto");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -211,7 +210,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarProduto.this, "ProdutoModel Não foi Deletado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -219,8 +218,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar ProdutoModel");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o ProdutoModel " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
+        alertBuilderAtualizar.setTitle("Atualizar Produto");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -237,51 +236,51 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "ProdutoModel Não foi Alterado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setAlertaRemoverFornecedor() {
         alertaRemoverFornecedor = new AlertDialog.Builder(this);
-        alertaRemoverFornecedor.setTitle("Remover FornecedorModel");
-        alertaRemoverFornecedor.setMessage("Tem Certeza Que Deseja Remover o FornecedorModel Deste ProdutoModel?");
+        alertaRemoverFornecedor.setTitle("Remover Fornecedor");
+        alertaRemoverFornecedor.setMessage("Tem Certeza Que Deseja Remover o Fornecedor Deste Produto?");
 
         alertaRemoverFornecedor.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 fornecedor = null;
                 txtFornecedor.getText().clear();
-                Toast.makeText(AlterarDeletarProduto.this, "FornecedorModel Removido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
             }
         });
 
         alertaRemoverFornecedor.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "FornecedorModel Não Foi Removido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Não Foi Removido", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setAlertaRemoverMarca() {
         alertaRemoverMarca = new AlertDialog.Builder(this);
-        alertaRemoverMarca.setTitle("Remover MarcaModel");
-        alertaRemoverMarca.setMessage("Tem Certeza Que Deseja Remover a MarcaModel Deste ProdutoModel?");
+        alertaRemoverMarca.setTitle("Remover Marca");
+        alertaRemoverMarca.setMessage("Tem Certeza Que Deseja Remover a Marca Deste Produto?");
 
         alertaRemoverMarca.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 marca = null;
                 txtMarca.getText().clear();
-                Toast.makeText(AlterarDeletarProduto.this, "MarcaModel Removida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
             }
         });
 
         alertaRemoverMarca.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "MarcaModel Não Foi Removida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarProduto.this, "Marca Não Foi Removida", Toast.LENGTH_SHORT).show();
             }
         });
     }

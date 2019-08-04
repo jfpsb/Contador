@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public abstract class TelaAlterarDeletar extends ActivityBaseView implements AlterarDeletarView {
@@ -17,7 +18,6 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
     protected Button btnDeletar;
     protected AlertDialog.Builder alertBuilderDeletar;
     protected AlertDialog.Builder alertBuilderAtualizar;
-    protected SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,14 +46,6 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
                 alertDialog.show();
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-            sqLiteDatabase.close();
-
-        super.onDestroy();
     }
 
     @Override
