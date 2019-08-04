@@ -2,8 +2,6 @@ package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;

@@ -12,17 +12,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
     private AlertDialog.Builder alertaQuantidadeProduto;
-    private Produto produtoCadastrado;
+    private ProdutoModel produtoCadastrado;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Coloca o código da pesquisa no produto a ser cadastrado
+        //Coloca o código da pesquisa no produtoModel a ser cadastrado
         String codigo = getArguments().getString("codigo");
-        produto.getCod_barra_fornecedor().add(codigo);
+        produtoModel.getCod_barra_fornecedor().add(codigo);
 
         setAlertaQuantidadeProduto();
 
@@ -31,7 +31,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
     @Override
     public void aposCadastro(Object... args) {
-        produtoCadastrado = (Produto) args[0];
+        produtoCadastrado = (ProdutoModel) args[0];
         alertaQuantidadeProduto.show();
     }
 
@@ -59,7 +59,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
                     }
 
                     Intent intent = new Intent();
-                    intent.putExtra("produto", produtoCadastrado);
+                    intent.putExtra("produtoModel", produtoCadastrado);
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
@@ -70,7 +70,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
         alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
+                mensagemAoUsuario("A Quantidade Não Foi Informada. A ContagemModel Não Foi Adicionada");
             }
         });
     }

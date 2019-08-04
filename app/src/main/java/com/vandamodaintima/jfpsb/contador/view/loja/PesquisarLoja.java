@@ -18,14 +18,13 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.PesquisarLojaController;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarLoja extends TelaPesquisa {
 
     private EditText txtNome;
     private PesquisarLojaController pesquisarLojaController;
-    private SQLiteDatabase sqLiteDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,8 +34,8 @@ public class PesquisarLoja extends TelaPesquisa {
         txtNome = view.findViewById(R.id.txtNome);
         listView = view.findViewById(R.id.listViewLoja);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarLojaController = new PesquisarLojaController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        pesquisarLojaController = new PesquisarLojaController(this, conexaoBanco, getContext());
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -60,14 +59,12 @@ public class PesquisarLoja extends TelaPesquisa {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_ALTERAR_DELETAR:
-                if (resultCode == Activity.RESULT_OK) {
-                    realizarPesquisa();
-                } else {
-                    mensagemAoUsuario("A Loja Não Foi Alterada");
-                }
-                break;
+        if (requestCode == TELA_ALTERAR_DELETAR) {
+            if (resultCode == Activity.RESULT_OK) {
+                realizarPesquisa();
+            } else {
+                mensagemAoUsuario("A Loja Não Foi Alterada");
+            }
         }
     }
 
@@ -92,7 +89,7 @@ public class PesquisarLoja extends TelaPesquisa {
 
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        Loja loja = pesquisarLojaController.retornaLojaEscolhidaListView(cnpj);
+        LojaModel loja = pesquisarLojaController.retornaLojaEscolhidaListView(cnpj);
 
         Intent intent = new Intent(getContext(), AlterarDeletarLoja.class);
 

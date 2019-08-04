@@ -2,8 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorManualmenteController {
@@ -15,19 +14,19 @@ public class CadastrarFornecedorManualmenteController {
         daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
-    public void cadastrar(Fornecedor fornecedor) {
+    public void cadastrar(FornecedorModel fornecedor) {
         if (fornecedor.getNome().isEmpty()) {
-            view.mensagemAoUsuario("O Nome do Fornecedor Não Pode Ser Vazia");
+            view.mensagemAoUsuario("O Nome do FornecedorModel Não Pode Ser Vazia");
             return;
         }
 
         Boolean result = daoFornecedor.inserir(fornecedor);
 
         if (result) {
-            view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
+            view.mensagemAoUsuario("FornecedorModel Cadastrado Com Sucesso");
             view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
+            view.mensagemAoUsuario("Erro ao Cadastrar FornecedorModel");
         }
     }
 }

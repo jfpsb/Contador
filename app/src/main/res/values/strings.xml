@@ -34,7 +34,7 @@
     <string name="dados_de_loja">Dados de Loja</string>
     <string name="hint_digite_cod_de_barra">Digite o Código De Barra do Produto</string>
     <string name="hint_digite_nome_fornecedor">Digite o Fornecedor do Produto</string>
-    <string name="hint_digite_descricao_produto">"Digite Uma Descrição Do produto"</string>
+    <string name="hint_digite_descricao_produto">"Digite Uma Descrição Do produtoModel"</string>
     <string name="alterar_deletar_marca">Alterar/Deletar Marca</string>
     <string name="dados_de_produto">Dados de Produto</string>
     <string name="cod_de_barras_dois_pontos">Cód. de Barras:</string>
@@ -44,7 +44,7 @@
     <string name="nome_fantasia_dois_pontos">Nome Fantasia:</string>
     <string name="cadastrar">Cadastrar</string>
     <string name="contador">Contador</string>
-    <string name="produto">Produto</string>
+    <string name="produtoModel">Produto</string>
     <string name="fornecedor">Fornecedor</string>
     <string name="loja">Loja</string>
     <string name="hint_a_definir">A Definir</string>

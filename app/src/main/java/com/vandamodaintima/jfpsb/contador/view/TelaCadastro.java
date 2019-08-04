@@ -5,18 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public abstract class TelaCadastro extends Fragment implements CadastrarView {
     protected View view;
-    protected SQLiteDatabase sqLiteDatabase;
+    protected ConexaoBanco conexaoBanco;
 
     @Override
     public void onDestroy() {
-        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-            sqLiteDatabase.close();
-
+        conexaoBanco.close();
         super.onDestroy();
     }
 
@@ -27,7 +26,10 @@ public abstract class TelaCadastro extends Fragment implements CadastrarView {
 
     @Override
     public void aposCadastro(Object... args) {
-        Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
+        Fragment fragment = null;
+
+        if(getActivity() != null)
+            fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
 
         if (fragment instanceof PesquisarView)
             ((PesquisarView) fragment).realizarPesquisa();

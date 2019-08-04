@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.TelaFornecedorController;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-public class TelaFornecedor extends TabLayoutActivityBase {
+public class TelaFornecedor extends TabLayoutBaseView {
 
     protected CadastrarFornecedor cadastrarFornecedor;
     protected PesquisarFornecedor pesquisarFornecedor;
@@ -93,7 +93,7 @@ public class TelaFornecedor extends TabLayoutActivityBase {
         Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
 
         DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Fornecedor Em Excel").allowReadOnlyDirectory(true).
+                newDirectoryName("Contador - FornecedorModel Em Excel").allowReadOnlyDirectory(true).
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);

@@ -1,12 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.view.marca;
 
 import android.os.Bundle;
-import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-public class TelaMarca extends TabLayoutActivityBase {
+public class TelaMarca extends TabLayoutBaseView {
 
     protected CadastrarMarca cadastrarMarca;
     protected PesquisarMarca pesquisarMarca;

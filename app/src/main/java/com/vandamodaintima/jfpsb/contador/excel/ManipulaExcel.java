@@ -1,51 +1,29 @@
 package com.vandamodaintima.jfpsb.contador.excel;
 
-import android.content.ContentResolver;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 /**
  * Created by jfpsb on 16/02/2018.
  */
 
 public class ManipulaExcel {
-    private static DAOFornecedor daoFornecedor;
-    private static DAOProduto daoProduto;
-    private static DAOMarca daoMarca;
+    //private static DAOFornecedor daoFornecedor;
+    //private static DAOProduto daoProduto;
+    //private static DAOMarca daoMarca;
     private AsyncTask task;
     private ConexaoBanco conexaoBanco;
 
     private enum Headers {
         COD_BARRA("Código de Barra"),
-        FORNECEDOR("Fornecedor (CNPJ)"),
-        COD_BARRA_FORNECEDOR("Códigos de Barra de Fornecedor"),
+        FORNECEDOR("FornecedorModel (CNPJ)"),
+        COD_BARRA_FORNECEDOR("Códigos de Barra de FornecedorModel"),
         DESCRICAO("Descrição"),
-        MARCA("Marca (Nome)"),
+        MARCA("MarcaModel (Nome)"),
         PRECO("Preço");
 
         public String texto;
@@ -79,7 +57,7 @@ public class ManipulaExcel {
     }
 
     //TODO: Tentar simplificar. Estilizar planilha
-    public boolean ExportaContagem(Contagem contagem, String diretorio) {
+    public boolean ExportaContagem(ContagemModel contagem, String diretorio) {
 
 //        Date dataAtual = new Date();
 //        ArquivoExcel arquivoExcel = new ArquivoExcel();
@@ -90,16 +68,16 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        //ArrayList<ContagemProduto> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
+        //ArrayList<ContagemProdutoModel> contagemproduto = contagemProdutoManager.listarPorContagem(contagem);
 
 //        try {
 //            if (contagemproduto.size() == 0)
-//                throw new Exception("Não Há Produtos na Contagem");
+//                throw new Exception("Não Há Produtos na ContagemModel");
 //
 //            for (int i = rowIndex; i <= contagemproduto.size(); i++) {
 //                Row row = arquivoExcel.getPlanilha().createRow(i);
 //
-//                ContagemProduto contagemProduto = contagemproduto.get(i - 1);
+//                ContagemProdutoModel contagemProduto = contagemproduto.get(i - 1);
 //
 //                Cell cod_barra = row.createCell(0);
 //                cod_barra.setCellValue(contagemProduto.getProduto().getCod_barra());
@@ -119,7 +97,7 @@ public class ManipulaExcel {
 //            arquivoExcel.getPlanilha().setColumnWidth(1, 65 * 256);
 //            arquivoExcel.getPlanilha().setColumnWidth(2, 18 * 256);
 //
-//            String nomeArquivo = "Contagem - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataFormatoBD(dataAtual) + ".xlsx";
+//            String nomeArquivo = "ContagemModel - " + contagem.getLoja().getNome() + " - " + TrataDisplayData.getDataFormatoBD(dataAtual) + ".xlsx";
 //
 //            File arquivo = new File(diretorio, nomeArquivo);
 //
@@ -157,7 +135,7 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 //
-//        ArrayList<Fornecedor> fornecedores = fornecedorManager.listarCursor();
+//        ArrayList<FornecedorModel> fornecedores = fornecedorManager.listarCursor();
 //
 //        try {
 //            if (fornecedores.size() == 0)
@@ -166,7 +144,7 @@ public class ManipulaExcel {
 //            for (int i = rowIndex; i <= fornecedores.size(); i++) {
 //                Row row = arquivoExcel.getPlanilha().createRow(i);
 //
-//                Fornecedor fornecedor = fornecedores.get(i - 1);
+//                FornecedorModel fornecedor = fornecedores.get(i - 1);
 //
 //                Cell cnpj = row.createCell(0);
 //                cnpj.setCellValue(fornecedor.getCnpj());
@@ -224,7 +202,7 @@ public class ManipulaExcel {
 //
 //        CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 //
-//        ArrayList<Produto> produtos = produtoManager.listarCursor();
+//        ArrayList<ProdutoModel> produtos = produtoManager.listarCursor();
 //
 //        try {
 //            if (produtos.size() == 0)
@@ -235,7 +213,7 @@ public class ManipulaExcel {
 //            for(int i = rowIndex; i <= rows.length; i++) {
 //                Row row = arquivoExcel.getPlanilha().createRow(i);
 //
-//                for(int j = 0; j < Produto.getHeaders().length; i++) {
+//                for(int j = 0; j < ProdutoModel.getHeaders().length; i++) {
 //                    Cell cell = row.createCell(j);
 //                    cell.setCellStyle(cellStyle);
 //                }
@@ -244,14 +222,14 @@ public class ManipulaExcel {
 //            }
 //
 //            for (int i = 0; i < rows.length; i++) {
-//                Produto produto = produtos.get(i);
+//                ProdutoModel produtoModel = produtos.get(i);
 //
-//                rows[i].getCell(0).setCellValue(produto.getCod_barra());
+//                rows[i].getCell(0).setCellValue(produtoModel.getCod_barra());
 //                //TODO: lista de codigos
-//                rows[i].getCell(2).setCellValue(produto.getFornecedor().getNome());
-//                rows[i].getCell(3).setCellValue(produto.getMarca().getNome());
-//                rows[i].getCell(4).setCellValue(produto.getDescricao());
-//                rows[i].getCell(5).setCellValue(produto.getPreco());
+//                rows[i].getCell(2).setCellValue(produtoModel.getFornecedor().getNome());
+//                rows[i].getCell(3).setCellValue(produtoModel.getMarca().getNome());
+//                rows[i].getCell(4).setCellValue(produtoModel.getDescricao());
+//                rows[i].getCell(5).setCellValue(produtoModel.getPreco());
 //            }
 //
 //            arquivoExcel.getPlanilha().setColumnWidth(0, 25 * 256);

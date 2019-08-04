@@ -1,19 +1,14 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.ContentResolver;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.excel.ArquivoExcel;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -34,17 +29,17 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TelaProdutoController {
-    private SQLiteDatabase sqLiteDatabase;
-    private DAOProduto daoProduto;
-    private DAOFornecedor daoFornecedor;
-    private DAOMarca daoMarca;
+    private ConexaoBanco conexaoBanco;
+    private ProdutoModel produtoModel;
+    private FornecedorModel fornecedorModel;
+    private MarcaModel marcaModel;
 
     private enum Headers {
         COD_BARRA("Código de Barra"),
-        FORNECEDOR("Fornecedor"),
-        COD_BARRA_FORNECEDOR("Códigos de Barra de Fornecedor"),
+        FORNECEDOR("FornecedorModel"),
+        COD_BARRA_FORNECEDOR("Códigos de Barra de FornecedorModel"),
         DESCRICAO("Descrição"),
-        MARCA("Marca"),
+        MARCA("MarcaModel"),
         PRECO("Preço");
 
         public String texto;
@@ -54,21 +49,22 @@ public class TelaProdutoController {
         }
     }
 
-    public TelaProdutoController(SQLiteDatabase sqLiteDatabase) {
-        this.sqLiteDatabase = sqLiteDatabase;
-        daoProduto = new DAOProduto(sqLiteDatabase);
-        daoFornecedor = new DAOFornecedor(sqLiteDatabase);
-        daoMarca = new DAOMarca(sqLiteDatabase);
+    public TelaProdutoController(ConexaoBanco conexaoBanco) {
+        this.conexaoBanco = conexaoBanco;
     }
 
     public Boolean importarDeArquivoExcel(TelaProduto.ImportarProdutoAsyncTask importarProdutoAsyncTask, final ContentResolver contentResolver) {
-        ArrayList<Produto> produtos = new ArrayList<>();
-
+        ConexaoBanco conexaoBanco = null;
+        ArrayList<ProdutoModel> produtos = new ArrayList<>();
         InputStream inputStream = null;
 
         importarProdutoAsyncTask.publish("Iniciando Cadastro");
 
         try {
+            produtoModel = new ProdutoModel(conexaoBanco);
+            marcaModel = new MarcaModel(conexaoBanco);
+            fornecedorModel = new FornecedorModel(conexaoBanco);
+
             inputStream = Arquivo.getInputStreamFromUri(contentResolver, importarProdutoAsyncTask.getUri());
 
             if (inputStream == null) {
@@ -109,12 +105,12 @@ public class TelaProdutoController {
 
             int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
 
-            importarProdutoAsyncTask.publish(rows + " Produto(s) Encontrado(s)");
+            importarProdutoAsyncTask.publish(rows + " ProdutoModel(s) Encontrado(s)");
 
             for (int i = 1; i < rows; i++) {
                 Row row = arquivoExcel.getPlanilha().getRow(i);
 
-                Produto produto = new Produto();
+                ProdutoModel produtoModel = new ProdutoModel(conexaoBanco);
 
                 Cell cod_barra = row.getCell(Headers.COD_BARRA.ordinal());
                 Cell fornecedor = row.getCell(Headers.FORNECEDOR.ordinal());
@@ -125,9 +121,9 @@ public class TelaProdutoController {
 
                 if (!isCellEmpty(cod_barra)) {
                     if (cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        produto.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
+                        produtoModel.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue())); //Retirando o .0
                     } else if (cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
-                        produto.setCod_barra(cod_barra.getStringCellValue());
+                        produtoModel.setCod_barra(cod_barra.getStringCellValue());
                     } else {
                         throw new Exception("Formato de Código de Barras Errado. A Célula Precisa Ser do Tipo \"Texto\" ou \"Número\"");
                     }
@@ -137,18 +133,18 @@ public class TelaProdutoController {
 
                 if (!isCellEmpty(fornecedor)) {
                     if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-                        Fornecedor f = daoFornecedor.listarPorIdOuNome(fornecedor.getStringCellValue());
+                        FornecedorModel f = fornecedorModel.listarPorIdOuNome(fornecedor.getStringCellValue());
 
                         if (f != null) {
-                            produto.setFornecedor(f);
+                            produtoModel.setFornecedor(f);
                         } else {
-                            throw new Exception("Fornecedor " + fornecedor.getStringCellValue() + "Informado Não Encontrado");
+                            throw new Exception("Fornecedor " + fornecedor.getStringCellValue() + " Informado Não Encontrado");
                         }
                     } else {
                         throw new Exception("Formato de CNPJ de Fornecedor Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
                     }
                 } else {
-                    produto.setFornecedor(null);
+                    produtoModel.setFornecedor(null);
                 }
 
                 if (!isCellEmpty(cod_barra_fornecedor)) {
@@ -164,14 +160,14 @@ public class TelaProdutoController {
 
                     String[] codigos = codigosCell.split(",");
 
-                    produto.setCod_barra_fornecedor(new ArrayList<>(Arrays.asList(codigos)));
+                    produtoModel.setCod_barra_fornecedor(new ArrayList<>(Arrays.asList(codigos)));
                 }
 
                 if (!isCellEmpty(descricao)) {
                     if (descricao.getCellType() == Cell.CELL_TYPE_STRING) {
-                        produto.setDescricao(descricao.getStringCellValue());
+                        produtoModel.setDescricao(descricao.getStringCellValue());
                     } else {
-                        throw new Exception("Formato de Descrição do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
+                        throw new Exception("Formato de Descrição do ProdutoModel Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
                     }
                 } else {
                     throw new Exception("A Célula de Descrição Não Pode Estar Vazia");
@@ -179,36 +175,36 @@ public class TelaProdutoController {
 
                 if (!isCellEmpty(marca)) {
                     if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
-                        Marca m = daoMarca.listarPorNome(marca.getStringCellValue()).get(0);
+                        MarcaModel m = marcaModel.listarPorNome(marca.getStringCellValue()).get(0);
 
                         if (m != null) {
-                            produto.setMarca(m);
+                            produtoModel.setMarca(m);
                         } else {
-                            throw new Exception("Marca " + marca.getStringCellValue() + " Não Encontrada");
+                            throw new Exception("MarcaModel " + marca.getStringCellValue() + " Não Encontrada");
                         }
                     } else {
-                        throw new Exception("Formato de Marca do Produto Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
+                        throw new Exception("Formato de MarcaModel do ProdutoModel Está Errado. A Célula Precisa ser do Tipo \"Texto\"");
                     }
                 } else {
-                    produto.setMarca(null);
+                    produtoModel.setMarca(null);
                 }
 
                 if (!isCellEmpty(preco)) {
                     if (preco.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                        produto.setPreco(preco.getNumericCellValue());
+                        produtoModel.setPreco(preco.getNumericCellValue());
                     } else {
-                        throw new Exception("Formato de Preço do Produto Está Errado. A Célula Precisa ser do Tipo \"Número\"");
+                        throw new Exception("Formato de Preço do ProdutoModel Está Errado. A Célula Precisa ser do Tipo \"Número\"");
                     }
                 } else {
                     throw new Exception("A Célula de Preço Não Pode Estar Vazia");
                 }
 
-                if (produto.getDescricao() != null && produto.getCod_barra() != null && produto.getPreco() != null) {
-                    produtos.add(produto);
+                if (produtoModel.getDescricao() != null && produtoModel.getCod_barra() != null && produtoModel.getPreco() != null) {
+                    produtos.add(produtoModel);
                 }
             }
 
-            Boolean result = daoProduto.importarDeExcel(produtos, importarProdutoAsyncTask);
+            Boolean result = produtoModel.importarDeExcel(produtos, importarProdutoAsyncTask);
 
             if (result) {
                 importarProdutoAsyncTask.publish("Produtos Cadastrados com Sucesso");
@@ -218,6 +214,8 @@ public class TelaProdutoController {
             Log.i("Contador", e.getMessage());
             importarProdutoAsyncTask.publish(e.getMessage());
         } finally {
+            conexaoBanco.close();
+
             if (inputStream != null) {
                 try {
                     inputStream.close();
@@ -242,7 +240,7 @@ public class TelaProdutoController {
 
         CellStyle cellStyle = CellStylePadrao(arquivoExcel);
 
-        ArrayList<Produto> produtos = daoProduto.listar();
+        ArrayList<ProdutoModel> produtos = produtoModel.listar();
 
         try {
             if (produtos.size() == 0)
@@ -262,38 +260,38 @@ public class TelaProdutoController {
             }
 
             for (int i = 0; i < rows.length; i++) {
-                Produto produto = produtos.get(i);
+                ProdutoModel produtoModel = produtos.get(i);
 
-                rows[i].getCell(Headers.COD_BARRA.ordinal()).setCellValue(produto.getCod_barra());
+                rows[i].getCell(Headers.COD_BARRA.ordinal()).setCellValue(produtoModel.getCod_barra());
 
-                if (produto.getFornecedor() != null) {
-                    rows[i].getCell(Headers.FORNECEDOR.ordinal()).setCellValue(produto.getFornecedor().getNome());
+                if (produtoModel.getFornecedor() != null) {
+                    rows[i].getCell(Headers.FORNECEDOR.ordinal()).setCellValue(produtoModel.getFornecedor().getNome());
                 } else {
                     rows[i].getCell(Headers.FORNECEDOR.ordinal()).setCellValue("Não Possui");
                 }
 
                 String codbarrafornecedor = "";
 
-                for (int j = 0; j < produto.getCod_barra_fornecedor().size(); j++) {
-                    codbarrafornecedor += produto.getCod_barra_fornecedor().get(j);
+                for (int j = 0; j < produtoModel.getCod_barra_fornecedor().size(); j++) {
+                    codbarrafornecedor += produtoModel.getCod_barra_fornecedor().get(j);
 
-                    if (j != produto.getCod_barra_fornecedor().size() - 1) {
+                    if (j != produtoModel.getCod_barra_fornecedor().size() - 1) {
                         codbarrafornecedor += ", ";
                     }
                 }
 
                 rows[i].getCell(Headers.COD_BARRA_FORNECEDOR.ordinal()).setCellValue(codbarrafornecedor);
 
-                rows[i].getCell(Headers.DESCRICAO.ordinal()).setCellValue(produto.getDescricao());
+                rows[i].getCell(Headers.DESCRICAO.ordinal()).setCellValue(produtoModel.getDescricao());
 
-                if (produto.getMarca() != null) {
-                    rows[i].getCell(Headers.MARCA.ordinal()).setCellValue(produto.getMarca().getNome());
+                if (produtoModel.getMarca() != null) {
+                    rows[i].getCell(Headers.MARCA.ordinal()).setCellValue(produtoModel.getMarca().getNome());
                 } else {
                     rows[i].getCell(Headers.MARCA.ordinal()).setCellValue("Não Possui");
                 }
 
 
-                rows[i].getCell(Headers.PRECO.ordinal()).setCellValue(produto.getPreco());
+                rows[i].getCell(Headers.PRECO.ordinal()).setCellValue(produtoModel.getPreco());
 
                 if (i % 100 == 0 && i > 99) {
                     exportarProdutoEmExcel.publish(i + " Produtos Já Listados");

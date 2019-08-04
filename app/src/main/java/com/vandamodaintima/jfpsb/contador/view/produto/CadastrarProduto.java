@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.CadastrarProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
@@ -43,9 +43,9 @@ public class CadastrarProduto extends TelaCadastro {
 
     private Animation slidedown;
 
-    protected Produto produto = new Produto();
-    private Fornecedor fornecedor;
-    private Marca marca;
+    protected ProdutoModel produtoModel = new ProdutoModel();
+    private FornecedorModel fornecedor;
+    private MarcaModel marca;
 
     protected CadastrarProdutoController cadastrarProdutoController;
 
@@ -57,8 +57,8 @@ public class CadastrarProduto extends TelaCadastro {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarProdutoController = new CadastrarProdutoController(this, sqLiteDatabase);
+        conexaoBanco = new ConexaoBanco(getContext());
+        cadastrarProdutoController = new CadastrarProdutoController(this, conexaoBanco.conexao());
 
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
         btnEscolherFornecedor = view.findViewById(R.id.btnEscolherFornecedor);
@@ -94,7 +94,7 @@ public class CadastrarProduto extends TelaCadastro {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
-                intent.putExtra("produto", produto);
+                intent.putExtra("produtoModel", produtoModel);
 
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
@@ -105,7 +105,7 @@ public class CadastrarProduto extends TelaCadastro {
             public void onClick(View v) {
                 fornecedor = null;
                 txtFornecedor.getText().clear();
-                Toast.makeText(getContext(), "Fornecedor Foi Removido Deste Produto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "FornecedorModel Foi Removido Deste ProdutoModel", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -114,20 +114,20 @@ public class CadastrarProduto extends TelaCadastro {
             public void onClick(View v) {
                 marca = null;
                 txtMarca.getText().clear();
-                Toast.makeText(getContext(), "Marca Foi Removida Deste Produto", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "MarcaModel Foi Removida Deste ProdutoModel", Toast.LENGTH_SHORT).show();
             }
         });
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                produto.setCod_barra(txtCodBarra.getText().toString());
-                produto.setDescricao(txtDescricao.getText().toString().trim().toUpperCase());
-                produto.setPreco(Double.parseDouble(txtPreco.getText().toString()));
-                produto.setFornecedor(fornecedor);
-                produto.setMarca(marca);
+                produtoModel.setCod_barra(txtCodBarra.getText().toString());
+                produtoModel.setDescricao(txtDescricao.getText().toString().trim().toUpperCase());
+                produtoModel.setPreco(Double.parseDouble(txtPreco.getText().toString()));
+                produtoModel.setFornecedor(fornecedor);
+                produtoModel.setMarca(marca);
 
-                cadastrarProdutoController.cadastrar(produto);
+                cadastrarProdutoController.cadastrar(produtoModel);
             }
         });
 
@@ -156,7 +156,7 @@ public class CadastrarProduto extends TelaCadastro {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == Activity.RESULT_OK) {
-                    fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+                    fornecedor = (FornecedorModel) data.getSerializableExtra("fornecedor");
 
                     if (fornecedor != null) {
                         txtFornecedor.setText(fornecedor.getNome());
@@ -165,7 +165,7 @@ public class CadastrarProduto extends TelaCadastro {
                 break;
             case ESCOLHER_MARCA:
                 if (resultCode == Activity.RESULT_OK) {
-                    marca = (Marca) data.getSerializableExtra("marca");
+                    marca = (MarcaModel) data.getSerializableExtra("marca");
 
                     if (marca != null) {
                         txtMarca.setText(marca.getNome());
@@ -174,12 +174,12 @@ public class CadastrarProduto extends TelaCadastro {
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
                 if (resultCode == Activity.RESULT_OK) {
-                    Produto produtoAlterado = (Produto) data.getSerializableExtra("produto");
+                    ProdutoModel produtoAlterado = (ProdutoModel) data.getSerializableExtra("produtoModel");
 
-                    if (produtoAlterado.equals(produto)) {
+                    if (produtoAlterado.equals(produtoModel)) {
                         Toast.makeText(getContext(), "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
                     } else {
-                        produto = produtoAlterado;
+                        produtoModel = produtoAlterado;
                         Toast.makeText(getContext(), "A Lista de Códigos Será Consolidada ao Apertar em \"Cadastrar\"", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -195,9 +195,9 @@ public class CadastrarProduto extends TelaCadastro {
         txtMarca.getText().clear();
         txtFornecedor.getText().clear();
 
-        produto = new Produto();
-        fornecedor = new Fornecedor();
-        marca = new Marca();
+        produtoModel = new ProdutoModel();
+        fornecedor = new FornecedorModel();
+        marca = new MarcaModel();
     }
 
     @Override

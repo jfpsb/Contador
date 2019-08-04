@@ -15,7 +15,7 @@ import android.widget.EditText;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.PesquisarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarMarca extends TelaPesquisa {
@@ -30,8 +30,8 @@ public class PesquisarMarca extends TelaPesquisa {
         txtNome = view.findViewById(R.id.txtNome);
         listView = view.findViewById(R.id.listViewMarca);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarMarcaController = new PesquisarMarcaController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        pesquisarMarcaController = new PesquisarMarcaController(this, conexaoBanco, getContext());
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -60,7 +60,7 @@ public class PesquisarMarca extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("A Marca Não Foi Alterada");
+                    mensagemAoUsuario("A MarcaModel Não Foi Alterada");
                 }
                 break;
         }
@@ -80,7 +80,7 @@ public class PesquisarMarca extends TelaPesquisa {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-        Marca marca = new Marca();
+        MarcaModel marca = new MarcaModel(conexaoBanco);
         marca.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
         marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
 

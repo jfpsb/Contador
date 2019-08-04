@@ -4,8 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.contagem.VisualizarProdutosContagem;
 
 public class VisualizarProdutosContagemController {
@@ -20,11 +19,11 @@ public class VisualizarProdutosContagemController {
         visualizarProdutosContagem.setListVIewAdaper(contagemProdutoCursorAdapter);
     }
 
-    public void pesquisar(Contagem contagem) {
+    public void pesquisar(ContagemModel contagem) {
         Cursor cursor = daoContagemProduto.listarPorContagemGroupByProdutoCursor(contagem);
 
         if (cursor.getCount() == 0) {
-            view.mensagemAoUsuario("Não Há Produtos Na Contagem");
+            view.mensagemAoUsuario("Não Há Produtos Na ContagemModel");
         }
 
         contagemProdutoCursorAdapter.changeCursor(cursor);

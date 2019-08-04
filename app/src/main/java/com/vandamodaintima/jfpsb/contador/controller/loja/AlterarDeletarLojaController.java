@@ -1,11 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarLojaController {

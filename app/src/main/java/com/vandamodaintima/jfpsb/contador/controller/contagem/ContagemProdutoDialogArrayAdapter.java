@@ -11,16 +11,16 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 import java.util.List;
 
-public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
+public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<ProdutoModel> {
     private int resourceLayout;
     private Context mContext;
     private int index = 0;
 
-    public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
+    public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<ProdutoModel> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
@@ -37,7 +37,7 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Produto p = getItem(position);
+        ProdutoModel p = getItem(position);
 
         if (p != null) {
             final CheckedTextView text1 = v.findViewById(R.id.txtProdutoDialog);

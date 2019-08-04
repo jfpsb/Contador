@@ -16,8 +16,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.CadastrarLojaController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.ArrayList;

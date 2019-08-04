@@ -12,11 +12,11 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.VisualizarProdutosContagemController;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 public class VisualizarProdutosContagem extends ActivityBaseView {
-    private Contagem contagem;
+    private ContagemModel contagem;
 
     private ListView listViewProdutoContagem;
 
@@ -31,7 +31,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         stub.setLayoutResource(R.layout.activity_visualizar_produtos_contagem);
         stub.inflate();
 
-        contagem = (Contagem) getIntent().getSerializableExtra("contagem");
+        contagem = (ContagemModel) getIntent().getSerializableExtra("contagem");
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 

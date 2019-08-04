@@ -4,17 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
-import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {

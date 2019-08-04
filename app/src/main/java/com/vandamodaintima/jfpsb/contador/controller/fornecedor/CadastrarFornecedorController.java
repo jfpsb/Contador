@@ -7,8 +7,7 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -29,15 +28,15 @@ public class CadastrarFornecedorController {
         daoFornecedor = new DAOFornecedor(sqLiteDatabase);
     }
 
-    public void cadastrar(Fornecedor fornecedor) {
+    public void cadastrar(FornecedorModel fornecedor) {
         Boolean result = daoFornecedor.inserir(fornecedor);
 
         if(result) {
-            view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
+            view.mensagemAoUsuario("FornecedorModel Cadastrado Com Sucesso");
             view.aposCadastro();
             view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
+            view.mensagemAoUsuario("Erro ao Cadastrar FornecedorModel");
         }
     }
 
@@ -52,7 +51,7 @@ public class CadastrarFornecedorController {
 
     public void checaCnpj(String cnpj) {
         if (!cnpj.isEmpty()) {
-            Fornecedor fornecedor = daoFornecedor.listarPorId(cnpj);
+            FornecedorModel fornecedor = daoFornecedor.listarPorId(cnpj);
 
             if (fornecedor != null) {
                 view.bloqueiaCampos();
@@ -112,7 +111,7 @@ public class CadastrarFornecedorController {
 
                     jsonReader.endObject();
 
-                    Fornecedor fornecedor = new Fornecedor();
+                    FornecedorModel fornecedor = new FornecedorModel();
 
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome);
@@ -141,13 +140,13 @@ public class CadastrarFornecedorController {
         @Override
         protected void onPostExecute(Object object) {
             if (object == null) {
-                Toast.makeText(context, "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
-            } else if (object instanceof Fornecedor) {
-                Fornecedor fornecedor = (Fornecedor) object;
+                Toast.makeText(context, "Erro ao Retornar FornecedorModel", Toast.LENGTH_SHORT).show();
+            } else if (object instanceof FornecedorModel) {
+                FornecedorModel fornecedor = (FornecedorModel) object;
                 view.setAlertaCadastro(fornecedor);
             } else {
                 String mensagem = (String) object;
-                toast.setText("Erro ao Inserir Fornecedor: " + mensagem);
+                toast.setText("Erro ao Inserir FornecedorModel: " + mensagem);
                 toast.show();
             }
         }

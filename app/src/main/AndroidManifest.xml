@@ -27,7 +27,7 @@
             android:label="Gerenciar Contagens"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".view.produto.TelaProduto"
+            android:name=".view.produtoModel.TelaProduto"
             android:label="Gerenciar Produtos"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
@@ -39,13 +39,13 @@
             android:label="@string/title_activity_adicionar_contagem_produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".view.TabLayoutActivityBase"
+            android:name=".view.TabLayoutBaseView"
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
         <activity
-            android:name=".view.produto.AlterarDeletarProduto"
+            android:name=".view.produtoModel.AlterarDeletarProduto"
             android:label="Alterar/Deletar Produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
@@ -90,7 +90,7 @@
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.produto.TelaProdutoForContagemForResult"
+            android:name=".view.produtoModel.TelaProdutoForContagemForResult"
             android:label="Selecionar Produto Para Contagem"
             android:theme="@style/TabAppTheme.NoActionBar" />
 

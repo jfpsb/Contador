@@ -2,28 +2,25 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarProdutoController {
     private PesquisarView view;
     private ProdutoCursorAdapter produtoAdapter;
-    private DAOProduto daoProduto;
-    private Context context;
+    private ProdutoModel produtoModel;
 
-    public PesquisarProdutoController(PesquisarView view, SQLiteDatabase sqLiteDatabase, Context context) {
+    public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco, Context context) {
         this.view = view;
-        this.context = context;
-        daoProduto = new DAOProduto(sqLiteDatabase);
+        produtoModel = new ProdutoModel(conexaoBanco);
         produtoAdapter = new ProdutoCursorAdapter(context, null);
         view.setListViewAdapter(produtoAdapter);
     }
 
     public void pesquisarPorDescricao(String termo) {
-        Cursor cursor = daoProduto.listarPorDescricaoCursor(termo);
+        Cursor cursor = produtoModel.listarPorDescricaoCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -33,7 +30,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = daoProduto.listarPorCodBarraCursor(termo);
+        Cursor cursor = produtoModel.listarPorCodBarraCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -43,7 +40,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = daoProduto.listarPorFornecedorCursor(termo);
+        Cursor cursor = produtoModel.listarPorFornecedorCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -53,7 +50,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = daoProduto.listarPorMarcaCursor(termo);
+        Cursor cursor = produtoModel.listarPorMarcaCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -68,13 +65,13 @@ public class PesquisarProdutoController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public Produto retornaProdutoEscolhidoListView(String cod_barra) {
-        return daoProduto.listarPorId(cod_barra);
+    public ProdutoModel retornaProdutoEscolhidoListView(String cod_barra) {
+        return produtoModel.listarPorId(cod_barra);
     }
 
-    //Utilizado apenas na tela de pesquisar produto para adicionar contagem
-    public void atualizar(Produto produto) {
-        Boolean result = daoProduto.atualizar(produto, produto.getCod_barra());
+    //Utilizado apenas na tela de pesquisar produtoModel para adicionar contagem
+    public void atualizar(ProdutoModel produtoModel) {
+        Boolean result = produtoModel.atualizar();
 
         if(result) {
             view.mensagemAoUsuario("Produto Foi Atualizado Com Código de Barras");

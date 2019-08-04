@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorManualmenteController;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -42,7 +42,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fornecedor fornecedor = new Fornecedor();
+                FornecedorModel fornecedor = new FornecedorModel();
 
                 fornecedor.setCnpj(txtCnpj.getText().toString());
                 fornecedor.setNome(txtNome.getText().toString());

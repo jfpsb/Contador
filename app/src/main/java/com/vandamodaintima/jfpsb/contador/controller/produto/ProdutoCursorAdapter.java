@@ -1,4 +1,4 @@
-//package com.vandamodaintima.jfpsb.contador.controller.produto;
+//package com.vandamodaintima.jfpsb.contador.controller.produtoModel;
 //
 //import android.content.Context;
 //import android.support.annotation.NonNull;
@@ -10,14 +10,14 @@
 //import android.widget.TextView;
 //
 //import com.vandamodaintima.jfpsb.contador.R;
-//import com.vandamodaintima.jfpsb.contador.model.Produto;
+//import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 //
 //import java.util.List;
 //
-//public class ProdutoCursorAdapter extends ArrayAdapter<Produto> {
+//public class ProdutoCursorAdapter extends ArrayAdapter<ProdutoModel> {
 //    private int resourceLayout;
 //
-//    public ProdutoCursorAdapter(Context context, int resource, List<Produto> objects) {
+//    public ProdutoCursorAdapter(Context context, int resource, List<ProdutoModel> objects) {
 //        super(context, resource, objects);
 //        this.resourceLayout = resource;
 //    }
@@ -33,7 +33,7 @@
 //            v = vi.inflate(resourceLayout, null);
 //        }
 //
-//        Produto p = getItem(position);
+//        ProdutoModel p = getItem(position);
 //
 //        if (p != null) {
 //            TextView tt1 = v.findViewById(R.id.labelCodBarra);

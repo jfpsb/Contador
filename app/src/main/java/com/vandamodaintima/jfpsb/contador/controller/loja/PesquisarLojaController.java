@@ -4,26 +4,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarLojaController {
     private PesquisarView view;
-    private DAOLoja daoLoja;
+    private LojaModel lojaModel;
     private LojaCursorAdapter lojaCursorAdapter;
-    private Context context;
 
-    public PesquisarLojaController(PesquisarView view, SQLiteDatabase sqLiteDatabase, Context context) {
+    public PesquisarLojaController(PesquisarView view, ConexaoBanco conexaoBanco, Context context) {
         this.view = view;
-        this.context = context;
-        daoLoja = new DAOLoja(sqLiteDatabase);
+        lojaModel = new LojaModel(conexaoBanco);
         lojaCursorAdapter = new LojaCursorAdapter(context, null);
         view.setListViewAdapter(lojaCursorAdapter);
     }
 
     public void pesquisar(String termo) {
-        Cursor cursor = daoLoja.listarPorNomeCnpjCursor(termo);
+        Cursor cursor = lojaModel.listarPorNomeCnpjCursor(termo);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Lojas Não Encontradas");
@@ -35,7 +33,7 @@ public class PesquisarLojaController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public Loja retornaLojaEscolhidaListView(String cnpj) {
-        return daoLoja.listarPorId(cnpj);
+    public LojaModel retornaLojaEscolhidaListView(String cnpj) {
+        return lojaModel.listarPorId(cnpj);
     }
 }

@@ -5,20 +5,19 @@ import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.AlterarDeletarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarMarca extends TelaAlterarDeletar {
     private EditText txtNome;
 
-    private Marca marca;
+    private MarcaModel marca;
 
     private SQLiteDatabase sqLiteDatabase;
     private AlterarDeletarMarcaController alterarDeletarMarcaController;
@@ -30,7 +29,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_marca);
         stub.inflate();
 
-        marca = (Marca) getIntent().getExtras().getSerializable("marca");
+        marca = (MarcaModel) getIntent().getExtras().getSerializable("marca");
 
         txtNome = findViewById(R.id.txtNome);
 
@@ -45,9 +44,9 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar Marca");
+        alertBuilderDeletar.setTitle("Deletar MarcaModel");
 
-        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a Marca?");
+        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a MarcaModel?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -59,7 +58,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Marca Não foi Deletada");
+                mensagemAoUsuario("MarcaModel Não foi Deletada");
             }
         });
     }
@@ -67,8 +66,8 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar Marca");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Marca?");
+        alertBuilderAtualizar.setTitle("Atualizar MarcaModel");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a MarcaModel?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -89,7 +88,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Marca Não Foi Alterada");
+                mensagemAoUsuario("MarcaModel Não Foi Alterada");
             }
         });
     }

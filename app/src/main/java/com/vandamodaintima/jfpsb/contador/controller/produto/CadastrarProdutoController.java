@@ -2,8 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.produto.CadastrarProduto;
 
@@ -17,38 +16,38 @@ public class CadastrarProdutoController {
         daoProduto = new DAOProduto(sqLiteDatabase);
     }
 
-    public void cadastrar(Produto produto) {
-        if (produto.getCod_barra().isEmpty()) {
+    public void cadastrar(ProdutoModel produtoModel) {
+        if (produtoModel.getCod_barra().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
         }
 
-        if (produto.getDescricao().isEmpty()) {
+        if (produtoModel.getDescricao().isEmpty()) {
             view.mensagemAoUsuario("Descrição Não Pode Estar Vazio");
             return;
         }
 
-        if (produto.getPreco() == 0) {
+        if (produtoModel.getPreco() == 0) {
             view.mensagemAoUsuario("Preço Não Pode Ser Zero");
             return;
         }
 
-        Boolean result = daoProduto.inserir(produto);
+        Boolean result = daoProduto.inserir(produtoModel);
 
         if (result) {
-            view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
-            view.aposCadastro(produto);
+            view.mensagemAoUsuario("ProdutoModel Cadastro Com Sucesso");
+            view.aposCadastro(produtoModel);
             view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Produto Não Foi Cadastrado");
+            view.mensagemAoUsuario("ProdutoModel Não Foi Cadastrado");
         }
     }
 
     public void checaCodigoBarra(String codigo) {
         if (!codigo.isEmpty()) {
-            Produto produto = daoProduto.listarPorId(codigo);
+            ProdutoModel produtoModel = daoProduto.listarPorId(codigo);
 
-            if (produto != null) {
+            if (produtoModel != null) {
                 view.bloqueiaCampos();
             } else {
                 view.liberaCampos();

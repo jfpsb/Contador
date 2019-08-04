@@ -15,12 +15,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public abstract class TelaPesquisa extends Fragment implements PesquisarView {
     protected ListView listView;
     protected View view;
-    protected SQLiteDatabase sqLiteDatabase;
+    protected ConexaoBanco conexaoBanco;
 
     @Nullable
     @Override
@@ -47,8 +48,7 @@ public abstract class TelaPesquisa extends Fragment implements PesquisarView {
                 cursor.close();
         }
 
-        if (sqLiteDatabase != null && sqLiteDatabase.isOpen())
-            sqLiteDatabase.close();
+        conexaoBanco.close();
 
         super.onDestroy();
     }

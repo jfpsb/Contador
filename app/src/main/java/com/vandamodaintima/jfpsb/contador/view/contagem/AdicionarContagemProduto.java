@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
-import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -22,9 +21,9 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AdicionarContagemProdutoView;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
@@ -40,11 +39,11 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
     private AlertDialog.Builder deletarContagemProdutoDialog;
     private MediaPlayer mediaPlayer;
 
-    private SQLiteDatabase sqLiteDatabase;
+    private ConexaoBanco conexaoBanco;
     private AdicionarContagemProdutoController adicionarContagemProdutoController;
 
-    private Contagem contagem;
-    private Produto produto;
+    private ContagemModel contagem;
+    private ProdutoModel produtoModel;
     private String cod_barra = null;
 
     private static final int TELA_SELECIONAR_PRODUTO = 1;
@@ -58,7 +57,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.buzzer);
 
-        contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
+        contagem = (ContagemModel) getIntent().getExtras().getSerializable("contagem");
 
         txtCodBarra = findViewById(R.id.txtCodigoBarra);
         listViewContagemProduto = findViewById(R.id.listViewAdicionarContagem);
@@ -67,8 +66,8 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         setEscolhaProdutoDialog();
         setDeletarContagemProdutoDialog();
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        adicionarContagemProdutoController = new AdicionarContagemProdutoController(this, sqLiteDatabase, getApplicationContext());
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        adicionarContagemProdutoController = new AdicionarContagemProdutoController(this, conexaoBanco, getApplicationContext());
 
         realizarPesquisa();
 
@@ -166,7 +165,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
 
         long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
 
-        ContagemProduto contagemProduto = adicionarContagemProdutoController.retornarContagemProduto(String.valueOf(id));
+        ContagemProdutoModel contagemProduto = adicionarContagemProdutoController.retornarContagemProduto(String.valueOf(id));
 
         if (contagemProduto != null) {
             abrirDeletarContagemProdutoDialog(contagemProduto);
@@ -187,11 +186,11 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
     }
 
     @Override
-    public void retornarProdutoEncontrado(Produto produto) {
-        ContagemProduto contagemProduto = new ContagemProduto();
+    public void retornarProdutoEncontrado(ProdutoModel produtoModel) {
+        ContagemProdutoModel contagemProduto = new ContagemProdutoModel(conexaoBanco);
 
         contagemProduto.setId(new Date().getTime());
-        contagemProduto.setProduto(produto);
+        contagemProduto.setProduto(produtoModel);
         contagemProduto.setContagem(contagem);
         contagemProduto.setQuant(1);
 
@@ -205,7 +204,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         escolhaProdutoDialog.setNegativeButton("O Produto Não Está Lista", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                produto = null;
+                produtoModel = null;
                 abrirTelaProdutoForResult();
             }
         });
@@ -214,12 +213,12 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 ListView lw = ((AlertDialog) dialogInterface).getListView();
-                produto = (Produto) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                produtoModel = (ProdutoModel) lw.getAdapter().getItem(lw.getCheckedItemPosition());
 
-                ContagemProduto contagemProduto = new ContagemProduto();
+                ContagemProdutoModel contagemProduto = new ContagemProdutoModel(conexaoBanco);
 
                 contagemProduto.setId(new Date().getTime());
-                contagemProduto.setProduto(produto);
+                contagemProduto.setProduto(produtoModel);
                 contagemProduto.setContagem(contagem);
                 contagemProduto.setQuant(1);
 
@@ -230,7 +229,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         escolhaProdutoDialog.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                produto = null;
+                produtoModel = null;
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
             }
         });
@@ -244,7 +243,7 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         produtoNaoEncontradoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                produto = null;
+                produtoModel = null;
                 abrirTelaProdutoForResult();
             }
         });
@@ -270,11 +269,11 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
     }
 
-    private void abrirDeletarContagemProdutoDialog(final ContagemProduto contagemProduto) {
+    private void abrirDeletarContagemProdutoDialog(final ContagemProdutoModel contagemProduto) {
         deletarContagemProdutoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                adicionarContagemProdutoController.deletar(String.valueOf(contagemProduto.getId()));
+                adicionarContagemProdutoController.deletar(contagemProduto);
             }
         });
 
@@ -292,13 +291,13 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         switch (requestCode) {
             case TELA_SELECIONAR_PRODUTO:
                 if (resultCode == RESULT_OK) {
-                    produto = (Produto) data.getSerializableExtra("produto");
+                    produtoModel = (ProdutoModel) data.getSerializableExtra("produto");
                     int quantidade = (int) data.getSerializableExtra("quantidade");
 
-                    ContagemProduto contagemProduto = new ContagemProduto();
+                    ContagemProdutoModel contagemProduto = new ContagemProdutoModel(conexaoBanco);
 
                     contagemProduto.setId(new Date().getTime());
-                    contagemProduto.setProduto(produto);
+                    contagemProduto.setProduto(produtoModel);
                     contagemProduto.setContagem(contagem);
                     contagemProduto.setQuant(quantidade);
 

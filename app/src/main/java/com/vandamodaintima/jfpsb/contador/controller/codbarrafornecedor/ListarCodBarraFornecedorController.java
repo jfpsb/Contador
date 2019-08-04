@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class ListarCodBarraFornecedorController {
@@ -19,15 +19,15 @@ public class ListarCodBarraFornecedorController {
         view.setListViewAdapter(codigoAdapter);
     }
 
-    public void pesquisar(Produto produto) {
+    public void pesquisar(ProdutoModel produtoModel) {
         codigoAdapter.clear();
-        codigoAdapter.addAll(produto.getCod_barra_fornecedor());
+        codigoAdapter.addAll(produtoModel.getCod_barra_fornecedor());
         codigoAdapter.notifyDataSetChanged();
 
-        if (produto.getCod_barra_fornecedor().size() == 0) {
-            view.mensagemAoUsuario("Não Há Códigos De Fornecedor No Produto");
+        if (produtoModel.getCod_barra_fornecedor().size() == 0) {
+            view.mensagemAoUsuario("Não Há Códigos De FornecedorModel No ProdutoModel");
         }
 
-        view.setTextoQuantidadeBusca(produto.getCod_barra_fornecedor().size());
+        view.setTextoQuantidadeBusca(produtoModel.getCod_barra_fornecedor().size());
     }
 }

@@ -5,10 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.contagem.PesquisarContagem;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
@@ -60,7 +57,7 @@ public class PesquisarContagemController {
         return daoLoja.listarPorId(cnpj);
     }
 
-    public Contagem retornaContagemEscolhidaListView(String loja, String data) {
+    public ContagemModel retornaContagemEscolhidaListView(String loja, String data) {
         return daoContagem.listarPorId(loja, data);
     }
 }

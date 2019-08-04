@@ -6,10 +6,10 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
+public class TelaCodBarraFornecedor extends TabLayoutBaseView {
     private InserirCodBarraFornecedor inserirCodBarraFornecedor;
     private ListarCodBarraFornecedor listarCodBarraFornecedor;
 
@@ -29,10 +29,10 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
         inserirCodBarraFornecedor = new InserirCodBarraFornecedor();
         listarCodBarraFornecedor = new ListarCodBarraFornecedor();
 
-        Produto produto = (Produto) getIntent().getSerializableExtra("produto");
+        ProdutoModel produtoModel = (ProdutoModel) getIntent().getSerializableExtra("produtoModel");
 
         bundle = new Bundle();
-        bundle.putSerializable("produto", produto);
+        bundle.putSerializable("produtoModel", produtoModel);
 
         inserirCodBarraFornecedor.setArguments(bundle);
         listarCodBarraFornecedor.setArguments(bundle);
@@ -55,10 +55,10 @@ public class TelaCodBarraFornecedor extends TabLayoutActivityBase {
 
     @Override
     public void onBackPressed() {
-        Produto produto = (Produto) bundle.getSerializable("produto");
+        ProdutoModel produtoModel = (ProdutoModel) bundle.getSerializable("produtoModel");
 
         Intent intent = new Intent();
-        intent.putExtra("produto", produto);
+        intent.putExtra("produtoModel", produtoModel);
 
         setResult(RESULT_OK, intent);
 

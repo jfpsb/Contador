@@ -12,11 +12,11 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.InserirCodBarraFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class InserirCodBarraFornecedor extends Fragment implements CadastrarView {
-    private Produto produto;
+    private ProdutoModel produtoModel;
 
     private EditText txtCodBarra;
     private Button btnInserir;
@@ -32,13 +32,13 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
 
         inserirCodBarraFornecedorController = new InserirCodBarraFornecedorController(this);
 
-        produto = (Produto) getArguments().getSerializable("produto");
+        produtoModel = (ProdutoModel) getArguments().getSerializable("produtoModel");
 
         btnInserir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String cod_barra_fornecedor = txtCodBarra.getText().toString();
-                inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produto);
+                inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produtoModel);
             }
         });
 
@@ -49,7 +49,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
                 if (getUserVisibleHint()) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
                         String cod_barra_fornecedor = txtCodBarra.getText().toString().replace("\n", "");
-                        inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produto);
+                        inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, produtoModel);
                         return true;
                     }
                 } else {

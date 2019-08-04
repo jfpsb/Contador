@@ -3,8 +3,7 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarContagemController {
@@ -18,25 +17,25 @@ public class AlterarDeletarContagemController {
         daoContagem = new DAOContagem(sqLiteDatabase);
     }
 
-    public void atualizar(Contagem contagem) {
-        Boolean result = daoContagem.atualizar(contagem, contagem.getLoja().getCnpj(), Contagem.getDataSQLite(contagem.getData()));
+    public void atualizar(ContagemModel contagem) {
+        Boolean result = daoContagem.atualizar(contagem, contagem.getLoja().getCnpj(), ContagemModel.getDataSQLite(contagem.getData()));
 
         if (result) {
-            view.mensagemAoUsuario("Contagem Atualizada Com Sucesso");
+            view.mensagemAoUsuario("ContagemModel Atualizada Com Sucesso");
             view.fecharTela();
         } else {
-            view.mensagemAoUsuario("Erro ao Atualizar Contagem");
+            view.mensagemAoUsuario("Erro ao Atualizar ContagemModel");
         }
     }
 
-    public void deletar(Contagem contagem) {
-        Boolean result = daoContagem.deletar(contagem.getLoja().getCnpj(), Contagem.getDataSQLite(contagem.getData()));
+    public void deletar(ContagemModel contagem) {
+        Boolean result = daoContagem.deletar(contagem.getLoja().getCnpj(), ContagemModel.getDataSQLite(contagem.getData()));
 
         if (result) {
-            view.mensagemAoUsuario("Contagem Deletada Com Sucesso");
+            view.mensagemAoUsuario("ContagemModel Deletada Com Sucesso");
             view.fecharTela();
         } else {
-            view.mensagemAoUsuario("Erro ao Deletar Contagem");
+            view.mensagemAoUsuario("Erro ao Deletar ContagemModel");
         }
     }
 }

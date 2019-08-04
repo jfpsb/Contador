@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.CadastrarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.Date;
@@ -41,7 +41,7 @@ public class CadastrarMarca extends TelaCadastro {
             @Override
             public void onClick(View v) {
                 try {
-                    Marca marca = new Marca();
+                    MarcaModel marca = new MarcaModel();
                     marca.setId(new Date().getTime());
                     marca.setNome(txtNome.getText().toString().trim().toUpperCase());
 
@@ -55,11 +55,11 @@ public class CadastrarMarca extends TelaCadastro {
         return view;
     }
 
-    protected void setAlertaCadastro(final Marca marca) {
+    protected void setAlertaCadastro(final MarcaModel marca) {
         alertaCadastro = new AlertDialog.Builder(getContext());
-        alertaCadastro.setTitle("Cadastrar Marca");
+        alertaCadastro.setTitle("Cadastrar MarcaModel");
 
-        String mensagem = "Deseja Cadastrar a Marca " + marca.getNome() + "?";
+        String mensagem = "Deseja Cadastrar a MarcaModel " + marca.getNome() + "?";
         alertaCadastro.setMessage(mensagem);
 
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
@@ -72,7 +72,7 @@ public class CadastrarMarca extends TelaCadastro {
         alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Marca Não Foi Cadastrada");
+                mensagemAoUsuario("MarcaModel Não Foi Cadastrada");
             }
         });
 

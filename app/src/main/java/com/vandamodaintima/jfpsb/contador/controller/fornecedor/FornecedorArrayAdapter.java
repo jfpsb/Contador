@@ -10,15 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 
 import java.util.List;
 
-public class FornecedorArrayAdapter extends ArrayAdapter<Fornecedor> {
+public class FornecedorArrayAdapter extends ArrayAdapter<FornecedorModel> {
     private int resourceLayout;
     private Context mContext;
 
-    public FornecedorArrayAdapter(Context context, int resource, List<Fornecedor> objects) {
+    public FornecedorArrayAdapter(Context context, int resource, List<FornecedorModel> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
@@ -35,7 +35,7 @@ public class FornecedorArrayAdapter extends ArrayAdapter<Fornecedor> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Fornecedor p = getItem(position);
+        FornecedorModel p = getItem(position);
 
         if (p != null) {
             TextView tt1 = v.findViewById(R.id.listaFornecedorCnpj);

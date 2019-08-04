@@ -4,8 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarFornecedorController {
@@ -35,7 +34,7 @@ public class PesquisarFornecedorController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public Fornecedor retornaFornecedorEscolhidoListView(String cnpj) {
+    public FornecedorModel retornaFornecedorEscolhidoListView(String cnpj) {
         return daoFornecedor.listarPorId(cnpj);
     }
 }

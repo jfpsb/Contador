@@ -23,8 +23,8 @@ public class ConexaoBanco {
         return conn;
     }
 
-    public void fechar() {
-        if(conn != null)
+    public void close() {
+        if(conn != null && conn.isOpen())
             conn.close();
 
         if(sqLiteHelper != null)

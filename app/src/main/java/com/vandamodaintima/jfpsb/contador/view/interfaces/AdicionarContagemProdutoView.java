@@ -3,7 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.interfaces;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 public interface AdicionarContagemProdutoView {
     void mensagemAoUsuario(String mensagem);
@@ -20,5 +20,5 @@ public interface AdicionarContagemProdutoView {
 
     void abrirTelaEscolhaProdutoDialog(ListAdapter adapter);
 
-    void retornarProdutoEncontrado(Produto produto);
+    void retornarProdutoEncontrado(ProdutoModel produtoModel);
 }

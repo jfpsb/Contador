@@ -2,39 +2,34 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AdicionarContagemProdutoView;
 
 import java.util.ArrayList;
 
 public class AdicionarContagemProdutoController {
     AdicionarContagemProdutoView view;
-    private DAOContagem daoContagem;
-    private DAOContagemProduto daoContagemProduto;
-    private DAOProduto daoProduto;
+    private ProdutoModel produtoModel;
+    private ContagemProdutoModel contagemProdutoModel;
     private ContagemProdutoCursorAdapter contagemProdutoCursorAdapter;
     private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
 
-    public AdicionarContagemProdutoController(AdicionarContagemProdutoView view, SQLiteDatabase sqLiteDatabase, Context context) {
+    public AdicionarContagemProdutoController(AdicionarContagemProdutoView view, ConexaoBanco conexaoBanco, Context context) {
         this.view = view;
-        daoContagem = new DAOContagem(sqLiteDatabase);
-        daoContagemProduto = new DAOContagemProduto(sqLiteDatabase);
-        daoProduto = new DAOProduto(sqLiteDatabase);
+        produtoModel = new ProdutoModel(conexaoBanco);
+        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
         contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(context, null);
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(context, R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
+        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(context, R.layout.item_contagem_produto_dialog, new ArrayList<ProdutoModel>());
         view.setListViewAdapter(contagemProdutoCursorAdapter);
     }
 
-    public void cadastrar(ContagemProduto contagemProduto) {
-        Boolean result = daoContagemProduto.inserir(contagemProduto);
+    public void cadastrar(ContagemProdutoModel contagemProdutoModel) {
+        Boolean result = contagemProdutoModel.inserir();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
@@ -44,8 +39,8 @@ public class AdicionarContagemProdutoController {
         }
     }
 
-    public void deletar(String id) {
-        Boolean result = daoContagemProduto.deletar(id);
+    public void deletar(ContagemProdutoModel contagemProdutoModel) {
+        Boolean result = contagemProdutoModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Deletada Com Sucesso");
@@ -55,8 +50,8 @@ public class AdicionarContagemProdutoController {
         }
     }
 
-    public void pesquisar(Contagem contagem) {
-        Cursor cursor = daoContagemProduto.listarPorContagemCursor(contagem);
+    public void pesquisar(ContagemModel contagem) {
+        Cursor cursor = contagemProdutoModel.listarPorContagemCursor(contagem);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos na Contagem");
@@ -68,7 +63,7 @@ public class AdicionarContagemProdutoController {
 
     public void pesquisarProduto(String cod_barra) {
         if (!cod_barra.isEmpty()) {
-            ArrayList<Produto> produtos = daoProduto.listarPorCodBarra(cod_barra);
+            ArrayList<ProdutoModel> produtos = produtoModel.listarPorCodBarra(cod_barra);
 
             if (produtos.size() == 0) {
                 view.abreProdutoNaoEncontradoDialog();
@@ -85,7 +80,7 @@ public class AdicionarContagemProdutoController {
         view.limparCampos();
     }
 
-    public ContagemProduto retornarContagemProduto(String id) {
-        return daoContagemProduto.listarPorId(id);
+    public ContagemProdutoModel retornarContagemProduto(String id) {
+        return contagemProdutoModel.listarPorId(id);
     }
 }

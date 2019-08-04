@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.AdapterView;
 
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 
 public class PesquisarFornecedorForResult extends PesquisarFornecedor {
     AlertDialog.Builder alertaEscolha;
@@ -16,7 +16,7 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-        Fornecedor fornecedor = new Fornecedor();
+        FornecedorModel fornecedor = new FornecedorModel();
 
         fornecedor.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
         fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
@@ -25,10 +25,10 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
         setAlertaEscolha(fornecedor);
     }
 
-    private void setAlertaEscolha(final Fornecedor fornecedor) {
+    private void setAlertaEscolha(final FornecedorModel fornecedor) {
         alertaEscolha = new AlertDialog.Builder(getContext());
-        alertaEscolha.setTitle("Escolher Fornecedor");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + " ao Produto?");
+        alertaEscolha.setTitle("Escolher FornecedorModel");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O FornecedorModel " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + " ao ProdutoModel?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -43,7 +43,7 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
         alertaEscolha.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Fornecedor Não Foi Escolhido");
+                mensagemAoUsuario("FornecedorModel Não Foi Escolhido");
             }
         });
 

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.PesquisarFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarFornecedor extends TelaPesquisa {
@@ -69,7 +69,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("O Fornecedor Não Foi Alterado");
+                    mensagemAoUsuario("O FornecedorModel Não Foi Alterado");
                 }
                 break;
         }
@@ -91,7 +91,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        Fornecedor fornecedor = pesquisarFornecedorController.retornaFornecedorEscolhidoListView(cnpj);
+        FornecedorModel fornecedor = pesquisarFornecedorController.retornaFornecedorEscolhidoListView(cnpj);
 
         Intent intent = new Intent(getContext(), AlterarDeletarFornecedor.class);
 

@@ -19,8 +19,7 @@ import android.widget.SpinnerAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.text.ParseException;
@@ -107,7 +106,7 @@ public class PesquisarContagem extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("A Contagem Não Foi Alterada");
+                    mensagemAoUsuario("A ContagemModel Não Foi Alterada");
                 }
                 break;
         }
@@ -140,7 +139,7 @@ public class PesquisarContagem extends TelaPesquisa {
         String loja = cursor.getString(cursor.getColumnIndexOrThrow("loja"));
         String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
 
-        Contagem contagem = pesquisarContagemController.retornaContagemEscolhidaListView(loja, data);
+        ContagemModel contagem = pesquisarContagemController.retornaContagemEscolhidaListView(loja, data);
 
         Intent alterarContagem = new Intent(getContext(), AlterarDeletarContagem.class);
 

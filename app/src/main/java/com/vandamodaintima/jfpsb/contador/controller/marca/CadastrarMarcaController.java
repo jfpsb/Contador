@@ -5,8 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.widget.SimpleCursorAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
+import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarMarcaController {
@@ -22,21 +21,21 @@ public class CadastrarMarcaController {
         marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_pesquisa_marca, null, new String[]{"nome"}, new int[]{R.id.labelMarcaNome}, 0);
     }
 
-    public Boolean cadastrar(Marca marca) {
+    public Boolean cadastrar(MarcaModel marca) {
         if(marca.getNome().isEmpty()) {
-            view.mensagemAoUsuario("Nome da Marca Não Pode Ser Vazio");
+            view.mensagemAoUsuario("Nome da MarcaModel Não Pode Ser Vazio");
             return false;
         }
 
         Boolean result = daoMarca.inserir(marca);
 
         if(result) {
-            view.mensagemAoUsuario("Marca Cadastrada Com Sucesso");
+            view.mensagemAoUsuario("MarcaModel Cadastrada Com Sucesso");
             view.aposCadastro();
             view.limparCampos();
             return true;
         } else {
-            view.mensagemAoUsuario("Erro ao Cadastrar Marca");
+            view.mensagemAoUsuario("Erro ao Cadastrar MarcaModel");
         }
 
         return false;

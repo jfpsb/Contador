@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AlterarDeletarContagemController;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -28,7 +28,7 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
-    private Contagem contagem;
+    private ContagemModel contagem;
     private EditText txtData;
     private EditText txtLoja;
     private CheckBox checkBoxFinalizada;
@@ -46,7 +46,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
         stub.inflate();
 
-        contagem = (Contagem) getIntent().getExtras().getSerializable("contagem");
+        contagem = (ContagemModel) getIntent().getExtras().getSerializable("contagem");
 
         txtData = findViewById(R.id.txtDataInicial);
         txtLoja = findViewById(R.id.txtLoja);
@@ -108,8 +108,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar Contagem");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Alterar o Status Desta Contagem?");
+        alertBuilderAtualizar.setTitle("Atualizar ContagemModel");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Alterar o Status Desta ContagemModel?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -123,7 +123,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Atualizada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarContagem.this, "ContagemModel Não Foi Atualizada", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -131,8 +131,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar Contagem");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Contagem?");
+        alertBuilderDeletar.setTitle("Deletar ContagemModel");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a ContagemModel?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -144,7 +144,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Deletada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarContagem.this, "ContagemModel Não Foi Deletada", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -169,7 +169,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
 
         DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Contagem Em Excel").allowReadOnlyDirectory(true).
+                newDirectoryName("Contador - ContagemModel Em Excel").allowReadOnlyDirectory(true).
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);

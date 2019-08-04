@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarProduto extends TelaPesquisa {
@@ -48,15 +48,15 @@ public class PesquisarProduto extends TelaPesquisa {
         txtQuantProdutosCadastrados = view.findViewById(R.id.txtQuantProdutosCadastrados);
 
         // Não pode ser antes de instanciar as views
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        pesquisarProdutoController = new PesquisarProdutoController(this, sqLiteDatabase, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        pesquisarProdutoController = new PesquisarProdutoController(this, conexaoBanco, getContext());
 
         spinnerPesquisa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case DESCRICAO:
-                        txtPesquisaProduto.setHint("Digite a Descrição do Produto");
+                        txtPesquisaProduto.setHint("Digite a Descrição do ProdutoModel");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = DESCRICAO;
                         break;
@@ -66,12 +66,12 @@ public class PesquisarProduto extends TelaPesquisa {
                         PESQUISA = COD_DE_BARRA;
                         break;
                     case FORNECEDOR:
-                        txtPesquisaProduto.setHint("Digite o Nome do Fornecedor");
+                        txtPesquisaProduto.setHint("Digite o Nome do FornecedorModel");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = FORNECEDOR;
                         break;
                     case MARCA:
-                        txtPesquisaProduto.setHint("Digite o Nome da Marca");
+                        txtPesquisaProduto.setHint("Digite o Nome da MarcaModel");
                         txtPesquisaProduto.setInputType(InputType.TYPE_CLASS_TEXT);
                         PESQUISA = MARCA;
                         break;
@@ -111,7 +111,7 @@ public class PesquisarProduto extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("Produto Não Foi Alterado");
+                    mensagemAoUsuario("ProdutoModel Não Foi Alterado");
                 }
 
                 break;
@@ -154,10 +154,10 @@ public class PesquisarProduto extends TelaPesquisa {
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        Produto produto = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
+        ProdutoModel produtoModel = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("produto", produto);
+        bundle.putSerializable("produtoModel", produtoModel);
 
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
         alterarProduto.putExtras(bundle);

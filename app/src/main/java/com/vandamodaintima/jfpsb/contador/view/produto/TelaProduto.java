@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,23 +22,22 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.TelaProdutoController;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
+import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
+import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
-public class TelaProduto extends TabLayoutActivityBase {
-
-    private SQLiteDatabase sqLiteDatabase;
-
-    protected CadastrarProduto cadastrarProduto;
-    protected PesquisarProduto pesquisarProduto;
+public class TelaProduto extends TabLayoutBaseView {
+    protected TelaCadastro cadastrarProduto;
+    protected TelaPesquisa pesquisarProduto;
 
     private AlphaAnimation inAnimation;
     private AlphaAnimation outAnimation;
     private LinearLayout progressBarHolder;
-
     private TextView txtProgressStatus;
+    private ConexaoBanco conexaoBanco;
 
     private TelaProdutoController telaProdutoController;
 
@@ -69,8 +67,8 @@ public class TelaProduto extends TabLayoutActivityBase {
 
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
 
-        sqLiteDatabase = new ConexaoBanco(getApplicationContext()).conexao();
-        telaProdutoController = new TelaProdutoController(sqLiteDatabase);
+        conexaoBanco = new ConexaoBanco(this);
+        telaProdutoController = new TelaProdutoController(conexaoBanco);
     }
 
     protected void setFragments() {
@@ -253,5 +251,11 @@ public class TelaProduto extends TabLayoutActivityBase {
             telaProdutoController.exportarProdutosEmExcel(this, diretorio);
             return null;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        conexaoBanco.close();
+        super.onDestroy();
     }
 }

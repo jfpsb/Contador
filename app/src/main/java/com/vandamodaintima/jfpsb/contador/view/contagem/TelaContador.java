@@ -2,13 +2,12 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewStub;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.view.DatePickerFragment;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-public class TelaContador extends TabLayoutActivityBase {
+public class TelaContador extends TabLayoutBaseView {
 
     private CadastrarContagem cadastrarContagem;
     private PesquisarContagem pesquisarContagem;

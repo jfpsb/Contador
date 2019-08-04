@@ -9,14 +9,14 @@ import android.util.Log;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
 import com.vandamodaintima.jfpsb.contador.R;
 
-public class TabLayoutActivityBase extends ActivityBaseView {
+public class TabLayoutBaseView extends ActivityBaseView {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private MyPagerAdapter adapter;
 
     private String[] headers;
 
-    public TabLayoutActivityBase() {
+    public TabLayoutBaseView() {
         //default constructor
     }
 
@@ -25,7 +25,7 @@ public class TabLayoutActivityBase extends ActivityBaseView {
      *
      * @param headers Nomes das abas, na ordem em que devem aparecer
      */
-    public TabLayoutActivityBase(String[] headers) {
+    public TabLayoutBaseView(String[] headers) {
         this.headers = headers;
     }
 
@@ -34,6 +34,10 @@ public class TabLayoutActivityBase extends ActivityBaseView {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Método que deve ser chamado na classe filha para inserir as fragments que ficarão nas abas
+     * @param fragments Fragments, na ordem que devem ser inseridas no tablayout
+     */
     protected void setViewPagerTabLayout(Fragment... fragments) {
         try {
             if (headers == null)

@@ -14,11 +14,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     private String codigo;
-    private Produto produto;
+    private ProdutoModel produtoModel;
     private AlertDialog.Builder alertaQuantidadeProduto;
 
     @Override
@@ -37,7 +37,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        produto = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
+        produtoModel = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
 
         alertaQuantidadeProduto.show();
     }
@@ -65,11 +65,11 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                         return;
                     }
 
-                    produto.getCod_barra_fornecedor().add(codigo);
-                    pesquisarProdutoController.atualizar(produto);
+                    produtoModel.getCod_barra_fornecedor().add(codigo);
+                    pesquisarProdutoController.atualizar(produtoModel);
 
                     Intent intent = new Intent();
-                    intent.putExtra("produto", produto);
+                    intent.putExtra("produtoModel", produtoModel);
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
@@ -80,7 +80,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
+                mensagemAoUsuario("A Quantidade Não Foi Informada. A ContagemModel Não Foi Adicionada");
             }
         });
     }

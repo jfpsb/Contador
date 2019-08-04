@@ -1,13 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.view.loja;
 
 import android.os.Bundle;
-import android.view.ViewStub;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutActivityBase;
+import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-public class TelaLoja extends TabLayoutActivityBase {
+public class TelaLoja extends TabLayoutBaseView {
 
     private CadastrarLoja telaCadastrarLoja;
     private PesquisarLoja telaPesquisarLoja;
