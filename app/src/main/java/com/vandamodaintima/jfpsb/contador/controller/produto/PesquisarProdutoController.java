@@ -12,10 +12,10 @@ public class PesquisarProdutoController {
     private ProdutoCursorAdapter produtoAdapter;
     private ProdutoModel produtoModel;
 
-    public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco, Context context) {
+    public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         produtoModel = new ProdutoModel(conexaoBanco);
-        produtoAdapter = new ProdutoCursorAdapter(context, null);
+        produtoAdapter = new ProdutoCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(produtoAdapter);
     }
 
@@ -65,12 +65,8 @@ public class PesquisarProdutoController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public ProdutoModel retornaProdutoEscolhidoListView(String cod_barra) {
-        return produtoModel.listarPorId(cod_barra);
-    }
-
     //Utilizado apenas na tela de pesquisar produtoModel para adicionar contagem
-    public void atualizar(ProdutoModel produtoModel) {
+    public void atualizar() {
         Boolean result = produtoModel.atualizar();
 
         if(result) {
@@ -78,5 +74,17 @@ public class PesquisarProdutoController {
         } else {
             view.mensagemAoUsuario("Erro ao Atualizar Produto Com Código de Barras");
         }
+    }
+
+    public void carregaProduto(String id) {
+        produtoModel.load(id);
+    }
+
+    public String getCodBarra() {
+        return produtoModel.getCod_barra();
+    }
+
+    public void addCodBarraFornecedor(String codigo) {
+        produtoModel.getCod_barra_fornecedor().add(codigo);
     }
 }

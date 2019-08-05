@@ -39,7 +39,7 @@ public class TelaProduto extends TabLayoutBaseView {
     private TextView txtProgressStatus;
     private ConexaoBanco conexaoBanco;
 
-    private TelaProdutoController telaProdutoController;
+    private TelaProdutoController controller;
 
     private static final int ESCOLHER_ARQUIVO = 1;
     private static final int ESCOLHER_DIRETORIO = 2;
@@ -68,7 +68,7 @@ public class TelaProduto extends TabLayoutBaseView {
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
 
         conexaoBanco = new ConexaoBanco(this);
-        telaProdutoController = new TelaProdutoController(conexaoBanco);
+        controller = new TelaProdutoController(conexaoBanco);
     }
 
     protected void setFragments() {
@@ -229,7 +229,7 @@ public class TelaProduto extends TabLayoutBaseView {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return telaProdutoController.importarDeArquivoExcel(this, getContentResolver());
+            return controller.importarDeArquivoExcel(this, getContentResolver());
         }
     }
 
@@ -248,7 +248,7 @@ public class TelaProduto extends TabLayoutBaseView {
         @Override
         protected Void doInBackground(String... strings) {
             String diretorio = strings[0];
-            telaProdutoController.exportarProdutosEmExcel(this, diretorio);
+            controller.exportarProdutosEmExcel(this, diretorio);
             return null;
         }
     }

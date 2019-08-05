@@ -15,10 +15,10 @@ public class PesquisarMarcaController {
     private MarcaModel marcaModel;
     private SimpleCursorAdapter marcaAdapter;
 
-    public PesquisarMarcaController(PesquisarView view, ConexaoBanco conexaoBanco, Context context) {
+    public PesquisarMarcaController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         marcaModel = new MarcaModel(conexaoBanco);
-        marcaAdapter = new SimpleCursorAdapter(context, R.layout.item_pesquisa_marca, null, new String[]{"_id"}, new int[]{R.id.labelMarcaNome}, 0);
+        marcaAdapter = new SimpleCursorAdapter(view.getContext(), R.layout.item_pesquisa_marca, null, new String[]{"_id"}, new int[]{R.id.labelMarcaNome}, 0);
         view.setListViewAdapter(marcaAdapter);
     }
 
@@ -33,5 +33,13 @@ public class PesquisarMarcaController {
         marcaAdapter.notifyDataSetChanged();
 
         view.setTextoQuantidadeBusca(cursor.getCount());
+    }
+
+    public void carregaMarca(String nome) {
+        marcaModel.load(nome);
+    }
+
+    public String getNome() {
+        return marcaModel.getNome();
     }
 }

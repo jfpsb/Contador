@@ -14,11 +14,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     private String codigo;
-    private ProdutoModel produtoModel;
     private AlertDialog.Builder alertaQuantidadeProduto;
 
     @Override
@@ -34,11 +32,8 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-        produtoModel = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
-
+        controller.carregaProduto(cod_barra);
         alertaQuantidadeProduto.show();
     }
 
@@ -65,11 +60,11 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                         return;
                     }
 
-                    produtoModel.getCod_barra_fornecedor().add(codigo);
-                    pesquisarProdutoController.atualizar(produtoModel);
+                    controller.addCodBarraFornecedor(codigo);
+                    controller.atualizar();
 
                     Intent intent = new Intent();
-                    intent.putExtra("produto", produtoModel.getCod_barra());
+                    intent.putExtra("produto", controller.getCodBarra());
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();

@@ -4,7 +4,6 @@ package com.vandamodaintima.jfpsb.contador.view.loja;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +23,7 @@ import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 public class PesquisarLoja extends TelaPesquisa {
 
     private EditText txtNome;
-    private PesquisarLojaController pesquisarLojaController;
+    private PesquisarLojaController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +34,7 @@ public class PesquisarLoja extends TelaPesquisa {
         listView = view.findViewById(R.id.listViewLoja);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        pesquisarLojaController = new PesquisarLojaController(this, conexaoBanco, getContext());
+        controller = new PesquisarLojaController(this, conexaoBanco, getContext());
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -80,23 +79,17 @@ public class PesquisarLoja extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        pesquisarLojaController.pesquisar(txtNome.getText().toString());
+        controller.pesquisar(txtNome.getText().toString());
     }
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-        LojaModel loja = pesquisarLojaController.retornaLojaEscolhidaListView(cnpj);
+        controller.carregaLoja(cnpj);
 
         Intent intent = new Intent(getContext(), AlterarDeletarLoja.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("loja", loja);
-
-        intent.putExtras(bundle);
+        intent.putExtra("loja", cnpj);
 
         startActivityForResult(intent, TELA_ALTERAR_DELETAR);
     }

@@ -33,6 +33,7 @@ public abstract class TelaCadastro extends Fragment implements CadastrarView {
         if (fragment instanceof PesquisarView)
             ((PesquisarView) fragment).realizarPesquisa();
 
+        limparCampos();
         focoEmViewInicial();
     }
 

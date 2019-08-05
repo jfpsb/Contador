@@ -33,7 +33,7 @@ public class PesquisarLojaController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    public LojaModel retornaLojaEscolhidaListView(String cnpj) {
-        return lojaModel.listarPorId(cnpj);
+    public void carregaLoja(String cnpj) {
+        lojaModel.load(cnpj);
     }
 }

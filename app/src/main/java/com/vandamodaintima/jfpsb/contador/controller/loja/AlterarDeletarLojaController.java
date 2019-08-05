@@ -3,18 +3,23 @@ package com.vandamodaintima.jfpsb.contador.controller.loja;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarLojaController {
-    AlterarDeletarView view;
+    private AlterarDeletarView view;
+    private ConexaoBanco conexaoBanco;
+    private LojaModel lojaModel;
 
-    public AlterarDeletarLojaController(AlterarDeletarView view) {
+    public AlterarDeletarLojaController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        this.conexaoBanco = conexaoBanco;
+        lojaModel = new LojaModel(conexaoBanco);
     }
 
-    public void atualizar(LojaModel loja) {
-        Boolean result = loja.atualizar();
+    public void atualizar() {
+        Boolean result = lojaModel.atualizar();
 
         if(result) {
             view.mensagemAoUsuario("Loja Deletada Com Sucesso");
@@ -24,8 +29,8 @@ public class AlterarDeletarLojaController {
         }
     }
 
-    public void deletar(LojaModel loja) {
-        Boolean result = loja.deletar();
+    public void deletar() {
+        Boolean result = lojaModel.deletar();
 
         if(result) {
             view.mensagemAoUsuario("Loja Deletada Com Sucesso");
@@ -33,5 +38,21 @@ public class AlterarDeletarLojaController {
         } else {
             view.mensagemAoUsuario("Erro ao Deletar Loja");
         }
+    }
+
+    public void carregaLoja(String id) {
+        lojaModel.load(id);
+    }
+
+    public String getCnpj() {
+        return lojaModel.getCnpj();
+    }
+
+    public void setNome(String nome) {
+        lojaModel.setNome(nome);
+    }
+
+    public String getNome() {
+        return lojaModel.getNome();
     }
 }

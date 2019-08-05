@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.view.loja;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,16 +11,14 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
-    private LojaModel lojaModel;
     ConexaoBanco conexaoBanco;
-    AlterarDeletarLojaController alterarDeletarLojaController;
+    AlterarDeletarLojaController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +27,8 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_loja);
         stub.inflate();
 
-        lojaModel = (LojaModel) getIntent().getExtras().getSerializable("loja");
+        String id = getIntent().getStringExtra("loja");
+        controller.carregaLoja(id);
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
@@ -38,10 +36,10 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         inicializaBotoes();
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        alterarDeletarLojaController = new AlterarDeletarLojaController(this);
+        controller = new AlterarDeletarLojaController(this, conexaoBanco);
 
-        txtCnpj.setText(String.valueOf(lojaModel.getCnpj()));
-        txtNome.setText(lojaModel.getNome());
+        txtCnpj.setText(controller.getCnpj());
+        txtNome.setText(controller.getNome());
     }
 
     @Override
@@ -54,12 +52,12 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Loja");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + lojaModel.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + controller.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                alterarDeletarLojaController.deletar(lojaModel);
+                controller.deletar();
             }
         });
 
@@ -75,15 +73,14 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Loja");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + lojaModel.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + controller.getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    lojaModel.setNome(txtNome.getText().toString().toUpperCase());
-
-                    alterarDeletarLojaController.atualizar(lojaModel);
+                    controller.setNome(txtNome.getText().toString().toUpperCase());
+                    controller.atualizar();
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(LOG, e.getMessage(), e);

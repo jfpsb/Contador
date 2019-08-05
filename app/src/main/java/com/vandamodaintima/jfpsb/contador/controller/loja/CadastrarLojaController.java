@@ -9,24 +9,29 @@ import java.util.ArrayList;
 public class CadastrarLojaController {
     private CadastrarView view;
     private LojaModel lojaModel;
+    private LojaModel matriz = null;
+    private ConexaoBanco conexaoBanco;
 
     public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        this.conexaoBanco = conexaoBanco;
         lojaModel = new LojaModel(conexaoBanco);
     }
 
-    public void cadastrar(LojaModel loja) {
-        if (loja.getCnpj().isEmpty()) {
+    public void cadastrar(String cnpj, String nome) {
+        if (cnpj.isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Estar Vazio");
             return;
         }
 
-        if (loja.getNome().isEmpty()) {
+        if (nome.isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Estar Vazio");
             return;
         }
 
-        Boolean result = loja.inserir();
+        lojaModel.setMatriz(matriz);
+
+        Boolean result = lojaModel.inserir();
 
         if (result) {
             view.mensagemAoUsuario("Loja Cadastrada Com Sucesso!");
@@ -37,7 +42,24 @@ public class CadastrarLojaController {
         }
     }
 
+    public void setMatriz(LojaModel matriz) {
+        this.matriz = matriz;
+    }
+
     public ArrayList<LojaModel> getMatrizes() {
-        return lojaModel.listarMatrizes();
+        ArrayList<LojaModel> matrizes = new ArrayList<>();
+        LojaModel loja = new LojaModel(conexaoBanco);
+        loja.setCnpj("0");
+        loja.setNome("SEM MATRIZ");
+
+        matrizes.add(loja);
+        matrizes.addAll(lojaModel.listarMatrizes());
+
+        return matrizes;
+    }
+
+    public void resetaLoja() {
+        lojaModel = new LojaModel(conexaoBanco);
+        matriz = null;
     }
 }

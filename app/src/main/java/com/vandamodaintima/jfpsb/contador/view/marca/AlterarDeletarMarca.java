@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.view.marca;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -16,9 +15,7 @@ import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarMarca extends TelaAlterarDeletar {
     private EditText txtNome;
-
-    private MarcaModel marca;
-
+    private MarcaModel marcaModel;
     private AlterarDeletarMarcaController alterarDeletarMarcaController;
 
     @Override
@@ -28,35 +25,35 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_marca);
         stub.inflate();
 
-        marca = (MarcaModel) getIntent().getExtras().getSerializable("marca");
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        marcaModel = new MarcaModel(conexaoBanco);
+
+        String id = getIntent().getStringExtra("marca");
+        marcaModel.load(id);
 
         txtNome = findViewById(R.id.txtNome);
-
-        inicializaBotoes();
-
         alterarDeletarMarcaController = new AlterarDeletarMarcaController(this);
-
-        txtNome.setText(marca.getNome());
+        txtNome.setText(marcaModel.getNome());
     }
 
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar MarcaModel");
+        alertBuilderDeletar.setTitle("Deletar Marca");
 
-        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a MarcaModel?");
+        alertBuilderDeletar.setMessage("Tem Certeza que Deseja Deletar a Marca?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                alterarDeletarMarcaController.deletar(marca);
+                alterarDeletarMarcaController.deletar(marcaModel);
             }
         });
 
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("MarcaModel Não foi Deletada");
+                mensagemAoUsuario("Marca Não foi Deletada");
             }
         });
     }
@@ -64,18 +61,16 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar MarcaModel");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a MarcaModel?");
+        alertBuilderAtualizar.setTitle("Atualizar Marca");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Marca?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     String nome = txtNome.getText().toString().toUpperCase();
-
-                    marca.setNome(nome);
-
-                    alterarDeletarMarcaController.atualizar(marca);
+                    marcaModel.setNome(nome);
+                    alterarDeletarMarcaController.atualizar(marcaModel);
                 } catch (Exception e) {
                     Log.e(LOG, e.getMessage(), e);
                     Toast.makeText(AlterarDeletarMarca.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -86,7 +81,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("MarcaModel Não Foi Alterada");
+                mensagemAoUsuario("Marca Não Foi Alterada");
             }
         });
     }

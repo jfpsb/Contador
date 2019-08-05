@@ -23,10 +23,11 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        inicializaBotoes();
         super.onCreate(savedInstanceState);
     }
 
-    protected void inicializaBotoes() {
+    public void inicializaBotoes() {
         btnAtualizar = findViewById(R.id.btnAtualizar);
         btnDeletar = findViewById(R.id.btnDeletar);
 
@@ -48,6 +49,12 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
                 alertDialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        conexaoBanco.close();
+        super.onDestroy();
     }
 
     @Override

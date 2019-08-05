@@ -15,13 +15,11 @@ import android.widget.EditText;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.PesquisarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarMarca extends TelaPesquisa {
     private EditText txtNome;
-
-    protected PesquisarMarcaController pesquisarMarcaController;
+    protected PesquisarMarcaController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +29,7 @@ public class PesquisarMarca extends TelaPesquisa {
         listView = view.findViewById(R.id.listViewMarca);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        pesquisarMarcaController = new PesquisarMarcaController(this, conexaoBanco, getContext());
+        controller = new PesquisarMarcaController(this, conexaoBanco);
 
         txtNome.addTextChangedListener(new TextWatcher() {
             @Override
@@ -55,14 +53,12 @@ public class PesquisarMarca extends TelaPesquisa {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_ALTERAR_DELETAR:
-                if (resultCode == Activity.RESULT_OK) {
-                    realizarPesquisa();
-                } else {
-                    mensagemAoUsuario("A MarcaModel Não Foi Alterada");
-                }
-                break;
+        if (requestCode == TELA_ALTERAR_DELETAR) {
+            if (resultCode == Activity.RESULT_OK) {
+                realizarPesquisa();
+            } else {
+                mensagemAoUsuario("A Marca Não Foi Alterada");
+            }
         }
     }
 
@@ -73,18 +69,17 @@ public class PesquisarMarca extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        pesquisarMarcaController.pesquisar(txtNome.getText().toString());
+        controller.pesquisar(txtNome.getText().toString());
     }
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-        MarcaModel marca = new MarcaModel(conexaoBanco);
-        marca.setNome(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("marca", marca);
+        bundle.putSerializable("marca", id);
 
         Intent intent = new Intent(getContext(), AlterarDeletarMarca.class);
         intent.putExtras(bundle);

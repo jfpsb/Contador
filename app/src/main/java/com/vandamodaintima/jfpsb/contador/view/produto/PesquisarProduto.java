@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarProduto extends TelaPesquisa {
@@ -36,7 +35,7 @@ public class PesquisarProduto extends TelaPesquisa {
 
     private static int PESQUISA = DESCRICAO;
 
-    protected PesquisarProdutoController pesquisarProdutoController;
+    protected PesquisarProdutoController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class PesquisarProduto extends TelaPesquisa {
 
         // Não pode ser antes de instanciar as views
         conexaoBanco = new ConexaoBanco(getContext());
-        pesquisarProdutoController = new PesquisarProdutoController(this, conexaoBanco, getContext());
+        controller = new PesquisarProdutoController(this, conexaoBanco);
 
         spinnerPesquisa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -134,16 +133,16 @@ public class PesquisarProduto extends TelaPesquisa {
 
         switch (PESQUISA) {
             case DESCRICAO:
-                pesquisarProdutoController.pesquisarPorDescricao(termo);
+                controller.pesquisarPorDescricao(termo);
                 break;
             case COD_DE_BARRA:
-                pesquisarProdutoController.pesquisarPorCodBarra(termo);
+                controller.pesquisarPorCodBarra(termo);
                 break;
             case FORNECEDOR:
-                pesquisarProdutoController.pesquisarPorFornecedor(termo);
+                controller.pesquisarPorFornecedor(termo);
                 break;
             case MARCA:
-                pesquisarProdutoController.pesquisarPorMarca(termo);
+                controller.pesquisarPorMarca(termo);
                 break;
         }
     }
@@ -154,10 +153,8 @@ public class PesquisarProduto extends TelaPesquisa {
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        ProdutoModel produtoModel = pesquisarProdutoController.retornaProdutoEscolhidoListView(cod_barra);
-
         Bundle bundle = new Bundle();
-        bundle.putString("produto", produtoModel.getCod_barra());
+        bundle.putString("produto", cod_barra);
 
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
         alterarProduto.putExtras(bundle);

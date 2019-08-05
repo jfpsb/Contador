@@ -26,7 +26,7 @@ public class CadastrarFornecedor extends TelaCadastro {
     protected EditText txtCnpj;
     protected TextView lblCnpjRepetido;
 
-    protected CadastrarFornecedorController cadastrarFornecedorController;
+    protected CadastrarFornecedorController controller;
 
     protected AlertDialog.Builder alertaCadastro;
 
@@ -41,7 +41,7 @@ public class CadastrarFornecedor extends TelaCadastro {
         View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_fornecedor, container, false);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        cadastrarFornecedorController = new CadastrarFornecedorController(this, conexaoBanco, getContext());
+        controller = new CadastrarFornecedorController(this, conexaoBanco);
 
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
@@ -62,14 +62,14 @@ public class CadastrarFornecedor extends TelaCadastro {
 
             @Override
             public void afterTextChanged(Editable s) {
-                cadastrarFornecedorController.checaCnpj(txtCnpj.getText().toString());
+                controller.checaCnpj(txtCnpj.getText().toString());
             }
         });
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cadastrarFornecedorController.pesquisarNaReceita(txtCnpj.getText().toString());
+                controller.pesquisarNaReceita(txtCnpj.getText().toString());
             }
         });
 
@@ -91,15 +91,15 @@ public class CadastrarFornecedor extends TelaCadastro {
         txtCnpj.requestFocus();
     }
 
-    public void setAlertaCadastro(final FornecedorModel fornecedor) {
+    public void setAlertaCadastro(final String cnpj, final String nome, final String fantasia, final String email) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Fornecedor");
 
-        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
-        mensagem += "Nome: " + fornecedor.getNome() + "\n\n";
+        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + cnpj + "\n\n";
+        mensagem += "Nome: " + nome + "\n\n";
 
-        if (!fornecedor.getFantasia().isEmpty()) {
-            mensagem += "Nome Fantasia: " + fornecedor.getFantasia() + "\n\n";
+        if (!fantasia.isEmpty()) {
+            mensagem += "Nome Fantasia: " + fantasia + "\n\n";
         }
 
         mensagem += "Deseja Cadastrar Este Fornecedor?";
@@ -109,7 +109,7 @@ public class CadastrarFornecedor extends TelaCadastro {
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cadastrarFornecedorController.cadastrar(fornecedor);
+                controller.cadastrar(cnpj, nome, fantasia, email);
             }
         });
 

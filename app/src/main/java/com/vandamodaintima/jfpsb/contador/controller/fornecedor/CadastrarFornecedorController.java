@@ -1,7 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
@@ -22,25 +20,37 @@ import java.nio.charset.StandardCharsets;
 public class CadastrarFornecedorController {
     protected CadastrarFornecedor view;
     FornecedorModel fornecedorModel;
-    protected Context context;
     private ConexaoBanco conexaoBanco;
 
-    public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco, Context context) {
+    public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarFornecedor) view;
-        this.context = context;
         this.conexaoBanco = conexaoBanco;
         fornecedorModel = new FornecedorModel(conexaoBanco);
     }
 
-    public void cadastrar(FornecedorModel fornecedor) {
-        Boolean result = fornecedor.inserir();
+    public void cadastrar(String cnpj, String nome, String fantasia, String email) {
+        if(cnpj.isEmpty()) {
+            view.mensagemAoUsuario("CNPJ Não Pode Ser Vazio");
+            return;
+        }
+
+        if(nome.isEmpty()) {
+            view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
+            return;
+        }
+
+        fornecedorModel.setCnpj(cnpj);
+        fornecedorModel.setNome(nome);
+        fornecedorModel.setFantasia(fantasia);
+        fornecedorModel.setEmail(email);
+
+        Boolean result = fornecedorModel.inserir();
 
         if(result) {
-            view.mensagemAoUsuario("FornecedorModel Cadastrado Com Sucesso");
+            view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
             view.aposCadastro();
-            view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Erro ao Cadastrar FornecedorModel");
+            view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
         }
     }
 
@@ -66,7 +76,7 @@ public class CadastrarFornecedorController {
     }
 
     public class RetornarEmpresa extends AsyncTask<String, Void, Object> {
-        private Toast toast = Toast.makeText(context, null, Toast.LENGTH_LONG);
+        private Toast toast = Toast.makeText(view.getContext(), null, Toast.LENGTH_LONG);
 
         @Override
         protected void onPreExecute() {
@@ -124,6 +134,7 @@ public class CadastrarFornecedorController {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome);
                     fornecedor.setFantasia(fantasia);
+                    fornecedor.setEmail("");
 
                     return fornecedor;
                 } else {
@@ -148,15 +159,19 @@ public class CadastrarFornecedorController {
         @Override
         protected void onPostExecute(Object object) {
             if (object == null) {
-                Toast.makeText(context, "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
             } else if (object instanceof FornecedorModel) {
                 FornecedorModel fornecedor = (FornecedorModel) object;
-                view.setAlertaCadastro(fornecedor);
+                view.setAlertaCadastro(fornecedor.getCnpj(), fornecedor.getNome(), fornecedor.getFantasia(), fornecedor.getEmail());
             } else {
                 String mensagem = (String) object;
                 toast.setText("Erro ao Inserir Fornecedor: " + mensagem);
                 toast.show();
             }
         }
+    }
+
+    public String getCnpj() {
+        return fornecedorModel.getCnpj();
     }
 }

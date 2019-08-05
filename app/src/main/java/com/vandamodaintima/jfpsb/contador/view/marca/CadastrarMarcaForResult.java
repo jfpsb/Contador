@@ -9,34 +9,10 @@ import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 
 public class CadastrarMarcaForResult extends CadastrarMarca {
     @Override
-    public void setAlertaCadastro(final MarcaModel marca) {
-        alertaCadastro = new AlertDialog.Builder(getContext());
-        alertaCadastro.setTitle("Cadastrar MarcaModel");
-
-        String mensagem = "Deseja Cadastrar a MarcaModel " + marca.getNome() + "?";
-        alertaCadastro.setMessage(mensagem);
-
-        alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Boolean result = cadastrarMarcaController.cadastrar(marca);
-
-                if(result) {
-                    Intent intent = new Intent();
-                    intent.putExtra("marca", marca);
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
-                }
-            }
-        });
-
-        alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("MarcaModel Não Foi Cadastrada");
-            }
-        });
-
-        alertaCadastro.show();
+    public void aposCadastro(Object... args) {
+        Intent intent = new Intent();
+        intent.putExtra("marca", controller.getNome());
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 }

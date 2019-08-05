@@ -16,8 +16,6 @@ import com.vandamodaintima.jfpsb.contador.controller.marca.CadastrarMarcaControl
 import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
-import java.util.Date;
-
 import static com.vandamodaintima.jfpsb.contador.view.ActivityBaseView.LOG;
 
 public class CadastrarMarca extends TelaCadastro {
@@ -25,7 +23,7 @@ public class CadastrarMarca extends TelaCadastro {
     protected AlertDialog.Builder alertaCadastro;
     private EditText txtNome;
     private Button btnCadastrar;
-    protected CadastrarMarcaController cadastrarMarcaController;
+    protected CadastrarMarcaController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,15 +33,14 @@ public class CadastrarMarca extends TelaCadastro {
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        cadastrarMarcaController = new CadastrarMarcaController(this);
+        controller = new CadastrarMarcaController(this, conexaoBanco);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    MarcaModel marca = new MarcaModel(conexaoBanco);
-                    marca.setNome(txtNome.getText().toString().trim().toUpperCase());
-                    setAlertaCadastro(marca);
+                    String nome = txtNome.getText().toString().trim().toUpperCase();
+                    setAlertaCadastro(nome);
                 } catch (Exception e) {
                     Log.e(LOG, e.getMessage(), e);
                 }
@@ -53,17 +50,17 @@ public class CadastrarMarca extends TelaCadastro {
         return view;
     }
 
-    protected void setAlertaCadastro(final MarcaModel marca) {
+    protected void setAlertaCadastro(final String nome) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Marca");
 
-        String mensagem = "Deseja Cadastrar a Marca " + marca.getNome() + "?";
+        String mensagem = "Deseja Cadastrar a Marca " + nome + "?";
         alertaCadastro.setMessage(mensagem);
 
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                cadastrarMarcaController.cadastrar(marca);
+                controller.cadastrar(nome);
             }
         });
 
