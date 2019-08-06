@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
@@ -13,10 +14,13 @@ public class ListarCodBarraFornecedorController {
     private ArrayAdapter<String> codigoAdapter;
     private PesquisarView view;
     private Context context;
+    private ProdutoModel produtoModel;
+    private ConexaoBanco conexaoBanco;
 
-    public ListarCodBarraFornecedorController(PesquisarView view, Context context) {
+    public ListarCodBarraFornecedorController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        this.context = context;
+        this.conexaoBanco = conexaoBanco;
+        produtoModel = new ProdutoModel(conexaoBanco);
         codigoAdapter = new ArrayAdapter<>(context, R.layout.item_lista_cod_barra_fornecedor);
         view.setListViewAdapter(codigoAdapter);
     }
@@ -31,5 +35,21 @@ public class ListarCodBarraFornecedorController {
         }
 
         view.setTextoQuantidadeBusca(codigos.size());
+    }
+
+    public void carregaProduto(String id) {
+        produtoModel.load(id);
+    }
+
+    public String getCodBarra() {
+        return produtoModel.getCod_barra();
+    }
+
+    public String getDescricao() {
+        return produtoModel.getDescricao();
+    }
+
+    public ArrayList<String> getCodBarraFornecedor() {
+        return produtoModel.getCod_barra_fornecedor();
     }
 }

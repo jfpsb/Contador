@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.AdapterView;
 
+import com.vandamodaintima.jfpsb.contador.controller.fornecedor.PesquisarFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 
 public class PesquisarFornecedorForResult extends PesquisarFornecedor {
@@ -15,22 +16,21 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-        FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
-        fornecedor.load(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-        setAlertaEscolha(fornecedor);
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        controller.carregaFornecedor(id);
+        setAlertaEscolha();
     }
 
-    private void setAlertaEscolha(final FornecedorModel fornecedor) {
+    private void setAlertaEscolha() {
         alertaEscolha = new AlertDialog.Builder(getContext());
         alertaEscolha.setTitle("Escolher Fornecedor");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + " ao Produto?");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
-                intent.putExtra("fornecedor", fornecedor.getCnpj());
+                intent.putExtra("fornecedor", controller.getCnpj());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
             }

@@ -1,6 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -23,7 +23,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     private Button btnCadastrar;
     private ConexaoBanco conexaoBanco;
 
-    private CadastrarFornecedorManualmenteController cadastrarFornecedorManualmenteController;
+    private CadastrarFornecedorManualmenteController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,19 +39,17 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         btnCadastrar = findViewById(R.id.btnCadastrar);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        cadastrarFornecedorManualmenteController = new CadastrarFornecedorManualmenteController(this);
+        controller = new CadastrarFornecedorManualmenteController(this, conexaoBanco);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
+                String cnpj = txtCnpj.getText().toString();
+                String nome = txtNome.getText().toString();
+                String fantasia = txtFantasia.getText().toString();
+                String email = txtEmail.getText().toString();
 
-                fornecedor.setCnpj(txtCnpj.getText().toString());
-                fornecedor.setNome(txtNome.getText().toString());
-                fornecedor.setFantasia(txtFantasia.getText().toString());
-                fornecedor.setEmail(txtEmail.getText().toString());
-
-                cadastrarFornecedorManualmenteController.cadastrar(fornecedor);
+                controller.cadastrar(cnpj, nome, fantasia, email);
             }
         });
     }
@@ -71,11 +69,16 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
 
     @Override
     public void aposCadastro(Object... args) {
-
+        limparCampos();
     }
 
     @Override
     public void focoEmViewInicial() {
         txtCnpj.requestFocus();
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }

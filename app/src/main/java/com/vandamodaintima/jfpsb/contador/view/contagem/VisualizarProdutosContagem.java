@@ -1,7 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.CursorAdapter;
@@ -16,13 +16,11 @@ import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 public class VisualizarProdutosContagem extends ActivityBaseView {
-    private ContagemModel contagem;
-
     private ListView listViewProdutoContagem;
 
     private ConexaoBanco conexaoBanco;
 
-    private VisualizarProdutosContagemController visualizarProdutosContagemController;
+    private VisualizarProdutosContagemController controller;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,14 +29,19 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         stub.setLayoutResource(R.layout.activity_visualizar_produtos_contagem);
         stub.inflate();
 
-        contagem = (ContagemModel) getIntent().getSerializableExtra("contagem");
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new VisualizarProdutosContagemController(this, conexaoBanco);
+
+        String loja = getIntent().getStringExtra("loja");
+        String data = getIntent().getStringExtra("data");
+        controller.carregaContagem(loja, data);
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
 
-        visualizarProdutosContagemController = new VisualizarProdutosContagemController(this, conexaoBanco, getApplicationContext());
-        visualizarProdutosContagemController.pesquisar(contagem);
+        controller = new VisualizarProdutosContagemController(this, conexaoBanco);
+        controller.pesquisar();
     }
 
     public void setListViewAdaper(ListAdapter adapter) {
@@ -61,7 +64,6 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         }
 
         conexaoBanco.close();
-
         super.onDestroy();
     }
 }

@@ -14,18 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.ListarCodBarraFornecedorController;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class ListarCodBarraFornecedor extends TelaPesquisa {
-    private ProdutoModel produtoModel;
-
     private TextView txtQuantCodigos;
     private TextView txtCodBarra;
     private TextView txtDescricao;
 
-    private ListarCodBarraFornecedorController listarCodBarraFornecedorController;
+    private ListarCodBarraFornecedorController controller;
 
     private AlertDialog.Builder alertaRemoverLista;
 
@@ -38,9 +37,12 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
         alertaRemoverLista = new AlertDialog.Builder(getContext());
 
-        produtoModel = (ProdutoModel) getArguments().getSerializable("produtoModel");
+        conexaoBanco = new ConexaoBanco(getContext());
+        controller = new ListarCodBarraFornecedorController(this, conexaoBanco);
+        String id = getArguments().getString("produto");
+        controller.carregaProduto(id);
 
-        if (produtoModel.getCod_barra() != null && produtoModel.getDescricao() != null) {
+        if (controller.getCodBarra() != null && controller.getDescricao() != null) {
             ViewStub stub = view.findViewById(R.id.dados_produto_cod_barra_fornecedor_stub);
             stub.setLayoutResource(R.layout.dados_produto_cod_barra_fornecedor);
             stub.inflate();
@@ -48,11 +50,9 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
             txtCodBarra = view.findViewById(R.id.txtCodBarraProduto);
             txtDescricao = view.findViewById(R.id.txtDescricao);
 
-            txtCodBarra.setText(produtoModel.getCod_barra());
-            txtDescricao.setText(produtoModel.getDescricao());
+            txtCodBarra.setText(controller.getCodBarra());
+            txtDescricao.setText(controller.getDescricao());
         }
-
-        listarCodBarraFornecedorController = new ListarCodBarraFornecedorController(this, getContext());
 
         realizarPesquisa();
 
@@ -78,7 +78,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
         alertaRemoverLista.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                produtoModel.getCod_barra_fornecedor().remove(index);
+                controller.getCodBarraFornecedor().remove(index);
 
                 Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(1);
                 if (fragment instanceof InserirCodBarraFornecedor) {
@@ -101,7 +101,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        listarCodBarraFornecedorController.pesquisar(produtoModel.getCod_barra_fornecedor());
+        controller.pesquisar(controller.getCodBarraFornecedor());
     }
 
     @Override

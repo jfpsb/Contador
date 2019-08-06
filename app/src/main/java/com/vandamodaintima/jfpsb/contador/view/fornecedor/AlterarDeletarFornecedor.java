@@ -17,9 +17,9 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     private EditText txtCnpj;
     private EditText txtNome;
     private EditText txtFantasia;
-    private FornecedorModel fornecedor;
+    private EditText txtEmail;
 
-    private AlterarDeletarFornecedorController alterarDeletarFornecedorController;
+    private AlterarDeletarFornecedorController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,29 +28,30 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_fornecedor);
         stub.inflate();
 
-        fornecedor = (FornecedorModel) getIntent().getExtras().getSerializable("fornecedor");
+        String id = getIntent().getStringExtra("fornecedor");
+        controller.carregaFornecedor(id);
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
+        txtEmail = findViewById(R.id.txtEmail);
 
-        inicializaBotoes();
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarFornecedorController(this, conexaoBanco);
 
-        alterarDeletarFornecedorController = new AlterarDeletarFornecedorController(this);
+        txtCnpj.setText(controller.getCnpj());
+        txtNome.setText(controller.getNome());
 
-        txtCnpj.setText(fornecedor.getCnpj());
-        txtNome.setText(fornecedor.getNome());
-
-        if (!fornecedor.getFantasia().isEmpty()) {
-            txtFantasia.setText(fornecedor.getFantasia());
+        if (!controller.getFantasia().isEmpty()) {
+            txtFantasia.setText(controller.getFantasia());
         }
     }
 
     @Override
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
-        alertBuilderAtualizar.setTitle("Atualizar FornecedorModel");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o FornecedorModel " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+        alertBuilderAtualizar.setTitle("Atualizar Fornecedor");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -58,11 +59,9 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
                 try {
                     String nome = txtNome.getText().toString().toUpperCase();
                     String fantasia = txtFantasia.getText().toString().toUpperCase();
+                    String email = txtEmail.getText().toString().toUpperCase();
 
-                    fornecedor.setNome(nome);
-                    fornecedor.setFantasia(fantasia);
-
-                    alterarDeletarFornecedorController.atualizar(fornecedor);
+                    controller.atualizar(nome, fantasia, email);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -80,13 +79,13 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     @Override
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
-        alertBuilderDeletar.setTitle("Deletar FornecedorModel");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o FornecedorModel " + fornecedor.getCnpj() + " - " + fornecedor.getNome() + "?");
+        alertBuilderDeletar.setTitle("Deletar Fornecedor");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                alterarDeletarFornecedorController.deletar(fornecedor);
+                controller.deletar();
             }
         });
 

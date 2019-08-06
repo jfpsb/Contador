@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemController;
 import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.Date;
@@ -25,11 +23,7 @@ public class CadastrarContagem extends TelaCadastro {
 
     private Button btnCadastrar;
     private Spinner spinnerLoja;
-
-    private LojaModel loja;
-
-    private SQLiteDatabase sqLiteDatabase;
-    private InserirContagemController cadastrarContagemController;
+    private InserirContagemController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,18 +32,13 @@ public class CadastrarContagem extends TelaCadastro {
         btnCadastrar = view.findViewById(R.id.btnCadastrar);
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 
-        sqLiteDatabase = new ConexaoBanco(getContext()).conexao();
-        cadastrarContagemController = new InserirContagemController(this, conexaoBanco, getContext());
+        conexaoBanco = new ConexaoBanco(getContext());
+        controller = new InserirContagemController(this, conexaoBanco);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContagemModel contagem = new ContagemModel(conexaoBanco);
-
-                contagem.setData(new Date());
-                contagem.setLoja(loja);
-
-                cadastrarContagemController.cadastrar(contagem);
+                controller.cadastrar();
             }
         });
 
@@ -57,10 +46,8 @@ public class CadastrarContagem extends TelaCadastro {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
                 String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-                loja = cadastrarContagemController.retornaLojaEscolhidaSpinner(cnpj);
+                controller.carregaLoja(cnpj);
             }
 
             @Override
@@ -69,7 +56,7 @@ public class CadastrarContagem extends TelaCadastro {
             }
         });
 
-        cadastrarContagemController.popularSpinnerLoja();
+        controller.carregaSpinnerLoja();
 
         return view;
     }

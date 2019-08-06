@@ -22,7 +22,7 @@ import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 public class PesquisarFornecedor extends TelaPesquisa {
     private EditText txtPesquisaFornecedor;
 
-    private PesquisarFornecedorController pesquisarFornecedorController;
+    protected PesquisarFornecedorController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +33,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
         listView = view.findViewById(R.id.listViewLoja);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        pesquisarFornecedorController = new PesquisarFornecedorController(this, conexaoBanco, getContext());
+        controller = new PesquisarFornecedorController(this, conexaoBanco);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,7 +55,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                pesquisarFornecedorController.pesquisa(txtPesquisaFornecedor.getText().toString());
+                controller.pesquisa(txtPesquisaFornecedor.getText().toString());
             }
         });
 
@@ -69,7 +69,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
                 if (resultCode == Activity.RESULT_OK) {
                     realizarPesquisa();
                 } else {
-                    mensagemAoUsuario("O FornecedorModel Não Foi Alterado");
+                    mensagemAoUsuario("O Fornecedor Não Foi Alterado");
                 }
                 break;
         }
@@ -88,23 +88,14 @@ public class PesquisarFornecedor extends TelaPesquisa {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-        FornecedorModel fornecedor = pesquisarFornecedorController.retornaFornecedorEscolhidoListView(cnpj);
-
         Intent intent = new Intent(getContext(), AlterarDeletarFornecedor.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("fornecedor", fornecedor);
-
-        intent.putExtras(bundle);
-
+        intent.putExtra("fornecedor", cnpj);
         startActivityForResult(intent, TELA_ALTERAR_DELETAR);
     }
 
     @Override
     public void realizarPesquisa() {
-        pesquisarFornecedorController.pesquisa(txtPesquisaFornecedor.getText().toString());
+        controller.pesquisa(txtPesquisaFornecedor.getText().toString());
     }
 }

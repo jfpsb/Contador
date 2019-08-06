@@ -11,43 +11,44 @@ import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.contagem.CadastrarContagem;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
+import java.util.Date;
+
 public class InserirContagemController {
     private CadastrarView view;
+    private ContagemModel contagemModel;
     private LojaModel lojaModel;
     private SimpleCursorAdapter spinnerLojaAdapter;
 
-    public InserirContagemController(CadastrarView view, ConexaoBanco conexaoBanco, Context context) {
+    public InserirContagemController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        contagemModel = new ContagemModel(conexaoBanco);
         lojaModel = new LojaModel(conexaoBanco);
-        spinnerLojaAdapter = new SimpleCursorAdapter(context, android.R.layout.simple_spinner_dropdown_item, null, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
+        spinnerLojaAdapter = new SimpleCursorAdapter(view.getContext(), android.R.layout.simple_spinner_dropdown_item, null, new String[]{"nome"}, new int[]{android.R.id.text1}, 0);
         ((CadastrarContagem) view).setSpinnerLojaAdapter(spinnerLojaAdapter);
     }
 
-    public void cadastrar(ContagemModel contagem) {
-        if (contagem.getLoja() == null) {
-            view.mensagemAoUsuario("Selecione Uma Loja Válida");
-            return;
-        }
+    public void cadastrar() {
+        contagemModel.setData(new Date());
+        contagemModel.setLoja(lojaModel);
+        contagemModel.setFinalizada(false);
 
-        Boolean result = contagem.inserir();
+        Boolean result = contagemModel.inserir();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Cadastrada Com Sucesso");
             view.aposCadastro();
-            view.limparCampos();
         } else {
-            view.mensagemAoUsuario("Erro Ao Cadastrar ContagemModel");
+            view.mensagemAoUsuario("Erro Ao Cadastrar Contagem");
         }
     }
 
-    public void popularSpinnerLoja() {
+    public void carregaSpinnerLoja() {
         Cursor cursor = lojaModel.listarCursor();
-
         spinnerLojaAdapter.changeCursor(cursor);
         spinnerLojaAdapter.notifyDataSetChanged();
     }
 
-    public LojaModel retornaLojaEscolhidaSpinner(String cnpj) {
-        return lojaModel.listarPorId(cnpj);
+    public void carregaLoja(String id) {
+        lojaModel.load(id);
     }
 }

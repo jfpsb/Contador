@@ -20,7 +20,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
 import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.text.ParseException;
@@ -36,9 +35,8 @@ public class PesquisarContagem extends TelaPesquisa {
     private EditText txtDataFinal;
     private Spinner spinnerLoja;
     private Button btnPesquisar;
-    private LojaModel lojaModel;
 
-    private PesquisarContagemController pesquisarContagemController;
+    private PesquisarContagemController controller;
 
     private SimpleDateFormat txtDataParaCalendar = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -54,7 +52,7 @@ public class PesquisarContagem extends TelaPesquisa {
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 
         conexaoBanco = new ConexaoBanco(getContext());
-        pesquisarContagemController = new PesquisarContagemController(this, conexaoBanco, getContext());
+        controller = new PesquisarContagemController(this, conexaoBanco);
 
         txtDataInicial.setText(txtDataParaCalendar.format(new Date()));
         txtDataInicial.setOnClickListener(new View.OnClickListener() {
@@ -76,10 +74,8 @@ public class PesquisarContagem extends TelaPesquisa {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
                 String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-                lojaModel = pesquisarContagemController.retornaLojaEscolhidaSpinner(cnpj);
+                controller.carregaLoja(cnpj);
             }
 
             @Override
@@ -87,6 +83,7 @@ public class PesquisarContagem extends TelaPesquisa {
 
             }
         });
+        spinnerLoja.setAdapter(controller.getSpinnerLojaAdapter());
 
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +92,7 @@ public class PesquisarContagem extends TelaPesquisa {
             }
         });
 
-        pesquisarContagemController.popularSpinnerLoja();
+        controller.carregaSpinnerLoja();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -127,7 +124,7 @@ public class PesquisarContagem extends TelaPesquisa {
             dataInicial.setTime(txtDataParaCalendar.parse(txtDataInicial.getText().toString()));
             dataFinal.setTime(txtDataParaCalendar.parse(txtDataFinal.getText().toString()));
 
-            pesquisarContagemController.pesquisar(lojaModel.getCnpj(), dataInicial, dataFinal);
+            controller.pesquisar(dataInicial, dataFinal);
         } catch (ParseException e) {
             Log.e(LOG, e.getMessage(), e);
         }
@@ -136,24 +133,13 @@ public class PesquisarContagem extends TelaPesquisa {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
         String loja = cursor.getString(cursor.getColumnIndexOrThrow("loja"));
         String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
 
-        ContagemModel contagem = pesquisarContagemController.retornaContagemEscolhidaListView(loja, data);
-
         Intent alterarContagem = new Intent(getContext(), AlterarDeletarContagem.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("contagem", contagem);
-
-        alterarContagem.putExtras(bundle);
-
+        alterarContagem.putExtra("loja", loja);
+        alterarContagem.putExtra("data", data);
         startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
-    }
-
-    public void setSpinnerLojaAdapter(SpinnerAdapter adapter) {
-        spinnerLoja.setAdapter(adapter);
     }
 
     @Override

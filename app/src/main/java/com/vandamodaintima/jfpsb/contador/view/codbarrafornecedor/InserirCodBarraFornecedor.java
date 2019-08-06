@@ -12,18 +12,15 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.InserirCodBarraFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;
 
 public class InserirCodBarraFornecedor extends Fragment implements CadastrarView {
     private ArrayList<String> codigos;
-
     private EditText txtCodBarra;
     private Button btnInserir;
-
-    private InserirCodBarraFornecedorController inserirCodBarraFornecedorController;
+    private InserirCodBarraFornecedorController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +29,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
         txtCodBarra = view.findViewById(R.id.txtCodBarra);
         btnInserir = view.findViewById(R.id.btnInserir);
 
-        inserirCodBarraFornecedorController = new InserirCodBarraFornecedorController(this);
+        controller = new InserirCodBarraFornecedorController(this);
 
         codigos = (ArrayList<String>) getArguments().getSerializable("codigos");
 
@@ -40,7 +37,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
             @Override
             public void onClick(View v) {
                 String cod_barra_fornecedor = txtCodBarra.getText().toString();
-                inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, codigos);
+                controller.inserir(cod_barra_fornecedor, codigos);
             }
         });
 
@@ -51,7 +48,7 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
                 if (getUserVisibleHint()) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
                         String cod_barra_fornecedor = txtCodBarra.getText().toString().replace("\n", "");
-                        inserirCodBarraFornecedorController.inserir(cod_barra_fornecedor, codigos);
+                        controller.inserir(cod_barra_fornecedor, codigos);
                         return true;
                     }
                 } else {

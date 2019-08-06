@@ -5,5 +5,5 @@ public interface AlterarDeletarView {
     void fecharTela();
     void setAlertBuilderDeletar();
     void setAlertBuilderAtualizar();
-    void inicializaBotoes()    ;
+    void inicializaBotoes();
 }

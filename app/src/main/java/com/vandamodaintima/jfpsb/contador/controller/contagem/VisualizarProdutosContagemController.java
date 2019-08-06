@@ -9,19 +9,21 @@ import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.contagem.VisualizarProdutosContagem;
 
 public class VisualizarProdutosContagemController {
+    private ContagemModel contagemModel;
     private ContagemProdutoModel contagemProdutoModel;
     private VisualizarProdutosContagem view;
     private ContagemProdutoCursorAdapter contagemProdutoCursorAdapter;
 
-    public VisualizarProdutosContagemController(VisualizarProdutosContagem visualizarProdutosContagem, ConexaoBanco conexaoBanco, Context context) {
+    public VisualizarProdutosContagemController(VisualizarProdutosContagem view, ConexaoBanco conexaoBanco) {
+        this.view = view;
         contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
-        this.view = visualizarProdutosContagem;
-        contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(context, null);
-        visualizarProdutosContagem.setListViewAdaper(contagemProdutoCursorAdapter);
+        contagemModel = new ContagemModel(conexaoBanco);
+        contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(view.getApplicationContext(), null);
+        view.setListViewAdaper(contagemProdutoCursorAdapter);
     }
 
-    public void pesquisar(ContagemModel contagem) {
-        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByProdutoCursor(contagem);
+    public void pesquisar() {
+        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByProdutoCursor(contagemModel);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos Na Contagem");
@@ -29,5 +31,9 @@ public class VisualizarProdutosContagemController {
 
         contagemProdutoCursorAdapter.changeCursor(cursor);
         contagemProdutoCursorAdapter.notifyDataSetChanged();
+    }
+
+    public void carregaContagem(String loja, String data) {
+        contagemModel.load(loja, data);
     }
 }

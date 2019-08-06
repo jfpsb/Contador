@@ -9,15 +9,17 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarContagemController {
     AlterarDeletarView view;
-    Context context;
+    private ContagemModel contagemModel;
 
-    public AlterarDeletarContagemController(AlterarDeletarView view, Context context) {
+    public AlterarDeletarContagemController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        this.context = context;
+        contagemModel = new ContagemModel(conexaoBanco);
     }
 
-    public void atualizar(ContagemModel contagem) {
-        Boolean result = contagem.atualizar();
+    public void atualizar(Boolean finalizada) {
+        contagemModel.setFinalizada(finalizada);
+
+        Boolean result = contagemModel.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Atualizada Com Sucesso");
@@ -27,8 +29,8 @@ public class AlterarDeletarContagemController {
         }
     }
 
-    public void deletar(ContagemModel contagem) {
-        Boolean result = contagem.deletar();
+    public void deletar() {
+        Boolean result = contagemModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Deletada Com Sucesso");
@@ -36,5 +38,25 @@ public class AlterarDeletarContagemController {
         } else {
             view.mensagemAoUsuario("Erro ao Deletar Contagem");
         }
+    }
+
+    public void carregaContagem(String loja, String data) {
+        contagemModel.load(loja, data);
+    }
+
+    public String getFullDataString() {
+        return contagemModel.getFullDataString();
+    }
+
+    public String getLojaNome() {
+        return contagemModel.getLoja().getNome();
+    }
+
+    public String getLoja() {
+        return contagemModel.getLoja().getCnpj();
+    }
+
+    public String getData() {
+        return contagemModel.getDataParaSQLite();
     }
 }

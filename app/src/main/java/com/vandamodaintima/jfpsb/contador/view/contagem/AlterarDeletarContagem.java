@@ -28,13 +28,12 @@ import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
-    private ContagemModel contagem;
     private EditText txtData;
     private EditText txtLoja;
     private CheckBox checkBoxFinalizada;
     private Button btnAdicionar;
 
-    private AlterarDeletarContagemController alterarDeletarContagemController;
+    private AlterarDeletarContagemController controller;
 
     private static final int ESCOLHER_DIRETORIO = 1;
     private static final int PEDIDO_PERMISSAO_READ = 2;
@@ -46,21 +45,35 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
         stub.inflate();
 
-        contagem = (ContagemModel) getIntent().getExtras().getSerializable("contagem");
+        String loja = getIntent().getStringExtra("loja");
+        String data = getIntent().getStringExtra("data");
+        controller.carregaContagem(loja, data);
 
         txtData = findViewById(R.id.txtDataInicial);
         txtLoja = findViewById(R.id.txtLoja);
         checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
         btnAdicionar = findViewById(R.id.btnAdicionar);
 
-        inicializaBotoes();
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarContagemController(this, conexaoBanco);
 
-        alterarDeletarContagemController = new AlterarDeletarContagemController(this, getApplicationContext());
+        txtData.setText(controller.getFullDataString());
+        txtLoja.setText(controller.getLojaNome());
+    }
 
-        txtData.setText(contagem.getFullDataString());
-        txtLoja.setText(contagem.getLoja().getNome());
+    @Override
+    public void inicializaBotoes() {
+        super.inicializaBotoes();
 
-        setBtnAdicionar();
+        btnAdicionar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
+                intent.putExtra("loja", controller.getLoja());
+                intent.putExtra("data", controller.getData());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -76,7 +89,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         switch (id) {
             case R.id.itemVerProdutos:
                 Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-                visualizarContagem.putExtra("contagem", contagem);
+                visualizarContagem.putExtra("loja", controller.getLoja());
+                visualizarContagem.putExtra("data", controller.getData());
                 startActivity(visualizarContagem);
                 return true;
             case R.id.itemExportarContagemExcel:
@@ -113,9 +127,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                contagem.setFinalizada(checkBoxFinalizada.isChecked());
-
-                alterarDeletarContagemController.atualizar(contagem);
+                Boolean finalizada = checkBoxFinalizada.isChecked();
+                controller.atualizar(finalizada);
             }
         });
 
@@ -136,7 +149,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                alterarDeletarContagemController.deletar(contagem);
+                controller.deletar();
             }
         });
 
@@ -144,22 +157,6 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(AlterarDeletarContagem.this, "Contagem Não Foi Deletada", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setBtnAdicionar() {
-        btnAdicionar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("contagem", contagem);
-
-                intent.putExtras(bundle);
-
-                startActivity(intent);
             }
         });
     }

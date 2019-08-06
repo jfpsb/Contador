@@ -49,7 +49,6 @@ public abstract class TelaPesquisa extends Fragment implements PesquisarView {
         }
 
         conexaoBanco.close();
-
         super.onDestroy();
     }
 
