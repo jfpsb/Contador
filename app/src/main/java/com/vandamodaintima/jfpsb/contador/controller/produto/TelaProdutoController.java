@@ -1,42 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.ContentResolver;
-import android.util.Log;
 
-import com.vandamodaintima.jfpsb.contador.arquivo.Arquivo;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.excel.ArquivoExcel;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 
 public class TelaProdutoController {
-    private ConexaoBanco conexaoBanco;
     private ProdutoModel produtoModel;
-    private FornecedorModel fornecedorModel;
-    private MarcaModel marcaModel;
-
     private enum Headers {
         COD_BARRA("Código de Barra"),
-        FORNECEDOR("FornecedorModel"),
+        FORNECEDOR("Fornecedor"),
         COD_BARRA_FORNECEDOR("Códigos de Barra de FornecedorModel"),
         DESCRICAO("Descrição"),
         MARCA("MarcaModel"),
@@ -50,11 +29,11 @@ public class TelaProdutoController {
     }
 
     public TelaProdutoController(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        produtoModel = new ProdutoModel(conexaoBanco);
     }
 
     public Boolean importarDeArquivoExcel(TelaProduto.ImportarProdutoAsyncTask importarProdutoAsyncTask, final ContentResolver contentResolver) {
-        ConexaoBanco conexaoBanco = null;
+        /*ConexaoBanco conexaoBanco = null;
         ArrayList<ProdutoModel> produtos = new ArrayList<>();
         InputStream inputStream = null;
 
@@ -105,7 +84,7 @@ public class TelaProdutoController {
 
             int rows = arquivoExcel.getPlanilha().getPhysicalNumberOfRows();
 
-            importarProdutoAsyncTask.publish(rows + " ProdutoModel(s) Encontrado(s)");
+            importarProdutoAsyncTask.publish(rows + " Produto(s) Encontrado(s)");
 
             for (int i = 1; i < rows; i++) {
                 Row row = arquivoExcel.getPlanilha().getRow(i);
@@ -223,13 +202,14 @@ public class TelaProdutoController {
                     Log.e("Contador", "Ao tentar fechar InputStream: " + e.getMessage(), e);
                 }
             }
-        }
+        }*/
 
         return false;
     }
 
     public void exportarProdutosEmExcel(TelaProduto.ExportarProdutoEmExcel exportarProdutoEmExcel, String diretorio) {
-        exportarProdutoEmExcel.publish("Iniciando Exportação. Aguarde");
+        new Excel(new ProdutoStrategy()).exportar(diretorio, produtoModel.listar());
+        /*exportarProdutoEmExcel.publish("Iniciando Exportação. Aguarde");
 
         Date dataAtual = new Date();
         ArquivoExcel arquivoExcel = new ArquivoExcel();
@@ -331,7 +311,7 @@ public class TelaProdutoController {
             }
         }
 
-        exportarProdutoEmExcel.publish("Erro ao Exportar Produtos");
+        exportarProdutoEmExcel.publish("Erro ao Exportar Produtos");*/
     }
 
     private boolean isCellEmpty(Cell cell) {
@@ -346,8 +326,8 @@ public class TelaProdutoController {
         return false;
     }
 
-    private void setCabecalhoProduto(ArquivoExcel arquivoExcel) {
-        CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
+    private void setCabecalhoProduto() {
+        /*CellStyle cabecalhoStyle = CellStylePadrao(arquivoExcel);
 
         Font font = arquivoExcel.getPastaTrabalho().createFont();
         font.setFontName("Arial");
@@ -364,11 +344,11 @@ public class TelaProdutoController {
 
             cell.setCellValue(header.texto);
             cell.setCellStyle(cabecalhoStyle);
-        }
+        }*/
     }
 
-    private CellStyle CellStylePadrao(ArquivoExcel arquivoExcel) {
-        CellStyle cellStyle = arquivoExcel.getPastaTrabalho().createCellStyle();
+    private CellStyle CellStylePadrao() {
+        /*CellStyle cellStyle = arquivoExcel.getPastaTrabalho().createCellStyle();
 
         Font font = arquivoExcel.getPastaTrabalho().createFont();
         font.setFontHeightInPoints((short) 12);
@@ -378,6 +358,8 @@ public class TelaProdutoController {
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
-        return cellStyle;
+        return cellStyle;*/
+
+        return null;
     }
 }

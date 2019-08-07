@@ -266,7 +266,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+                p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
                 produtos.add(p);
@@ -306,7 +306,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
             cursorCodigoBarraFornecedor.close();
 
-            p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+            p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
             p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
         }
 
@@ -340,10 +340,8 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
             cursorCodigoBarraFornecedor.close();
 
-            String m = cursor.getString(cursor.getColumnIndexOrThrow("marca"));
-            String f = cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"));
-            setMarca(marcaModel.listarPorId(m));
-            setFornecedor(fornecedorModel.listarPorId(f));
+            setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
+            setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
         }
 
         cursor.close();
@@ -384,7 +382,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+                p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
                 produtos.add(p);
@@ -431,7 +429,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+                p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
         }
@@ -478,7 +476,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
                 cursorCodigoBarraFornecedor.close();
 
-                p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+                p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
         }
@@ -524,7 +522,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
                 cursorCodigoBarraFornecedor.close();
 
                 p.setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                p.setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
+                p.setMarca(marcaModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
 
                 produtos.add(p);
             }
