@@ -44,8 +44,8 @@ public class CadastrarLoja extends TelaCadastro {
             public void onClick(View view) {
                 String cnpj = txtCnpj.getText().toString();
                 String nome = txtNome.getText().toString().trim().toUpperCase();
-                LojaModel matriz = (LojaModel) spinnerMatrizes.getSelectedItem();
-                controller.setMatriz(matriz);
+                Object matriz = spinnerMatrizes.getSelectedItem();
+                controller.carregaMatriz(matriz);
                 controller.cadastrar(cnpj, nome);
             }
         });

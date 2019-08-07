@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class ListarCodBarraFornecedorController {
     private ArrayAdapter<String> codigoAdapter;
     private PesquisarView view;
-    private Context context;
     private ProdutoModel produtoModel;
     private ConexaoBanco conexaoBanco;
 
@@ -21,7 +20,7 @@ public class ListarCodBarraFornecedorController {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         produtoModel = new ProdutoModel(conexaoBanco);
-        codigoAdapter = new ArrayAdapter<>(context, R.layout.item_lista_cod_barra_fornecedor);
+        codigoAdapter = new ArrayAdapter<>(view.getContext(), R.layout.item_lista_cod_barra_fornecedor);
         view.setListViewAdapter(codigoAdapter);
     }
 

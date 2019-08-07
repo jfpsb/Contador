@@ -21,7 +21,6 @@ import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 public class PesquisarLoja extends TelaPesquisa {
-
     private EditText txtNome;
     private PesquisarLojaController controller;
 
@@ -86,11 +85,8 @@ public class PesquisarLoja extends TelaPesquisa {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-        controller.carregaLoja(cnpj);
-
         Intent intent = new Intent(getContext(), AlterarDeletarLoja.class);
         intent.putExtra("loja", cnpj);
-
         startActivityForResult(intent, TELA_ALTERAR_DELETAR);
     }
 }

@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -69,7 +68,7 @@ public class PesquisarProdutoController {
     public void atualizar() {
         Boolean result = produtoModel.atualizar();
 
-        if(result) {
+        if (result) {
             view.mensagemAoUsuario("Produto Foi Atualizado Com Código de Barras");
         } else {
             view.mensagemAoUsuario("Erro ao Atualizar Produto Com Código de Barras");

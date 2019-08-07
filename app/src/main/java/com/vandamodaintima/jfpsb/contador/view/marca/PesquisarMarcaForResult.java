@@ -13,7 +13,7 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-        String id = cursor.getString(cursor.getColumnIndexOrThrow("nome"));
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaMarca(id);
         setAlertaEscolha(controller.getNome());
     }

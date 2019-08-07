@@ -17,7 +17,6 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
-    ConexaoBanco conexaoBanco;
     AlterarDeletarLojaController controller;
 
     @Override
@@ -33,13 +32,13 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
 
-        inicializaBotoes();
-
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarLojaController(this, conexaoBanco);
 
         txtCnpj.setText(controller.getCnpj());
         txtNome.setText(controller.getNome());
+
+        inicializaBotoes();
     }
 
     @Override
@@ -79,8 +78,8 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    controller.setNome(txtNome.getText().toString().toUpperCase());
-                    controller.atualizar();
+                    String nome = txtNome.getText().toString().toUpperCase();
+                    controller.atualizar(nome);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(LOG, e.getMessage(), e);

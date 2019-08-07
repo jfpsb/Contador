@@ -32,8 +32,4 @@ public class PesquisarLojaController {
 
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
-
-    public void carregaLoja(String cnpj) {
-        lojaModel.load(cnpj);
-    }
 }

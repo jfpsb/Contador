@@ -28,12 +28,12 @@ public class CadastrarProdutoController {
     }
 
     public void cadastrar(String cod_barra, String descricao, Double preco) {
-        if (cod_barra.isEmpty()) {
+        if (cod_barra.trim().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
         }
 
-        if (descricao.isEmpty()) {
+        if (descricao.trim().isEmpty()) {
             view.mensagemAoUsuario("Descrição Não Pode Estar Vazio");
             return;
         }
@@ -43,8 +43,23 @@ public class CadastrarProdutoController {
             return;
         }
 
-        produtoModel.setFornecedor(fornecedorModel);
-        produtoModel.setMarca(marcaModel);
+        if(fornecedorModel.getCnpj() == null) {
+            produtoModel.setFornecedor(null);
+        }
+        else {
+            produtoModel.setFornecedor(fornecedorModel);
+        }
+
+        if(marcaModel.getNome() == null) {
+            produtoModel.setMarca(null);
+        }
+        else {
+            produtoModel.setMarca(marcaModel);
+        }
+
+        produtoModel.setCod_barra(cod_barra);
+        produtoModel.setDescricao(descricao.trim().toUpperCase());
+        produtoModel.setPreco(preco);
 
         Boolean result = produtoModel.inserir();
 
@@ -101,11 +116,11 @@ public class CadastrarProdutoController {
     }
 
     public void setFornecedorNull() {
-        fornecedorModel = null;
+        fornecedorModel = new FornecedorModel(conexaoBanco);
     }
 
     public void setMarcaNull() {
-        marcaModel = null;
+        marcaModel = new MarcaModel(conexaoBanco);
     }
 
     public void resetaProduto() {

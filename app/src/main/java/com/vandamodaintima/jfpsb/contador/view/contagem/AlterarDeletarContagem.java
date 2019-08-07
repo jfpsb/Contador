@@ -59,6 +59,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());
+
+        inicializaBotoes();
     }
 
     @Override

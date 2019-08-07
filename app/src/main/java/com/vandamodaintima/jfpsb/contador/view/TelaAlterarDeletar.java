@@ -23,7 +23,6 @@ public abstract class TelaAlterarDeletar extends ActivityBaseView implements Alt
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        inicializaBotoes();
         super.onCreate(savedInstanceState);
     }
 

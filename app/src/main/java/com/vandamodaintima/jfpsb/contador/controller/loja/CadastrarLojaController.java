@@ -62,4 +62,9 @@ public class CadastrarLojaController {
         lojaModel = new LojaModel(conexaoBanco);
         matriz = null;
     }
+
+    public void carregaMatriz(Object o) {
+        if(o instanceof LojaModel)
+            matriz = (LojaModel)o;
+    }
 }

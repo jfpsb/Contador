@@ -340,8 +340,10 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
             cursorCodigoBarraFornecedor.close();
 
-            setMarca(marcaModel.listarPorId(cursor.getLong(cursor.getColumnIndexOrThrow("marca"))));
-            setFornecedor(fornecedorModel.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+            String m = cursor.getString(cursor.getColumnIndexOrThrow("marca"));
+            String f = cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"));
+            setMarca(marcaModel.listarPorId(m));
+            setFornecedor(fornecedorModel.listarPorId(f));
         }
 
         cursor.close();

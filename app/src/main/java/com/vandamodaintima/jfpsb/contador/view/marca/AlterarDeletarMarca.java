@@ -15,8 +15,7 @@ import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarMarca extends TelaAlterarDeletar {
     private EditText txtNome;
-    private MarcaModel marcaModel;
-    private AlterarDeletarMarcaController alterarDeletarMarcaController;
+    private AlterarDeletarMarcaController controller;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -26,14 +25,14 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         stub.inflate();
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        marcaModel = new MarcaModel(conexaoBanco);
-
+        controller = new AlterarDeletarMarcaController(this, conexaoBanco);
         String id = getIntent().getStringExtra("marca");
-        marcaModel.load(id);
+        controller.carregaMarca(id);
 
         txtNome = findViewById(R.id.txtNome);
-        alterarDeletarMarcaController = new AlterarDeletarMarcaController(this);
-        txtNome.setText(marcaModel.getNome());
+        txtNome.setText(controller.getNome());
+
+        inicializaBotoes();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                alterarDeletarMarcaController.deletar(marcaModel);
+                controller.deletar();
             }
         });
 
@@ -69,8 +68,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     String nome = txtNome.getText().toString().toUpperCase();
-                    marcaModel.setNome(nome);
-                    alterarDeletarMarcaController.atualizar(marcaModel);
+                    controller.atualizar(nome);
                 } catch (Exception e) {
                     Log.e(LOG, e.getMessage(), e);
                     Toast.makeText(AlterarDeletarMarca.this, e.getMessage(), Toast.LENGTH_SHORT).show();

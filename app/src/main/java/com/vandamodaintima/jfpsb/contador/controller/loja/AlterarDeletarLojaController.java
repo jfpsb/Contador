@@ -18,7 +18,14 @@ public class AlterarDeletarLojaController {
         lojaModel = new LojaModel(conexaoBanco);
     }
 
-    public void atualizar() {
+    public void atualizar(String nome) {
+        if(nome.trim().isEmpty()) {
+            view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
+            return;
+        }
+
+        lojaModel.setNome(nome);
+
         Boolean result = lojaModel.atualizar();
 
         if(result) {
@@ -46,10 +53,6 @@ public class AlterarDeletarLojaController {
 
     public String getCnpj() {
         return lojaModel.getCnpj();
-    }
-
-    public void setNome(String nome) {
-        lojaModel.setNome(nome);
     }
 
     public String getNome() {

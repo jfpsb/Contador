@@ -1,22 +1,27 @@
 package com.vandamodaintima.jfpsb.contador.controller.marca;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarMarcaController {
     private AlterarDeletarView view;
+    private MarcaModel marcaModel;
 
-    public AlterarDeletarMarcaController(AlterarDeletarView view) {
+    public AlterarDeletarMarcaController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        marcaModel = new MarcaModel(conexaoBanco);
     }
 
-    public void atualizar(MarcaModel marca) {
-        if (marca.getNome().trim().isEmpty()) {
+    public void atualizar(String nome) {
+        if (nome.trim().isEmpty()) {
             view.mensagemAoUsuario("Nome de Marca Não Pode Ser Vazio");
             return;
         }
 
-        Boolean result = marca.atualizar();
+        marcaModel.setNome(nome);
+
+        Boolean result = marcaModel.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Marca Atualizada Com Sucesso");
@@ -26,8 +31,8 @@ public class AlterarDeletarMarcaController {
         }
     }
 
-    public void deletar(MarcaModel marca) {
-        Boolean result = marca.deletar();
+    public void deletar() {
+        Boolean result = marcaModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Marca Deletada Com Sucesso");
@@ -35,5 +40,13 @@ public class AlterarDeletarMarcaController {
         } else {
             view.mensagemAoUsuario("Erro ao Deletar Marca");
         }
+    }
+
+    public void carregaMarca(String nome) {
+        marcaModel.load(nome);
+    }
+
+    public String getNome() {
+        return marcaModel.getNome();
     }
 }

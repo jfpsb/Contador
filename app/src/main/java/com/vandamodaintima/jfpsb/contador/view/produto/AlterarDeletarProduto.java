@@ -12,9 +12,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.AlterarDeletarProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
@@ -23,8 +20,6 @@ import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 import java.util.ArrayList;
 
 public class AlterarDeletarProduto extends TelaAlterarDeletar {
-
-    private ProdutoModel produtoModel;
     private EditText txtCodBarra;
     private EditText txtDescricao;
     private EditText txtPreco;
@@ -36,10 +31,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
 
-    private FornecedorModel fornecedorModel;
-    private MarcaModel marcaModel;
-
-    AlterarDeletarProdutoController alterarDeletarProdutoController;
+    AlterarDeletarProdutoController controller;
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
@@ -53,18 +45,13 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         super.onCreate(savedInstanceState);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarProdutoController(this, conexaoBanco);
 
         stub.setLayoutResource(R.layout.activity_alterar_deletar_produto);
         stub.inflate();
 
         String id = getIntent().getExtras().getString("produto");
-
-        produtoModel = new ProdutoModel(conexaoBanco);
-        fornecedorModel = new FornecedorModel(conexaoBanco);
-        marcaModel = new MarcaModel(conexaoBanco);
-
-        //Carrega dados de produto
-        produtoModel.load(id);
+        controller.carregaProduto(id);
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
@@ -72,21 +59,19 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
 
-        alterarDeletarProdutoController = new AlterarDeletarProdutoController(this);
+        txtCodBarra.setText(controller.getCodBarra());
+        txtDescricao.setText(controller.getDescricao());
+        txtPreco.setText(String.valueOf(controller.getPreco()));
 
-        txtCodBarra.setText(produtoModel.getCod_barra());
-        txtDescricao.setText(produtoModel.getDescricao());
-        txtPreco.setText(String.valueOf(produtoModel.getPreco()));
-
-        if (produtoModel.getFornecedor() != null) {
-            txtFornecedor.setText(produtoModel.getFornecedor().getNome());
-            fornecedorModel = produtoModel.getFornecedor();
+        if (controller.getFornecedor() != null) {
+            txtFornecedor.setText(controller.getFornecedor().getNome());
         }
 
-        if (produtoModel.getMarca() != null) {
-            txtMarca.setText(produtoModel.getMarca().getNome());
-            marcaModel = produtoModel.getMarca();
+        if (controller.getMarca() != null) {
+            txtMarca.setText(controller.getMarca().getNome());
         }
+
+        inicializaBotoes();
     }
 
     @Override
@@ -122,7 +107,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
-                intent.putExtra("codigos", produtoModel.getCod_barra_fornecedor());
+                intent.putExtra("codigos", controller.getCodBarraFornecedor());
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
         });
@@ -130,7 +115,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!fornecedorModel.getCnpj().isEmpty()) {
+                if (!controller.getFornecedor().getCnpj().isEmpty()) {
                     alertaRemoverFornecedor.show();
                 } else {
                     mensagemAoUsuario("Produto Não Possui Fornecedor");
@@ -141,7 +126,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!marcaModel.getNome().isEmpty()) {
+                if (!controller.getMarca().getNome().isEmpty()) {
                     alertaRemoverMarca.show();
                 } else {
                     mensagemAoUsuario("Produto Não Possui Marca");
@@ -156,8 +141,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
                     String id = data.getStringExtra("fornecedor");
-                    fornecedorModel.load(id);
-                    txtFornecedor.setText(fornecedorModel.getNome());
+                    controller.carregaFornecedor(id);
+                    txtFornecedor.setText(controller.getFornecedor().getNome());
                     mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
                 } else {
                     mensagemAoUsuario("Fornecedor Não Foi Escolhido");
@@ -166,8 +151,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             case ESCOLHER_MARCA:
                 if (resultCode == RESULT_OK) {
                     String id = data.getStringExtra("marca");
-                    marcaModel.load(id);
-                    txtMarca.setText(marcaModel.getNome());
+                    controller.carregaMarca(id);
+                    txtMarca.setText(controller.getMarca().getNome());
                     mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                 } else {
                     mensagemAoUsuario("Marca Não Foi Escolhida");
@@ -177,10 +162,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 if (resultCode == RESULT_OK) {
                     ArrayList<String> codigos = (ArrayList<String>) data.getSerializableExtra("codigos");
 
-                    if (produtoModel.getCod_barra_fornecedor().equals(codigos)) {
+                    if (controller.getCodBarraFornecedor().equals(codigos)) {
                         mensagemAoUsuario("Cód. de Barras de Fornecedores Não Foram Alterados");
                     } else {
-                        produtoModel.setCod_barra_fornecedor(codigos);
+                        controller.setCodBarraFornecedor(codigos);
                         mensagemAoUsuario("A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"");
                     }
                 }
@@ -192,12 +177,12 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Produto");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + controller.getCodBarra() + " - " + controller.getDescricao() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                alterarDeletarProdutoController.deletar(produtoModel);
+                controller.deletar();
             }
         });
 
@@ -213,17 +198,14 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Produto");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + controller.getCodBarra() + " - " + controller.getDescricao() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                produtoModel.setDescricao(txtDescricao.getText().toString().toUpperCase());
-                produtoModel.setFornecedor(fornecedorModel);
-                produtoModel.setMarca(marcaModel);
-                produtoModel.setPreco(Double.parseDouble(txtPreco.getText().toString()));
-
-                alterarDeletarProdutoController.atualizar(produtoModel);
+                String descricao = txtDescricao.getText().toString().toUpperCase();
+                Double preco = Double.parseDouble(txtPreco.getText().toString());
+                controller.atualizar(descricao, preco);
             }
         });
 
@@ -243,7 +225,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverFornecedor.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fornecedorModel = new FornecedorModel(conexaoBanco);
+                controller.setFornecedorNull();
                 txtFornecedor.getText().clear();
                 Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
             }
@@ -265,7 +247,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverMarca.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                marcaModel = new MarcaModel(conexaoBanco);
+                controller.setMarcaNull();
                 txtMarca.getText().clear();
                 Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
             }

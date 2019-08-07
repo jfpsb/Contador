@@ -45,6 +45,8 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         if (!controller.getFantasia().isEmpty()) {
             txtFantasia.setText(controller.getFantasia());
         }
+
+        inicializaBotoes();
     }
 
     @Override

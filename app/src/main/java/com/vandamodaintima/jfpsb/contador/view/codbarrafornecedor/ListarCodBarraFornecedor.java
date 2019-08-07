@@ -19,10 +19,13 @@ import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.ListarCo
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
+import java.util.ArrayList;
+
 public class ListarCodBarraFornecedor extends TelaPesquisa {
     private TextView txtQuantCodigos;
     private TextView txtCodBarra;
     private TextView txtDescricao;
+    private ArrayList<String> codigos;
 
     private ListarCodBarraFornecedorController controller;
 
@@ -34,6 +37,8 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
         listView = view.findViewById(R.id.listViewCodigos);
         txtQuantCodigos = view.findViewById(R.id.txtQuantCodigos);
+
+        codigos = (ArrayList<String>) getArguments().getSerializable("codigos");
 
         alertaRemoverLista = new AlertDialog.Builder(getContext());
 
@@ -101,7 +106,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        controller.pesquisar(controller.getCodBarraFornecedor());
+        controller.pesquisar(codigos);
     }
 
     @Override

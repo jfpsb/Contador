@@ -75,15 +75,9 @@ public class PesquisarMarca extends TelaPesquisa {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
         String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("marca", id);
-
         Intent intent = new Intent(getContext(), AlterarDeletarMarca.class);
-        intent.putExtras(bundle);
-
+        intent.putExtra("marca", id);
         startActivityForResult(intent, TELA_ALTERAR_DELETAR);
     }
 }
