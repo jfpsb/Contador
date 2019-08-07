@@ -10,16 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.text.ParseException;
@@ -73,9 +72,8 @@ public class PesquisarContagem extends TelaPesquisa {
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-                String cnpj = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-                controller.carregaLoja(cnpj);
+                Object o = spinnerLoja.getSelectedItem();
+                controller.carregaLoja(o);
             }
 
             @Override
@@ -83,7 +81,6 @@ public class PesquisarContagem extends TelaPesquisa {
 
             }
         });
-        spinnerLoja.setAdapter(controller.getSpinnerLojaAdapter());
 
         btnPesquisar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +89,8 @@ public class PesquisarContagem extends TelaPesquisa {
             }
         });
 
-        controller.carregaSpinnerLoja();
+        ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
+        spinnerLoja.setAdapter(spinnerAdapter);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -140,19 +138,5 @@ public class PesquisarContagem extends TelaPesquisa {
         alterarContagem.putExtra("loja", loja);
         alterarContagem.putExtra("data", data);
         startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
-    }
-
-    @Override
-    public void onDestroy() {
-        SimpleCursorAdapter spinnerAdapter = (SimpleCursorAdapter) spinnerLoja.getAdapter();
-
-        if (spinnerAdapter != null) {
-            Cursor cursor = spinnerAdapter.getCursor();
-
-            if (cursor != null)
-                cursor.close();
-        }
-
-        super.onDestroy();
     }
 }

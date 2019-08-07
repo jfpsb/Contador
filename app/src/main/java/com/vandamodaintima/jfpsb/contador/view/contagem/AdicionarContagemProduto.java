@@ -54,6 +54,9 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         stub.setLayoutResource(R.layout.activity_adicionar_contagem_produto);
         stub.inflate();
 
+        txtCodBarra = findViewById(R.id.txtCodigoBarra);
+        listViewContagemProduto = findViewById(R.id.listViewAdicionarContagem);
+
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AdicionarContagemProdutoController(this, conexaoBanco);
 
@@ -63,14 +66,9 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         String data = getIntent().getStringExtra("data");
         controller.carregaContagem(loja, data);
 
-        txtCodBarra = findViewById(R.id.txtCodigoBarra);
-        listViewContagemProduto = findViewById(R.id.listViewAdicionarContagem);
-
         setProdutoNaoEncontradoDialog();
         setEscolhaProdutoDialog();
         setDeletarContagemProdutoDialog();
-
-        realizarPesquisa();
 
         listViewContagemProduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -93,6 +91,8 @@ public class AdicionarContagemProduto extends ActivityBaseView implements Adicio
         });
 
         txtCodBarra.setShowSoftInputOnFocus(false);
+
+        realizarPesquisa();
     }
 
     @Override

@@ -130,7 +130,7 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
 
     @Override
     public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, null, null, null, null, null, null, null);
+        return conexaoBanco.conexao().query(TABELA, getColunas(), null, null, null, null, "nome", null);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
             while (cursor.moveToNext()) {
                 LojaModel loja = new LojaModel(conexaoBanco);
 
-                loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("cnpj")));
+                loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 loja.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
 
@@ -193,7 +193,7 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
             setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
 
             if(!cursor.isNull(cursor.getColumnIndexOrThrow("matriz"))) {
-                setMatriz(listarPorId(cursor.getColumnIndexOrThrow("matriz")));
+                setMatriz(listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("matriz"))));
             }
         }
 
@@ -228,7 +228,7 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
     public ArrayList<LojaModel> listarMatrizes() {
         ArrayList<LojaModel> lojas = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "matriz IS NULL", null, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "matriz IS NULL", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

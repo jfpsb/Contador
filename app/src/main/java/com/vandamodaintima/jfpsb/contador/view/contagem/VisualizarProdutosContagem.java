@@ -37,10 +37,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         controller.carregaContagem(loja, data);
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
-
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-
-        controller = new VisualizarProdutosContagemController(this, conexaoBanco);
+        
         controller.pesquisar();
     }
 

@@ -28,6 +28,9 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_fornecedor);
         stub.inflate();
 
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarFornecedorController(this, conexaoBanco);
+
         String id = getIntent().getStringExtra("fornecedor");
         controller.carregaFornecedor(id);
 
@@ -35,9 +38,6 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
         txtEmail = findViewById(R.id.txtEmail);
-
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarFornecedorController(this, conexaoBanco);
 
         txtCnpj.setText(controller.getCnpj());
         txtNome.setText(controller.getNome());

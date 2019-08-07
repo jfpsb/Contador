@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AlterarDeletarContagemController;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -45,6 +44,9 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
         stub.inflate();
 
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarContagemController(this, conexaoBanco);
+
         String loja = getIntent().getStringExtra("loja");
         String data = getIntent().getStringExtra("data");
         controller.carregaContagem(loja, data);
@@ -53,9 +55,6 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         txtLoja = findViewById(R.id.txtLoja);
         checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
         btnAdicionar = findViewById(R.id.btnAdicionar);
-
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarContagemController(this, conexaoBanco);
 
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());

@@ -9,13 +9,14 @@ import java.util.ArrayList;
 public class CadastrarLojaController {
     private CadastrarView view;
     private LojaModel lojaModel;
-    private LojaModel matriz = null;
+    private LojaModel matriz;
     private ConexaoBanco conexaoBanco;
 
     public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         lojaModel = new LojaModel(conexaoBanco);
+        matriz = new LojaModel(conexaoBanco);
     }
 
     public void cadastrar(String cnpj, String nome) {
@@ -29,7 +30,15 @@ public class CadastrarLojaController {
             return;
         }
 
-        lojaModel.setMatriz(matriz);
+        if(matriz.getCnpj().equals("0")) {
+            lojaModel.setMatriz(null);
+        }
+        else {
+            lojaModel.setMatriz(matriz);
+        }
+
+        lojaModel.setCnpj(cnpj);
+        lojaModel.setNome(nome);
 
         Boolean result = lojaModel.inserir();
 
@@ -40,10 +49,6 @@ public class CadastrarLojaController {
         } else {
             view.mensagemAoUsuario("Erro Ao Cadastrar Loja");
         }
-    }
-
-    public void setMatriz(LojaModel matriz) {
-        this.matriz = matriz;
     }
 
     public ArrayList<LojaModel> getMatrizes() {
@@ -60,7 +65,7 @@ public class CadastrarLojaController {
 
     public void resetaLoja() {
         lojaModel = new LojaModel(conexaoBanco);
-        matriz = null;
+        matriz = new LojaModel(conexaoBanco);
     }
 
     public void carregaMatriz(Object o) {

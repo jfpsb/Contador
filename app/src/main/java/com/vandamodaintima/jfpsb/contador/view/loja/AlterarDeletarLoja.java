@@ -5,18 +5,22 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
+import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
+    private Spinner spinnerMatrizes;
     AlterarDeletarLojaController controller;
 
     @Override
@@ -26,17 +30,22 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_loja);
         stub.inflate();
 
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarLojaController(this, conexaoBanco);
+
         String id = getIntent().getStringExtra("loja");
         controller.carregaLoja(id);
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
-
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarLojaController(this, conexaoBanco);
+        spinnerMatrizes = findViewById(R.id.spinnerMatrizes);
 
         txtCnpj.setText(controller.getCnpj());
         txtNome.setText(controller.getNome());
+        ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());
+        spinnerMatrizes.setAdapter(spinnerAdapter);
+
+        spinnerMatrizes.setSelection(controller.getMatrizIndex(controller.getMatriz().getCnpj()));
 
         inicializaBotoes();
     }
@@ -79,6 +88,8 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     String nome = txtNome.getText().toString().toUpperCase();
+                    Object matriz = spinnerMatrizes.getSelectedItem();
+                    controller.carregaMatriz(matriz);
                     controller.atualizar(nome);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
