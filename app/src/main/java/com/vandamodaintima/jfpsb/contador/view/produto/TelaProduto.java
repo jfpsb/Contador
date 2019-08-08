@@ -68,7 +68,7 @@ public class TelaProduto extends TabLayoutBaseView {
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
 
         conexaoBanco = new ConexaoBanco(this);
-        controller = new TelaProdutoController(conexaoBanco);
+        controller = new TelaProdutoController(this, conexaoBanco);
     }
 
     protected void setFragments() {
@@ -133,13 +133,13 @@ public class TelaProduto extends TabLayoutBaseView {
             case ESCOLHER_ARQUIVO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
-                    new ImportarProdutoAsyncTask(uri).execute();
+                    controller.importarProdutosDeExcel(uri, getContentResolver());
                 }
                 break;
             case ESCOLHER_DIRETORIO:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                    new ExportarProdutoEmExcel().execute(diretorio);
+                    controller.exportarProdutosParaExcel(diretorio);
                 }
                 break;
         }
@@ -149,108 +149,6 @@ public class TelaProduto extends TabLayoutBaseView {
 
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
-    }
-
-    public class ImportarProdutoAsyncTask extends AsyncTask<Void, String, Boolean> {
-
-        private Uri uri;
-        public ImportarProdutoAsyncTask(Uri uri) {
-            this.uri = uri;
-        }
-
-        public Uri getUri() {
-            return uri;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(300);
-            inAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    progressBarHolder.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            progressBarHolder.setAnimation(inAnimation);
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            txtProgressStatus.setText(values[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(5000);
-            outAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    progressBarHolder.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-
-            progressBarHolder.setAnimation(outAnimation);
-
-            if (result) {
-                mensagemAoUsuario("Cadastro de Produtos Por Excel Realiza Com Sucesso");
-                pesquisarProduto.realizarPesquisa();
-            } else {
-                mensagemAoUsuario("Houve um Erro ao Cadastrar Produtos. Contate o Suporte se Problema Persistir");
-            }
-        }
-
-        public void publish(String mensagem) {
-            this.publishProgress(mensagem);
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            return controller.importarDeArquivoExcel(this, getContentResolver());
-        }
-    }
-
-    public class ExportarProdutoEmExcel extends AsyncTask<String, String, Void> {
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            String mensagem = values[0];
-            mensagemAoUsuario(mensagem);
-        }
-
-        public void publish(String mensagem) {
-            this.publishProgress(mensagem);
-        }
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            String diretorio = strings[0];
-            controller.exportarProdutosEmExcel(this, diretorio);
-            return null;
-        }
     }
 
     @Override

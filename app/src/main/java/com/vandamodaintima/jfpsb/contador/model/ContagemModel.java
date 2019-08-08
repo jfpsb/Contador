@@ -113,6 +113,11 @@ public class ContagemModel implements Serializable, IModel<ContagemModel> {
     }
 
     @Override
+    public Boolean inserir(ArrayList<ContagemModel> lista) {
+        return null;
+    }
+
+    @Override
     public Boolean atualizar() {
         try {
             conexaoBanco.conexao().beginTransaction();

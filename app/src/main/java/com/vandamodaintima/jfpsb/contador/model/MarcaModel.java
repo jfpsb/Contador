@@ -56,6 +56,11 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
     }
 
     @Override
+    public Boolean inserir(ArrayList<MarcaModel> lista) {
+        return null;
+    }
+
+    @Override
     public Boolean atualizar() {
         try {
             conexaoBanco.conexao().beginTransaction();

@@ -126,47 +126,42 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
         return false;
     }
 
-    public Boolean importarDeExcel(ArrayList<ProdutoModel> produtos, TelaProduto.ImportarProdutoAsyncTask importarProdutoAsyncTask) {
+    @Override
+    public Boolean inserir(ArrayList<ProdutoModel> lista) {
         try {
-            if(produtos.size() == 0) {
-                throw new Exception("Lista de Produtos Está Vazia");
-            }
-
             conexaoBanco.conexao().beginTransaction();
 
-            for (ProdutoModel produtoModel : produtos) {
+            for(ProdutoModel p : lista) {
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("cod_barra", produtoModel.getCod_barra());
-                contentValues.put("descricao", produtoModel.getDescricao());
-                contentValues.put("preco", produtoModel.getPreco());
+                contentValues.put("cod_barra", p.getCod_barra());
+                contentValues.put("descricao", p.getDescricao());
+                contentValues.put("preco", p.getPreco());
 
-                if (produtoModel.getFornecedor() != null) {
-                    contentValues.put("fornecedor", produtoModel.getFornecedor().getCnpj());
+                if (getFornecedor() != null) {
+                    contentValues.put("fornecedor", p.getFornecedor().getCnpj());
                 } else {
                     contentValues.putNull("fornecedor");
                 }
 
-                if (produtoModel.getMarca() != null) {
-                    contentValues.put("marca", produtoModel.getMarca().getNome());
+                if (getMarca() != null) {
+                    contentValues.put("marca", p.getMarca().getNome());
                 } else {
                     contentValues.putNull("marca");
                 }
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
-                for (int i = 0; i < produtoModel.getCod_barra_fornecedor().size(); i++) {
-                    String codigo = produtoModel.getCod_barra_fornecedor().get(i);
+                for (int i = 0; i < p.getCod_barra_fornecedor().size(); i++) {
+                    String codigo = p.getCod_barra_fornecedor().get(i);
 
                     ContentValues content = new ContentValues();
 
-                    content.put("produto", produtoModel.getCod_barra());
+                    content.put("produto", p.getCod_barra());
                     content.put("codigo", codigo);
 
                     conexaoBanco.conexao().insertWithOnConflict("cod_barra_fornecedor", null, content, SQLiteDatabase.CONFLICT_IGNORE);
                 }
-
-                importarProdutoAsyncTask.publish("Produto " + produtoModel.getCod_barra() + " - " + produtoModel.getDescricao() + " Cadastrado");
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();

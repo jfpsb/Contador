@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -12,9 +13,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
-public class LojaStrategy implements IExportarStrategy {
+public class ExcelLojaStrategy implements IExcelStrategy<LojaModel> {
     @Override
-    public void escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
         //Estilo da primeira linha
         CellStyle cellStyle = workbook.createCellStyle();
 
@@ -77,6 +78,12 @@ public class LojaStrategy implements IExportarStrategy {
         sheet.setColumnWidth(0, 25 * 256);
         sheet.setColumnWidth(1, 30 * 256);
         sheet.setColumnWidth(2, 30 * 256);
-        //sheet.setColumnWidth(5, 40 * 256);
+
+        return "Lojas.xlsx";
+    }
+
+    @Override
+    public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
+        return false;
     }
 }

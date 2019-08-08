@@ -8,6 +8,7 @@ public interface IModel<T> {
     String LOG = "Contador";
 
     Boolean inserir();
+    Boolean inserir(ArrayList<T> lista);
     Boolean atualizar();
     Boolean deletar();
     Cursor listarCursor();

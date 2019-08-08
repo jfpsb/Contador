@@ -92,6 +92,11 @@ public class FornecedorModel implements Serializable, IModel<FornecedorModel> {
     }
 
     @Override
+    public Boolean inserir(ArrayList<FornecedorModel> lista) {
+        return null;
+    }
+
+    @Override
     public Boolean atualizar() {
         try {
             conexaoBanco.conexao().beginTransaction();

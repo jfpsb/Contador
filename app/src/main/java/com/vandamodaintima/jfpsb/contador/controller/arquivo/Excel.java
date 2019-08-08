@@ -2,6 +2,8 @@ package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
 import android.util.Log;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,32 +12,40 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Excel {
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
     private FormulaEvaluator formulaEvaluator;
-    private IExportarStrategy exportarStrategy;
+    private IExcelStrategy excelStrategy;
 
-    public Excel(IExportarStrategy exportarStrategy) {
+    public Excel(IExcelStrategy excelStrategy) {
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet();
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        this.exportarStrategy = exportarStrategy;
+        this.excelStrategy = excelStrategy;
     }
 
-    public void exportar(String dir, Object lista) {
+    public Excel(IExcelStrategy excelStrategy, InputStream inputStream) {
+        workbook = new XSSFWorkbook();
+        sheet = workbook.createSheet();
+        formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+        this.excelStrategy = excelStrategy;
+    }
+
+    public Boolean exportar(String dir, Object lista) {
         OutputStream outputStream = null;
 
-        exportarStrategy.escreveDados(workbook, sheet, lista);
+        String nomeArquivo = excelStrategy.escreveDados(workbook, sheet, lista);
 
-        String nomeArquivo = "Produtos.xlsx";
         File arquivo = new File(dir, nomeArquivo);
 
         try {
             outputStream = new FileOutputStream(arquivo.getAbsolutePath());
             workbook.write(outputStream);
+            return true;
         } catch (FileNotFoundException fe) {
             Log.e("Contador", fe.getMessage(), fe);
         } catch (IOException ie) {
@@ -50,9 +60,11 @@ public class Excel {
                 e.printStackTrace();
             }
         }
+
+        return false;
     }
 
-    public void importar(String dir) {
-
+    public Boolean importar(ConexaoBanco conexaoBanco) {
+        return excelStrategy.lerInserirDados(workbook, sheet, conexaoBanco);
     }
 }

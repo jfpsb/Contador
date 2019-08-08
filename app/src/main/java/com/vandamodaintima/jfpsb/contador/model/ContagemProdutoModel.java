@@ -94,6 +94,11 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
     }
 
     @Override
+    public Boolean inserir(ArrayList<ContagemProdutoModel> lista) {
+        return null;
+    }
+
+    @Override
     public Boolean atualizar() {
         try {
             conexaoBanco.conexao().beginTransaction();

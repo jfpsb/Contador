@@ -91,6 +91,11 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
     }
 
     @Override
+    public Boolean inserir(ArrayList<LojaModel> lista) {
+        return null;
+    }
+
+    @Override
     public Boolean atualizar() {
         try {
             conexaoBanco.conexao().beginTransaction();
