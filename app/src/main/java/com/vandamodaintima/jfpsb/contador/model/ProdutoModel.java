@@ -138,13 +138,13 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
                 contentValues.put("descricao", p.getDescricao());
                 contentValues.put("preco", p.getPreco());
 
-                if (getFornecedor() != null) {
+                if (p.getFornecedor() != null) {
                     contentValues.put("fornecedor", p.getFornecedor().getCnpj());
                 } else {
                     contentValues.putNull("fornecedor");
                 }
 
-                if (getMarca() != null) {
+                if (p.getMarca() != null) {
                     contentValues.put("marca", p.getMarca().getNome());
                 } else {
                     contentValues.putNull("marca");
@@ -435,7 +435,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
     }
 
     public Cursor listarPorMarcaCursor(String marca) {
-        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN marca ON produto.marca = marca.id WHERE (marca = id OR marca IS NULL) AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN marca ON produto.marca = marca.nome WHERE (marca = nome OR marca IS NULL) AND nome LIKE ? ORDER BY descricao";
 
         String[] selection = new String[]{"%" + marca + "%"};
 

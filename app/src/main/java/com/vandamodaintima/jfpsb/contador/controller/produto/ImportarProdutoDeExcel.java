@@ -15,6 +15,7 @@ import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> {
@@ -46,7 +47,13 @@ public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> 
             return false;
         }
 
-        return new Excel(new ExcelProdutoStrategy(), inputStream).importar(conexaoBanco);
+        try {
+            return new Excel(new ExcelProdutoStrategy(), inputStream).importar(conexaoBanco);
+        } catch (IOException e) {
+            Log.e("Contador", e.getMessage());
+        }
+
+        return false;
     }
 
     @Override

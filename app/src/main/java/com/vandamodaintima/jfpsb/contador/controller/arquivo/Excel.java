@@ -28,9 +28,9 @@ public class Excel {
         this.excelStrategy = excelStrategy;
     }
 
-    public Excel(IExcelStrategy excelStrategy, InputStream inputStream) {
-        workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet();
+    public Excel(IExcelStrategy excelStrategy, InputStream inputStream) throws IOException {
+        workbook = new XSSFWorkbook(inputStream);
+        sheet = workbook.getSheetAt(0);
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
         this.excelStrategy = excelStrategy;
     }

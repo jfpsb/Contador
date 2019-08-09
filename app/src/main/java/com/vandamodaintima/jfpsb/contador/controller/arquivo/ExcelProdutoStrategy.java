@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
     @Override
@@ -50,11 +51,15 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
         Cell marca = cabecalho.createCell(4);
         marca.setCellValue("Marca");
 
+        Cell codbarrafornecedor = cabecalho.createCell(5);
+        codbarrafornecedor.setCellValue("Cód. de Barra de Fornecedor");
+
         codBarra.setCellStyle(cellStyle);
         descricao.setCellStyle(cellStyle);
         preco.setCellStyle(cellStyle);
         fornecedor.setCellStyle(cellStyle);
         marca.setCellStyle(cellStyle);
+        codbarrafornecedor.setCellStyle(cellStyle);
 
         //Estilo para restante das células
         cellStyle = workbook.createCellStyle();
@@ -73,7 +78,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < 6; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
@@ -87,6 +92,17 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
             rows[i].getCell(2).setCellValue(p.getPreco());
             rows[i].getCell(3).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
             rows[i].getCell(4).setCellValue(p.getMarca() == null ? "NÃO POSSUI" : p.getMarca().getNome());
+
+            String codigos = "";
+
+            for(int j = 0; j < p.getCod_barra_fornecedor().size(); j++) {
+                codigos += p.getCod_barra_fornecedor().get(j);
+
+                if(j != p.getCod_barra_fornecedor().size() - 1)
+                    codigos += ",";
+            }
+
+            rows[i].getCell(5).setCellValue(codigos);
         }
 
         sheet.setColumnWidth(0, 25 * 256);
@@ -94,6 +110,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
         sheet.setColumnWidth(2, 40 * 256);
         sheet.setColumnWidth(3, 40 * 256);
         sheet.setColumnWidth(4, 40 * 256);
+        sheet.setColumnWidth(5, 40 * 256);
 
         return "Produtos.xlsx";
     }
@@ -107,7 +124,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
         Row cabecalho = sheet.getRow(0);
         int numCols = cabecalho.getPhysicalNumberOfCells();
-        if (numCols != 5) {
+        if (numCols != 6) {
             Log.e("Contador", "O Número de Colunas Está Errado");
             return false;
         }
@@ -124,12 +141,13 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
             Cell preco = row.getCell(2);
             Cell fornecedor = row.getCell(3);
             Cell marca = row.getCell(4);
+            Cell codbarrafornecedor = row.getCell(5);
 
             if (cod_barra != null && cod_barra.getCellType() != Cell.CELL_TYPE_BLANK) {
                 if (cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
                     p.setCod_barra(cod_barra.getStringCellValue());
                 } else if (cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                    p.setCod_barra(String.valueOf(cod_barra.getNumericCellValue()));
+                    p.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue()));
                 } else {
                     Log.i("Contador", "Código de Barra Vazio");
                     continue;
@@ -156,7 +174,22 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
             if (fornecedor != null && fornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
                 if (fornecedor.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                    p.setFornecedor(fornecedorModel.listarPorId(fornecedor.getNumericCellValue()));
+                    //O Excel apaga zeros iniciais de células configuradas como números então aqui eu os coloco de volta
+                    String cnpj = String.format(Locale.ENGLISH, "%.0f", fornecedor.getNumericCellValue());
+
+                    if(cnpj.length() != 14) {
+                        int diff = 14 - cnpj.length();
+
+                        String append = "";
+
+                        for(int j = 0; j < diff; j++) {
+                            append += "0";
+                        }
+
+                        append += cnpj;
+                        cnpj = append;
+                    }
+                    p.setFornecedor(fornecedorModel.listarPorId(cnpj));
                 } else if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
                     p.setFornecedor(fornecedorModel.listarPorId(fornecedor.getStringCellValue()));
                 } else {
@@ -168,11 +201,30 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
             if (marca != null && marca.getCellType() != Cell.CELL_TYPE_BLANK) {
                 if (marca.getCellType() == Cell.CELL_TYPE_NUMERIC) {
                     p.setMarca(marcaModel.listarPorId(marca.getNumericCellValue()));
-                } else if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
+                } else if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
                     p.setMarca(marcaModel.listarPorId(marca.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrada ou Vazia");
                     p.setMarca(null);
+                }
+            }
+
+            if(codbarrafornecedor != null && codbarrafornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
+                if(marca.getCellType() == Cell.CELL_TYPE_STRING) {
+                    String conteudo = codbarrafornecedor.getStringCellValue();
+                    String[] partes = null;
+                    if(conteudo.contains(",")) {
+                        partes = conteudo.split(",");
+
+                        for(String s : partes) {
+                            p.getCod_barra_fornecedor().add(s);
+                        }
+                    }else {
+                        p.getCod_barra_fornecedor().add(conteudo);
+                    }
+                } else {
+                    Log.i("Contador", "Cód. de Barras de Fornecedor em Formato Errado");
+                    continue;
                 }
             }
 

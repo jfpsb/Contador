@@ -83,7 +83,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
         alertaRemoverLista.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                controller.getCodBarraFornecedor().remove(index);
+                codigos.remove(index);
 
                 Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(1);
                 if (fragment instanceof InserirCodBarraFornecedor) {

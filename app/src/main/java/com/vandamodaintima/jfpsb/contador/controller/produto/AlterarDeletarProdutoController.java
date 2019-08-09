@@ -41,7 +41,7 @@ public class AlterarDeletarProdutoController {
             produtoModel.setFornecedor(fornecedorModel);
         }
 
-        if(marcaModel.getNome() == null) {
+        if( marcaModel.getNome() == null) {
             produtoModel.setMarca(null);
         }
         else {
@@ -74,8 +74,12 @@ public class AlterarDeletarProdutoController {
 
     public void carregaProduto(String id) {
         produtoModel.load(id);
-        fornecedorModel = produtoModel.getFornecedor();
-        marcaModel = produtoModel.getMarca();
+
+        if(produtoModel.getFornecedor() != null)
+            fornecedorModel = produtoModel.getFornecedor();
+
+        if(produtoModel.getMarca() != null)
+            marcaModel = produtoModel.getMarca();
     }
 
     public void carregaFornecedor(String id) {
