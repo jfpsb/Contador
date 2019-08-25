@@ -1,17 +1,17 @@
-package com.vandamodaintima.jfpsb.contador.controller.produto;
+package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 
-public class ExportarProdutoParaExcel extends AsyncTask<Object, Integer, Boolean> {
+public class ExportarContagemProdutoParaExcel extends AsyncTask<Object, Integer, Boolean> {
     private Context context;
 
-    public ExportarProdutoParaExcel(Context context) {
+    public ExportarContagemProdutoParaExcel(Context context) {
         this.context = context;
     }
 
@@ -19,7 +19,7 @@ public class ExportarProdutoParaExcel extends AsyncTask<Object, Integer, Boolean
     public Boolean doInBackground(Object... objects) {
         String diretorio = (String) objects[0];
         Object lista = objects[1];
-        return new Excel(new ExcelStrategy(new ExcelProdutoStrategy())).exportar(diretorio, lista);
+        return new Excel(new ExcelStrategy(new ExcelContagemProdutoStrategy())).exportar(diretorio, lista);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class ExportarProdutoParaExcel extends AsyncTask<Object, Integer, Boolean
     @Override
     public void onPostExecute(Boolean aBoolean) {
         if (aBoolean)
-            Toast.makeText(context, "Produtos Exportados Com Sucesso", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Contagem de Produtos Exportados Com Sucesso", Toast.LENGTH_SHORT).show();
     }
 }

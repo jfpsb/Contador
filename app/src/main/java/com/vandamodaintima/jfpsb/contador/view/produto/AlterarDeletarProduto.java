@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.produto;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -133,6 +134,11 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 }
             }
         });
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 
     @Override

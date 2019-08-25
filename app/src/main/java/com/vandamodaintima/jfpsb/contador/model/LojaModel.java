@@ -19,8 +19,6 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
     private String nome;
     private String telefone;
 
-    private static final String[] colunas = new String[]{"cnpj as _id", "matriz", "nome", "telefone"};
-
     public LojaModel(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
     }
@@ -58,7 +56,11 @@ public class LojaModel implements Serializable, IModel<LojaModel> {
     }
 
     public static String[] getColunas() {
-        return colunas;
+        return new String[]{"cnpj as _id", "matriz", "nome", "telefone"};
+    }
+
+    public static String[] getHeaders() {
+        return new String[] { "CNPJ", "Nome", "Matriz", "Telefone"};
     }
 
     @Override

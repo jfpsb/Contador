@@ -31,6 +31,10 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
         fornecedorModel = new FornecedorModel(conexaoBanco);
     }
 
+    public static String[] getHeaders() {
+        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Fornecedor", "Marca", "Cód. de Barra de Fornecedor"};
+    }
+
     public String getCod_barra() {
         return cod_barra;
     }
@@ -223,11 +227,7 @@ public class ProdutoModel implements Serializable, IModel<ProdutoModel> {
 
     public Boolean deletar() {
         int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{getCod_barra()});
-
-        if (result > 0)
-            return true;
-
-        return false;
+        return result > 0;
     }
 
     public Cursor listarCursor() {

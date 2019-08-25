@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.TelaFornecedorController;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
@@ -25,7 +26,8 @@ public class TelaFornecedor extends TabLayoutBaseView {
     protected CadastrarFornecedor cadastrarFornecedor;
     protected PesquisarFornecedor pesquisarFornecedor;
 
-    private TelaFornecedorController telaFornecedorController;
+    private ConexaoBanco conexaoBanco;
+    private TelaFornecedorController controller;
 
     private static final int ESCOLHER_ARQUIVO = 1;
     private static final int ESCOLHER_DIRETORIO = 2;
@@ -48,6 +50,9 @@ public class TelaFornecedor extends TabLayoutBaseView {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         setViewPagerTabLayout(pesquisarFornecedor, cadastrarFornecedor);
+
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new TelaFornecedorController(this, conexaoBanco);
     }
 
     @Override
@@ -79,13 +84,11 @@ public class TelaFornecedor extends TabLayoutBaseView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PEDIDO_PERMISSAO_READ:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
-                    AbrirEscolhaDiretorioActivity();
-                }
-                break;
+        if (requestCode == PEDIDO_PERMISSAO_READ) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
+                AbrirEscolhaDiretorioActivity();
+            }
         }
     }
 
@@ -93,7 +96,7 @@ public class TelaFornecedor extends TabLayoutBaseView {
         Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
 
         DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - FornecedorModel Em Excel").allowReadOnlyDirectory(true).
+                newDirectoryName("Contador - Fornecedor Em Excel").allowReadOnlyDirectory(true).
                 build();
 
         intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
@@ -106,16 +109,7 @@ public class TelaFornecedor extends TabLayoutBaseView {
             case ESCOLHER_DIRETORIO:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-
-//                    ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
-
-//                    boolean result = manipulaExcel.ExportaFornecedor(diretorio);
-
-//                    if (result) {
-//                        Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
-//                    }
+                    controller.exportarFornecedoresParaExcel(diretorio);
                 }
                 break;
 
@@ -134,35 +128,5 @@ public class TelaFornecedor extends TabLayoutBaseView {
 
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
-    }
-
-    public class ExportarFornecedorEmExcel extends AsyncTask<String, String, Void> {
-
-        public class Progresso {
-            private ExportarFornecedorEmExcel exportarFornecedorEmExcel;
-
-            public Progresso(ExportarFornecedorEmExcel exportarFornecedorEmExcel) {
-                this.exportarFornecedorEmExcel = exportarFornecedorEmExcel;
-            }
-
-            public void publish(String mensagem) {
-                exportarFornecedorEmExcel.publishProgress(mensagem);
-            }
-        }
-
-        private Progresso progresso = new Progresso(this);
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            String mensagem = values[0];
-            mensagemAoUsuario(mensagem);
-        }
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            String diretorio = strings[0];
-            //telaFornecedorController.exportarProdutosEmExcel(diretorio, progresso);
-            return null;
-        }
     }
 }

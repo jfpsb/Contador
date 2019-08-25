@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,9 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdutoStrategy;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AlterarDeletarContagemController;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
@@ -75,6 +79,11 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 
     @Override
@@ -181,17 +190,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         if (requestCode == ESCOLHER_DIRETORIO) {
             if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                 String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-
-//                ManipulaExcel manipulaExcel = new ManipulaExcel(conn);
-//
-//                boolean result = manipulaExcel.ExportaContagem(contagem, diretorio);
-//
-//                if(result) {
-//                    Toast.makeText(this, "Arquivo Exportado Com Sucesso", Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    Toast.makeText(this, "Erro Ao Exportar Arquivo", Toast.LENGTH_SHORT).show();
-//                }
+                controller.exportarParaExcel(diretorio);
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.marca;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -82,5 +83,10 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
                 mensagemAoUsuario("Marca Não Foi Alterada");
             }
         });
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }

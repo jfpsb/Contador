@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -76,6 +77,11 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
                 Toast.makeText(AlterarDeletarFornecedor.this, "FornecedorModel Não Foi Atualizado", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 
     @Override

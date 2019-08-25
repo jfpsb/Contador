@@ -5,15 +5,20 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarContagemController {
     AlterarDeletarView view;
     private ContagemModel contagemModel;
+    private ContagemProdutoModel contagemProdutoModel;
+    private ConexaoBanco conexaoBanco;
 
     public AlterarDeletarContagemController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        this.conexaoBanco = conexaoBanco;
         contagemModel = new ContagemModel(conexaoBanco);
+        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
     }
 
     public void atualizar(Boolean finalizada) {
@@ -58,5 +63,9 @@ public class AlterarDeletarContagemController {
 
     public String getData() {
         return contagemModel.getDataParaSQLite();
+    }
+
+    public void exportarParaExcel(String dir) {
+        new ExportarContagemProdutoParaExcel(view.getContext()).execute(dir, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
     }
 }

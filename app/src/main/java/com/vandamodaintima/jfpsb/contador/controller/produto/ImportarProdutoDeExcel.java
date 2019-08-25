@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
@@ -48,7 +49,7 @@ public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> 
         }
 
         try {
-            return new Excel(new ExcelProdutoStrategy(), inputStream).importar(conexaoBanco);
+            return new Excel(new ExcelStrategy(new ExcelProdutoStrategy()), inputStream).importar(conexaoBanco);
         } catch (IOException e) {
             Log.e("Contador", e.getMessage());
         }

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.loja;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,6 +105,11 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
                 Toast.makeText(AlterarDeletarLoja.this, "A Loja Não Foi Alterada", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 
     @Override

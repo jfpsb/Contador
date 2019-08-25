@@ -25,8 +25,6 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
         produto = new ProdutoModel(conexaoBanco);
     }
 
-    private static final String[] colunas = new String[] { "id as _id", "produtoModel", "contagem_data", "contagem_loja", "quant" };
-
     public long getId() {
         return id;
     }
@@ -64,7 +62,11 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
     }
 
     public static String[] getColunas() {
-        return colunas;
+        return new String[] { "id as _id", "produto", "contagem_data", "contagem_loja", "quant" };
+    }
+
+    public static String[] getHeaders() {
+        return new String[] { "Cód De Barra", "Descrição", "Quantidade" };
     }
 
     @Override
@@ -126,11 +128,7 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
     @Override
     public Boolean deletar() {
         int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{getIdString()});
-
-        if(result > 0)
-            return true;
-
-        return false;
+        return result > 0;
     }
 
     @Override
@@ -222,9 +220,34 @@ public class ContagemProdutoModel implements Serializable, IModel<ContagemProdut
         String loja = contagem.getLoja().getCnpj();
         String data = contagem.getDataParaSQLite();
 
-        String sql = "SELECT id as _id, SUM(quant) as quant, cod_barra, descricao FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
+        String sql = "SELECT id as _id, SUM(quant) as quant, produto, descricao, contagem_loja, contagem_data FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
         String[] selection = new String[]{loja, data};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);
+    }
+
+    public ArrayList<ContagemProdutoModel> listarPorContagemGroupByProduto(ContagemModel contagem) {
+        ArrayList<ContagemProdutoModel> contagemProdutoModels = new ArrayList<>();
+        Cursor cursor = listarPorContagemGroupByProdutoCursor(contagem);
+
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                ContagemProdutoModel contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
+
+                contagemProdutoModel.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                contagemProdutoModel.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+
+                String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
+                String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
+                contagemProdutoModel.setContagem(contagem.listarPorId(loja, data));
+
+                String p = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
+                contagemProdutoModel.setProduto(produto.listarPorId(p));
+
+                contagemProdutoModels.add(contagemProdutoModel);
+            }
+        }
+
+        return contagemProdutoModels;
     }
 }

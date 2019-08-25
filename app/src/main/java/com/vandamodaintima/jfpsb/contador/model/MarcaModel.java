@@ -15,7 +15,6 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
     private ConexaoBanco conexaoBanco;
 
     private String nome;
-    private static final String[] colunas = new String[]{"nome as _id"};
 
     public MarcaModel(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
@@ -30,7 +29,11 @@ public class MarcaModel implements Serializable, IModel<MarcaModel> {
     }
 
     public static String[] getColunas() {
-        return colunas;
+        return new String[]{"nome as _id"};
+    }
+
+    public static String[] getHeaders() {
+        return new String[] {"Nome"};
     }
 
     @Override

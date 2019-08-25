@@ -28,8 +28,6 @@ public class FornecedorModel implements Serializable, IModel<FornecedorModel> {
         this.conexaoBanco = conexaoBanco;
     }
 
-    private static final String[] colunas = new String[]{"cnpj as _id", "nome", "fantasia", "email"};
-
     public String getCnpj() {
         return cnpj;
     }
@@ -63,7 +61,11 @@ public class FornecedorModel implements Serializable, IModel<FornecedorModel> {
     }
 
     public static String[] getColunas() {
-        return colunas;
+        return new String[]{"cnpj as _id", "nome", "fantasia", "email"};
+    }
+
+    public static String[] getHeaders() {
+        return new String[] { "CNPJ", "Nome", "Nome Fantasia", "Email"};
     }
 
     @Override

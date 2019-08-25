@@ -104,6 +104,7 @@ public class CadastrarFornecedorController {
                     String cnpj = strings[1];
                     String nome = null;
                     String fantasia = null;
+                    String email = null;
                     String message;
 
                     jsonReader.beginObject();
@@ -117,6 +118,9 @@ public class CadastrarFornecedorController {
                                 break;
                             case "fantasia":
                                 fantasia = jsonReader.nextString();
+                                break;
+                            case "email":
+                                email = jsonReader.nextString();
                                 break;
                             case "message":
                                 message = jsonReader.nextString();
@@ -134,7 +138,7 @@ public class CadastrarFornecedorController {
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome);
                     fornecedor.setFantasia(fantasia);
-                    fornecedor.setEmail("");
+                    fornecedor.setEmail(email);
 
                     return fornecedor;
                 } else {

@@ -7,6 +7,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public interface IExcelStrategy<T> {
     String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista);
-
     Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco);
+    String[] getHeaders();
 }

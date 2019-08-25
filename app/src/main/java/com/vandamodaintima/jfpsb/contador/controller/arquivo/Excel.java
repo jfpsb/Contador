@@ -19,16 +19,16 @@ public class Excel {
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
     private FormulaEvaluator formulaEvaluator;
-    private IExcelStrategy excelStrategy;
+    private ExcelStrategy excelStrategy;
 
-    public Excel(IExcelStrategy excelStrategy) {
+    public Excel(ExcelStrategy excelStrategy) {
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet();
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
         this.excelStrategy = excelStrategy;
     }
 
-    public Excel(IExcelStrategy excelStrategy, InputStream inputStream) throws IOException {
+    public Excel(ExcelStrategy excelStrategy, InputStream inputStream) throws IOException {
         workbook = new XSSFWorkbook(inputStream);
         sheet = workbook.getSheetAt(0);
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();

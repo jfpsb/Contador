@@ -27,8 +27,6 @@ public class ContagemModel implements Serializable, IModel<ContagemModel> {
         loja = new LojaModel(conexaoBanco);
     }
 
-    private static final String[] colunas = new String[]{"ROWID as _id", "loja", "data", "finalizada"};
-
     public LojaModel getLoja() {
         return loja;
     }
@@ -80,7 +78,7 @@ public class ContagemModel implements Serializable, IModel<ContagemModel> {
     }
 
     public static String[] getColunas() {
-        return colunas;
+        return new String[]{"ROWID as _id", "loja", "data", "finalizada"};
     }
 
     public static String getDataSQLite(Date data) {

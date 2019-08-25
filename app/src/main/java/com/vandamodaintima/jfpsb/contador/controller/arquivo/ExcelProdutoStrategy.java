@@ -7,7 +7,6 @@ import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -21,54 +20,12 @@ import java.util.Locale;
 public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
     @Override
     public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
-        //Estilo da primeira linha
         CellStyle cellStyle = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
-        fonte.setFontName("Arial");
-        fonte.setFontHeightInPoints((short) 16);
-        fonte.setBold(true);
-
-        cellStyle.setFont(fonte);
-        cellStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
-
-        Row cabecalho = sheet.createRow(0);
-
-        Cell codBarra = cabecalho.createCell(0);
-        codBarra.setCellValue("Cód. De Barra");
-
-        Cell descricao = cabecalho.createCell(1);
-        descricao.setCellValue("Descrição");
-
-        Cell preco = cabecalho.createCell(2);
-        preco.setCellValue("Preço");
-
-        Cell fornecedor = cabecalho.createCell(3);
-        fornecedor.setCellValue("Fornecedor");
-
-        Cell marca = cabecalho.createCell(4);
-        marca.setCellValue("Marca");
-
-        Cell codbarrafornecedor = cabecalho.createCell(5);
-        codbarrafornecedor.setCellValue("Cód. de Barra de Fornecedor");
-
-        codBarra.setCellStyle(cellStyle);
-        descricao.setCellStyle(cellStyle);
-        preco.setCellStyle(cellStyle);
-        fornecedor.setCellStyle(cellStyle);
-        marca.setCellStyle(cellStyle);
-        codbarrafornecedor.setCellStyle(cellStyle);
-
-        //Estilo para restante das células
-        cellStyle = workbook.createCellStyle();
-
-        fonte = workbook.createFont();
         fonte.setFontHeightInPoints((short) 12);
 
         cellStyle.setFont(fonte);
-
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
@@ -78,7 +35,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < 6; j++) {
+            for (int j = 0; j < ProdutoModel.getHeaders().length; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
@@ -124,7 +81,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
         Row cabecalho = sheet.getRow(0);
         int numCols = cabecalho.getPhysicalNumberOfCells();
-        if (numCols != 6) {
+        if (numCols != ProdutoModel.getHeaders().length) {
             Log.e("Contador", "O Número de Colunas Está Errado");
             return false;
         }
@@ -232,5 +189,10 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
         }
 
         return produtoModel.inserir(produtos);
+    }
+
+    @Override
+    public String[] getHeaders() {
+        return ProdutoModel.getHeaders();
     }
 }
