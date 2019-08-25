@@ -9,10 +9,10 @@ import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdut
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 
 public class ExportarContagemProdutoParaExcel extends AsyncTask<Object, Integer, Boolean> {
-    private Context context;
+    private Toast toast;
 
-    public ExportarContagemProdutoParaExcel(Context context) {
-        this.context = context;
+    ExportarContagemProdutoParaExcel(Context context) {
+        toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -24,12 +24,15 @@ public class ExportarContagemProdutoParaExcel extends AsyncTask<Object, Integer,
 
     @Override
     public void onPreExecute() {
-        Toast.makeText(context, "Iniciando Exportação para Excel", Toast.LENGTH_SHORT).show();
+        toast.setText("Iniciando Exportação para Excel");
+        toast.show();
     }
 
     @Override
     public void onPostExecute(Boolean aBoolean) {
-        if (aBoolean)
-            Toast.makeText(context, "Contagem de Produtos Exportados Com Sucesso", Toast.LENGTH_SHORT).show();
+        if (aBoolean) {
+            toast.setText("Contagem de Produtos Exportada Com Sucesso");
+            toast.show();
+        }
     }
 }
