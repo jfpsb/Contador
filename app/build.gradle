@@ -5,7 +5,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         applicationId "com.vandamodaintima.jfpsb.contador"
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.2.1.1.1"
