@@ -64,7 +64,7 @@ public class PesquisarProdutoController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    //Utilizado apenas na tela de pesquisar produtoModel para adicionar contagem
+    //Utilizado apenas na tela de pesquisar produto para adicionar em contagem
     public void atualizar() {
         Boolean result = produtoModel.atualizar();
 

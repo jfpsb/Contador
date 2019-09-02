@@ -60,7 +60,9 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                         return;
                     }
 
-                    controller.addCodBarraFornecedor(codigo);
+                    if (codigo != null && !codigo.isEmpty())
+                        controller.addCodBarraFornecedor(codigo);
+
                     controller.atualizar();
 
                     Intent intent = new Intent();
