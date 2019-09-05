@@ -19,6 +19,9 @@ public class TelaLerCodigoDeBarraController {
 
     public TelaLerCodigoDeBarraController(ITelaLerCodigoDeBarra view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        produtoModel = new ProdutoModel(conexaoBanco);
+        contagemModel = new ContagemModel(conexaoBanco);
+        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
         contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<ProdutoModel>());
     }
 
@@ -32,6 +35,7 @@ public class TelaLerCodigoDeBarraController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
@@ -47,6 +51,7 @@ public class TelaLerCodigoDeBarraController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
@@ -57,7 +62,7 @@ public class TelaLerCodigoDeBarraController {
             ArrayList<ProdutoModel> produtos = produtoModel.listarPorCodBarra(cod_barra);
 
             if (produtos.size() == 0) {
-                view.abrirProdutoNaoEncontradoDialog();
+                view.abrirProdutoNaoEncontradoDialog(cod_barra);
             } else if (produtos.size() == 1) {
                 produtoModel = produtos.get(0);
                 cadastrar();
@@ -74,9 +79,8 @@ public class TelaLerCodigoDeBarraController {
         return contagemProdutoModel.listarPorId(id);
     }
 
-    public void carregaContagem(String id1, String id2) {
-        contagemModel.load(id1, id2);
-        contagemProdutoModel.setContagem(contagemModel);
+    public void carregaContagem(String loja, String data) {
+        contagemModel.load(loja, data);
     }
 
     public void carregaProduto(String id) {

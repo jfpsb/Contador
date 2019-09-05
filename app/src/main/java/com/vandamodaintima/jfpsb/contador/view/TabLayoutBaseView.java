@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -37,6 +36,7 @@ public class TabLayoutBaseView extends ActivityBaseView {
 
     /**
      * Método que deve ser chamado na classe filha para inserir as fragments que ficarão nas abas
+     *
      * @param fragments Fragments, na ordem que devem ser inseridas no tablayout
      */
     protected void setViewPagerTabLayout(Fragment... fragments) {
@@ -87,5 +87,9 @@ public class TabLayoutBaseView extends ActivityBaseView {
 
     public MyPagerAdapter getPagerAdapter() {
         return adapter;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
     }
 }

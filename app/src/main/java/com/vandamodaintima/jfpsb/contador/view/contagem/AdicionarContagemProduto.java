@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -72,8 +73,10 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
     }
 
     @Override
-    public void abrirTelaProdutoForResult() {
+    public void abrirTelaProdutoForResult(String... codigo) {
         Intent intent = new Intent(this, TelaProdutoForContagemForResult.class);
+        if (codigo.length > 0)
+            intent.putExtra("codigo", codigo[0]);
         startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
     }
 

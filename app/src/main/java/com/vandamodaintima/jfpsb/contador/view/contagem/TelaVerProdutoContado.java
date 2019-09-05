@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaVerProdutoContadoController;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaVerProdutoContado;
@@ -25,8 +24,9 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaVerProdutoContado
 public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoContado {
     private ListView listViewContagemProduto;
     private AlertDialog.Builder deletarContagemProdutoDialog;
-    private ConexaoBanco conexaoBanco;
     private TelaVerProdutoContadoController controller;
+
+    private IAdicionarContagemProduto owner;
 
     @Nullable
     @Override
@@ -35,8 +35,8 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
 
         listViewContagemProduto = view.findViewById(R.id.listViewAdicionarContagem);
 
-        conexaoBanco = ((IAdicionarContagemProduto) getActivity()).getConexaoBanco();
-        controller = new TelaVerProdutoContadoController(this, conexaoBanco);
+        owner = (IAdicionarContagemProduto) getActivity();
+        controller = new TelaVerProdutoContadoController(this, owner.getConexaoBanco());
 
         Bundle bundle = getArguments();
         String loja = bundle.getString("loja");
