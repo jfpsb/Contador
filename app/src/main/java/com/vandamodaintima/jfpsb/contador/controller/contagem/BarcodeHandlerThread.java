@@ -12,8 +12,12 @@ import android.view.TextureView;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class BarcodeHandlerThread extends HandlerThread {
     private Handler handler;
@@ -21,7 +25,8 @@ public class BarcodeHandlerThread extends HandlerThread {
     private WeakReference<TextureView> textureViewWeakReference;
     private BarcodeDetector barcodeDetector;
     private TelaLerCodigoDeBarraController controller;
-    private SparseArray<Barcode> barcodeSparseArray = new SparseArray<>();
+    private ITelaLerCodigoDeBarra view;
+    private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
 
     private boolean textureViewVisible = true;
 
@@ -37,43 +42,61 @@ public class BarcodeHandlerThread extends HandlerThread {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
-                        if (textureViewVisible) {
+                        if (textureViewVisible && barcodeDetector.isOperational()) {
                             Bitmap bitmap = Bitmap.createBitmap(textureViewWeakReference.get().getWidth(), textureViewWeakReference.get().getHeight(), Bitmap.Config.ARGB_8888);
                             textureViewWeakReference.get().getBitmap(bitmap);
                             Frame frame = new Frame.Builder().setBitmap(bitmap).build();
 
-                            if (barcodeDetector.isOperational()) {
-                                barcodeSparseArray = barcodeDetector.detect(frame);
-                                if (barcodeSparseArray.size() > 0) {
-                                    sendEmptyMessage(2);
-                                } else {
-                                    sendEmptyMessage(1);
-                                }
-                            } else {
+                            SparseArray<Barcode> barcodeSparseArray = barcodeDetector.detect(frame);
+
+                            if (barcodeSparseArray.size() == 0) {
                                 sendEmptyMessage(1);
+                            } else if (barcodeSparseArray.size() == 1) {
+                                Log.i("Contador", "Um Código de Barras Encontrado");
+                                Message message = handler.obtainMessage();
+                                message.what = 2;
+                                message.obj = barcodeSparseArray;
+                                sendMessage(message);
+                            } else {
+                                //TODO: abrir tela para lidar com leitura de múltiplos códigos
+                                Log.i("Contador", "Vários Códigos de Barras Encontrados. Nº: " + barcodeSparseArray.size());
                             }
                         } else {
                             sendEmptyMessage(1);
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < barcodeSparseArray.size(); i++) {
-                            Barcode barcode = barcodeSparseArray.valueAt(i);
-                            Log.i("Contador", "handleMessage: " + barcode.rawValue);
+                        SparseArray<Barcode> sparseArray = (SparseArray<Barcode>) msg.obj;
 
-                            Message message = handler.obtainMessage();
-                            message.what = 3;
-                            message.obj = barcode.rawValue;
+                        Barcode barcode = sparseArray.valueAt(0);
 
-                            sendMessage(message);
-                        }
+                        Log.i("Contador", "Código Lido: " + barcode.rawValue);
 
-                        barcodeSparseArray.clear();
+                        Message message = handler.obtainMessage();
+                        message.what = 3;
+                        message.obj = barcode.rawValue;
 
-                        sendEmptyMessageDelayed(1, 2000);
+                        sendMessage(message);
+
                         break;
                     case 3:
-                        controller.pesquisarProduto((String) msg.obj);
+                        String codigo = (String) msg.obj;
+                        ArrayList<ProdutoModel> produtos = controller.pesquisarProduto(codigo);
+
+                        if (produtos.size() == 0) {
+                            view.abrirProdutoNaoEncontradoDialog(codigo);
+                        } else if (produtos.size() == 1) {
+                            controller.carregaProduto(produtos.get(0));
+                            controller.cadastrar();
+                        } else {
+                            contagemProdutoDialogArrayAdapter.clear();
+                            contagemProdutoDialogArrayAdapter.addAll(produtos);
+                            contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
+                            view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter);
+                        }
+
+                        sendEmptyMessageDelayed(1, 2000);
+
                         break;
                 }
             }
@@ -98,5 +121,10 @@ public class BarcodeHandlerThread extends HandlerThread {
 
     public void setTextureViewVisible(boolean textureViewVisible) {
         this.textureViewVisible = textureViewVisible;
+    }
+
+    public void setView(ITelaLerCodigoDeBarra view) {
+        this.view = view;
+        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<ProdutoModel>());
     }
 }

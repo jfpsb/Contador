@@ -15,14 +15,12 @@ public class TelaLerCodigoDeBarraController {
     private ProdutoModel produtoModel;
     private ContagemModel contagemModel;
     private ContagemProdutoModel contagemProdutoModel;
-    private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
 
     public TelaLerCodigoDeBarraController(ITelaLerCodigoDeBarra view, ConexaoBanco conexaoBanco) {
         this.view = view;
         produtoModel = new ProdutoModel(conexaoBanco);
         contagemModel = new ContagemModel(conexaoBanco);
         contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<ProdutoModel>());
     }
 
     public void cadastrar(int quantidade) {
@@ -57,22 +55,14 @@ public class TelaLerCodigoDeBarraController {
         }
     }
 
-    public void pesquisarProduto(String cod_barra) {
-        if (!cod_barra.isEmpty()) {
-            ArrayList<ProdutoModel> produtos = produtoModel.listarPorCodBarra(cod_barra);
+    ArrayList<ProdutoModel> pesquisarProduto(String cod_barra) {
+        ArrayList<ProdutoModel> produtos = new ArrayList<>();
 
-            if (produtos.size() == 0) {
-                view.abrirProdutoNaoEncontradoDialog(cod_barra);
-            } else if (produtos.size() == 1) {
-                produtoModel = produtos.get(0);
-                cadastrar();
-            } else {
-                contagemProdutoDialogArrayAdapter.clear();
-                contagemProdutoDialogArrayAdapter.addAll(produtos);
-                contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
-                view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter);
-            }
+        if (!cod_barra.isEmpty()) {
+            produtos = produtoModel.listarPorCodBarra(cod_barra);
         }
+
+        return produtos;
     }
 
     public ContagemProdutoModel retornarContagemProduto(String id) {

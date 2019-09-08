@@ -117,6 +117,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 setUpCamera();
                 openCamera();
+                //Inicia fila de mensagens de thread que detecta códigos da câmera
                 barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
 
@@ -179,6 +180,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         barcodeHandlerThread.setBarcodeDetector(barcodeDetector);
         barcodeHandlerThread.setTextureView(textureView);
         barcodeHandlerThread.setController(controller);
+        barcodeHandlerThread.setView(this);
         barcodeHandlerThread.start();
     }
 
@@ -250,7 +252,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         produtoNaoEncontradoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //TODO: Arrumar bug dos outros dialogs fecharem quando abrem mais de um
                 dialogInterface.dismiss();
                 owner.abrirTelaProdutoForResult(codigo_pesquisado);
             }
@@ -340,7 +341,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         }
 
         if (barcodeHandlerThread != null) {
-            barcodeHandlerThread.quitSafely();
+            barcodeHandlerThread.quit();
             barcodeHandlerThread = null;
         }
     }
@@ -381,7 +382,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                                 TelaLerCodigoDeBarra.this.cameraCaptureSession = cameraCaptureSession;
                                 TelaLerCodigoDeBarra.this.cameraCaptureSession.setRepeatingRequest(captureRequest, null, cameraBackgroundHandler);
                             } catch (CameraAccessException e) {
-                                e.printStackTrace();
+                                Log.e("Contador", e.getMessage(), e);
                             }
                         }
 
