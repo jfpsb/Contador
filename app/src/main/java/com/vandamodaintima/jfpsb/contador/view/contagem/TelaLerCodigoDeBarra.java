@@ -65,7 +65,8 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
     private AlertDialog.Builder escolhaProdutoDialog;
     private AlertDialog.Builder produtoNaoEncontradoDialog;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer erroMediaPlayer;
+    private MediaPlayer codigoLidoMediaPlayer;
 
     private IAdicionarContagemProduto owner;
     private String codigo_pesquisado;
@@ -82,7 +83,8 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         owner = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.buzzer);
+        erroMediaPlayer = MediaPlayer.create(getContext(), R.raw.erro_buzzer);
+        codigoLidoMediaPlayer = MediaPlayer.create(getContext(), R.raw.barcode_beep);
 
         controller = new TelaLerCodigoDeBarraController(this, owner.getConexaoBanco());
 
@@ -187,19 +189,24 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     }
 
     @Override
+    public void playBarcodeBeep() {
+        codigoLidoMediaPlayer.start();
+    }
+
+    @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void abrirProdutoNaoEncontradoDialog(String codigo) {
-        mediaPlayer.start();
+        erroMediaPlayer.start();
         this.codigo_pesquisado = codigo;
         produtoNaoEncontradoDialog.show();
     }
 
     public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter) {
-        mediaPlayer.start();
+        erroMediaPlayer.start();
         escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
         escolhaProdutoDialog.show();
     }

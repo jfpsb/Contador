@@ -99,6 +99,7 @@ public class BarcodeHandlerThread extends HandlerThread {
                         } else if (produtos.size() == 1) {
                             controller.carregaProduto(produtos.get(0));
                             controller.cadastrar();
+                            view.playBarcodeBeep();
                         } else {
                             contagemProdutoDialogArrayAdapter.clear();
                             contagemProdutoDialogArrayAdapter.addAll(produtos);

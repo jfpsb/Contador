@@ -12,5 +12,7 @@ public interface ITelaLerCodigoDeBarra {
 
     void realizarPesquisa();
 
+    void playBarcodeBeep();
+
     Context getContext();
 }
