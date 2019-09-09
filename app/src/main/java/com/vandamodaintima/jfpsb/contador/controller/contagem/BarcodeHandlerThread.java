@@ -1,7 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -13,7 +15,9 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.view.contagem.MultiploCodigoBarraLido;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
 import java.lang.ref.WeakReference;
@@ -26,6 +30,7 @@ public class BarcodeHandlerThread extends HandlerThread {
     private BarcodeDetector barcodeDetector;
     private TelaLerCodigoDeBarraController controller;
     private ITelaLerCodigoDeBarra view;
+    private Contagem contagemModel;
     private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
 
     private boolean textureViewVisible = true;
@@ -58,8 +63,14 @@ public class BarcodeHandlerThread extends HandlerThread {
                                 message.obj = barcodeSparseArray;
                                 sendMessage(message);
                             } else {
-                                //TODO: abrir tela para lidar com leitura de múltiplos códigos
                                 Log.i("Contador", "Vários Códigos de Barras Encontrados. Nº: " + barcodeSparseArray.size());
+                                Intent intent = new Intent(view.getContext(), MultiploCodigoBarraLido.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSparseParcelableArray("barcodes", barcodeSparseArray);
+                                bundle.putString("loja", contagemModel.getLoja().getCnpj());
+                                bundle.putString("data", contagemModel.getDataParaSQLite());
+                                intent.putExtras(bundle);
+                                view.getContext().startActivity(intent);
                             }
                         } else {
                             sendEmptyMessage(1);
@@ -81,7 +92,7 @@ public class BarcodeHandlerThread extends HandlerThread {
                         break;
                     case 3:
                         String codigo = (String) msg.obj;
-                        ArrayList<ProdutoModel> produtos = controller.pesquisarProduto(codigo);
+                        ArrayList<Produto> produtos = controller.pesquisarProduto(codigo);
 
                         if (produtos.size() == 0) {
                             view.abrirProdutoNaoEncontradoDialog(codigo);
@@ -125,6 +136,10 @@ public class BarcodeHandlerThread extends HandlerThread {
 
     public void setView(ITelaLerCodigoDeBarra view) {
         this.view = view;
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<ProdutoModel>());
+        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
+    }
+
+    public void setContagem(Contagem contagemModel) {
+        this.contagemModel = contagemModel;
     }
 }

@@ -37,7 +37,7 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
         lblQuantidade.setTypeface(type);
         lblQuantidadeAdicionada.setTypeface(type);
 
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra"));
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow("quant"));
 

@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.codbarrafornecedor.ListarCodBarraFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
         String id = getArguments().getString("produto");
         controller.carregaProduto(id);
 
-        if (controller.getCodBarra() != null && controller.getDescricao() != null) {
+        if (controller.getProduto() != null && controller.getProduto() != null) {
             ViewStub stub = view.findViewById(R.id.dados_produto_cod_barra_fornecedor_stub);
             stub.setLayoutResource(R.layout.dados_produto_cod_barra_fornecedor);
             stub.inflate();
@@ -55,8 +54,8 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
             txtCodBarra = view.findViewById(R.id.txtCodBarraProduto);
             txtDescricao = view.findViewById(R.id.txtDescricao);
 
-            txtCodBarra.setText(controller.getCodBarra());
-            txtDescricao.setText(controller.getDescricao());
+            txtCodBarra.setText(controller.getProduto().getCod_barra());
+            txtDescricao.setText(controller.getProduto().getDescricao());
         }
 
         realizarPesquisa();

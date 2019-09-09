@@ -3,26 +3,26 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaVerProdutoContado;
 
 public class TelaVerProdutoContadoController {
     ITelaVerProdutoContado view;
-    private ContagemModel contagemModel;
-    private ContagemProdutoModel contagemProdutoModel;
+    private ContagemManager contagemManager;
+    private ContagemProdutoManager contagemProdutoManager;
     private ContagemProdutoCursorAdapter contagemProdutoCursorAdapter;
 
     public TelaVerProdutoContadoController(ITelaVerProdutoContado view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        contagemModel = new ContagemModel(conexaoBanco);
-        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
+        contagemManager = new ContagemManager(conexaoBanco);
+        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
         contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(contagemProdutoCursorAdapter);
     }
 
     public void deletar() {
-        Boolean result = contagemProdutoModel.deletar();
+        Boolean result = contagemProdutoManager.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Deletada Com Sucesso");
@@ -33,7 +33,7 @@ public class TelaVerProdutoContadoController {
     }
 
     public void pesquisar() {
-        Cursor cursor = contagemProdutoModel.listarPorContagemCursor(contagemModel);
+        Cursor cursor = contagemProdutoManager.listarPorContagemCursor(contagemProdutoManager.getContagemProduto().getContagem());
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos na Contagem");
@@ -44,10 +44,10 @@ public class TelaVerProdutoContadoController {
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
+        contagemProdutoManager.getContagemProduto().setContagem(contagemManager.listarPorId(loja, data));
     }
 
     public void carregaContagemProduto(long id) {
-        contagemProdutoModel.load(id);
+        contagemProdutoManager.load(id);
     }
 }

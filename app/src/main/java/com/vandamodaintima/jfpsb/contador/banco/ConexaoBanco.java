@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.banco;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.io.Serializable;
 
@@ -10,7 +9,7 @@ import java.io.Serializable;
  * Created by jfpsb on 08/02/2018.
  */
 
-public class ConexaoBanco {
+public class ConexaoBanco implements Serializable {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
     private static final int VERSAO_BANCO = 8;
@@ -26,10 +25,10 @@ public class ConexaoBanco {
     }
 
     public void close() {
-        if(conn != null && conn.isOpen())
+        if (conn != null && conn.isOpen())
             conn.close();
 
-        if(sqLiteHelper != null)
+        if (sqLiteHelper != null)
             sqLiteHelper.close();
     }
 }

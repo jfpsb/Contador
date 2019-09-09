@@ -1,16 +1,17 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarFornecedorController {
-    private FornecedorModel fornecedorModel;
+    private FornecedorManager fornecedorManager;
     private AlterarDeletarView view;
 
     public AlterarDeletarFornecedorController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorModel = new FornecedorModel(conexaoBanco);
+        fornecedorManager = new FornecedorManager(conexaoBanco);
     }
 
     public void atualizar(String nome, String fantasia, String email) {
@@ -19,11 +20,11 @@ public class AlterarDeletarFornecedorController {
             return;
         }
 
-        fornecedorModel.setNome(nome);
-        fornecedorModel.setFantasia(fantasia);
-        fornecedorModel.setEmail(email);
+        fornecedorManager.getFornecedor().setNome(nome);
+        fornecedorManager.getFornecedor().setFantasia(fantasia);
+        fornecedorManager.getFornecedor().setEmail(email);
 
-        Boolean result = fornecedorModel.atualizar();
+        Boolean result = fornecedorManager.atualizar(fornecedorManager.getFornecedor().getCnpj());
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Atualizado Com Sucesso");
@@ -34,7 +35,7 @@ public class AlterarDeletarFornecedorController {
     }
 
     public void deletar() {
-        Boolean result = fornecedorModel.deletar();
+        Boolean result = fornecedorManager.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Deletado Com Sucesso");
@@ -45,22 +46,10 @@ public class AlterarDeletarFornecedorController {
     }
 
     public void carregaFornecedor(String id) {
-        fornecedorModel.load(id);
+        fornecedorManager.load(id);
     }
 
-    public String getCnpj() {
-        return fornecedorModel.getCnpj();
-    }
-
-    public String getNome() {
-        return fornecedorModel.getNome();
-    }
-
-    public String getFantasia() {
-        return fornecedorModel.getFantasia();
-    }
-
-    public String getEmail() {
-        return fornecedorModel.getEmail();
+    public Fornecedor getFornecedor() {
+        return fornecedorManager.getFornecedor();
     }
 }

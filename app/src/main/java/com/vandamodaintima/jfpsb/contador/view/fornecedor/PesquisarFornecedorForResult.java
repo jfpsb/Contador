@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.AdapterView;
 
-import com.vandamodaintima.jfpsb.contador.controller.fornecedor.PesquisarFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-
 public class PesquisarFornecedorForResult extends PesquisarFornecedor {
     AlertDialog.Builder alertaEscolha;
 
@@ -24,13 +21,13 @@ public class PesquisarFornecedorForResult extends PesquisarFornecedor {
     private void setAlertaEscolha() {
         alertaEscolha = new AlertDialog.Builder(getContext());
         alertaEscolha.setTitle("Escolher Fornecedor");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + " ao Produto?");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar O Fornecedor " + controller.getFornecedor().getCnpj() + " - " + controller.getFornecedor().getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
-                intent.putExtra("fornecedor", controller.getCnpj());
+                intent.putExtra("fornecedor", controller.getFornecedor());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
             }

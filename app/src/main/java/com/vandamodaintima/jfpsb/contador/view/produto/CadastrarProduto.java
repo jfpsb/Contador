@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.CadastrarProdutoController;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
@@ -89,7 +91,7 @@ public class CadastrarProduto extends TelaCadastro {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
-                intent.putExtra("codigos", controller.getCodBarraFornecedor());
+                intent.putExtra("codigos", controller.getProduto().getCod_barra_fornecedor());
                 startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
             }
         });
@@ -148,26 +150,26 @@ public class CadastrarProduto extends TelaCadastro {
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == Activity.RESULT_OK) {
-                    String id = data.getStringExtra("fornecedor");
-                    controller.carregaFornecedor(id);
-                    txtFornecedor.setText(controller.getFornecedorNome());
+                    Fornecedor fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+                    controller.carregaFornecedor(fornecedor);
+                    txtFornecedor.setText(controller.getProduto().getFornecedor().getNome());
                 }
                 break;
             case ESCOLHER_MARCA:
                 if (resultCode == Activity.RESULT_OK) {
-                    String id = data.getStringExtra("marca");
-                    controller.carregaMarca(id);
-                    txtMarca.setText(controller.getMarcaNome());
+                    Marca marca = (Marca) data.getSerializableExtra("marca");
+                    controller.carregaMarca(marca);
+                    txtMarca.setText(controller.getProduto().getMarca().getNome());
                 }
                 break;
             case TELA_COD_BARRA_FORNECEDOR:
                 if (resultCode == Activity.RESULT_OK) {
                     ArrayList<String> codigos = (ArrayList<String>) data.getSerializableExtra("codigos");
 
-                    if (codigos.equals(controller.getCodBarraFornecedor())) {
+                    if (codigos.equals(controller.getProduto().getCod_barra_fornecedor())) {
                         Toast.makeText(getContext(), "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
                     } else {
-                        controller.setCodBarraFornecedor(codigos);
+                        controller.getProduto().setCod_barra_fornecedor(codigos);
                         Toast.makeText(getContext(), "A Lista de Códigos Será Consolidada ao Apertar em \"Cadastrar\"", Toast.LENGTH_LONG).show();
                     }
                 }

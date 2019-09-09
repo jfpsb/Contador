@@ -1,9 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -13,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
-public class ExcelLojaStrategy implements IExcelStrategy<LojaModel> {
+public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
     @Override
     public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
         CellStyle cellStyle = workbook.createCellStyle();
@@ -25,20 +24,20 @@ public class ExcelLojaStrategy implements IExcelStrategy<LojaModel> {
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
-        ArrayList<LojaModel> lojas = (ArrayList<LojaModel>) lista;
+        ArrayList<Loja> lojas = (ArrayList<Loja>) lista;
 
         Row[] rows = new Row[lojas.size()];
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < LojaModel.getColunas().length; j++) {
+            for (int j = 0; j < Loja.getColunas().length; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
         for (int i = 0; i < rows.length; i++) {
-            LojaModel l = lojas.get(i);
+            Loja l = lojas.get(i);
 
             rows[i].getCell(0).setCellValue(l.getCnpj());
             rows[i].getCell(1).setCellValue(l.getNome());
@@ -61,6 +60,6 @@ public class ExcelLojaStrategy implements IExcelStrategy<LojaModel> {
 
     @Override
     public String[] getHeaders() {
-        return LojaModel.getHeaders();
+        return Loja.getHeaders();
     }
 }

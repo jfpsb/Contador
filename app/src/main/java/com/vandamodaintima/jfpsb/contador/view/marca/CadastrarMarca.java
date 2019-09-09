@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.CadastrarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import static com.vandamodaintima.jfpsb.contador.view.ActivityBaseView.LOG;

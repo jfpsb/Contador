@@ -1,27 +1,26 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarFornecedorController {
     private PesquisarView view;
-    FornecedorModel fornecedorModel;
+    private FornecedorManager fornecedorManager;
     private FornecedorCursorAdapter fornecedorCursorAdapter;
 
     public PesquisarFornecedorController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorModel = new FornecedorModel(conexaoBanco);
+        fornecedorManager = new FornecedorManager(conexaoBanco);
         fornecedorCursorAdapter = new FornecedorCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(fornecedorCursorAdapter);
     }
 
     public void pesquisa(String termo) {
-        Cursor cursor = fornecedorModel.listarPorCnpjNomeFantasiaCursor(termo);
+        Cursor cursor = fornecedorManager.listarPorCnpjNomeFantasiaCursor(termo);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Fornecedores Não Encontrados");
@@ -34,22 +33,10 @@ public class PesquisarFornecedorController {
     }
 
     public void carregaFornecedor(String id) {
-        fornecedorModel.load(id);
+        fornecedorManager.load(id);
     }
 
-    public String getCnpj() {
-        return fornecedorModel.getCnpj();
-    }
-
-    public String getNome() {
-        return fornecedorModel.getNome();
-    }
-
-    public String getFantasia() {
-        return fornecedorModel.getFantasia();
-    }
-
-    public String getEmail() {
-        return fornecedorModel.getEmail();
+    public Fornecedor getFornecedor() {
+        return fornecedorManager.getFornecedor();
     }
 }

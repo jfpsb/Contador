@@ -6,11 +6,8 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TelaCodBarraFornecedor extends TabLayoutBaseView {
@@ -35,9 +32,11 @@ public class TelaCodBarraFornecedor extends TabLayoutBaseView {
         listarCodBarraFornecedor = new ListarCodBarraFornecedor();
 
         codigos = (ArrayList<String>) getIntent().getSerializableExtra("codigos");
+        String produto = getIntent().getStringExtra("produto");
 
         bundle = new Bundle();
         bundle.putSerializable("codigos", codigos);
+        bundle.putString("produto", produto);
 
         inserirCodBarraFornecedor.setArguments(bundle);
         listarCodBarraFornecedor.setArguments(bundle);

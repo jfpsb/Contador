@@ -1,7 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
-public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProdutoModel> {
+public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProduto> {
     @Override
     public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
         CellStyle cellStyle = workbook.createCellStyle();
@@ -24,20 +24,20 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
-        ArrayList<ContagemProdutoModel> contagensProduto = (ArrayList<ContagemProdutoModel>) lista;
+        ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
 
         Row[] rows = new Row[contagensProduto.size()];
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < ContagemProdutoModel.getHeaders().length; j++) {
+            for (int j = 0; j < ContagemProduto.getHeaders().length; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
         for (int i = 0; i < rows.length; i++) {
-            ContagemProdutoModel contagemProdutoModel = contagensProduto.get(i);
+            ContagemProduto contagemProdutoModel = contagensProduto.get(i);
 
             rows[i].getCell(0).setCellValue(contagemProdutoModel.getProduto().getCod_barra());
             rows[i].getCell(1).setCellValue(contagemProdutoModel.getProduto().getDescricao());
@@ -58,6 +58,6 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
 
     @Override
     public String[] getHeaders() {
-        return ContagemProdutoModel.getHeaders();
+        return ContagemProduto.getHeaders();
     }
 }

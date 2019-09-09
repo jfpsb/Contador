@@ -1,50 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<TableLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dip"
     android:background="@drawable/item_lista_linha_inferior"
-    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dip">
+    <TableRow>
 
-        <TableRow>
+        <TextView
+            android:id="@+id/listaFornecedorCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="30sp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </TableRow>
 
-            <TextView
-                android:id="@+id/listaFornecedorCnpj"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="30sp"
-                android:textAlignment="center"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </TableRow>
+    <TableRow android:layout_weight="2">
 
-        <TableRow android:layout_weight="2">
+        <TextView
+            android:id="@+id/listaFornecedorNome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="30sp"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/listaFornecedorNome"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="30sp"
-                android:textAlignment="textStart"
-                android:textColor="#000000"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/listaFornecedorFantasia"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="30sp"
-                android:textAlignment="textStart"
-                android:textColor="#000000"
-                android:textSize="18sp" />
-        </TableRow>
-    </TableLayout>
-</LinearLayout>
+        <TextView
+            android:id="@+id/listaFornecedorFantasia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="30sp"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </TableRow>
+</TableLayout>

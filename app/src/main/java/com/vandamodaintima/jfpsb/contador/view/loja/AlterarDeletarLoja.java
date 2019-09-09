@@ -41,12 +41,13 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         txtNome = findViewById(R.id.txtNome);
         spinnerMatrizes = findViewById(R.id.spinnerMatrizes);
 
-        txtCnpj.setText(controller.getCnpj());
-        txtNome.setText(controller.getNome());
+        txtCnpj.setText(controller.getLoja().getCnpj());
+        txtNome.setText(controller.getLoja().getNome());
         ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());
         spinnerMatrizes.setAdapter(spinnerAdapter);
 
-        spinnerMatrizes.setSelection(controller.getMatrizIndex(controller.getMatriz().getCnpj()));
+        if(controller.getLoja().getMatriz() != null)
+            spinnerMatrizes.setSelection(controller.getMatrizIndex(controller.getLoja().getMatriz().getCnpj()));
 
         inicializaBotoes();
     }
@@ -61,7 +62,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Loja");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + controller.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Apagar a Loja " + controller.getLoja().getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -82,7 +83,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Loja");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + controller.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + controller.getLoja().getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override

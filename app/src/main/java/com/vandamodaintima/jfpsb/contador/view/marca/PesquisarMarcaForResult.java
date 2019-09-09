@@ -15,19 +15,19 @@ public class PesquisarMarcaForResult extends PesquisarMarca {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaMarca(id);
-        setAlertaEscolha(controller.getNome());
+        setAlertaEscolha();
     }
 
-    private void setAlertaEscolha(final String nome) {
+    private void setAlertaEscolha() {
         alertaEscolha = new AlertDialog.Builder(getContext());
         alertaEscolha.setTitle("Escolher Marca");
-        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar A Marca " + nome + " ao Produto?");
+        alertaEscolha.setMessage("Tem Certeza Que Deseja Adicionar A Marca " + controller.getMarca().getNome() + " ao Produto?");
 
         alertaEscolha.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent();
-                intent.putExtra("marca", nome);
+                intent.putExtra("marca", controller.getMarca());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
             }

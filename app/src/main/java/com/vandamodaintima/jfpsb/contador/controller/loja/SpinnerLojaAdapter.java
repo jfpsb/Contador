@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 
 import java.util.List;
 
-public class SpinnerLojaAdapter extends ArrayAdapter<LojaModel> {
+public class SpinnerLojaAdapter extends ArrayAdapter<Loja> {
 
-    private List<LojaModel> objects;
+    private List<Loja> objects;
 
-    public SpinnerLojaAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<LojaModel> objects) {
+    public SpinnerLojaAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<Loja> objects) {
         super(context, resource, textViewResourceId, objects);
         this.objects = objects;
     }

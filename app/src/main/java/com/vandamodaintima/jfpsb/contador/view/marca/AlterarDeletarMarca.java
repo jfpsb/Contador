@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.AlterarDeletarMarcaController;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarMarca extends TelaAlterarDeletar {
@@ -31,7 +30,7 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         controller.carregaMarca(id);
 
         txtNome = findViewById(R.id.txtNome);
-        txtNome.setText(controller.getNome());
+        txtNome.setText(controller.getMarca().getNome());
 
         inicializaBotoes();
     }

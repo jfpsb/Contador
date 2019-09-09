@@ -6,7 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -19,34 +20,34 @@ import java.nio.charset.StandardCharsets;
 
 public class CadastrarFornecedorController {
     protected CadastrarFornecedor view;
-    FornecedorModel fornecedorModel;
+    private FornecedorManager fornecedorManager;
     private ConexaoBanco conexaoBanco;
 
     public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarFornecedor) view;
         this.conexaoBanco = conexaoBanco;
-        fornecedorModel = new FornecedorModel(conexaoBanco);
+        fornecedorManager = new FornecedorManager(conexaoBanco);
     }
 
     public void cadastrar(String cnpj, String nome, String fantasia, String email) {
-        if(cnpj.isEmpty()) {
+        if (cnpj.isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Ser Vazio");
             return;
         }
 
-        if(nome.isEmpty()) {
+        if (nome.isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
             return;
         }
 
-        fornecedorModel.setCnpj(cnpj);
-        fornecedorModel.setNome(nome);
-        fornecedorModel.setFantasia(fantasia);
-        fornecedorModel.setEmail(email);
+        fornecedorManager.getFornecedor().setCnpj(cnpj);
+        fornecedorManager.getFornecedor().setNome(nome);
+        fornecedorManager.getFornecedor().setFantasia(fantasia);
+        fornecedorManager.getFornecedor().setEmail(email);
 
-        Boolean result = fornecedorModel.inserir();
+        Boolean result = fornecedorManager.salvar();
 
-        if(result) {
+        if (result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
             view.aposCadastro();
         } else {
@@ -65,7 +66,7 @@ public class CadastrarFornecedorController {
 
     public void checaCnpj(String cnpj) {
         if (!cnpj.isEmpty()) {
-            FornecedorModel fornecedor = fornecedorModel.listarPorId(cnpj);
+            Fornecedor fornecedor = fornecedorManager.listarPorId(cnpj);
 
             if (fornecedor != null) {
                 view.bloqueiaCampos();
@@ -133,7 +134,7 @@ public class CadastrarFornecedorController {
 
                     jsonReader.endObject();
 
-                    FornecedorModel fornecedor = new FornecedorModel(conexaoBanco);
+                    Fornecedor fornecedor = new Fornecedor();
 
                     fornecedor.setCnpj(cnpj);
                     fornecedor.setNome(nome);
@@ -164,8 +165,8 @@ public class CadastrarFornecedorController {
         protected void onPostExecute(Object object) {
             if (object == null) {
                 Toast.makeText(view.getContext(), "Erro ao Retornar Fornecedor", Toast.LENGTH_SHORT).show();
-            } else if (object instanceof FornecedorModel) {
-                FornecedorModel fornecedor = (FornecedorModel) object;
+            } else if (object instanceof Fornecedor) {
+                Fornecedor fornecedor = (Fornecedor) object;
                 view.setAlertaCadastro(fornecedor.getCnpj(), fornecedor.getNome(), fornecedor.getFantasia(), fornecedor.getEmail());
             } else {
                 String mensagem = (String) object;
@@ -175,7 +176,7 @@ public class CadastrarFornecedorController {
         }
     }
 
-    public String getCnpj() {
-        return fornecedorModel.getCnpj();
+    public Fornecedor getFornecedor() {
+        return fornecedorManager.getFornecedor();
     }
 }

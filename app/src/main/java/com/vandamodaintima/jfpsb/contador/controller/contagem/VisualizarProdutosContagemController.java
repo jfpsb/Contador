@@ -1,29 +1,28 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.contagem.VisualizarProdutosContagem;
 
 public class VisualizarProdutosContagemController {
-    private ContagemModel contagemModel;
-    private ContagemProdutoModel contagemProdutoModel;
+    private ContagemManager contagemManager;
+    private ContagemProdutoManager contagemProdutoManager;
     private VisualizarProdutosContagem view;
     private ContagemProdutoCursorAdapter contagemProdutoCursorAdapter;
 
     public VisualizarProdutosContagemController(VisualizarProdutosContagem view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
-        contagemModel = new ContagemModel(conexaoBanco);
+        contagemManager = new ContagemManager(conexaoBanco);
+        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
         contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(view.getApplicationContext(), null);
         view.setListViewAdaper(contagemProdutoCursorAdapter);
     }
 
     public void pesquisar() {
-        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByProdutoCursor(contagemModel);
+        Cursor cursor = contagemProdutoManager.listarPorContagemGroupByProdutoCursor(contagemManager.getContagem());
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos Na Contagem");
@@ -34,6 +33,6 @@ public class VisualizarProdutosContagemController {
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
+        contagemManager.load(loja, data);
     }
 }

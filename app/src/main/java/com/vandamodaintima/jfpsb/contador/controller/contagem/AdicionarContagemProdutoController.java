@@ -1,40 +1,34 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
-import android.database.Cursor;
-
-import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class AdicionarContagemProdutoController {
     IAdicionarContagemProduto view;
     private ConexaoBanco conexaoBanco;
-    private ProdutoModel produtoModel;
-    private ContagemModel contagemModel;
-    private ContagemProdutoModel contagemProdutoModel;
+    private ProdutoManager produtoManager;
+    private ContagemManager contagemManager;
+    private ContagemProdutoManager contagemProdutoManager;
 
     public AdicionarContagemProdutoController(IAdicionarContagemProduto view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new ProdutoModel(conexaoBanco);
-        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
-        contagemModel = new ContagemModel(conexaoBanco);
+        produtoManager = new ProdutoManager(conexaoBanco);
+        contagemManager = new ContagemManager(conexaoBanco);
+        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
     }
 
     public void cadastrar(int quantidade) {
-        contagemProdutoModel.setId(new Date().getTime());
-        contagemProdutoModel.setProduto(produtoModel);
-        contagemProdutoModel.setContagem(contagemModel);
-        contagemProdutoModel.setQuant(quantidade);
+        contagemProdutoManager.getContagemProduto().setId(new Date().getTime());
+        contagemProdutoManager.getContagemProduto().setQuant(quantidade);
 
-        Boolean result = contagemProdutoModel.inserir();
+        Boolean result = contagemProdutoManager.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
@@ -44,16 +38,15 @@ public class AdicionarContagemProdutoController {
     }
 
     public void carregaProduto(String id) {
-        produtoModel.load(id);
+        contagemProdutoManager.getContagemProduto().setProduto(produtoManager.listarPorId(id));
     }
 
     public void carregaProduto(Object o) {
-        if (o instanceof ProdutoModel)
-            produtoModel = (ProdutoModel) o;
+        if (o instanceof Produto)
+            contagemProdutoManager.getContagemProduto().setProduto((Produto) o);
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
-        contagemProdutoModel.setContagem(contagemModel);
+        contagemProdutoManager.getContagemProduto().setContagem(contagemManager.listarPorId(loja, data));
     }
 }

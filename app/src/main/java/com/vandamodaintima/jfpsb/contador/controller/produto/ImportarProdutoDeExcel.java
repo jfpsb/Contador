@@ -11,9 +11,10 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,16 +23,10 @@ import java.io.InputStream;
 public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> {
     private Context context;
     private ConexaoBanco conexaoBanco;
-    private ProdutoModel produtoModel;
-    private FornecedorModel fornecedorModel;
-    private MarcaModel marcaModel;
 
     public ImportarProdutoDeExcel(Context context, ConexaoBanco conexaoBanco) {
         this.context = context;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new ProdutoModel(conexaoBanco);
-        fornecedorModel = new FornecedorModel(conexaoBanco);
-        marcaModel = new MarcaModel(conexaoBanco);
     }
 
     @Override

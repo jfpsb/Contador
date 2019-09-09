@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.VisualizarProdutosContagemController;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 public class VisualizarProdutosContagem extends ActivityBaseView {

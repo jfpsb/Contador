@@ -1,22 +1,20 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorManualmenteController {
-    private FornecedorModel fornecedorModel;
+    private FornecedorManager fornecedorManager;
     private CadastrarView view;
 
     public CadastrarFornecedorManualmenteController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorModel = new FornecedorModel(conexaoBanco);
+        fornecedorManager = new FornecedorManager(conexaoBanco);
     }
 
     public void cadastrar(String cnpj, String nome, String fantasia, String email) {
-        if(cnpj.trim().isEmpty()) {
+        if (cnpj.trim().isEmpty()) {
             view.mensagemAoUsuario("O CNPJ do Fornecedor Não Pode Ser Vazio");
             return;
         }
@@ -25,12 +23,12 @@ public class CadastrarFornecedorManualmenteController {
             return;
         }
 
-        fornecedorModel.setCnpj(cnpj);
-        fornecedorModel.setNome(nome.toUpperCase());
-        fornecedorModel.setFantasia(fantasia.toUpperCase());
-        fornecedorModel.setEmail(email);
+        fornecedorManager.getFornecedor().setCnpj(cnpj);
+        fornecedorManager.getFornecedor().setNome(nome.toUpperCase());
+        fornecedorManager.getFornecedor().setFantasia(fantasia.toUpperCase());
+        fornecedorManager.getFornecedor().setEmail(email);
 
-        Boolean result = fornecedorModel.inserir();
+        Boolean result = fornecedorManager.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");

@@ -1,22 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
+import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;
 
 public class CadastrarLojaController {
     private CadastrarView view;
-    private LojaModel lojaModel;
-    private LojaModel matriz;
+    private LojaManager lojaManager;
     private ConexaoBanco conexaoBanco;
 
     public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        lojaModel = new LojaModel(conexaoBanco);
-        matriz = new LojaModel(conexaoBanco);
+        lojaManager = new LojaManager(conexaoBanco);
     }
 
     public void cadastrar(String cnpj, String nome) {
@@ -30,17 +29,14 @@ public class CadastrarLojaController {
             return;
         }
 
-        if(matriz.getCnpj().equals("0")) {
-            lojaModel.setMatriz(null);
-        }
-        else {
-            lojaModel.setMatriz(matriz);
+        if (lojaManager.getLoja().getMatriz().getCnpj().equals("0")) {
+            lojaManager.getLoja().setMatriz(null);
         }
 
-        lojaModel.setCnpj(cnpj);
-        lojaModel.setNome(nome);
+        lojaManager.getLoja().setCnpj(cnpj);
+        lojaManager.getLoja().setNome(nome);
 
-        Boolean result = lojaModel.inserir();
+        Boolean result = lojaManager.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Loja Cadastrada Com Sucesso!");
@@ -51,25 +47,24 @@ public class CadastrarLojaController {
         }
     }
 
-    public ArrayList<LojaModel> getMatrizes() {
-        ArrayList<LojaModel> matrizes = new ArrayList<>();
-        LojaModel loja = new LojaModel(conexaoBanco);
+    public ArrayList<Loja> getMatrizes() {
+        ArrayList<Loja> matrizes = new ArrayList<>();
+        Loja loja = new Loja();
         loja.setCnpj("0");
         loja.setNome("SEM MATRIZ");
 
         matrizes.add(loja);
-        matrizes.addAll(lojaModel.listarMatrizes());
+        matrizes.addAll(lojaManager.listarMatrizes());
 
         return matrizes;
     }
 
     public void resetaLoja() {
-        lojaModel = new LojaModel(conexaoBanco);
-        matriz = new LojaModel(conexaoBanco);
+        lojaManager.resetaModelo();
     }
 
     public void carregaMatriz(Object o) {
-        if(o instanceof LojaModel)
-            matriz = (LojaModel)o;
+        if (o instanceof Loja)
+            lojaManager.getLoja().setMatriz((Loja) o);
     }
 }

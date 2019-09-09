@@ -10,15 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 
 import java.util.List;
 
-public class ContagemArrayAdapter extends ArrayAdapter<ContagemModel> {
+public class ContagemArrayAdapter extends ArrayAdapter<Contagem> {
     private int resourceLayout;
     private Context mContext;
 
-    public ContagemArrayAdapter(Context context, int resource, List<ContagemModel> objects) {
+    public ContagemArrayAdapter(Context context, int resource, List<Contagem> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
@@ -34,7 +34,7 @@ public class ContagemArrayAdapter extends ArrayAdapter<ContagemModel> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        ContagemModel c = getItem(position);
+        Contagem c = getItem(position);
 
         if (c != null) {
             TextView labelLojaNome = v.findViewById(R.id.labelLojaNome);

@@ -3,9 +3,10 @@ package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.MarcaManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -17,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
+public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
     @Override
     public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
         CellStyle cellStyle = workbook.createCellStyle();
@@ -29,20 +30,20 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
-        ArrayList<ProdutoModel> produtos = (ArrayList<ProdutoModel>) lista;
+        ArrayList<Produto> produtos = (ArrayList<Produto>) lista;
 
         Row[] rows = new Row[produtos.size()];
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < ProdutoModel.getHeaders().length; j++) {
+            for (int j = 0; j < Produto.getHeaders().length; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
         for (int i = 0; i < rows.length; i++) {
-            ProdutoModel p = produtos.get(i);
+            Produto p = produtos.get(i);
 
             rows[i].getCell(0).setCellValue(p.getCod_barra());
             rows[i].getCell(1).setCellValue(p.getDescricao());
@@ -52,10 +53,10 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
             String codigos = "";
 
-            for(int j = 0; j < p.getCod_barra_fornecedor().size(); j++) {
+            for (int j = 0; j < p.getCod_barra_fornecedor().size(); j++) {
                 codigos += p.getCod_barra_fornecedor().get(j);
 
-                if(j != p.getCod_barra_fornecedor().size() - 1)
+                if (j != p.getCod_barra_fornecedor().size() - 1)
                     codigos += ",";
             }
 
@@ -74,14 +75,14 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
-        ArrayList<ProdutoModel> produtos = new ArrayList<>();
-        ProdutoModel produtoModel = new ProdutoModel(conexaoBanco);
-        FornecedorModel fornecedorModel = new FornecedorModel(conexaoBanco);
-        MarcaModel marcaModel = new MarcaModel(conexaoBanco);
+        ArrayList<Produto> produtos = new ArrayList<>();
+        ProdutoManager produtoManager = new ProdutoManager(conexaoBanco);
+        FornecedorManager fornecedorManager = new FornecedorManager(conexaoBanco);
+        MarcaManager marcaManager = new MarcaManager(conexaoBanco);
 
         Row cabecalho = sheet.getRow(0);
         int numCols = cabecalho.getPhysicalNumberOfCells();
-        if (numCols != ProdutoModel.getHeaders().length) {
+        if (numCols != Produto.getHeaders().length) {
             Log.e("Contador", "O Número de Colunas Está Errado");
             return false;
         }
@@ -91,7 +92,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
         for (int i = 1; i < rows; i++) {
             Row row = sheet.getRow(i);
 
-            ProdutoModel p = new ProdutoModel(conexaoBanco);
+            Produto p = new Produto();
 
             Cell cod_barra = row.getCell(0);
             Cell descricao = row.getCell(1);
@@ -134,21 +135,21 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
                     //O Excel apaga zeros iniciais de células configuradas como números então aqui eu os coloco de volta
                     String cnpj = String.format(Locale.ENGLISH, "%.0f", fornecedor.getNumericCellValue());
 
-                    if(cnpj.length() != 14) {
+                    if (cnpj.length() != 14) {
                         int diff = 14 - cnpj.length();
 
                         String append = "";
 
-                        for(int j = 0; j < diff; j++) {
+                        for (int j = 0; j < diff; j++) {
                             append += "0";
                         }
 
                         append += cnpj;
                         cnpj = append;
                     }
-                    p.setFornecedor(fornecedorModel.listarPorId(cnpj));
+                    p.setFornecedor(fornecedorManager.listarPorId(cnpj));
                 } else if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-                    p.setFornecedor(fornecedorModel.listarPorId(fornecedor.getStringCellValue()));
+                    p.setFornecedor(fornecedorManager.listarPorId(fornecedor.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrado ou Vazio");
                     p.setFornecedor(null);
@@ -157,26 +158,26 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
 
             if (marca != null && marca.getCellType() != Cell.CELL_TYPE_BLANK) {
                 if (marca.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                    p.setMarca(marcaModel.listarPorId(marca.getNumericCellValue()));
+                    p.setMarca(marcaManager.listarPorId(marca.getNumericCellValue()));
                 } else if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
-                    p.setMarca(marcaModel.listarPorId(marca.getStringCellValue()));
+                    p.setMarca(marcaManager.listarPorId(marca.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrada ou Vazia");
                     p.setMarca(null);
                 }
             }
 
-            if(codbarrafornecedor != null && codbarrafornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if(marca.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (codbarrafornecedor != null && codbarrafornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
+                if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
                     String conteudo = codbarrafornecedor.getStringCellValue();
                     String[] partes = null;
-                    if(conteudo.contains(",")) {
+                    if (conteudo.contains(",")) {
                         partes = conteudo.split(",");
 
-                        for(String s : partes) {
+                        for (String s : partes) {
                             p.getCod_barra_fornecedor().add(s);
                         }
-                    }else {
+                    } else {
                         p.getCod_barra_fornecedor().add(conteudo);
                     }
                 } else {
@@ -188,11 +189,11 @@ public class ExcelProdutoStrategy implements IExcelStrategy<ProdutoModel> {
             produtos.add(p);
         }
 
-        return produtoModel.inserir(produtos);
+        return produtoManager.salvar(produtos);
     }
 
     @Override
     public String[] getHeaders() {
-        return ProdutoModel.getHeaders();
+        return Produto.getHeaders();
     }
 }

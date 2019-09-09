@@ -1,16 +1,17 @@
 package com.vandamodaintima.jfpsb.contador.controller.marca;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarMarcaController {
     private AlterarDeletarView view;
-    private MarcaModel marcaModel;
+    private MarcaManager marcaManager;
 
     public AlterarDeletarMarcaController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        marcaModel = new MarcaModel(conexaoBanco);
+        marcaManager = new MarcaManager(conexaoBanco);
     }
 
     public void atualizar(String nome) {
@@ -19,9 +20,10 @@ public class AlterarDeletarMarcaController {
             return;
         }
 
-        marcaModel.setNome(nome);
+        String id = marcaManager.getMarca().getNome();
+        marcaManager.getMarca().setNome(nome);
 
-        Boolean result = marcaModel.atualizar();
+        Boolean result = marcaManager.atualizar(id);
 
         if (result) {
             view.mensagemAoUsuario("Marca Atualizada Com Sucesso");
@@ -32,7 +34,7 @@ public class AlterarDeletarMarcaController {
     }
 
     public void deletar() {
-        Boolean result = marcaModel.deletar();
+        Boolean result = marcaManager.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Marca Deletada Com Sucesso");
@@ -43,10 +45,10 @@ public class AlterarDeletarMarcaController {
     }
 
     public void carregaMarca(String nome) {
-        marcaModel.load(nome);
+        marcaManager.load(nome);
     }
 
-    public String getNome() {
-        return marcaModel.getNome();
+    public Marca getMarca() {
+        return marcaManager.getMarca();
     }
 }

@@ -15,7 +15,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.CadastrarLojaController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
-import com.vandamodaintima.jfpsb.contador.model.LojaModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 public class CadastrarLoja extends TelaCadastro {

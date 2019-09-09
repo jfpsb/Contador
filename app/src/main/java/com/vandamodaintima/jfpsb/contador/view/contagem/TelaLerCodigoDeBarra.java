@@ -118,6 +118,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 setUpCamera();
                 openCamera();
                 //Inicia fila de mensagens de thread que detecta códigos da câmera
+                barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
                 barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
 
@@ -181,6 +182,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         barcodeHandlerThread.setTextureView(textureView);
         barcodeHandlerThread.setController(controller);
         barcodeHandlerThread.setView(this);
+        barcodeHandlerThread.setContagem(controller.getContagemManager());
         barcodeHandlerThread.start();
     }
 
@@ -316,6 +318,9 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         if (textureView.isAvailable()) {
             setUpCamera();
             openCamera();
+            barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
+            barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 2000);
+            realizarPesquisa();
         } else {
             textureView.setSurfaceTextureListener(surfaceTextureListener);
         }

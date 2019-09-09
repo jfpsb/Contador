@@ -1,30 +1,27 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemModel;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarContagemController {
     AlterarDeletarView view;
-    private ContagemModel contagemModel;
-    private ContagemProdutoModel contagemProdutoModel;
+    private ContagemManager contagemManager;
+    private ContagemProdutoManager contagemProdutoManager;
     private ConexaoBanco conexaoBanco;
 
     public AlterarDeletarContagemController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        contagemModel = new ContagemModel(conexaoBanco);
-        contagemProdutoModel = new ContagemProdutoModel(conexaoBanco);
+        contagemManager = new ContagemManager(conexaoBanco);
+        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
     }
 
     public void atualizar(Boolean finalizada) {
-        contagemModel.setFinalizada(finalizada);
+        contagemManager.getContagem().setFinalizada(finalizada);
 
-        Boolean result = contagemModel.atualizar();
+        Boolean result = contagemManager.atualizar(contagemManager.getContagem().getLoja().getCnpj(), contagemManager.getContagem().getDataParaSQLite());
 
         if (result) {
             view.mensagemAoUsuario("Contagem Atualizada Com Sucesso");
@@ -35,7 +32,7 @@ public class AlterarDeletarContagemController {
     }
 
     public void deletar() {
-        Boolean result = contagemModel.deletar();
+        Boolean result = contagemManager.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Deletada Com Sucesso");
@@ -46,26 +43,26 @@ public class AlterarDeletarContagemController {
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
+        contagemManager.load(loja, data);
     }
 
     public String getFullDataString() {
-        return contagemModel.getFullDataString();
+        return contagemManager.getContagem().getFullDataString();
     }
 
     public String getLojaNome() {
-        return contagemModel.getLoja().getNome();
+        return contagemManager.getContagem().getLoja().getNome();
     }
 
     public String getLoja() {
-        return contagemModel.getLoja().getCnpj();
+        return contagemManager.getContagem().getLoja().getCnpj();
     }
 
     public String getData() {
-        return contagemModel.getDataParaSQLite();
+        return contagemManager.getContagem().getDataParaSQLite();
     }
 
     public void exportarParaExcel(String dir) {
-        new ExportarContagemProdutoParaExcel(view.getContext()).execute(dir, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
+        new ExportarContagemProdutoParaExcel(view.getContext()).execute(dir, contagemProdutoManager.listarPorContagemGroupByProduto(contagemManager.getContagem()));
     }
 }

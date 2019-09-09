@@ -21,7 +21,6 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         //Código de barras usado na pesquisa inicial
         codigo = getArguments().getString("codigo");
 
@@ -66,7 +65,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                     controller.atualizar();
 
                     Intent intent = new Intent();
-                    intent.putExtra("produto", controller.getCodBarra());
+                    intent.putExtra("produto", controller.getProduto());
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();

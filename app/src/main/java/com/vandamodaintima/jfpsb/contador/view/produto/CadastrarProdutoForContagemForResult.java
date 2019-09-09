@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
 
 public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
     private AlertDialog.Builder alertaQuantidadeProduto;
@@ -23,7 +22,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
         //Coloca o código da pesquisa no produto a ser cadastrado
         String codigo = getArguments().getString("codigo");
-        controller.addCodBarraFornecedor(codigo);
+        controller.getProduto().getCod_barra_fornecedor().add(codigo);
         setAlertaQuantidadeProduto();
 
         return view;
@@ -58,7 +57,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
                     }
 
                     Intent intent = new Intent();
-                    intent.putExtra("produto", controller.getCodBarra());
+                    intent.putExtra("produto", controller.getProduto().getCod_barra());
                     intent.putExtra("quantidade", quantidade);
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();

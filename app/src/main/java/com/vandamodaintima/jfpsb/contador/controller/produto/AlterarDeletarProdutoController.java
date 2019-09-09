@@ -1,9 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
-import com.vandamodaintima.jfpsb.contador.model.MarcaModel;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.MarcaManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 import java.util.ArrayList;
@@ -11,16 +14,12 @@ import java.util.ArrayList;
 public class AlterarDeletarProdutoController {
     private AlterarDeletarView view;
     private ConexaoBanco conexaoBanco;
-    private ProdutoModel produtoModel;
-    private FornecedorModel fornecedorModel;
-    private MarcaModel marcaModel;
+    private ProdutoManager produtoManager;
 
     public AlterarDeletarProdutoController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new ProdutoModel(conexaoBanco);
-        fornecedorModel = new FornecedorModel(conexaoBanco);
-        marcaModel = new MarcaModel(conexaoBanco);
+        produtoManager = new ProdutoManager(conexaoBanco);
     }
 
     public void atualizar(String descricao, double preco) {
@@ -34,24 +33,10 @@ public class AlterarDeletarProdutoController {
             return;
         }
 
-        if(fornecedorModel.getCnpj() == null) {
-            produtoModel.setFornecedor(null);
-        }
-        else {
-            produtoModel.setFornecedor(fornecedorModel);
-        }
+        produtoManager.getProduto().setDescricao(descricao.trim().toUpperCase());
+        produtoManager.getProduto().setPreco(preco);
 
-        if( marcaModel.getNome() == null) {
-            produtoModel.setMarca(null);
-        }
-        else {
-            produtoModel.setMarca(marcaModel);
-        }
-
-        produtoModel.setDescricao(descricao.trim().toUpperCase());
-        produtoModel.setPreco(preco);
-
-        Boolean result = produtoModel.atualizar();
+        Boolean result = produtoManager.atualizar(produtoManager.getProduto().getCod_barra());
 
         if (result) {
             view.mensagemAoUsuario("Produto Atualizado Com Sucesso");
@@ -62,7 +47,7 @@ public class AlterarDeletarProdutoController {
     }
 
     public void deletar() {
-        Boolean result = produtoModel.deletar();
+        Boolean result = produtoManager.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Produto Deletado Com Sucesso");
@@ -73,56 +58,34 @@ public class AlterarDeletarProdutoController {
     }
 
     public void carregaProduto(String id) {
-        produtoModel.load(id);
-
-        if(produtoModel.getFornecedor() != null)
-            fornecedorModel = produtoModel.getFornecedor();
-
-        if(produtoModel.getMarca() != null)
-            marcaModel = produtoModel.getMarca();
+        produtoManager.load(id);
     }
 
-    public void carregaFornecedor(String id) {
-        fornecedorModel.load(id);
+    public void carregaFornecedor(Fornecedor fornecedor) {
+        produtoManager.getProduto().setFornecedor(fornecedor);
     }
 
-    public void carregaMarca(String id) {
-        marcaModel.load(id);
-    }
-
-    public String getCodBarra() {
-        return produtoModel.getCod_barra();
+    public void carregaMarca(Marca marca) {
+        produtoManager.getProduto().setMarca(marca);
     }
 
     public ArrayList<String> getCodBarraFornecedor() {
-        return produtoModel.getCod_barra_fornecedor();
-    }
-
-    public String getDescricao() {
-        return produtoModel.getDescricao();
-    }
-
-    public Double getPreco() {
-        return produtoModel.getPreco();
-    }
-
-    public FornecedorModel getFornecedor() {
-        return fornecedorModel;
-    }
-
-    public MarcaModel getMarca() {
-        return marcaModel;
+        return produtoManager.getProduto().getCod_barra_fornecedor();
     }
 
     public void setCodBarraFornecedor(ArrayList<String> codigos) {
-        produtoModel.setCod_barra_fornecedor(codigos);
+        produtoManager.getProduto().setCod_barra_fornecedor(codigos);
     }
 
     public void setFornecedorNull() {
-        fornecedorModel = new FornecedorModel(conexaoBanco);
+        produtoManager.getProduto().setFornecedor(null);
     }
 
     public void setMarcaNull() {
-        marcaModel = new MarcaModel(conexaoBanco);
+        produtoManager.getProduto().setMarca(null);
+    }
+
+    public Produto getProduto() {
+        return produtoManager.getProduto();
     }
 }

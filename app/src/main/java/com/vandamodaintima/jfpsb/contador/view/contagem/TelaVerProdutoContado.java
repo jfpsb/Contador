@@ -82,7 +82,7 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaContagemProduto(id);
-        abrirDeletarContagemProdutoDialog();
+        deletarContagemProdutoDialog.show();
     }
 
     @Override
@@ -108,16 +108,5 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
                 controller.deletar();
             }
         });
-    }
-
-    private void abrirDeletarContagemProdutoDialog() {
-        /*deletarContagemProdutoDialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                controller.deletar();
-            }
-        });*/
-
-        deletarContagemProdutoDialog.show();
     }
 }

@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.AlterarDeletarFornecedorController;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
@@ -40,11 +39,11 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         txtFantasia = findViewById(R.id.txtFantasia);
         txtEmail = findViewById(R.id.txtEmail);
 
-        txtCnpj.setText(controller.getCnpj());
-        txtNome.setText(controller.getNome());
+        txtCnpj.setText(controller.getFornecedor().getCnpj());
+        txtNome.setText(controller.getFornecedor().getNome());
 
-        if (!controller.getFantasia().isEmpty()) {
-            txtFantasia.setText(controller.getFantasia());
+        if (!controller.getFornecedor().getFantasia().isEmpty()) {
+            txtFantasia.setText(controller.getFornecedor().getFantasia());
         }
 
         inicializaBotoes();
@@ -54,7 +53,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Fornecedor");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + controller.getFornecedor().getCnpj() + " - " + controller.getFornecedor().getNome() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
@@ -88,7 +87,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Fornecedor");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Fornecedor " + controller.getCnpj() + " - " + controller.getNome() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Fornecedor " + controller.getFornecedor().getCnpj() + " - " + controller.getFornecedor().getNome() + "?");
 
         alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override

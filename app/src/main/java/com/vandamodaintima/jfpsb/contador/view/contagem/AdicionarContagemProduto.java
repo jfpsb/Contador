@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
@@ -94,9 +95,9 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TELA_SELECIONAR_PRODUTO) {
             if (resultCode == RESULT_OK) {
-                String id = data.getStringExtra("produto");
-                controller.carregaProduto(id);
-                int quantidade = data.getIntExtra("quantidade", 0);
+                Produto produto = (Produto) data.getSerializableExtra("produto");
+                controller.carregaProduto(produto);
+                int quantidade = data.getIntExtra("quantidade", 1);
                 controller.cadastrar(quantidade);
                 telaVerProdutoContado.realizarPesquisa();
             }

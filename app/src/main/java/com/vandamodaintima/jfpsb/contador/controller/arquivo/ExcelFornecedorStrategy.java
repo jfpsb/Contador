@@ -1,7 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.FornecedorModel;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
-public class ExcelFornecedorStrategy implements IExcelStrategy<FornecedorModel> {
+public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     @Override
     public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
         CellStyle cellStyle = workbook.createCellStyle();
@@ -24,20 +24,20 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<FornecedorModel> 
         cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
 
-        ArrayList<FornecedorModel> fornecedores = (ArrayList<FornecedorModel>) lista;
+        ArrayList<Fornecedor> fornecedores = (ArrayList<Fornecedor>) lista;
 
         Row[] rows = new Row[fornecedores.size()];
 
         for (int i = 1; i <= rows.length; i++) {
             rows[i - 1] = sheet.createRow(i);
-            for (int j = 0; j < FornecedorModel.getHeaders().length; j++) {
+            for (int j = 0; j < Fornecedor.getHeaders().length; j++) {
                 Cell cell = rows[i - 1].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
         for (int i = 0; i < rows.length; i++) {
-            FornecedorModel f = fornecedores.get(i);
+            Fornecedor f = fornecedores.get(i);
 
             rows[i].getCell(0).setCellValue(f.getCnpj());
             rows[i].getCell(1).setCellValue(f.getNome());
@@ -60,6 +60,6 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<FornecedorModel> 
 
     @Override
     public String[] getHeaders() {
-        return FornecedorModel.getHeaders();
+        return Fornecedor.getHeaders();
     }
 }

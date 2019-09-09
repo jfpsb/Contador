@@ -4,22 +4,22 @@ import android.content.ContentResolver;
 import android.net.Uri;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
 public class TelaProdutoController {
-    private ProdutoModel produtoModel;
+    private ProdutoManager produtoManager;
     private TabLayoutBaseView view;
     private ConexaoBanco conexaoBanco;
 
     public TelaProdutoController(TabLayoutBaseView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new ProdutoModel(conexaoBanco);
+        produtoManager = new ProdutoManager(conexaoBanco);
     }
 
     public void exportarProdutosParaExcel(String diretorio) {
-        new ExportarProdutoParaExcel(view.getApplicationContext()).execute(diretorio, produtoModel.listar());
+        new ExportarProdutoParaExcel(view.getApplicationContext()).execute(diretorio, produtoManager.listar());
     }
 
     public void importarProdutosDeExcel(Uri uri, ContentResolver contentResolver) {

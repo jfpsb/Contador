@@ -3,23 +3,24 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoModel;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarProdutoController {
     private PesquisarView view;
     private ProdutoCursorAdapter produtoAdapter;
-    private ProdutoModel produtoModel;
+    private ProdutoManager produtoManager;
 
     public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        produtoModel = new ProdutoModel(conexaoBanco);
+        produtoManager = new ProdutoManager(conexaoBanco);
         produtoAdapter = new ProdutoCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(produtoAdapter);
     }
 
     public void pesquisarPorDescricao(String termo) {
-        Cursor cursor = produtoModel.listarPorDescricaoCursor(termo);
+        Cursor cursor = produtoManager.listarPorDescricaoCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -29,7 +30,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoModel.listarPorCodBarraCursor(termo);
+        Cursor cursor = produtoManager.listarPorCodBarraCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -39,7 +40,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoModel.listarPorFornecedorCursor(termo);
+        Cursor cursor = produtoManager.listarPorFornecedorCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -49,7 +50,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoModel.listarPorMarcaCursor(termo);
+        Cursor cursor = produtoManager.listarPorMarcaCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -66,7 +67,7 @@ public class PesquisarProdutoController {
 
     //Utilizado apenas na tela de pesquisar produto para adicionar em contagem
     public void atualizar() {
-        Boolean result = produtoModel.atualizar();
+        Boolean result = produtoManager.atualizar(produtoManager.getProduto().getCod_barra());
 
         if (result) {
             view.mensagemAoUsuario("Produto Foi Atualizado Com Código de Barras");
@@ -76,14 +77,14 @@ public class PesquisarProdutoController {
     }
 
     public void carregaProduto(String id) {
-        produtoModel.load(id);
+        produtoManager.load(id);
     }
 
-    public String getCodBarra() {
-        return produtoModel.getCod_barra();
+    public Produto getProduto() {
+        return produtoManager.getProduto();
     }
 
     public void addCodBarraFornecedor(String codigo) {
-        produtoModel.getCod_barra_fornecedor().add(codigo);
+        produtoManager.getProduto().getCod_barra_fornecedor().add(codigo);
     }
 }
