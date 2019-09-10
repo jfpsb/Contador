@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -33,15 +34,23 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_loja);
         stub.inflate();
 
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarLojaController(this, conexaoBanco);
-
-        String id = getIntent().getStringExtra("loja");
-        controller.carregaLoja(id);
+        setBtnAtualizar();
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         spinnerMatrizes = findViewById(R.id.spinnerMatrizes);
+        navigationView.inflateMenu(R.menu.menu_tela_alterar_deletar_loja);
+        navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_loja);
+
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarLojaController(this, conexaoBanco);
+
+        String id = getIntent().getStringExtra("loja");
+
+        controller.carregaLoja(id);
+
+        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
 
         txtCnpj.setText(controller.getLoja().getCnpj());
         txtNome.setText(controller.getLoja().getNome());
@@ -51,17 +60,20 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         if (controller.getLoja().getMatriz() != null)
             spinnerMatrizes.setSelection(controller.getMatrizIndex(controller.getLoja().getMatriz().getCnpj()));
 
-        inicializaBotoes();
-
-        navigationView.inflateMenu(R.menu.menu_tela_alterar_deletar_loja);
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
 
-                if (id == R.id.menuItemDeletar) {
-                    Toast.makeText(getContext(), "Deletar", Toast.LENGTH_SHORT).show();
+                switch (id) {
+                    case R.id.menuItemDeletar:
+                        AlertDialog alertDialog = alertBuilderDeletar.create();
+                        alertDialog.show();
+                        break;
+                    case R.id.menuItemVisualizarEstoque:
+                        break;
+                    case R.id.menuItemExportarEstoque:
+                        break;
                 }
 
                 return true;

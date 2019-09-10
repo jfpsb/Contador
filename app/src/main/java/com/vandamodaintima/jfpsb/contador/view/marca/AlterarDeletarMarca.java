@@ -24,15 +24,21 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_marca);
         stub.inflate();
 
-        conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarMarcaController(this, conexaoBanco);
-        String id = getIntent().getStringExtra("marca");
-        controller.carregaMarca(id);
+        setBtnAtualizar();
 
         txtNome = findViewById(R.id.txtNome);
-        txtNome.setText(controller.getMarca().getNome());
 
-        inicializaBotoes();
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        controller = new AlterarDeletarMarcaController(this, conexaoBanco);
+
+        String id = getIntent().getStringExtra("marca");
+
+        controller.carregaMarca(id);
+
+        setAlertBuilderAtualizar();
+        setAlertBuilderDeletar();
+
+        txtNome.setText(controller.getMarca().getNome());
     }
 
     @Override

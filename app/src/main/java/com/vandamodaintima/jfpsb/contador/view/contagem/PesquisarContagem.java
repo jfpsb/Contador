@@ -46,7 +46,7 @@ public class PesquisarContagem extends TelaPesquisa {
 
         txtDataInicial = view.findViewById(R.id.txtDataInicial);
         txtDataFinal = view.findViewById(R.id.txtDataFinal);
-        listView = view.findViewById(R.id.listViewLoja);
+        listView = view.findViewById(R.id.listViewContagem);
         btnPesquisar = view.findViewById(R.id.btnPesquisar);
         spinnerLoja = view.findViewById(R.id.spinnerLoja);
 

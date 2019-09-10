@@ -59,7 +59,7 @@
     </TableLayout>
 
     <ListView
-        android:id="@+id/listViewLoja"
+        android:id="@+id/listViewFornecedor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="textStart">

@@ -1,15 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/transparent">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="5sp"
-        android:layout_marginRight="5sp">
+        android:layout_marginRight="5sp"
+        android:background="@android:color/transparent">
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="1">
@@ -193,7 +195,7 @@
                     android:textSize="22sp" />
             </TableRow>
 
-            <TableRow>
+            <TableRow android:paddingBottom="80sp">
 
                 <EditText
                     android:id="@+id/txtPreco"
@@ -204,12 +206,6 @@
                     android:textSize="20sp" />
             </TableRow>
 
-            <TableRow>
-
-                <Button
-                    android:layout_height="80sp"
-                    android:visibility="invisible" />
-            </TableRow>
         </TableLayout>
     </ScrollView>
 
@@ -217,19 +213,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:gravity="center">
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_weight="1"
-            android:height="60sp"
-            android:background="@drawable/botao_active"
-            android:text="@string/cadastrar"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
+            style="@style/BtnCadastrarAtualizarStyle"
+            android:text="@string/cadastrar" />
     </LinearLayout>
 </RelativeLayout>

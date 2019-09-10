@@ -29,7 +29,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
         view = inflater.inflate(R.layout.fragment_pesquisar_fornecedor, container, false);
 
         txtPesquisaFornecedor = view.findViewById(R.id.txtPesquisaFornecedor);
-        listView = view.findViewById(R.id.listViewLoja);
+        listView = view.findViewById(R.id.listViewFornecedor);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarFornecedorController(this, conexaoBanco);

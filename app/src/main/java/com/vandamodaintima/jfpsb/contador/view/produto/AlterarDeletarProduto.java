@@ -53,14 +53,26 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_produto);
         stub.inflate();
 
-        String id = getIntent().getExtras().getString("produto");
-        controller.carregaProduto(id);
+        setBtnAtualizar();
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
+        btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
+        btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
+        btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
+        btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
+        btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
+
+        String id = getIntent().getExtras().getString("produto");
+        controller.carregaProduto(id);
+
+        setAlertaRemoverFornecedor();
+        setAlertaRemoverMarca();
+        setAlertBuilderDeletar();
+        setAlertBuilderAtualizar();
 
         txtCodBarra.setText(controller.getProduto().getCod_barra());
         txtDescricao.setText(controller.getProduto().getDescricao());
@@ -73,22 +85,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         if (controller.getProduto().getMarca() != null) {
             txtMarca.setText(controller.getProduto().getMarca().getNome());
         }
-
-        inicializaBotoes();
-    }
-
-    @Override
-    public void inicializaBotoes() {
-        super.inicializaBotoes();
-
-        setAlertaRemoverMarca();
-        setAlertaRemoverFornecedor();
-
-        btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
-        btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
-        btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
-        btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
-        btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
 
         btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
             @Override

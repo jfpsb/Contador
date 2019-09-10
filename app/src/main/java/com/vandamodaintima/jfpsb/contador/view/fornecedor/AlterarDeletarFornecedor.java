@@ -28,16 +28,21 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_fornecedor);
         stub.inflate();
 
+        setBtnAtualizar();
+
+        txtCnpj = findViewById(R.id.txtCnpj);
+        txtNome = findViewById(R.id.txtNome);
+        txtFantasia = findViewById(R.id.txtFantasia);
+        txtEmail = findViewById(R.id.txtEmail);
+
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarFornecedorController(this, conexaoBanco);
 
         String id = getIntent().getStringExtra("fornecedor");
         controller.carregaFornecedor(id);
 
-        txtCnpj = findViewById(R.id.txtCnpj);
-        txtNome = findViewById(R.id.txtNome);
-        txtFantasia = findViewById(R.id.txtFantasia);
-        txtEmail = findViewById(R.id.txtEmail);
+        setAlertBuilderAtualizar();
+        setAlertBuilderDeletar();
 
         txtCnpj.setText(controller.getFornecedor().getCnpj());
         txtNome.setText(controller.getFornecedor().getNome());
@@ -45,8 +50,6 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         if (!controller.getFornecedor().getFantasia().isEmpty()) {
             txtFantasia.setText(controller.getFornecedor().getFantasia());
         }
-
-        inicializaBotoes();
     }
 
     @Override

@@ -24,9 +24,20 @@
 
     <style name="MenuItemTextAppearance" parent="TextAppearance.AppCompat.Menu">
         <item name="android:fontFamily">@font/century_gothic</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:foreground">#000</item>
+    </style>
+
+    <style name="BtnCadastrarAtualizarStyle" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:fontFamily">@font/century_gothic</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:height">60sp</item>
+        <item name="android:background">@drawable/botao_active</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

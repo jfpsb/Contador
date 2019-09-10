@@ -45,6 +45,13 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
         stub.inflate();
 
+        setBtnAtualizar();
+
+        txtData = findViewById(R.id.txtDataInicial);
+        txtLoja = findViewById(R.id.txtLoja);
+        checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
+        btnAdicionar = findViewById(R.id.btnAdicionar);
+
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarContagemController(this, conexaoBanco);
 
@@ -52,20 +59,11 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         String data = getIntent().getStringExtra("data");
         controller.carregaContagem(loja, data);
 
-        txtData = findViewById(R.id.txtDataInicial);
-        txtLoja = findViewById(R.id.txtLoja);
-        checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
-        btnAdicionar = findViewById(R.id.btnAdicionar);
+        setAlertBuilderAtualizar();
+        setAlertBuilderDeletar();
 
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());
-
-        inicializaBotoes();
-    }
-
-    @Override
-    public void inicializaBotoes() {
-        super.inicializaBotoes();
 
         btnAdicionar.setOnClickListener(new View.OnClickListener() {
             @Override
