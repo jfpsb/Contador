@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +120,7 @@ public class CadastrarProduto extends TelaCadastro {
             public void onClick(View view) {
                 String cod_barra = txtCodBarra.getText().toString();
                 String descricao = txtDescricao.getText().toString();
-                Double preco = Double.parseDouble(txtPreco.getText().toString());
+                String preco = txtPreco.getText().toString();
 
                 controller.cadastrar(cod_barra, descricao, preco);
             }

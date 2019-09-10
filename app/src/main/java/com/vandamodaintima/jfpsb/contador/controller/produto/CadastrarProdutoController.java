@@ -20,7 +20,9 @@ public class CadastrarProdutoController {
         produtoManager = new ProdutoManager(conexaoBanco);
     }
 
-    public void cadastrar(String cod_barra, String descricao, Double preco) {
+    public void cadastrar(String cod_barra, String descricao, String preco) {
+        Double p = 0.0;
+
         if (cod_barra.trim().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
@@ -31,14 +33,25 @@ public class CadastrarProdutoController {
             return;
         }
 
-        if (preco == 0) {
-            view.mensagemAoUsuario("Preço Não Pode Ser Zero");
+        if (preco.trim().isEmpty()) {
+            view.mensagemAoUsuario("Preço Não Pode Ser Vazio");
             return;
+        } else {
+            try {
+                p = Double.parseDouble(preco);
+                if (p <= 0) {
+                    view.mensagemAoUsuario("Preço Não Pode Ser Zero");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                view.mensagemAoUsuario("Preço Informado Inválido");
+                return;
+            }
         }
 
         produtoManager.getProduto().setCod_barra(cod_barra);
         produtoManager.getProduto().setDescricao(descricao.trim().toUpperCase());
-        produtoManager.getProduto().setPreco(preco);
+        produtoManager.getProduto().setPreco(p);
 
         Boolean result = produtoManager.salvar();
 
