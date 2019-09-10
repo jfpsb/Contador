@@ -1,12 +1,12 @@
 <resources>
 
-    <!-- Base application theme. -->
-
+    <!-- Tema base do app, configura a fonte em Century Gothic -->
     <style name="TabAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:fontFamily">@font/century_gothic</item>
         <item name="android:textColor">#000</item>
     </style>
 
+    <!-- Remove a barra superior, usado no manifest -->
     <style name="TabAppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -21,9 +21,12 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
-    <style name="AlertDialogProduto" parent="@android:style/Theme.Dialog">
+
+    <style name="MenuItemTextAppearance" parent="TextAppearance.AppCompat.Menu">
         <item name="android:fontFamily">@font/century_gothic</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:foreground">#000</item>
     </style>
 
 </resources>

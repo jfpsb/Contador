@@ -12,7 +12,6 @@ import com.vandamodaintima.jfpsb.contador.R;
 
 public class ActivityBaseView extends AppCompatActivity {
     public static final String LOG = "Contador";
-
     protected ViewStub stub;
 
     @Override

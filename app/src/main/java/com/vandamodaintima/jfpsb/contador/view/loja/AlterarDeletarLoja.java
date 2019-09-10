@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
-import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -46,16 +48,25 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());
         spinnerMatrizes.setAdapter(spinnerAdapter);
 
-        if(controller.getLoja().getMatriz() != null)
+        if (controller.getLoja().getMatriz() != null)
             spinnerMatrizes.setSelection(controller.getMatrizIndex(controller.getLoja().getMatriz().getCnpj()));
 
         inicializaBotoes();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_tela_alterar_deletar_loja, menu);
-        return true;
+        navigationView.inflateMenu(R.menu.menu_tela_alterar_deletar_loja);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                if (id == R.id.menuItemDeletar) {
+                    Toast.makeText(getContext(), "Deletar", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override

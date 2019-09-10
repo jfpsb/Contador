@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/menuItemVisualizarEstoque"
+            android:title="Visualizar Estoque" />
 
-    <item
-        android:title="Visualizar Estoque" />
+        <item
+            android:id="@+id/menuItemExportarEstoque"
+            android:title="Exportar Estoque em Excel" />
 
-    <item
-        android:title="Exportar Estoque em Excel" />
+        <item
+            android:id="@+id/menuItemDeletar"
+            android:title="Deletar" />
+    </group>
 </menu>
