@@ -218,7 +218,7 @@
 
         <Button
             android:id="@+id/btnCadastrar"
-            style="@style/BtnCadastrarAtualizarStyle"
+            style="@style/BtnGreen"
             android:text="@string/cadastrar" />
     </LinearLayout>
 </RelativeLayout>

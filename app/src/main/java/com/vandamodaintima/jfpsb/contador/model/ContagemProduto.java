@@ -32,8 +32,8 @@ public class ContagemProduto implements Serializable {
         return produto;
     }
 
-    public void setProduto(Produto produtoModel) {
-        this.produto = produtoModel;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     public int getQuant() {

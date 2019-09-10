@@ -8,12 +8,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,7 +29,6 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     private EditText txtData;
     private EditText txtLoja;
     private CheckBox checkBoxFinalizada;
-    private Button btnAdicionar;
 
     private AlterarDeletarContagemController controller;
 
@@ -50,7 +47,9 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         txtData = findViewById(R.id.txtDataInicial);
         txtLoja = findViewById(R.id.txtLoja);
         checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
-        btnAdicionar = findViewById(R.id.btnAdicionar);
+
+        navigationView.inflateMenu(R.menu.menu_alterar_deletar_contagem);
+        navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_contagem);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarContagemController(this, conexaoBanco);
@@ -65,13 +64,36 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());
 
-        btnAdicionar.setOnClickListener(new View.OnClickListener() {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-                intent.putExtra("loja", controller.getLoja());
-                intent.putExtra("data", controller.getData());
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id) {
+                    case R.id.menuItemVerProdutos:
+                        Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
+                        visualizarContagem.putExtra("loja", controller.getLoja());
+                        visualizarContagem.putExtra("data", controller.getData());
+                        startActivity(visualizarContagem);
+                        break;
+                    case R.id.menuItemExportarContagemExcel:
+                        if (ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PEDIDO_PERMISSAO_READ);
+                        } else {
+                            AbrirEscolhaDiretorioActivity();
+                        }
+                        break;
+                    case R.id.menuItemDeletar:
+                        AlertDialog alertDialog = alertBuilderDeletar.create();
+                        alertDialog.show();
+                        break;
+                    case R.id.menuItemAdicionarContagem:
+                        Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
+                        intent.putExtra("loja", controller.getLoja());
+                        intent.putExtra("data", controller.getData());
+                        startActivity(intent);
+                        break;
+                }
+                return true;
             }
         });
     }
@@ -79,35 +101,6 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     @Override
     public Context getContext() {
         return getApplicationContext();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_alterar_deletar_contagem, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.itemVerProdutos:
-                Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-                visualizarContagem.putExtra("loja", controller.getLoja());
-                visualizarContagem.putExtra("data", controller.getData());
-                startActivity(visualizarContagem);
-                return true;
-            case R.id.itemExportarContagemExcel:
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PEDIDO_PERMISSAO_READ);
-                } else {
-                    AbrirEscolhaDiretorioActivity();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

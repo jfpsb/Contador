@@ -165,27 +165,27 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
     }
 
     public ArrayList<ContagemProduto> listarPorContagemGroupByProduto(Contagem contagem) {
-        ArrayList<ContagemProduto> contagemProdutoModels = new ArrayList<>();
+        ArrayList<ContagemProduto> contagemProdutos = new ArrayList<>();
         Cursor cursor = listarPorContagemGroupByProdutoCursor(contagem);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                ContagemProduto contagemProdutoModel = new ContagemProduto();
+                ContagemProduto contagemProduto = new ContagemProduto();
 
-                contagemProdutoModel.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
-                contagemProdutoModel.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+                contagemProduto.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
 
                 String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
                 String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-                contagemProdutoModel.setContagem(daoContagem.listarPorId(loja, data));
+                contagemProduto.setContagem(daoContagem.listarPorId(loja, data));
 
                 String p = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
-                contagemProdutoModel.setProduto(daoProduto.listarPorId(p));
+                contagemProduto.setProduto(daoProduto.listarPorId(p));
 
-                contagemProdutoModels.add(contagemProdutoModel);
+                contagemProdutos.add(contagemProduto);
             }
         }
 
-        return contagemProdutoModels;
+        return contagemProdutos;
     }
 }

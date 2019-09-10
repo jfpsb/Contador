@@ -9,14 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="3dip"
-        android:src="@drawable/loja_small" />
+        android:src="@drawable/produto_small" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:text="Opções de Loja"
+        android:text="Opções de Produto"
         android:textColor="#fff"
         android:textSize="18sp" />
 

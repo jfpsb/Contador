@@ -92,14 +92,7 @@
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:height="70sp"
-            android:background="@drawable/botao_active"
-            android:text="@string/cadastrar"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            style="@style/BtnCadastrar" />
 
     </RelativeLayout>
 

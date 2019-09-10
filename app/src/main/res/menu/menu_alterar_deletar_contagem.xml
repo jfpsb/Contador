@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/menuItemVerProdutos"
+            android:title="Ver Produtos" />
+        <item
+            android:id="@+id/menuItemExportarContagemExcel"
+            android:title="Exportar Para Excel" />
 
-    <item
-        android:title="Ver Produtos"
-        android:id="@+id/itemVerProdutos" />
-    <item
-        android:title="Exportar Contagem Para Excel"
-        android:id="@+id/itemExportarContagemExcel" />
+        <item
+            android:id="@+id/menuItemAdicionarContagem"
+            android:title="Adicionar Contagem de Produto" />
+
+        <item
+            android:id="@+id/menuItemDeletar"
+            android:title="Deletar" />
+
+    </group>
 </menu>

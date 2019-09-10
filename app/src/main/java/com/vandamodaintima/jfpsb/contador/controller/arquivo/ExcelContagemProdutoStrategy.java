@@ -37,11 +37,11 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         }
 
         for (int i = 0; i < rows.length; i++) {
-            ContagemProduto contagemProdutoModel = contagensProduto.get(i);
+            ContagemProduto contagemProduto = contagensProduto.get(i);
 
-            rows[i].getCell(0).setCellValue(contagemProdutoModel.getProduto().getCod_barra());
-            rows[i].getCell(1).setCellValue(contagemProdutoModel.getProduto().getDescricao());
-            rows[i].getCell(2).setCellValue(contagemProdutoModel.getQuant());
+            rows[i].getCell(0).setCellValue(contagemProduto.getProduto().getCod_barra());
+            rows[i].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
+            rows[i].getCell(2).setCellValue(contagemProduto.getQuant());
         }
 
         sheet.setColumnWidth(0, 25 * 256);

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +68,9 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
         btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
         btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
+
+        navigationView.inflateMenu(R.menu.menu_alterar_deletar_produto);
+        navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_produto);
 
         String id = getIntent().getExtras().getString("produto");
         controller.carregaProduto(id);
@@ -131,6 +137,22 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 } else {
                     mensagemAoUsuario("Produto Não Possui Marca");
                 }
+            }
+        });
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                switch (id) {
+                    case R.id.menuItemDeletar:
+                        AlertDialog alertDialog = alertBuilderDeletar.create();
+                        alertDialog.show();
+                        break;
+                }
+
+                return true;
             }
         });
     }

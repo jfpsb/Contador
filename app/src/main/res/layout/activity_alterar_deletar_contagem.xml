@@ -23,7 +23,7 @@
                     android:text="@string/dados_de_contagem"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -36,7 +36,7 @@
                     android:text="@string/loja_dois_pontos"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -50,7 +50,7 @@
                     android:enabled="false"
                     android:textAlignment="textStart"
                     android:textColor="#000"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </TableRow>
 
             <TableRow>
@@ -62,7 +62,7 @@
                     android:text="@string/data_dois_pontos"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -86,7 +86,7 @@
                     android:layout_weight="1"
                     android:text="@string/finalizada_dois_pontos"
                     android:textColor="#000"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -102,44 +102,18 @@
 
                 </LinearLayout>
             </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/btnAtualizar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/century_gothic"
-                    android:text="@string/atualizar"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:typeface="normal" />
-
-                <Button
-                    android:id="@+id/btnDeletar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/century_gothic"
-                    android:text="@string/deletar"
-                    android:textColor="#FF0000"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/btnAdicionar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/century_gothic"
-                    android:text="@string/adicionar_contagem_de_produtos"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </TableRow>
         </TableLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnAtualizar"
+            style="@style/BtnAtualizar" />
+
+    </RelativeLayout>
 </LinearLayout>

@@ -12,10 +12,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="TabAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="TabAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="TextoTab" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">20sp</item>
         <item name="android:textAllCaps">true</item>
@@ -24,12 +20,17 @@
 
     <style name="MenuItemTextAppearance" parent="TextAppearance.AppCompat.Menu">
         <item name="android:fontFamily">@font/century_gothic</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:foreground">#000</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="BtnCadastrarAtualizarStyle" parent="TextAppearance.AppCompat.Button">
-        <item name="android:layout_width">0dp</item>
+    <!-- No estilo acima não funciona -->
+    <style name="MenuItemTextStyle">
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="BtnGreen" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:fontFamily">@font/century_gothic</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">10dp</item>
@@ -38,6 +39,18 @@
         <item name="android:background">@drawable/botao_active</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BtnCadastrar" parent="BtnGreen">
+        <item name="android:text">Cadastrar</item>
+    </style>
+
+    <style name="BtnAtualizar" parent="BtnGreen">
+        <item name="android:text">Atualizar</item>
+    </style>
+
+    <style name="BtnPesquisar" parent="BtnGreen">
+        <item name="android:text">Pesquisar</item>
     </style>
 
 </resources>

@@ -71,13 +71,7 @@
 
             <Button
                 android:id="@+id/btnPesquisar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/botao_active"
-                android:text="@string/pesquisar"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                style="@style/BtnPesquisar" />
         </TableRow>
     </TableLayout>
 

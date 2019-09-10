@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -39,7 +38,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
         spinnerMatrizes = findViewById(R.id.spinnerMatrizes);
-        navigationView.inflateMenu(R.menu.menu_tela_alterar_deletar_loja);
+        navigationView.inflateMenu(R.menu.menu_alterar_deletar_loja);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_loja);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());

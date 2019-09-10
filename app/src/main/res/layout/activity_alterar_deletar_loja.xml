@@ -92,15 +92,18 @@
                     android:layout_height="40dp"
                     android:layout_weight="1" />
             </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/btnAtualizar"
-                    style="@style/BtnCadastrarAtualizarStyle"
-                    android:text="@string/atualizar" />
-
-            </TableRow>
         </TableLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnAtualizar"
+            style="@style/BtnAtualizar" />
+
+    </RelativeLayout>
 </LinearLayout>

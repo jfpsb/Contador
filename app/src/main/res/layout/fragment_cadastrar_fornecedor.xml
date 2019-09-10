@@ -63,18 +63,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:gravity="bottom">
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:height="70sp"
-            android:background="@drawable/botao_active"
-            android:text="@string/cadastrar"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            style="@style/BtnCadastrar" />
+
     </RelativeLayout>
 
 </FrameLayout>

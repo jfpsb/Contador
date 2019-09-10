@@ -31,6 +31,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:itemTextAppearance="@style/MenuItemTextAppearance"
-        app:itemBackground="@drawable/item_lista_linha_inferior"/>
+        app:itemBackground="@drawable/item_lista_linha_inferior"
+        app:theme="@style/MenuItemTextStyle"/>
 
 </android.support.v4.widget.DrawerLayout>

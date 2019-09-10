@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,6 +38,9 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         txtFantasia = findViewById(R.id.txtFantasia);
         txtEmail = findViewById(R.id.txtEmail);
 
+        navigationView.inflateMenu(R.menu.menu_alterar_deletar_fornecedor);
+        navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_fornecedor);
+
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarFornecedorController(this, conexaoBanco);
 
@@ -50,6 +56,22 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         if (!controller.getFornecedor().getFantasia().isEmpty()) {
             txtFantasia.setText(controller.getFornecedor().getFantasia());
         }
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+
+                switch (id) {
+                    case R.id.menuItemDeletar:
+                        AlertDialog alertDialog = alertBuilderDeletar.create();
+                        alertDialog.show();
+                        break;
+                }
+
+                return true;
+            }
+        });
     }
 
     @Override
@@ -76,7 +98,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarFornecedor.this, "FornecedorModel Não Foi Atualizado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Atualizado", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -102,7 +124,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarFornecedor.this, "FornecedorModel Não Foi Deletado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Deletado", Toast.LENGTH_SHORT).show();
             }
         });
     }

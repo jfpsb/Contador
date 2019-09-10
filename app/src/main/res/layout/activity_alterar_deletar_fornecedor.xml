@@ -121,28 +121,18 @@
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
-
-            <TableRow>
-
-                <Button
-                    android:id="@+id/btnAtualizar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/atualizar"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btnDeletar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/deletar"
-                    android:textColor="#FF0000"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </TableRow>
         </TableLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnAtualizar"
+            style="@style/BtnAtualizar" />
+
+    </RelativeLayout>
 </LinearLayout>

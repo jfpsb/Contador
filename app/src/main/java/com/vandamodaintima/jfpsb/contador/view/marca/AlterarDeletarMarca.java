@@ -28,6 +28,9 @@ public class AlterarDeletarMarca extends TelaAlterarDeletar {
 
         txtNome = findViewById(R.id.txtNome);
 
+        navigationView.inflateMenu(R.menu.menu_alterar_deletar_marca);
+        navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_marca);
+
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarMarcaController(this, conexaoBanco);
 
