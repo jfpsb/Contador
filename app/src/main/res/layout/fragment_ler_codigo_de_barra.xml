@@ -23,6 +23,13 @@
         </TableRow>
 
         <TableRow>
+            <Button
+                android:id="@+id/btnInserirManualmente"
+                android:text="Inserir Manualmente"
+                android:layout_weight="1"/>
+        </TableRow>
+
+        <TableRow>
 
             <TextureView
                 android:id="@+id/textureView"

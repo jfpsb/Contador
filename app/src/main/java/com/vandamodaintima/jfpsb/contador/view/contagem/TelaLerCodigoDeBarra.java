@@ -30,6 +30,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ import java.util.Collections;
 
 public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBarra {
     private TextureView textureView;
+    private Button btnInserirManualmente;
     private String cameraId;
     private Size previewSize;
     private CameraDevice.StateCallback stateCallback;
@@ -80,6 +82,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ler_codigo_de_barra, container, false);
 
+        btnInserirManualmente = view.findViewById(R.id.btnInserirManualemente);
         owner = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
