@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
@@ -66,8 +64,13 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.itemAdicionarManualmente) {
-            abrirTelaProdutoForResult();
+        if (id == R.id.itemHabilitarCampoQuant) {
+            if (item.isChecked()) {
+                item.setChecked(false);
+            } else {
+                item.setChecked(true);
+            }
+            telaLerCodigo.setCampoQuantChecked(item.isChecked());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -93,17 +96,8 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TELA_SELECIONAR_PRODUTO) {
-            if (resultCode == RESULT_OK) {
-                Produto produto = (Produto) data.getSerializableExtra("produto");
-                controller.carregaProduto(produto);
-                int quantidade = data.getIntExtra("quantidade", 1);
-                controller.cadastrar(quantidade);
-                telaVerProdutoContado.realizarPesquisa();
-            }
-        }
-
         super.onActivityResult(requestCode, resultCode, data);
+        telaVerProdutoContado.realizarPesquisa();
     }
 
     @Override

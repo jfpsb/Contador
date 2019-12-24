@@ -12,7 +12,7 @@
     <string name="title_activity_base">ActivityBase</string>
     <string name="title_activity_pesquisa_contagem_produto_container">Contagem e Produto: adicionar</string>
     <string name="menu_item_adicionar_contagem_manualmente">Adicionar Contagem Manualmente</string>
-    <string name="menu_item_habilitar_campo">Habilitar Campo Para Teclado</string>
+    <string name="menu_item_habilitar_campo_quant">Campo De Quantidade</string>
     <string name="inserir_contagem_de_produto">Inserir Contagem de Produto</string>
     <string name="leitura_codigo">Use a Câmera Para Ler o Código De Barras</string>
     <string name="leia_o_cod_de_barras_do_produto">Leia o Código de Barras do Produto</string>

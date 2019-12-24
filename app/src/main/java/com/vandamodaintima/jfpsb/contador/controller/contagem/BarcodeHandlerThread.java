@@ -1,6 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -9,7 +12,10 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.EditText;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -25,6 +31,7 @@ import java.util.ArrayList;
 
 public class BarcodeHandlerThread extends HandlerThread {
     private Handler handler;
+    private AlertDialog.Builder alertaQuantidadeProduto;
 
     private WeakReference<TextureView> textureViewWeakReference;
     private BarcodeDetector barcodeDetector;
@@ -32,11 +39,18 @@ public class BarcodeHandlerThread extends HandlerThread {
     private ITelaLerCodigoDeBarra view;
     private Contagem contagemModel;
     private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
-
+    private boolean isCampoQuantChecked = false;
     private boolean textureViewVisible = true;
 
-    public BarcodeHandlerThread() {
+    public BarcodeHandlerThread(BarcodeDetector barcodeDetector, TextureView textureView, TelaLerCodigoDeBarraController controller, ITelaLerCodigoDeBarra view, Contagem contagemModel) {
         super("BarcodeHandlerThread");
+        this.barcodeDetector = barcodeDetector;
+        textureViewWeakReference = new WeakReference<>(textureView);
+        this.controller = controller;
+        this.view = view;
+        this.contagemModel = contagemModel;
+
+        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
     }
 
     @SuppressLint("HandlerLeak")
@@ -96,19 +110,24 @@ public class BarcodeHandlerThread extends HandlerThread {
 
                         if (produtos.size() == 0) {
                             view.abrirProdutoNaoEncontradoDialog(codigo);
+                            sendEmptyMessageDelayed(1, 1200);
                         } else if (produtos.size() == 1) {
                             controller.carregaProduto(produtos.get(0));
-                            controller.cadastrar();
-                            view.playBarcodeBeep();
+
+                            if (isCampoQuantChecked) {
+                                showAlertaQuantidadeProduto(this);
+                            } else {
+                                controller.cadastrar();
+                                view.playBarcodeBeep();
+                                sendEmptyMessageDelayed(1, 1200);
+                            }
                         } else {
                             contagemProdutoDialogArrayAdapter.clear();
                             contagemProdutoDialogArrayAdapter.addAll(produtos);
                             contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
                             view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter);
+                            sendEmptyMessageDelayed(1, 1200);
                         }
-
-                        sendEmptyMessageDelayed(1, 2000);
-
                         break;
                 }
             }
@@ -119,28 +138,51 @@ public class BarcodeHandlerThread extends HandlerThread {
         return handler;
     }
 
-    public void setTextureView(TextureView textureView) {
-        textureViewWeakReference = new WeakReference<>(textureView);
-    }
-
-    public void setController(TelaLerCodigoDeBarraController controller) {
-        this.controller = controller;
-    }
-
-    public void setBarcodeDetector(BarcodeDetector barcodeDetector) {
-        this.barcodeDetector = barcodeDetector;
-    }
-
     public void setTextureViewVisible(boolean textureViewVisible) {
         this.textureViewVisible = textureViewVisible;
     }
 
-    public void setView(ITelaLerCodigoDeBarra view) {
-        this.view = view;
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
+    private void showAlertaQuantidadeProduto(final Handler handler) {
+        LayoutInflater layoutInflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = layoutInflater.inflate(R.layout.fragment_quantidade_produto_contagem_dialog, null, false);
+
+        final EditText txtQuantidade = v.findViewById(R.id.txtQuantidade);
+
+        alertaQuantidadeProduto = new AlertDialog.Builder(v.getContext());
+        alertaQuantidadeProduto.setView(v);
+        alertaQuantidadeProduto.setTitle("Informe a Quantidade");
+
+        alertaQuantidadeProduto.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String txtQuant = txtQuantidade.getText().toString();
+
+                if (!txtQuant.isEmpty()) {
+                    int quantidade = Integer.parseInt(txtQuant);
+
+                    if (quantidade < 1) {
+                        view.mensagemAoUsuario("Informe Uma Quantidade Válida");
+                        return;
+                    }
+
+                    controller.cadastrar(quantidade);
+                    view.playBarcodeBeep();
+                    handler.sendEmptyMessageDelayed(1, 1200);
+                }
+            }
+        });
+
+        alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                view.mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
+            }
+        });
+
+        alertaQuantidadeProduto.show();
     }
 
-    public void setContagem(Contagem contagemModel) {
-        this.contagemModel = contagemModel;
+    public void setCampoQuantChecked(boolean b) {
+        isCampoQuantChecked = b;
     }
 }

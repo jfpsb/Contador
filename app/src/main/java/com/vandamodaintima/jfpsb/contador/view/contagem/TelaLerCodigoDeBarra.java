@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -39,13 +40,17 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.BarcodeHandlerThread;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
+import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
 import java.util.Collections;
 
 public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBarra {
+    private static final int TELA_SELECIONAR_PRODUTO = 1;
+
     private TextureView textureView;
     private Button btnInserirManualmente;
     private String cameraId;
@@ -82,7 +87,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ler_codigo_de_barra, container, false);
 
-        btnInserirManualmente = view.findViewById(R.id.btnInserirManualemente);
+        btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
         owner = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
@@ -95,6 +100,14 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         String loja = bundle.getString("loja");
         String data = bundle.getString("data");
         controller.carregaContagem(loja, data);
+
+        btnInserirManualmente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TelaProdutoForContagemForResult.class);
+                startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
+            }
+        });
 
         stateCallback = new CameraDevice.StateCallback() {
             @Override
@@ -175,6 +188,18 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TELA_SELECIONAR_PRODUTO) {
+            if (resultCode == getActivity().RESULT_OK) {
+                Produto produto = (Produto) data.getSerializableExtra("produto");
+                controller.carregaProduto(produto);
+                int quantidade = data.getIntExtra("quantidade", 1);
+                controller.cadastrar(quantidade);
+            }
+        }
+    }
+
     private void openBackgroundThread() {
         cameraBackgroundThread = new HandlerThread("camera_background_thread");
         cameraBackgroundThread.start();
@@ -182,12 +207,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     }
 
     private void iniciaBarcodeThread() {
-        barcodeHandlerThread = new BarcodeHandlerThread();
-        barcodeHandlerThread.setBarcodeDetector(barcodeDetector);
-        barcodeHandlerThread.setTextureView(textureView);
-        barcodeHandlerThread.setController(controller);
-        barcodeHandlerThread.setView(this);
-        barcodeHandlerThread.setContagem(controller.getContagemManager());
+        barcodeHandlerThread = new BarcodeHandlerThread(barcodeDetector, textureView, controller, this, controller.getContagemManager());
         barcodeHandlerThread.start();
     }
 
@@ -409,5 +429,9 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCampoQuantChecked(boolean b) {
+        barcodeHandlerThread.setCampoQuantChecked(b);
     }
 }
