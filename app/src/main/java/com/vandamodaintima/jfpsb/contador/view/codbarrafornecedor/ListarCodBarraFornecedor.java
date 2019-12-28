@@ -32,10 +32,10 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pesquisar_cod_barra_fornecedor, container, false);
+        telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_cod_barra_fornecedor, container, false);
 
-        listView = view.findViewById(R.id.listViewCodigos);
-        txtQuantCodigos = view.findViewById(R.id.txtQuantCodigos);
+        listView = telaPesquisaView.findViewById(R.id.listViewCodigos);
+        txtQuantCodigos = telaPesquisaView.findViewById(R.id.txtQuantCodigos);
 
         codigos = (ArrayList<String>) getArguments().getSerializable("codigos");
 
@@ -47,12 +47,12 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
         controller.carregaProduto(id);
 
         if (controller.getProduto() != null && controller.getProduto() != null) {
-            ViewStub stub = view.findViewById(R.id.dados_produto_cod_barra_fornecedor_stub);
+            ViewStub stub = telaPesquisaView.findViewById(R.id.dados_produto_cod_barra_fornecedor_stub);
             stub.setLayoutResource(R.layout.dados_produto_cod_barra_fornecedor);
             stub.inflate();
 
-            txtCodBarra = view.findViewById(R.id.txtCodBarraProduto);
-            txtDescricao = view.findViewById(R.id.txtDescricao);
+            txtCodBarra = telaPesquisaView.findViewById(R.id.txtCodBarraProduto);
+            txtDescricao = telaPesquisaView.findViewById(R.id.txtDescricao);
 
             txtCodBarra.setText(controller.getProduto().getCod_barra());
             txtDescricao.setText(controller.getProduto().getDescricao());

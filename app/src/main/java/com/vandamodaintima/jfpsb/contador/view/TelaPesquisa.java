@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,8 +18,10 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public abstract class TelaPesquisa extends Fragment implements PesquisarView {
+    protected static final int TELA_ALTERAR_DELETAR = 1;
+
     protected ListView listView;
-    protected View view;
+    protected View telaPesquisaView;
     protected ConexaoBanco conexaoBanco;
 
     @Nullable
@@ -34,7 +35,7 @@ public abstract class TelaPesquisa extends Fragment implements PesquisarView {
             }
         });
 
-        return view;
+        return telaPesquisaView;
     }
 
     @Override

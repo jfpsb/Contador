@@ -11,7 +11,6 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
-import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
 public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdicionarContagemProduto {
 
@@ -74,14 +73,6 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void abrirTelaProdutoForResult(String... codigo) {
-        Intent intent = new Intent(this, TelaProdutoForContagemForResult.class);
-        if (codigo.length > 0)
-            intent.putExtra("codigo", codigo[0]);
-        startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
     }
 
     @Override

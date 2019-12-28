@@ -9,7 +9,7 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public abstract class TelaCadastro extends Fragment implements CadastrarView {
-    protected View view;
+    protected View telaCadastroView;
     protected ConexaoBanco conexaoBanco;
 
     @Override

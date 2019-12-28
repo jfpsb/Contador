@@ -1,35 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="10dip">
+    android:layout_height="match_parent">
 
     <TableRow>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cod_de_barra"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/descricao"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-    <TableRow>
         <ListView
             android:id="@+id/listViewAdicionarContagem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_marginTop="10sp"
+            android:layout_weight="1" />
     </TableRow>
 </TableLayout>

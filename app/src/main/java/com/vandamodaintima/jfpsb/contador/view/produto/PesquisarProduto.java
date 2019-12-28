@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -39,14 +38,13 @@ public class PesquisarProduto extends TelaPesquisa {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
+        telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
-        listView = view.findViewById(R.id.listViewProduto);
-        spinnerPesquisa = view.findViewById(R.id.spinnerPesquisa);
-        txtPesquisaProduto = view.findViewById(R.id.txtPesquisaProduto);
-        txtQuantProdutosCadastrados = view.findViewById(R.id.txtQuantProdutosCadastrados);
+        listView = telaPesquisaView.findViewById(R.id.listViewProduto);
+        spinnerPesquisa = telaPesquisaView.findViewById(R.id.spinnerPesquisa);
+        txtPesquisaProduto = telaPesquisaView.findViewById(R.id.txtPesquisaProduto);
+        txtQuantProdutosCadastrados = telaPesquisaView.findViewById(R.id.txtQuantProdutosCadastrados);
 
-        // Não pode ser antes de instanciar as views
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarProdutoController(this, conexaoBanco);
 
@@ -105,21 +103,13 @@ public class PesquisarProduto extends TelaPesquisa {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_ALTERAR_DELETAR:
-                if (resultCode == Activity.RESULT_OK) {
-                    realizarPesquisa();
-                } else {
-                    mensagemAoUsuario("Produto Não Foi Alterado");
-                }
-
-                break;
+        if (requestCode == TELA_ALTERAR_DELETAR) {
+            if (resultCode == Activity.RESULT_OK) {
+                realizarPesquisa();
+            } else {
+                mensagemAoUsuario("Produto Não Foi Alterado");
+            }
         }
-    }
-
-    @Override
-    public void mensagemAoUsuario(String mensagem) {
-        Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -153,11 +143,8 @@ public class PesquisarProduto extends TelaPesquisa {
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
 
-        Bundle bundle = new Bundle();
-        bundle.putString("produto", cod_barra);
-
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
-        alterarProduto.putExtras(bundle);
+        alterarProduto.putExtra("produto", cod_barra);
 
         startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
     }

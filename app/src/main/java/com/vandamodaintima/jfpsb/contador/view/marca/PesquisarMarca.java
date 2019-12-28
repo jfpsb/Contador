@@ -23,10 +23,10 @@ public class PesquisarMarca extends TelaPesquisa {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pesquisar_marca, container, false);
+        telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_marca, container, false);
 
-        txtNome = view.findViewById(R.id.txtNome);
-        listView = view.findViewById(R.id.listViewMarca);
+        txtNome = telaPesquisaView.findViewById(R.id.txtNome);
+        listView = telaPesquisaView.findViewById(R.id.listViewMarca);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarMarcaController(this, conexaoBanco);

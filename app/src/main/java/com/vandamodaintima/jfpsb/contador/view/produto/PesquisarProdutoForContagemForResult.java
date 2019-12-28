@@ -32,6 +32,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
 
         controller = new PesquisarProdutoForContagemForResultController(this, conexaoBanco);
         setAlertaQuantidadeProduto();
+
         return view;
     }
 

@@ -28,16 +28,8 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
         TextView lblCodBarra = view.findViewById(R.id.lblCodBarra);
         TextView lblDescricao = view.findViewById(R.id.lblDescricao);
         TextView lblQuantidade = view.findViewById(R.id.lblQuantidade);
-        TextView lblQuantidadeAdicionada = view.findViewById(R.id.lblQuantidadeAdicionada);
 
-        Typeface type = Typeface.createFromAsset(context.getAssets(), "fonts/century_gothic.ttf");
-
-        lblCodBarra.setTypeface(type);
-        lblDescricao.setTypeface(type);
-        lblQuantidade.setTypeface(type);
-        lblQuantidadeAdicionada.setTypeface(type);
-
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow("quant"));
 

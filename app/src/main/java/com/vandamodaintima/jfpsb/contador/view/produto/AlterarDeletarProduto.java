@@ -72,7 +72,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_produto);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_produto);
 
-        String id = getIntent().getExtras().getString("produto");
+        String id = getIntent().getStringExtra("produto");
         controller.carregaProduto(id);
 
         setAlertaRemoverFornecedor();

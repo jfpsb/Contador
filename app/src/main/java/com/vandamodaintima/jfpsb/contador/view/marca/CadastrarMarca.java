@@ -26,10 +26,10 @@ public class CadastrarMarca extends TelaCadastro {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
+        telaCadastroView = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
 
-        txtNome = view.findViewById(R.id.txtNome);
-        btnCadastrar = view.findViewById(R.id.btnCadastrar);
+        txtNome = telaCadastroView.findViewById(R.id.txtNome);
+        btnCadastrar = telaCadastroView.findViewById(R.id.btnCadastrar);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new CadastrarMarcaController(this, conexaoBanco);
@@ -46,7 +46,7 @@ public class CadastrarMarca extends TelaCadastro {
             }
         });
 
-        return view;
+        return telaCadastroView;
     }
 
     protected void setAlertaCadastro(final String nome) {

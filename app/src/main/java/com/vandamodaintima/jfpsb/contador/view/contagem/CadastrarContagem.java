@@ -24,10 +24,10 @@ public class CadastrarContagem extends TelaCadastro {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
+        telaCadastroView = inflater.inflate(R.layout.fragment_cadastrar_contagem, container, false);
 
-        btnCadastrar = view.findViewById(R.id.btnCadastrar);
-        spinnerLoja = view.findViewById(R.id.spinnerLoja);
+        btnCadastrar = telaCadastroView.findViewById(R.id.btnCadastrar);
+        spinnerLoja = telaCadastroView.findViewById(R.id.spinnerLoja);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new InserirContagemController(this, conexaoBanco);
@@ -55,7 +55,7 @@ public class CadastrarContagem extends TelaCadastro {
         ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
         spinnerLoja.setAdapter(spinnerAdapter);
 
-        return view;
+        return telaCadastroView;
     }
 
     @Override

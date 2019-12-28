@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,7 +64,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
     private Handler cameraBackgroundHandler;
     private HandlerThread cameraBackgroundThread;
-
     private BarcodeHandlerThread barcodeHandlerThread;
 
     private BarcodeDetector barcodeDetector;
@@ -73,7 +73,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     private MediaPlayer erroMediaPlayer;
     private MediaPlayer codigoLidoMediaPlayer;
 
-    private IAdicionarContagemProduto owner;
     private String codigo_pesquisado;
 
     private TelaLerCodigoDeBarraController controller;
@@ -87,13 +86,13 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         View view = inflater.inflate(R.layout.fragment_ler_codigo_de_barra, container, false);
 
         btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
-        owner = (IAdicionarContagemProduto) getActivity();
+        IAdicionarContagemProduto ownerActivity = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
         erroMediaPlayer = MediaPlayer.create(getContext(), R.raw.erro_buzzer);
         codigoLidoMediaPlayer = MediaPlayer.create(getContext(), R.raw.barcode_beep);
 
-        controller = new TelaLerCodigoDeBarraController(this, owner.getConexaoBanco());
+        controller = new TelaLerCodigoDeBarraController(this, ownerActivity.getConexaoBanco());
 
         Bundle bundle = getArguments();
         String loja = bundle.getString("loja");
@@ -190,7 +189,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TELA_SELECIONAR_PRODUTO) {
-            if (resultCode == getActivity().RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 Produto produto = (Produto) data.getSerializableExtra("produto");
                 controller.carregaProduto(produto);
                 int quantidade = data.getIntExtra("quantidade", 1);
@@ -227,8 +226,9 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         produtoNaoEncontradoDialog.show();
     }
 
-    public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter) {
+    public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo) {
         erroMediaPlayer.start();
+        codigo_pesquisado = codigo;
         escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
         escolhaProdutoDialog.show();
     }
@@ -253,7 +253,10 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         escolhaProdutoDialog.setNegativeButton("O Produto Não Está Lista", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                owner.abrirTelaProdutoForResult(codigo_pesquisado);
+                Intent intent = new Intent(getContext(), TelaProdutoForContagemForResult.class);
+                intent.putExtra("codigo", codigo_pesquisado);
+                startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
+                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
 
@@ -264,6 +267,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 Object model = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                 controller.carregaProduto(model);
                 controller.cadastrar();
+                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
 
@@ -271,6 +275,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
+                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
     }
@@ -284,7 +289,10 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                owner.abrirTelaProdutoForResult(codigo_pesquisado);
+                Intent intent = new Intent(getContext(), TelaProdutoForContagemForResult.class);
+                intent.putExtra("codigo", codigo_pesquisado);
+                startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
+                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
 
@@ -293,6 +301,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
                 dialogInterface.dismiss();
+                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
     }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,23 +52,23 @@ public class CadastrarProduto extends TelaCadastro {
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
+        telaCadastroView = inflater.inflate(R.layout.fragment_cadastrar_produto, container, false);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new CadastrarProdutoController(this, conexaoBanco);
 
-        btnCadastrar = view.findViewById(R.id.btnCadastrar);
-        btnEscolherFornecedor = view.findViewById(R.id.btnEscolherFornecedor);
-        btnEscolherMarca = view.findViewById(R.id.btnEscolherMarca);
-        btnGerenciarCodBarraFornecedor = view.findViewById(R.id.btnGerenciarCodBarraFornecedor);
-        btnRemoverFornecedor = view.findViewById(R.id.btnRemoverFornecedor);
-        btnRemoverMarca = view.findViewById(R.id.btnRemoverMarca);
-        txtCodBarra = view.findViewById(R.id.txtCodBarra);
-        txtDescricao = view.findViewById(R.id.txtDescricao);
-        txtPreco = view.findViewById(R.id.txtPreco);
-        txtFornecedor = view.findViewById(R.id.txtFornecedor);
-        txtMarca = view.findViewById(R.id.txtMarca);
-        lblCodRepetido = view.findViewById(R.id.lblCodRepetido);
+        btnCadastrar = telaCadastroView.findViewById(R.id.btnCadastrar);
+        btnEscolherFornecedor = telaCadastroView.findViewById(R.id.btnEscolherFornecedor);
+        btnEscolherMarca = telaCadastroView.findViewById(R.id.btnEscolherMarca);
+        btnGerenciarCodBarraFornecedor = telaCadastroView.findViewById(R.id.btnGerenciarCodBarraFornecedor);
+        btnRemoverFornecedor = telaCadastroView.findViewById(R.id.btnRemoverFornecedor);
+        btnRemoverMarca = telaCadastroView.findViewById(R.id.btnRemoverMarca);
+        txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
+        txtDescricao = telaCadastroView.findViewById(R.id.txtDescricao);
+        txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
+        txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
+        txtMarca = telaCadastroView.findViewById(R.id.txtMarca);
+        lblCodRepetido = telaCadastroView.findViewById(R.id.lblCodRepetido);
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
 
         btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +142,7 @@ public class CadastrarProduto extends TelaCadastro {
             }
         });
 
-        return view;
+        return telaCadastroView;
     }
 
     @Override

@@ -42,13 +42,13 @@ public class PesquisarContagem extends TelaPesquisa {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
+        telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_contagem, container, false);
 
-        txtDataInicial = view.findViewById(R.id.txtDataInicial);
-        txtDataFinal = view.findViewById(R.id.txtDataFinal);
-        listView = view.findViewById(R.id.listViewContagem);
-        btnPesquisar = view.findViewById(R.id.btnPesquisar);
-        spinnerLoja = view.findViewById(R.id.spinnerLoja);
+        txtDataInicial = telaPesquisaView.findViewById(R.id.txtDataInicial);
+        txtDataFinal = telaPesquisaView.findViewById(R.id.txtDataFinal);
+        listView = telaPesquisaView.findViewById(R.id.listViewContagem);
+        btnPesquisar = telaPesquisaView.findViewById(R.id.btnPesquisar);
+        spinnerLoja = telaPesquisaView.findViewById(R.id.spinnerLoja);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarContagemController(this, conexaoBanco);

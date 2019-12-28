@@ -8,7 +8,7 @@ public interface ITelaLerCodigoDeBarra {
 
     void abrirProdutoNaoEncontradoDialog(String codigo);
 
-    void abrirTelaEscolhaProdutoDialog(ListAdapter adapter);
+    void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo);
 
     void realizarPesquisa();
 

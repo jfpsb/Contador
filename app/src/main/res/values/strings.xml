@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Contador</string>
     <string name="escolha_fornecedor_hint">Escolha No Botão Abaixo</string>
-    <string name="hint_cnpj_nome_ou_fantasia">CNPJ, nome ou fantasia</string>
+    <string name="hint_cnpj_nome_ou_fantasia">CNPJ, nome ou nome fantasia</string>
+    <string name="hint_digite_nome_loja">Digite O Nome da Loja</string>
     <string name="title_activity_alterar_deletar_contagem">Contagem: alterar, deletar ou manipular</string>
     <string name="title_activity_alterar_deletar_fornecedor">Fornecedor: alterar ou deletar</string>
     <string name="title_activity_alterar_deletar_loja">Loja: alterar ou deletar</string>

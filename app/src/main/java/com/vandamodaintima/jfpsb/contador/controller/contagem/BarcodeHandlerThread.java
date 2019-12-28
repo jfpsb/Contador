@@ -110,7 +110,6 @@ public class BarcodeHandlerThread extends HandlerThread {
 
                         if (produtos.size() == 0) {
                             view.abrirProdutoNaoEncontradoDialog(codigo);
-                            sendEmptyMessageDelayed(1, 1200);
                         } else if (produtos.size() == 1) {
                             controller.carregaProduto(produtos.get(0));
 
@@ -119,14 +118,14 @@ public class BarcodeHandlerThread extends HandlerThread {
                             } else {
                                 controller.cadastrar();
                                 view.playBarcodeBeep();
-                                sendEmptyMessageDelayed(1, 1200);
+                                sendEmptyMessageDelayed(1, 1800);
                             }
                         } else {
                             contagemProdutoDialogArrayAdapter.clear();
                             contagemProdutoDialogArrayAdapter.addAll(produtos);
                             contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
-                            view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter);
-                            sendEmptyMessageDelayed(1, 1200);
+                            view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter, codigo);
+                            sendEmptyMessageDelayed(1, 1800);
                         }
                         break;
                 }
@@ -167,7 +166,8 @@ public class BarcodeHandlerThread extends HandlerThread {
 
                     controller.cadastrar(quantidade);
                     view.playBarcodeBeep();
-                    handler.sendEmptyMessageDelayed(1, 1200);
+
+                    handler.sendEmptyMessageDelayed(1, 1500);
                 }
             }
         });
@@ -176,6 +176,7 @@ public class BarcodeHandlerThread extends HandlerThread {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 view.mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
+                handler.sendEmptyMessage(1);
             }
         });
 
