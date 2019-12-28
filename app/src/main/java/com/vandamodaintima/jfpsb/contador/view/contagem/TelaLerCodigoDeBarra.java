@@ -49,8 +49,6 @@ import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemFor
 import java.util.Collections;
 
 public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBarra {
-    private static final int TELA_SELECIONAR_PRODUTO = 1;
-
     private TextureView textureView;
     private Button btnInserirManualmente;
     private String cameraId;
@@ -81,6 +79,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     private TelaLerCodigoDeBarraController controller;
 
     private static final int PERMISSAO_CAMERA = 1;
+    private static final int TELA_SELECIONAR_PRODUTO = 2;
 
     @Nullable
     @Override

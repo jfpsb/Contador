@@ -4,13 +4,16 @@ import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
 import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
+import java.util.Date;
+
 public class PesquisarProdutoController {
-    private PesquisarView view;
+    protected PesquisarView view;
     private ProdutoCursorAdapter produtoAdapter;
-    private ProdutoManager produtoManager;
+    protected ProdutoManager produtoManager;
 
     public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
@@ -65,19 +68,13 @@ public class PesquisarProdutoController {
         view.setTextoQuantidadeBusca(cursor.getCount());
     }
 
-    //Utilizado apenas na tela de pesquisar produto para adicionar em contagem
-    public void atualizar() {
-        Boolean result = produtoManager.atualizar(produtoManager.getProduto().getCod_barra());
-
-        if (result) {
-            view.mensagemAoUsuario("Produto Foi Atualizado Com Código de Barras");
-        } else {
-            view.mensagemAoUsuario("Erro ao Atualizar Produto Com Código de Barras");
-        }
-    }
-
     public void carregaProduto(String id) {
         produtoManager.load(id);
+    }
+
+    public void carregaProduto(Object o) {
+        if (o instanceof Produto)
+            produtoManager.setProduto((Produto) o);
     }
 
     public Produto getProduto() {

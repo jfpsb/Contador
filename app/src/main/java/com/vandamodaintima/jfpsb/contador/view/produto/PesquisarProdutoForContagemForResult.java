@@ -14,18 +14,25 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoForContagemForResultController;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     private String codigo;
     private AlertDialog.Builder alertaQuantidadeProduto;
 
+    private static final int TELA_SELECIONAR_PRODUTO = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         //Código de barras usado na pesquisa inicial
         codigo = getArguments().getString("codigo");
 
+        controller = new PesquisarProdutoForContagemForResultController(this, conexaoBanco);
         setAlertaQuantidadeProduto();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -50,26 +57,27 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String txtQuant = txtQuantidade.getText().toString();
+                int quantidade = 1;
 
                 if (!txtQuant.isEmpty()) {
-                    int quantidade = Integer.parseInt(txtQuant);
-
-                    if (quantidade < 1) {
-                        mensagemAoUsuario("Informe Uma Quantidade Válida");
-                        return;
-                    }
-
-                    if (codigo != null && !codigo.isEmpty())
-                        controller.addCodBarraFornecedor(codigo);
-
-                    controller.atualizar();
-
-                    Intent intent = new Intent();
-                    intent.putExtra("produto", controller.getProduto());
-                    intent.putExtra("quantidade", quantidade);
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
+                    quantidade = Integer.parseInt(txtQuant);
                 }
+
+                if (quantidade < 1) {
+                    mensagemAoUsuario("Informe Uma Quantidade Válida");
+                    return;
+                }
+
+                if (codigo != null && !codigo.isEmpty())
+                    controller.addCodBarraFornecedor(codigo);
+
+                ((PesquisarProdutoForContagemForResultController)controller).atualizar();
+
+                Intent intent = new Intent();
+                intent.putExtra("produto", controller.getProduto());
+                intent.putExtra("quantidade", quantidade);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
             }
         });
 
@@ -79,5 +87,17 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                 mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TELA_SELECIONAR_PRODUTO) {
+            if (resultCode == getActivity().RESULT_OK) {
+                Produto produto = (Produto) data.getSerializableExtra("produto");
+                controller.carregaProduto(produto);
+                int quantidade = data.getIntExtra("quantidade", 1);
+                ((PesquisarProdutoForContagemForResultController)controller).cadastrar(quantidade);
+            }
+        }
     }
 }
