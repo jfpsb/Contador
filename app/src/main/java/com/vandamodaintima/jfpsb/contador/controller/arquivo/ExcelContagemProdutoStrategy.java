@@ -41,12 +41,14 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
 
             rows[i].getCell(0).setCellValue(contagemProduto.getProduto().getCod_barra());
             rows[i].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
-            rows[i].getCell(2).setCellValue(contagemProduto.getQuant());
+            rows[i].getCell(2).setCellValue(contagemProduto.getProduto().getPreco());
+            rows[i].getCell(3).setCellValue(contagemProduto.getQuant());
         }
 
         sheet.setColumnWidth(0, 25 * 256);
         sheet.setColumnWidth(1, 70 * 256);
         sheet.setColumnWidth(2, 20 * 256);
+        sheet.setColumnWidth(3, 20 * 256);
 
         return "Contagem.xlsx";
     }

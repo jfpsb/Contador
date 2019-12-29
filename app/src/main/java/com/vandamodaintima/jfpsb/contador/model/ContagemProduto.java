@@ -49,6 +49,6 @@ public class ContagemProduto implements Serializable {
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód De Barra", "Descrição", "Quantidade"};
+        return new String[]{"Cód De Barra", "Descrição", "Preço", "Quantidade"};
     }
 }
