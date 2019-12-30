@@ -6,4 +6,35 @@
         <item>Fornecedor</item>
         <item>Marca</item>
     </string-array>
+    <string-array name="auto_complete_textview_produto_items">
+        <item>CAMISOLA</item>
+        <item>BABYDOLL</item>
+        <item>PIJAMA</item>
+        <item>CAMISETE</item>
+        <item>CAMISETA</item>
+        <item>CALCINHA</item>
+        <item>TANGA</item>
+        <item>SUTIÃ</item>
+        <item>CUECA</item>
+        <item>BERMUDA</item>
+        <item>BIQUINI</item>
+        <item>BODY</item>
+        <item>BOX</item>
+        <item>BUSTIÊ</item>
+        <item>CALÇA</item>
+        <item>CONJUNTO</item>
+        <item>CORPETE</item>
+        <item>CROPPED</item>
+        <item>FIO</item>
+        <item>MAIÔ</item>
+        <item>MEIA</item>
+        <item>MODELADOR</item>
+        <item>PESCADOR</item>
+        <item>SAIA</item>
+        <item>SAÍDA</item>
+        <item>SHORT</item>
+        <item>BUNDEX</item>
+        <item>SUNGA</item>
+        <item>TOP</item>
+    </string-array>
 </resources>

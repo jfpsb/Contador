@@ -32,6 +32,7 @@ public class DAOContagem implements IDAO<Contagem> {
             contentValues.put("loja", contagem.getLoja().getCnpj());
             contentValues.put("data", contagem.getDataSQLite(contagem.getData()));
             contentValues.put("finalizada", contagem.getFinalizada());
+            contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -138,7 +139,7 @@ public class DAOContagem implements IDAO<Contagem> {
     }
 
     public Cursor listarPorLojaPeriodoCursor(String loja, Calendar dataInicial, Calendar dataFinal) {
-        String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
+        String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada, tipo FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
 
         dataInicial.set(Calendar.HOUR_OF_DAY, 0);
         dataInicial.set(Calendar.MINUTE, 0);

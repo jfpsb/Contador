@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class ConexaoBanco implements Serializable {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 8;
+    private static final int VERSAO_BANCO = 9;
     private SQLiteHelper sqLiteHelper;
 
     public ConexaoBanco(Context context) {

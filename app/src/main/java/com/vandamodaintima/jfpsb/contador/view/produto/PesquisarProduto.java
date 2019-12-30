@@ -12,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 public class PesquisarProduto extends TelaPesquisa {
 
     protected Spinner spinnerPesquisa;
-    protected EditText txtPesquisaProduto;
+    protected AutoCompleteTextView txtPesquisaProduto;
     protected TextView txtQuantProdutosCadastrados;
 
     private static final int DESCRICAO = 0;
@@ -44,6 +45,10 @@ public class PesquisarProduto extends TelaPesquisa {
         spinnerPesquisa = telaPesquisaView.findViewById(R.id.spinnerPesquisa);
         txtPesquisaProduto = telaPesquisaView.findViewById(R.id.txtPesquisaProduto);
         txtQuantProdutosCadastrados = telaPesquisaView.findViewById(R.id.txtQuantProdutosCadastrados);
+
+        ArrayAdapter<String> autoCompleteAdapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.auto_complete_textview_produto_items));
+        txtPesquisaProduto.setAdapter(autoCompleteAdapter);
 
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarProdutoController(this, conexaoBanco);

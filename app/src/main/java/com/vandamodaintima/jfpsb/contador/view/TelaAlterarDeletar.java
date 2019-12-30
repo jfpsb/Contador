@@ -48,7 +48,7 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.Abrir, R.string.Fechar);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.abrir, R.string.fechar);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         navigationView = findViewById(R.id.alterarDeletarNavigationView);
         actionBarDrawerToggle.syncState();

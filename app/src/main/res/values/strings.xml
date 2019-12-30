@@ -83,6 +83,7 @@
     <string name="quantidade_adicionada">Quantidade Adicionada:</string>
     <string name="email_dois_pontos">Email:</string>
     <string name="preco">Preço</string>
-    <string name="Abrir">Abrir</string>
-    <string name="Fechar">Fechar</string>
+    <string name="abrir">Abrir</string>
+    <string name="fechar">Fechar</string>
+    <string name="entrada_produto">Entrada de Produto</string>
 </resources>

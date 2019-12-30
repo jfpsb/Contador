@@ -33,7 +33,7 @@
 
         <TableRow>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/txtPesquisaProduto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,8 @@
                 android:layout_marginRight="15sp"
                 android:layout_weight="1"
                 android:hint="@string/hint_digite_cod_de_barra"
-                android:inputType="number" />
+                android:inputType="number"
+                />
         </TableRow>
 
         <TableRow
