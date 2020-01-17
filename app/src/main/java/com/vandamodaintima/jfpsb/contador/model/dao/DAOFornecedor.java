@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -46,7 +47,30 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
 
     @Override
     public Boolean inserir(List<Fornecedor> lista) {
-        return null;
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Fornecedor f : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("cnpj", f.getCnpj());
+                contentValues.put("nome", f.getNome());
+                contentValues.put("fantasia", f.getFantasia());
+                contentValues.put("email", f.getEmail());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
     }
 
     @Override
@@ -130,7 +154,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
     public Fornecedor listarPorIdOuNome(String termo) {
         Fornecedor fornecedor = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cnpj = ? OR nome = ?", new String[]{termo, termo}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "cnpj = ? OR nome = ?", new String[]{termo, termo}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

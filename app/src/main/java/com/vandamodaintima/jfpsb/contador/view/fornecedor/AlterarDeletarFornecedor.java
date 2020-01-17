@@ -52,10 +52,8 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
 
         txtCnpj.setText(controller.getFornecedor().getCnpj());
         txtNome.setText(controller.getFornecedor().getNome());
-
-        if (!controller.getFornecedor().getFantasia().isEmpty()) {
-            txtFantasia.setText(controller.getFornecedor().getFantasia());
-        }
+        txtFantasia.setText(controller.getFornecedor().getFantasia());
+        txtEmail.setText(controller.getFornecedor().getEmail());
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

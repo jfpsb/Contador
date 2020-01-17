@@ -3,7 +3,7 @@
 
     <item
         android:title="Cadastrar Produtos Em Excel"
-        android:id="@+id/itemCadastrarProdutosBatch"/>
+        android:id="@+id/itemImportarProdutoExcel"/>
 
     <item
         android:id="@+id/itemExportarProdutoExcel"

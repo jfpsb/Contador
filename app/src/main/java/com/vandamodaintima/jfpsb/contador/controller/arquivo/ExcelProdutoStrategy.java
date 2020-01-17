@@ -149,7 +149,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                     }
                     p.setFornecedor(fornecedorManager.listarPorId(cnpj));
                 } else if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
-                    p.setFornecedor(fornecedorManager.listarPorId(fornecedor.getStringCellValue()));
+                    p.setFornecedor(fornecedorManager.listarPorIdOuNome(fornecedor.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrado ou Vazio");
                     p.setFornecedor(null);
@@ -157,9 +157,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
             }
 
             if (marca != null && marca.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (marca.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                    p.setMarca(marcaManager.listarPorId(marca.getNumericCellValue()));
-                } else if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
+                if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
                     p.setMarca(marcaManager.listarPorId(marca.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrada ou Vazia");

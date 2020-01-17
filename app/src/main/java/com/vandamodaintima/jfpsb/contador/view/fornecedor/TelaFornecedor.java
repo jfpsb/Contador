@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -66,9 +67,14 @@ public class TelaFornecedor extends TabLayoutBaseView {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.itemImportarFornecedorExcel:
+                Intent intentImportar = new Intent(Intent.ACTION_GET_CONTENT);
+                intentImportar.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                startActivityForResult(Intent.createChooser(intentImportar, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);
+                return true;
             case R.id.itemCadastrarFornecedorManualmente:
-                Intent intent = new Intent(this, CadastrarFornecedorManualmente.class);
-                startActivityForResult(intent, CADASTRAR_MANUALMENTE);
+                Intent intentCadastrarManualmente = new Intent(this, CadastrarFornecedorManualmente.class);
+                startActivityForResult(intentCadastrarManualmente, CADASTRAR_MANUALMENTE);
                 return true;
             case R.id.itemExportarFornecedorExcel:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -106,13 +112,18 @@ public class TelaFornecedor extends TabLayoutBaseView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case ESCOLHER_ARQUIVO:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    controller.importarFornecedoresDeExcel(uri, getContentResolver());
+                }
+                break;
             case ESCOLHER_DIRETORIO:
                 if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
                     String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
                     controller.exportarFornecedoresParaExcel(diretorio);
                 }
                 break;
-
             case CADASTRAR_MANUALMENTE:
                 pesquisarFornecedor.realizarPesquisa();
                 break;

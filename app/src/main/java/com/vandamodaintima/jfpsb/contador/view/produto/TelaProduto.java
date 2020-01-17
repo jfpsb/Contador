@@ -84,7 +84,7 @@ public class TelaProduto extends TabLayoutBaseView {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.itemCadastrarProdutosBatch:
+            case R.id.itemImportarProdutoExcel:
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);

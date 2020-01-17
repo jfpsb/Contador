@@ -1,7 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
+import android.util.Log;
+
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -11,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     @Override
@@ -55,7 +60,74 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
 
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
-        return null;
+        ArrayList<Fornecedor> fornecedores = new ArrayList<>();
+        FornecedorManager fornecedorManager = new FornecedorManager(conexaoBanco);
+
+        Row cabecalho = sheet.getRow(0);
+        int numCols = cabecalho.getPhysicalNumberOfCells();
+        if (numCols != Fornecedor.getHeaders().length) {
+            Log.e("Contador", "O Número de Colunas Está Errado");
+            return false;
+        }
+
+        int rows = sheet.getPhysicalNumberOfRows();
+
+        for (int i = 1; i < rows; i++) {
+            Row row = sheet.getRow(i);
+
+            Fornecedor f = new Fornecedor();
+
+            Cell cnpj = row.getCell(0);
+            Cell nome = row.getCell(1);
+            Cell fantasia = row.getCell(2);
+            Cell email = row.getCell(3);
+
+            if (cnpj != null && cnpj.getCellType() != Cell.CELL_TYPE_BLANK) {
+                if (cnpj.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                    //O Excel apaga zeros iniciais de células configuradas como números então aqui eu os coloco de volta
+                    String cnpjValue = String.format(Locale.ENGLISH, "%.0f", cnpj.getNumericCellValue());
+
+                    if (cnpjValue.length() != 14) {
+                        int diff = 14 - cnpjValue.length();
+
+                        String append = "";
+
+                        for (int j = 0; j < diff; j++) {
+                            append += "0";
+                        }
+
+                        append += cnpj;
+                        cnpjValue = append;
+                    }
+                    f.setCnpj(cnpjValue);
+                } else if (cnpj.getCellType() == Cell.CELL_TYPE_STRING) {
+                    f.setCnpj(cnpj.getStringCellValue());
+                } else {
+                    Log.i("Contador", "Campo de CNPJ está Vazio");
+                }
+            }
+
+            if(nome != null && nome.getCellType() != Cell.CELL_TYPE_BLANK) {
+                if (nome.getCellType() == Cell.CELL_TYPE_STRING) {
+                    f.setNome(nome.getStringCellValue());
+                } else {
+                    Log.i("Contador", "Nome de Fornecedor Vazio");
+                    continue;
+                }
+            }
+
+            if(fantasia != null) {
+                f.setFantasia(fantasia.getStringCellValue());
+            }
+
+            if(email != null) {
+                f.setEmail(email.getStringCellValue());
+            }
+
+            fornecedores.add(f);
+        }
+
+        return fornecedorManager.salvar(fornecedores);
     }
 
     @Override

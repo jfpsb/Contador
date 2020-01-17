@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:title="Importar Fornecedores de Excel"
+        android:id="@+id/itemImportarFornecedorExcel" />
+
+    <item
         android:title="Cadastrar Fornecedor Manualmente"
         android:id="@+id/itemCadastrarFornecedorManualmente" />
     <item
