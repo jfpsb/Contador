@@ -33,7 +33,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     private AlterarDeletarContagemController controller;
 
     private static final int ESCOLHER_DIRETORIO = 1;
-    private static final int PEDIDO_PERMISSAO_READ = 2;
+    private static final int PERMISSAO_WRITE_READ = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +76,13 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                         startActivity(visualizarContagem);
                         break;
                     case R.id.menuItemExportarContagemExcel:
-                        if (ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PEDIDO_PERMISSAO_READ);
-                        } else {
+                        Boolean permissaoRead = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+                        Boolean permissaoWrite = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+
+                        if(permissaoRead && permissaoWrite) {
                             AbrirEscolhaDiretorioActivity();
+                        } else {
+                            ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
                         }
                         break;
                     case R.id.menuItemDeletar:
@@ -105,14 +108,13 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PEDIDO_PERMISSAO_READ:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Permissão Concedida para Acessar Memória Interna", Toast.LENGTH_SHORT).show();
-                    AbrirEscolhaDiretorioActivity();
-                }
-
-                break;
+        if (requestCode == PERMISSAO_WRITE_READ) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permissão Concedida para Ler e Gravar na Memória Interna", Toast.LENGTH_SHORT).show();
+                AbrirEscolhaDiretorioActivity();
+            } else {
+                Toast.makeText(this, "Conceda as Permissões Para Poder Exportar os Arquivos", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
