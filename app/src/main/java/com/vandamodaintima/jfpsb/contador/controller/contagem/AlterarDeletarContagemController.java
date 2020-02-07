@@ -1,14 +1,20 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.manager.TipoContagemManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
+
+import java.util.List;
 
 public class AlterarDeletarContagemController {
     AlterarDeletarView view;
     private ContagemManager contagemManager;
     private ContagemProdutoManager contagemProdutoManager;
+    private TipoContagemManager tipoContagemManager;
     private ConexaoBanco conexaoBanco;
 
     public AlterarDeletarContagemController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
@@ -16,6 +22,7 @@ public class AlterarDeletarContagemController {
         this.conexaoBanco = conexaoBanco;
         contagemManager = new ContagemManager(conexaoBanco);
         contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
+        tipoContagemManager = new TipoContagemManager(conexaoBanco);
     }
 
     public void atualizar(Boolean finalizada) {
@@ -46,6 +53,11 @@ public class AlterarDeletarContagemController {
         contagemManager.load(loja, data);
     }
 
+    public void carregaTipoContagem(Object o) {
+        if (o instanceof TipoContagem)
+            contagemManager.getContagem().setTipoContagem((TipoContagem) o);
+    }
+
     public String getFullDataString() {
         return contagemManager.getContagem().getFullDataString();
     }
@@ -60,6 +72,23 @@ public class AlterarDeletarContagemController {
 
     public String getData() {
         return contagemManager.getContagem().getDataParaSQLite();
+    }
+
+    public int getTipoContagemIndex() {
+        int index = 0;
+
+        for(TipoContagem tipo : getTipoContagens()) {
+            if(contagemManager.getContagem().getTipoContagem().getId() == tipo.getId()) {
+                break;
+            }
+            index++;
+        }
+
+        return index;
+    }
+
+    public List<TipoContagem> getTipoContagens() {
+        return tipoContagemManager.listar();
     }
 
     public void exportarParaExcel(String dir) {

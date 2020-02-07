@@ -19,6 +19,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import java.text.ParseException;
@@ -130,13 +131,11 @@ public class PesquisarContagem extends TelaPesquisa {
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-        String loja = cursor.getString(cursor.getColumnIndexOrThrow("loja"));
-        String data = cursor.getString(cursor.getColumnIndexOrThrow("data"));
+        Contagem contagem = (Contagem) adapterView.getItemAtPosition(i);
 
         Intent alterarContagem = new Intent(getContext(), AlterarDeletarContagem.class);
-        alterarContagem.putExtra("loja", loja);
-        alterarContagem.putExtra("data", data);
+        alterarContagem.putExtra("loja", contagem.getLoja().getCnpj());
+        alterarContagem.putExtra("data", contagem.getDataParaSQLite());
         startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
     }
 }

@@ -39,9 +39,11 @@ public class ContagemArrayAdapter extends ArrayAdapter<Contagem> {
         if (c != null) {
             TextView labelLojaNome = v.findViewById(R.id.labelLojaNome);
             TextView labelDataInicial = v.findViewById(R.id.labelDataCriada);
+            TextView labelTipoContagem = v.findViewById(R.id.labelTipoContagem);
 
             labelLojaNome.setText(c.getLoja().getNome());
             labelDataInicial.setText(c.getFullDataString());
+            labelTipoContagem.setText(c.getTipoContagem().getNome());
         }
 
         return v;

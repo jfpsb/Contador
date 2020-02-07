@@ -12,22 +12,31 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.AlterarDeletarContagemController;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.SpinnerTipoContagemAdapter;
+import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
 import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
+import java.util.List;
+
 public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
     private EditText txtData;
     private EditText txtLoja;
+    private Spinner spinnerTipoContagem;
     private CheckBox checkBoxFinalizada;
 
     private AlterarDeletarContagemController controller;
@@ -46,6 +55,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         txtData = findViewById(R.id.txtDataInicial);
         txtLoja = findViewById(R.id.txtLoja);
+        spinnerTipoContagem = findViewById(R.id.spinnerTipoContagem);
         checkBoxFinalizada = findViewById(R.id.checkBoxFinalizada);
 
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_contagem);
@@ -64,6 +74,25 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());
 
+        spinnerTipoContagem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Object o = spinnerTipoContagem.getSelectedItem();
+                controller.carregaTipoContagem(o);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        List<TipoContagem> tipoContagems = controller.getTipoContagens();
+        ArrayAdapter spinnerTipoContagemAdapter = new SpinnerTipoContagemAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, tipoContagems);
+        spinnerTipoContagem.setAdapter(spinnerTipoContagemAdapter);
+
+        spinnerTipoContagem.setSelection(controller.getTipoContagemIndex());
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -79,7 +108,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                         Boolean permissaoRead = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
                         Boolean permissaoWrite = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
 
-                        if(permissaoRead && permissaoWrite) {
+                        if (permissaoRead && permissaoWrite) {
                             AbrirEscolhaDiretorioActivity();
                         } else {
                             ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);

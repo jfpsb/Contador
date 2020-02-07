@@ -16,10 +16,12 @@ public class DAOContagem implements IDAO<Contagem> {
     private static final String TABELA = "contagem";
     private ConexaoBanco conexaoBanco;
     private DAOLoja daoLoja;
+    private DAOTipoContagem daoTipoContagem;
 
     public DAOContagem(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
         daoLoja = new DAOLoja(conexaoBanco);
+        daoTipoContagem = new DAOTipoContagem(conexaoBanco);
     }
 
     @Override
@@ -63,13 +65,14 @@ public class DAOContagem implements IDAO<Contagem> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("finalizada", contagem.getFinalizada());
+            contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{cnpj, data});
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return true;
         } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR MARCA", ex);
+            Log.e(LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -101,6 +104,7 @@ public class DAOContagem implements IDAO<Contagem> {
                 Contagem contagem = new Contagem();
 
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
+                contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
                 String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
                 contagem.setData(Contagem.convertStringToDate(d));
@@ -126,6 +130,7 @@ public class DAOContagem implements IDAO<Contagem> {
             contagem = new Contagem();
 
             contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
+            contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
             String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
             contagem.setData(Contagem.convertStringToDate(d));
@@ -164,6 +169,7 @@ public class DAOContagem implements IDAO<Contagem> {
                 Contagem contagem = new Contagem();
 
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
+                contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
                 String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
                 contagem.setData(Contagem.convertStringToDate(d));
