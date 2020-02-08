@@ -125,7 +125,6 @@ public class BarcodeHandlerThread extends HandlerThread {
                             contagemProdutoDialogArrayAdapter.addAll(produtos);
                             contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
                             view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter, codigo);
-                            sendEmptyMessageDelayed(1, 1800);
                         }
                         break;
                 }
