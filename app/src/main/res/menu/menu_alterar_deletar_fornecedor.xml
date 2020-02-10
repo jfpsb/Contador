@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
         <item
+            android:id="@+id/menuItemAtualizarDados"
+            android:title="Atualizar Dados" />
+        <item
             android:id="@+id/menuItemDeletar"
             android:title="Deletar" />
     </group>

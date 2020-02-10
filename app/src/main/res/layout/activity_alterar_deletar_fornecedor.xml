@@ -121,6 +121,28 @@
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/telefone_dois_pontos"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/txtTelefone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000"
+                    android:textSize="20sp" />
+            </TableRow>
         </TableLayout>
     </ScrollView>
 

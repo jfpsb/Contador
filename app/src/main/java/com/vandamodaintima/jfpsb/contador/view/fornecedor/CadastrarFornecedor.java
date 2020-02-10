@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorController;
+import com.vandamodaintima.jfpsb.contador.controller.fornecedor.IAposPesquisarFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
-public class CadastrarFornecedor extends TelaCadastro {
+public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarFornecedor {
     protected Button btnCadastrar;
     protected EditText txtCnpj;
     protected TextView lblCnpjRepetido;
@@ -90,15 +92,15 @@ public class CadastrarFornecedor extends TelaCadastro {
         txtCnpj.requestFocus();
     }
 
-    public void setAlertaCadastro(final String cnpj, final String nome, final String fantasia, final String email) {
+    private void setAlertaCadastro(final Fornecedor fornecedor) {
         alertaCadastro = new AlertDialog.Builder(getContext());
         alertaCadastro.setTitle("Cadastrar Fornecedor");
 
-        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + cnpj + "\n\n";
-        mensagem += "Nome: " + nome + "\n\n";
+        String mensagem = "Confirme os Dados do Fornecedor Encontrado Com CNPJ: " + fornecedor.getCnpj() + "\n\n";
+        mensagem += "Nome: " + fornecedor.getNome() + "\n\n";
 
-        if (!fantasia.isEmpty()) {
-            mensagem += "Nome Fantasia: " + fantasia + "\n\n";
+        if (!fornecedor.getFantasia().isEmpty()) {
+            mensagem += "Nome Fantasia: " + fornecedor.getFantasia() + "\n\n";
         }
 
         mensagem += "Deseja Cadastrar Este Fornecedor?";
@@ -108,7 +110,7 @@ public class CadastrarFornecedor extends TelaCadastro {
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                controller.cadastrar(cnpj, nome, fantasia, email);
+                controller.cadastrar(fornecedor);
             }
         });
 
@@ -131,5 +133,10 @@ public class CadastrarFornecedor extends TelaCadastro {
     public void liberaCampos() {
         btnCadastrar.setEnabled(true);
         lblCnpjRepetido.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void aposPesquisarFornecedor(Fornecedor fornecedor) {
+        setAlertaCadastro(fornecedor);
     }
 }

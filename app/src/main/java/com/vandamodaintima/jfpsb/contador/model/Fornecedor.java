@@ -11,6 +11,7 @@ public class Fornecedor implements Serializable {
     private String nome;
     private String fantasia;
     private String email;
+    private String telefone;
 
     public String getCnpj() {
         return cnpj;
@@ -44,11 +45,19 @@ public class Fornecedor implements Serializable {
         this.email = email;
     }
 
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
     public static String[] getColunas() {
-        return new String[]{"cnpj as _id", "nome", "fantasia", "email"};
+        return new String[]{"cnpj as _id", "nome", "fantasia", "email", "telefone"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"CNPJ", "Nome", "Nome Fantasia", "Email"};
+        return new String[]{"CNPJ", "Nome", "Nome Fantasia", "Email", "Telefone"};
     }
 }

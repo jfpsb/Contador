@@ -13,14 +13,17 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.AlterarDeletarFornecedorController;
+import com.vandamodaintima.jfpsb.contador.controller.fornecedor.IAposPesquisarFornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
-public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
+public class AlterarDeletarFornecedor extends TelaAlterarDeletar implements IAposPesquisarFornecedor {
 
     private EditText txtCnpj;
     private EditText txtNome;
     private EditText txtFantasia;
     private EditText txtEmail;
+    private EditText txtTelefone;
 
     private AlterarDeletarFornecedorController controller;
 
@@ -37,6 +40,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
         txtEmail = findViewById(R.id.txtEmail);
+        txtTelefone = findViewById(R.id.txtTelefone);
 
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_fornecedor);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_fornecedor);
@@ -54,6 +58,7 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
         txtNome.setText(controller.getFornecedor().getNome());
         txtFantasia.setText(controller.getFornecedor().getFantasia());
         txtEmail.setText(controller.getFornecedor().getEmail());
+        txtTelefone.setText(controller.getFornecedor().getTelefone());
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -64,6 +69,9 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
                     case R.id.menuItemDeletar:
                         AlertDialog alertDialog = alertBuilderDeletar.create();
                         alertDialog.show();
+                        break;
+                    case R.id.menuItemAtualizarDados:
+                        controller.pesquisarNaReceita(controller.getFornecedor().getCnpj());
                         break;
                 }
 
@@ -82,11 +90,15 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    String nome = txtNome.getText().toString().toUpperCase();
-                    String fantasia = txtFantasia.getText().toString().toUpperCase();
-                    String email = txtEmail.getText().toString().toUpperCase();
+                    Fornecedor fornecedor = new Fornecedor();
 
-                    controller.atualizar(nome, fantasia, email);
+                    fornecedor.setCnpj(txtCnpj.getText().toString());
+                    fornecedor.setNome(txtNome.getText().toString().toUpperCase());
+                    fornecedor.setFantasia(txtFantasia.getText().toString().toUpperCase());
+                    fornecedor.setEmail(txtEmail.getText().toString().toUpperCase());
+                    fornecedor.setTelefone(txtTelefone.getText().toString());
+
+                    controller.atualizar(fornecedor);
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -99,6 +111,14 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar {
                 Toast.makeText(AlterarDeletarFornecedor.this, "Fornecedor Não Foi Atualizado", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void aposPesquisarFornecedor(Fornecedor fornecedor) {
+        txtNome.setText(fornecedor.getNome());
+        txtFantasia.setText(fornecedor.getFantasia());
+        txtEmail.setText(fornecedor.getEmail());
+        txtTelefone.setText(fornecedor.getTelefone());
     }
 
     @Override

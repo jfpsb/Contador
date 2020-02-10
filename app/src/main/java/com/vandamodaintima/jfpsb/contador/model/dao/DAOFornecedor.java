@@ -31,6 +31,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             contentValues.put("nome", fornecedor.getNome());
             contentValues.put("fantasia", fornecedor.getFantasia());
             contentValues.put("email", fornecedor.getEmail());
+            contentValues.put("telefone", fornecedor.getTelefone());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -57,6 +58,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
                 contentValues.put("nome", f.getNome());
                 contentValues.put("fantasia", f.getFantasia());
                 contentValues.put("email", f.getEmail());
+                contentValues.put("telefone", f.getTelefone());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
@@ -85,13 +87,14 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             contentValues.put("nome", fornecedor.getNome());
             contentValues.put("fantasia", fornecedor.getFantasia());
             contentValues.put("email", fornecedor.getEmail());
+            contentValues.put("telefone", fornecedor.getTelefone());
 
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return true;
         } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR FORNECEDOR", ex);
+            Log.e(LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -125,6 +128,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
                 fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+                fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
                 fornecedores.add(fornecedor);
             }
         }
@@ -145,6 +149,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
             fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
             fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+            fornecedor.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
         }
 
         cursor.close();
@@ -165,6 +170,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
             fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
             fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+            fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
         }
 
         cursor.close();
@@ -188,6 +194,7 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
                 fornecedor.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 fornecedor.setFantasia(cursor.getString(cursor.getColumnIndexOrThrow("fantasia")));
                 fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+                fornecedor.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
 
                 fornecedores.add(fornecedor);
             }

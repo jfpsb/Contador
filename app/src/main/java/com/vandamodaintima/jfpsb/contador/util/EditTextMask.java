@@ -42,8 +42,6 @@ public class EditTextMask implements TextWatcher {
                     break;
                 }
             }
-
-            Log.i("Contador", formatado);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -13,21 +14,17 @@ public class CadastrarFornecedorManualmenteController {
         fornecedorManager = new FornecedorManager(conexaoBanco);
     }
 
-    public void cadastrar(String cnpj, String nome, String fantasia, String email) {
-        if (cnpj.trim().isEmpty()) {
+    public void cadastrar(Fornecedor fornecedor) {
+        if (fornecedor.getCnpj().trim().isEmpty()) {
             view.mensagemAoUsuario("O CNPJ do Fornecedor Não Pode Ser Vazio");
             return;
         }
-        if (nome.trim().isEmpty()) {
+        if (fornecedor.getNome().trim().isEmpty()) {
             view.mensagemAoUsuario("O Nome do Fornecedor Não Pode Ser Vazia");
             return;
         }
 
-        fornecedorManager.getFornecedor().setCnpj(cnpj);
-        fornecedorManager.getFornecedor().setNome(nome.toUpperCase());
-        fornecedorManager.getFornecedor().setFantasia(fantasia.toUpperCase());
-        fornecedorManager.getFornecedor().setEmail(email);
-
+        fornecedorManager.setFornecedor(fornecedor);
         Boolean result = fornecedorManager.salvar();
 
         if (result) {

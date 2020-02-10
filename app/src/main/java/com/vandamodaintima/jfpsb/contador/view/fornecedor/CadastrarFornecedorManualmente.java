@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorManualmenteController;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -19,6 +20,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     private EditText txtNome;
     private EditText txtFantasia;
     private EditText txtEmail;
+    private EditText txtTelefone;
     private Button btnCadastrar;
     private ConexaoBanco conexaoBanco;
 
@@ -35,6 +37,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         txtNome = findViewById(R.id.txtNome);
         txtFantasia = findViewById(R.id.txtFantasia);
         txtEmail = findViewById(R.id.txtEmail);
+        txtTelefone = findViewById(R.id.txtTelefone);
         btnCadastrar = findViewById(R.id.btnCadastrar);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
@@ -43,12 +46,15 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String cnpj = txtCnpj.getText().toString();
-                String nome = txtNome.getText().toString();
-                String fantasia = txtFantasia.getText().toString();
-                String email = txtEmail.getText().toString();
+                Fornecedor fornecedor = new Fornecedor();
 
-                controller.cadastrar(cnpj, nome, fantasia, email);
+                fornecedor.setCnpj(txtCnpj.getText().toString());
+                fornecedor.setNome(txtNome.getText().toString());
+                fornecedor.setFantasia(txtFantasia.getText().toString());
+                fornecedor.setEmail(txtEmail.getText().toString());
+                fornecedor.setTelefone(txtTelefone.getText().toString());
+
+                controller.cadastrar(fornecedor);
             }
         });
     }

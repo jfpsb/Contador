@@ -21,7 +21,7 @@
                 android:textSize="26sp" />
         </TableRow>
 
-        <TableRow android:layout_marginTop="10dip">
+        <TableRow>
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:visibility="gone" />
         </TableRow>
 
-        <TableRow android:layout_marginTop="10dip">
+        <TableRow>
 
             <TextView
                 android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                 android:textSize="20sp" />
         </TableRow>
 
-        <TableRow android:layout_marginTop="10dip">
+        <TableRow>
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                 android:textSize="20sp" />
         </TableRow>
 
-        <TableRow android:layout_marginTop="10dip">
+        <TableRow>
 
             <TextView
                 android:layout_width="match_parent"
@@ -115,6 +115,28 @@
 
             <EditText
                 android:id="@+id/txtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/telefone_dois_pontos"
+                android:textColor="#000"
+                android:textSize="22sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/txtTelefone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
