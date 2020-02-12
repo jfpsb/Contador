@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -40,10 +41,12 @@ public class ContagemArrayAdapter extends ArrayAdapter<Contagem> {
             TextView labelLojaNome = v.findViewById(R.id.labelLojaNome);
             TextView labelDataInicial = v.findViewById(R.id.labelDataCriada);
             TextView labelTipoContagem = v.findViewById(R.id.labelTipoContagem);
+            CheckBox checkBoxFinalizada = v.findViewById(R.id.chkFinalizada);
 
             labelLojaNome.setText(c.getLoja().getNome());
             labelDataInicial.setText(c.getFullDataString());
             labelTipoContagem.setText(c.getTipoContagem().getNome());
+            checkBoxFinalizada.setChecked(c.getFinalizada());
         }
 
         return v;

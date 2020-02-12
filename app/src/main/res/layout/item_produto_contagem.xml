@@ -5,52 +5,7 @@
     android:background="@drawable/item_lista_linha_inferior"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32sp"
-                android:layout_height="match_parent"
-                android:maxHeight="30sp"
-                android:src="@drawable/barcode"
-                android:contentDescription="Imagem Ilustrativa De Um Código de Barras"/>
-
-            <TextView
-                android:id="@+id/lblCodBarra"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="30sp"
-                android:padding="5sp"
-                android:text="placeholder"
-                android:textColor="#000"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/lblDescricao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:ellipsize="end"
-            android:minHeight="30sp"
-            android:padding="5sp"
-            android:singleLine="true"
-            android:textStyle="bold"
-            android:text="placeholder"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <include layout="@layout/item_pesquisa_produto" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -67,7 +22,7 @@
             android:text="@string/quantidade_adicionada"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/lblQuantidade"
@@ -78,7 +33,7 @@
             android:padding="5sp"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

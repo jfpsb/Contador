@@ -73,6 +73,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         txtData.setText(controller.getFullDataString());
         txtLoja.setText(controller.getLojaNome());
+        checkBoxFinalizada.setChecked(controller.getFinalizada());
 
         spinnerTipoContagem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

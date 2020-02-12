@@ -158,7 +158,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
         String loja = contagem.getLoja().getCnpj();
         String data = contagem.getDataParaSQLite();
 
-        String sql = "SELECT id as _id, SUM(quant) as quant, produto, descricao, contagem_loja, contagem_data FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
+        String sql = "SELECT id as _id, SUM(quant) as quant, preco, produto, descricao, contagem_loja, contagem_data FROM contagem_produto, produto WHERE produto = cod_barra AND contagem_loja = ? AND contagem_data = ? GROUP BY produto ORDER BY descricao";
         String[] selection = new String[]{loja, data};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);

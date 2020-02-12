@@ -74,6 +74,10 @@ public class AlterarDeletarContagemController {
         return contagemManager.getContagem().getDataParaSQLite();
     }
 
+    public boolean getFinalizada() {
+        return  contagemManager.getContagem().getFinalizada();
+    }
+
     public int getTipoContagemIndex() {
         int index = 0;
 
