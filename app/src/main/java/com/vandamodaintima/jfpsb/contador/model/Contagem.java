@@ -1,14 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import org.simpleframework.xml.Element;
+
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Contagem implements Serializable {
+public class Contagem implements Serializable, IModel {
+    @Element(name = "Loja")
     private Loja loja;
+    @Element(name = "Data")
     private Date data;
+    @Element(name = "Finalizada")
     private Boolean finalizada;
+    @Element(name = "TipoContagem")
     private TipoContagem tipoContagem;
 
     public Loja getLoja() {
@@ -20,8 +27,7 @@ public class Contagem implements Serializable {
     }
 
     public String getFullDataString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return simpleDateFormat.format(data);
+        return DateFormat.getDateInstance().format("dd/MM/yyyy HH:mm:ss");
     }
 
     public String getShortDataString() {
@@ -76,5 +82,10 @@ public class Contagem implements Serializable {
     public static String getDataSQLite(Date data) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(data);
+    }
+
+    @Override
+    public String getIdentificador() {
+        return loja.getCnpj() + data.toString();
     }
 }

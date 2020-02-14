@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -38,14 +39,54 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
 
     @Override
     public Boolean inserir(List<TipoContagem> lista) {
-
         try {
             conexaoBanco.conexao().beginTransaction();
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("nome", tipoContagem.getNome());
-                conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(TipoContagem tipoContagem) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("nome", tipoContagem.getNome());
+            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            conexaoBanco.conexao().setTransactionSuccessful();
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(List<TipoContagem> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (TipoContagem tipoContagem : lista) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("nome", tipoContagem.getNome());
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();

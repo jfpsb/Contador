@@ -10,7 +10,7 @@ public class EditTextMask implements TextWatcher {
     private EditText editText;
     private String mask;
     public static final String CNPJ = "##.###.###/####-##";
-    private static String formatado = "";
+    private static StringBuilder formatado = new StringBuilder();
 
     public EditTextMask(EditText editText, String mask) {
         this.editText = editText;
@@ -25,7 +25,7 @@ public class EditTextMask implements TextWatcher {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if(isUpdating) {
             String input = unmask(s.toString());
-            formatado = "";
+            formatado.setLength(0);
             int index = 0;
 
             for (int i = 0; i < mask.length(); i++) {
@@ -33,10 +33,10 @@ public class EditTextMask implements TextWatcher {
 
                 try {
                     if (c == '#') {
-                        formatado += input.charAt(index);
+                        formatado.append(input.charAt(index));
                         index++;
                     } else {
-                        formatado += c;
+                        formatado.append(c);
                     }
                 } catch (Exception e) {
                     break;
@@ -49,12 +49,12 @@ public class EditTextMask implements TextWatcher {
     public void afterTextChanged(Editable s) {
     }
 
-    public static String unmask(final String s) {
+    private static String unmask(final String s) {
         return s.replaceAll("[.]", "").replaceAll("[-]", "").replaceAll("[/]", "").replaceAll("[(]", "").replaceAll("[ ]","").replaceAll("[:]", "").replaceAll("[)]", "");
     }
 
     public static String mask(String input, String mask) {
-        formatado = "";
+        formatado.setLength(0);
         int index = 0;
 
         for (int i = 0; i < mask.length(); i++) {
@@ -62,18 +62,16 @@ public class EditTextMask implements TextWatcher {
 
             try {
                 if (c == '#') {
-                    formatado += input.charAt(index);
+                    formatado.append(input.charAt(index));
                     index++;
                 } else {
-                    formatado += c;
+                    formatado.append(c);
                 }
             } catch (Exception e) {
                 break;
             }
         }
 
-        Log.i("Contador", formatado);
-
-        return formatado;
+        return formatado.toString();
     }
 }

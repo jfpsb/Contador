@@ -9,8 +9,11 @@ import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -26,8 +29,8 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
         fonte.setFontHeightInPoints((short) 12);
 
         cellStyle.setFont(fonte);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
         ArrayList<Fornecedor> fornecedores = (ArrayList<Fornecedor>) lista;
 
@@ -82,33 +85,33 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
             Cell fantasia = row.getCell(2);
             Cell email = row.getCell(3);
 
-            if (cnpj != null && cnpj.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (cnpj.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            if (cnpj != null && cnpj.getCellTypeEnum() != CellType.BLANK) {
+                if (cnpj.getCellTypeEnum() == CellType.NUMERIC) {
                     //O Excel apaga zeros iniciais de células configuradas como números então aqui eu os coloco de volta
                     String cnpjValue = String.format(Locale.ENGLISH, "%.0f", cnpj.getNumericCellValue());
 
                     if (cnpjValue.length() != 14) {
                         int diff = 14 - cnpjValue.length();
 
-                        String append = "";
+                        StringBuilder append = new StringBuilder();
 
                         for (int j = 0; j < diff; j++) {
-                            append += "0";
+                            append.append("0");
                         }
 
-                        append += cnpj;
-                        cnpjValue = append;
+                        append.append(cnpj);
+                        cnpjValue = append.toString();
                     }
                     f.setCnpj(cnpjValue);
-                } else if (cnpj.getCellType() == Cell.CELL_TYPE_STRING) {
+                } else if (cnpj.getCellTypeEnum() == CellType.STRING) {
                     f.setCnpj(cnpj.getStringCellValue());
                 } else {
                     Log.i("Contador", "Campo de CNPJ está Vazio");
                 }
             }
 
-            if(nome != null && nome.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (nome.getCellType() == Cell.CELL_TYPE_STRING) {
+            if(nome != null && nome.getCellTypeEnum() != CellType.BLANK) {
+                if (nome.getCellTypeEnum() == CellType.STRING) {
                     f.setNome(nome.getStringCellValue());
                 } else {
                     Log.i("Contador", "Nome de Fornecedor Vazio");

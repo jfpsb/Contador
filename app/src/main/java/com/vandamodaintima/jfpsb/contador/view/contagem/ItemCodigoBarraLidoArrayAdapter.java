@@ -2,8 +2,8 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +16,10 @@ import java.util.List;
 
 public class ItemCodigoBarraLidoArrayAdapter extends ArrayAdapter<ItemCodigoBarraLido> {
 
-    Context context;
-    List<ItemCodigoBarraLido> objects;
+    private Context context;
+    private List<ItemCodigoBarraLido> objects;
 
-    public ItemCodigoBarraLidoArrayAdapter(@NonNull Context context, @NonNull List<ItemCodigoBarraLido> objects) {
+    ItemCodigoBarraLidoArrayAdapter(@NonNull Context context, @NonNull List<ItemCodigoBarraLido> objects) {
         super(context, 0, objects);
         this.objects = objects;
         this.context = context;

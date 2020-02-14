@@ -76,6 +76,61 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
     }
 
     @Override
+    public Boolean inserirOuAtualizar(Fornecedor fornecedor) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("cnpj", fornecedor.getCnpj());
+            contentValues.put("nome", fornecedor.getNome());
+            contentValues.put("fantasia", fornecedor.getFantasia());
+            contentValues.put("email", fornecedor.getEmail());
+            contentValues.put("telefone", fornecedor.getTelefone());
+
+            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(List<Fornecedor> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Fornecedor f : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("cnpj", f.getCnpj());
+                contentValues.put("nome", f.getNome());
+                contentValues.put("fantasia", f.getFantasia());
+                contentValues.put("email", f.getEmail());
+                contentValues.put("telefone", f.getTelefone());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
     public Boolean atualizar(Fornecedor fornecedor, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];

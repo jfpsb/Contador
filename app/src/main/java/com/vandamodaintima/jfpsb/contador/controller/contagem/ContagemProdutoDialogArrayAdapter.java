@@ -1,8 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +20,7 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
     private Context mContext;
     private int index = 0;
 
-    public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
+    ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
@@ -54,6 +54,7 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
                     // Ao tocar na opção, salva em index a posição do item selecionado
                     index = (int) view.getTag();
                     notifyDataSetChanged();
+                    view.performClick();
                     return false;
                 }
             });

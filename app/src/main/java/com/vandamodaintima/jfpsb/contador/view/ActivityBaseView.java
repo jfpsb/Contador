@@ -1,16 +1,16 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.WindowManager;
 
 import com.vandamodaintima.jfpsb.contador.R;
 
-public class ActivityBaseView extends AppCompatActivity {
+public abstract class ActivityBaseView extends AppCompatActivity {
     public static final String LOG = "Contador";
     protected ViewStub stub;
 

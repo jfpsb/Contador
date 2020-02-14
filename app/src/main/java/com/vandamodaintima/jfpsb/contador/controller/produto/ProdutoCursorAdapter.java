@@ -2,7 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import androidx.cursoradapter.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.vandamodaintima.jfpsb.contador.R;
 
 public class ProdutoCursorAdapter extends CursorAdapter {
-    public ProdutoCursorAdapter(Context context, Cursor c) {
+    ProdutoCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 

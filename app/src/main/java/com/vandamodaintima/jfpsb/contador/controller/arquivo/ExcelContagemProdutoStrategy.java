@@ -5,8 +5,11 @@ import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,8 +25,8 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         fonte.setFontHeightInPoints((short) 12);
 
         estiloCelula.setFont(fonte);
-        estiloCelula.setAlignment(CellStyle.ALIGN_CENTER);
-        estiloCelula.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+        estiloCelula.setAlignment(HorizontalAlignment.CENTER);
+        estiloCelula.setVerticalAlignment(VerticalAlignment.CENTER);
 
         ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
 
@@ -48,7 +51,7 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         for (int i = 1; i <= rows.length; i++) {
             Cell cell = rows[i - 1].createCell(4);
             cell.setCellStyle(estiloCelulaMonetario);
-            cell.setCellType(XSSFCell.CELL_TYPE_FORMULA);
+            cell.setCellType(CellType.FORMULA);
             String output = String.format("%s*%s", "C" + (i + 1), "D" + (i + 1));
             cell.setCellFormula(output);
         }

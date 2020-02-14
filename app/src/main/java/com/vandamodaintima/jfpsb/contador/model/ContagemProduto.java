@@ -1,11 +1,17 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import org.simpleframework.xml.Element;
+
 import java.io.Serializable;
 
-public class ContagemProduto implements Serializable {
+public class ContagemProduto implements Serializable, IModel {
+    @Element(name = "Id")
     private long id;
+    @Element(name = "Contagem")
     private Contagem contagem;
+    @Element(name = "Produto")
     private Produto produto;
+    @Element(name = "Quant")
     private int quant;
 
     public long getId() {
@@ -13,7 +19,7 @@ public class ContagemProduto implements Serializable {
     }
 
     public String getIdString() {
-        return String.valueOf(getId());
+        return String.valueOf(getIdentificador());
     }
 
     public void setId(long id) {
@@ -50,5 +56,10 @@ public class ContagemProduto implements Serializable {
 
     public static String[] getHeaders() {
         return new String[]{"Cód De Barra", "Descrição", "Preço", "Quantidade"};
+    }
+
+    @Override
+    public String getIdentificador() {
+        return String.valueOf(id);
     }
 }

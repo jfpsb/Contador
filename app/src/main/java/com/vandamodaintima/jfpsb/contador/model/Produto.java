@@ -1,22 +1,33 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Produto implements Serializable {
+public class Produto implements Serializable, IModel {
+    @Element(name = "Cod_Barra")
     private String cod_barra;
+    @ElementList(name = "Codigos", entry = "Codigo", required = false)
     private ArrayList<String> cod_barra_fornecedor = new ArrayList<>();
+    @Element(name = "Marca", required = false)
     private Marca marca;
+    @Element(name = "Fornecedor", required = false)
     private Fornecedor fornecedor;
+    @Element(name = "Descricao")
     private String descricao;
+    @Element(name = "Preco")
     private Double preco;
+    @Element(name = "Ncm", required = false)
+    private String ncm;
 
     public static String[] getColunas() {
-        return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca"};
+        return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca", "ncm"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Fornecedor", "Marca", "Cód. de Barra de Fornecedor"};
+        return new String[]{"Cód. De Barra", "Descrição", "Preço", "NCM", "Fornecedor", "Marca", "Cód. de Barra de Fornecedor"};
     }
 
     public String getCod_barra() {
@@ -65,5 +76,18 @@ public class Produto implements Serializable {
 
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    public String getNcm() {
+        return ncm;
+    }
+
+    public void setNcm(String ncm) {
+        this.ncm = ncm;
+    }
+
+    @Override
+    public String getIdentificador() {
+        return cod_barra;
     }
 }

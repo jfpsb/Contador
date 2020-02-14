@@ -1,16 +1,24 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import java.io.Serializable;
 
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Fornecedor implements Serializable {
+public class Fornecedor implements Serializable, IModel {
+    @Element(name = "Cnpj")
     private String cnpj;
+    @Element(name = "Nome")
     private String nome;
+    @Element(name = "Fantasia", required = false)
     private String fantasia;
+    @Element(name = "Email", required = false)
     private String email;
+    @Element(name = "Telefone", required = false)
     private String telefone;
 
     public String getCnpj() {
@@ -59,5 +67,10 @@ public class Fornecedor implements Serializable {
 
     public static String[] getHeaders() {
         return new String[]{"CNPJ", "Nome", "Nome Fantasia", "Email", "Telefone"};
+    }
+
+    @Override
+    public String getIdentificador() {
+        return cnpj;
     }
 }

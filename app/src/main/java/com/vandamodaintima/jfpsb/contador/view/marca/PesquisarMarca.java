@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.PesquisarMarcaController;
@@ -22,7 +24,7 @@ public class PesquisarMarca extends TelaPesquisa {
     protected PesquisarMarcaController controller;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_marca, container, false);
 
         txtNome = telaPesquisaView.findViewById(R.id.txtNome);

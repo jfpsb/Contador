@@ -52,7 +52,7 @@ public class ContagemProdutoManager implements IManager<ContagemProduto> {
 
     @Override
     public Boolean deletar() {
-        return daoContagemProduto.deletar(contagemProduto.getId());
+        return daoContagemProduto.deletar(contagemProduto.getIdentificador());
     }
 
     @Override

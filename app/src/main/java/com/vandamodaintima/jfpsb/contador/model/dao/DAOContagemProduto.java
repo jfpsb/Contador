@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -31,7 +32,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", contagemProduto.getId());
+            contentValues.put("id", contagemProduto.getIdentificador());
             contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
             contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
             contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
@@ -52,7 +53,86 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
     @Override
     public Boolean inserir(List<ContagemProduto> lista) {
-        return null;
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (ContagemProduto contagemProduto : lista) {
+
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("id", contagemProduto.getIdentificador());
+                contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
+                contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                contentValues.put("quant", contagemProduto.getQuant());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(ContagemProduto contagemProduto) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("id", contagemProduto.getIdentificador());
+            contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
+            contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+            contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+            contentValues.put("quant", contagemProduto.getQuant());
+
+            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(List<ContagemProduto> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (ContagemProduto contagemProduto : lista) {
+
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("id", contagemProduto.getIdentificador());
+                contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
+                contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                contentValues.put("quant", contagemProduto.getQuant());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
     }
 
     @Override

@@ -6,11 +6,11 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.util.ArrayList;
 
 public class ExcelStrategy<T> {
     private IExcelStrategy excelStrategy;
@@ -29,9 +29,9 @@ public class ExcelStrategy<T> {
         fonte.setBold(true);
 
         cellStyle.setFont(fonte);
-        cellStyle.setFillBackgroundColor(HSSFColor.GREY_40_PERCENT.index);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.GREY_40_PERCENT.getIndex());
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
         Row cabecalho = sheet.createRow(0);
 

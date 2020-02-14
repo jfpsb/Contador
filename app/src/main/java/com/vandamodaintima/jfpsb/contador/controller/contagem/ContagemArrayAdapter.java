@@ -1,8 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,13 @@ public class ContagemArrayAdapter extends ArrayAdapter<Contagem> {
     private int resourceLayout;
     private Context mContext;
 
-    public ContagemArrayAdapter(Context context, int resource, List<Contagem> objects) {
+    ContagemArrayAdapter(Context context, int resource, List<Contagem> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;

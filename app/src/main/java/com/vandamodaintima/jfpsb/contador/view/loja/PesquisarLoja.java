@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.PesquisarLojaController;
@@ -24,7 +26,7 @@ public class PesquisarLoja extends TelaPesquisa {
     private PesquisarLojaController controller;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_loja, container, false);
 

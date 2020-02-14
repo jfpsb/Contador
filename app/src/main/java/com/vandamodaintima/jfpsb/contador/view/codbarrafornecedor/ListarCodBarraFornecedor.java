@@ -3,7 +3,9 @@ package com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
     private AlertDialog.Builder alertaRemoverLista;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_cod_barra_fornecedor, container, false);
 
         listView = telaPesquisaView.findViewById(R.id.listViewCodigos);
@@ -64,18 +66,14 @@ public class ListarCodBarraFornecedor extends TelaPesquisa {
 
             @Override
             public boolean onKey(View v, int i, KeyEvent event) {
-                if (i == KeyEvent.KEYCODE_ENTER) {
-                    return true;
-                }
-
-                return false;
+                return i == KeyEvent.KEYCODE_ENTER;
             }
         });
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public void setAlertaRemoverLista(String codigo, final int index) {
+    private void setAlertaRemoverLista(String codigo, final int index) {
         alertaRemoverLista.setTitle("Remover Código de Listar");
         alertaRemoverLista.setMessage("Tem Certeza Que Deseja Remover o Código " + codigo + " da Lista?");
 

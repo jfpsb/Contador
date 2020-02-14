@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -32,7 +33,7 @@ public class DAOContagem implements IDAO<Contagem> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("loja", contagem.getLoja().getCnpj());
-            contentValues.put("data", contagem.getDataSQLite(contagem.getData()));
+            contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
@@ -51,7 +52,83 @@ public class DAOContagem implements IDAO<Contagem> {
 
     @Override
     public Boolean inserir(List<Contagem> lista) {
-        return null;
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Contagem contagem : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("loja", contagem.getLoja().getCnpj());
+                contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+                contentValues.put("finalizada", contagem.getFinalizada());
+                contentValues.put("tipo", contagem.getTipoContagem().getId());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(Contagem contagem) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("loja", contagem.getLoja().getCnpj());
+            contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+            contentValues.put("finalizada", contagem.getFinalizada());
+            contentValues.put("tipo", contagem.getTipoContagem().getId());
+
+            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(List<Contagem> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Contagem contagem : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("loja", contagem.getLoja().getCnpj());
+                contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+                contentValues.put("finalizada", contagem.getFinalizada());
+                contentValues.put("tipo", contagem.getTipoContagem().getId());
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
     }
 
     @Override

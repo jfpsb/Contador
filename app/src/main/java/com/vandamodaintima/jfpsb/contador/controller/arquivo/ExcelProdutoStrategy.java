@@ -10,8 +10,11 @@ import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -27,8 +30,8 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
         fonte.setFontHeightInPoints((short) 12);
 
         cellStyle.setFont(fonte);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
         ArrayList<Produto> produtos = (ArrayList<Produto>) lista;
 
@@ -51,16 +54,16 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
             rows[i].getCell(3).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
             rows[i].getCell(4).setCellValue(p.getMarca() == null ? "NÃO POSSUI" : p.getMarca().getNome());
 
-            String codigos = "";
+            StringBuilder codigos = new StringBuilder();
 
             for (int j = 0; j < p.getCod_barra_fornecedor().size(); j++) {
-                codigos += p.getCod_barra_fornecedor().get(j);
+                codigos.append(p.getCod_barra_fornecedor().get(j));
 
                 if (j != p.getCod_barra_fornecedor().size() - 1)
-                    codigos += ",";
+                    codigos.append(",");
             }
 
-            rows[i].getCell(5).setCellValue(codigos);
+            rows[i].getCell(5).setCellValue(codigos.toString());
         }
 
         sheet.setColumnWidth(0, 25 * 256);
@@ -101,10 +104,10 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
             Cell marca = row.getCell(4);
             Cell codbarrafornecedor = row.getCell(5);
 
-            if (cod_barra != null && cod_barra.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (cod_barra.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (cod_barra != null && cod_barra.getCellTypeEnum() != CellType.BLANK) {
+                if (cod_barra.getCellTypeEnum() == CellType.STRING) {
                     p.setCod_barra(cod_barra.getStringCellValue());
-                } else if (cod_barra.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                } else if (cod_barra.getCellTypeEnum() == CellType.NUMERIC) {
                     p.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue()));
                 } else {
                     Log.i("Contador", "Código de Barra Vazio");
@@ -112,8 +115,8 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                 }
             }
 
-            if (descricao != null && descricao.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (descricao.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (descricao != null && descricao.getCellTypeEnum() != CellType.BLANK) {
+                if (descricao.getCellTypeEnum() == CellType.STRING) {
                     p.setDescricao(descricao.getStringCellValue());
                 } else {
                     Log.i("Contador", "Descrição Vazia");
@@ -121,8 +124,8 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                 }
             }
 
-            if (preco != null && preco.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (preco.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            if (preco != null && preco.getCellTypeEnum() != CellType.BLANK) {
+                if (preco.getCellTypeEnum() == CellType.NUMERIC) {
                     p.setPreco(preco.getNumericCellValue());
                 } else {
                     Log.i("Contador", "Preço Vazio");
@@ -130,25 +133,25 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                 }
             }
 
-            if (fornecedor != null && fornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (fornecedor.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            if (fornecedor != null && fornecedor.getCellTypeEnum() != CellType.BLANK) {
+                if (fornecedor.getCellTypeEnum() == CellType.NUMERIC) {
                     //O Excel apaga zeros iniciais de células configuradas como números então aqui eu os coloco de volta
                     String cnpj = String.format(Locale.ENGLISH, "%.0f", fornecedor.getNumericCellValue());
 
                     if (cnpj.length() != 14) {
                         int diff = 14 - cnpj.length();
 
-                        String append = "";
+                        StringBuilder stringBuilder = new StringBuilder();
 
                         for (int j = 0; j < diff; j++) {
-                            append += "0";
+                            stringBuilder.append("0");
                         }
 
-                        append += cnpj;
-                        cnpj = append;
+                        stringBuilder.append(cnpj);
+                        cnpj = stringBuilder.toString();
                     }
                     p.setFornecedor(fornecedorManager.listarPorId(cnpj));
-                } else if (fornecedor.getCellType() == Cell.CELL_TYPE_STRING) {
+                } else if (fornecedor.getCellTypeEnum() == CellType.STRING) {
                     p.setFornecedor(fornecedorManager.listarPorIdOuNome(fornecedor.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrado ou Vazio");
@@ -156,8 +159,8 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                 }
             }
 
-            if (marca != null && marca.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (marca != null && marca.getCellTypeEnum() != CellType.BLANK) {
+                if (marca.getCellTypeEnum() == CellType.STRING) {
                     p.setMarca(marcaManager.listarPorId(marca.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrada ou Vazia");
@@ -165,12 +168,11 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                 }
             }
 
-            if (codbarrafornecedor != null && codbarrafornecedor.getCellType() != Cell.CELL_TYPE_BLANK) {
-                if (marca.getCellType() == Cell.CELL_TYPE_STRING) {
+            if (codbarrafornecedor != null && codbarrafornecedor.getCellTypeEnum() != CellType.BLANK) {
+                if (codbarrafornecedor.getCellTypeEnum() == CellType.STRING) {
                     String conteudo = codbarrafornecedor.getStringCellValue();
-                    String[] partes = null;
                     if (conteudo.contains(",")) {
-                        partes = conteudo.split(",");
+                        String[] partes = conteudo.split(",");
 
                         for (String s : partes) {
                             p.getCod_barra_fornecedor().add(s);

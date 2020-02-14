@@ -1,9 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import org.simpleframework.xml.Element;
+
 import java.io.Serializable;
 
-public class TipoContagem implements Serializable {
+public class TipoContagem implements Serializable, IModel {
+    @Element(name = "Id")
     private int id;
+    @Element(name = "Nome")
     private String nome;
 
     public TipoContagem() {
@@ -32,5 +36,10 @@ public class TipoContagem implements Serializable {
 
     public static String[] getColunas() {
         return new String[]{"id as _id", "nome"};
+    }
+
+    @Override
+    public String getIdentificador() {
+        return String.valueOf(id);
     }
 }

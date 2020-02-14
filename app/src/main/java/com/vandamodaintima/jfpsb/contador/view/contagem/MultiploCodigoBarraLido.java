@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -108,19 +108,20 @@ public class MultiploCodigoBarraLido extends ActivityBaseView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECIONAR_PRODUTO) {
             if (resultCode == Activity.RESULT_OK) {
                 Produto produto = (Produto) data.getSerializableExtra("produto");
                 int quantidade = data.getIntExtra("quantidade", 0);
                 controller.carregaProduto(produto);
 
-                if(quantidade == 0) {
+                if (quantidade == 0) {
                     if (controller.cadastrar()) {
                         clicado.setStatus(ItemCodigoBarraLido.Status.ENCONTRADO);
                         arrayAdapter.notifyDataSetChanged();
                     }
                 } else {
-                    if(controller.cadastrar(quantidade)) {
+                    if (controller.cadastrar(quantidade)) {
                         clicado.setStatus(ItemCodigoBarraLido.Status.ENCONTRADO);
                         arrayAdapter.notifyDataSetChanged();
                     }

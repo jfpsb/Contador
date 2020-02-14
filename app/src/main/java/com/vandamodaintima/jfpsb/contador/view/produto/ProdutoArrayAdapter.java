@@ -1,8 +1,8 @@
 package com.vandamodaintima.jfpsb.contador.view.produto;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
     private List<Produto> produtos;
@@ -37,7 +38,7 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
 
         labelDescricao.setText(produto.getDescricao());
         labelCodBarra.setText(produto.getCod_barra());
-        labelPreco.setText(produto.getPreco().toString());
+        labelPreco.setText(String.format(produto.getPreco().toString(), Locale.getDefault()));
 
         return convertView;
     }

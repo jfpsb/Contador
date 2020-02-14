@@ -6,7 +6,9 @@ import com.vandamodaintima.jfpsb.contador.model.Loja;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -21,8 +23,8 @@ public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
         fonte.setFontHeightInPoints((short) 12);
 
         cellStyle.setFont(fonte);
-        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
         ArrayList<Loja> lojas = (ArrayList<Loja>) lista;
 

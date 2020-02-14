@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoForContagemForResultController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
@@ -24,7 +26,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     private static final int TELA_SELECIONAR_PRODUTO = 1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         //Código de barras usado na pesquisa inicial
@@ -93,7 +95,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TELA_SELECIONAR_PRODUTO) {
-            if (resultCode == getActivity().RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 Produto produto = (Produto) data.getSerializableExtra("produto");
                 controller.carregaProduto(produto);
                 int quantidade = data.getIntExtra("quantidade", 1);

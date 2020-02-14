@@ -17,6 +17,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoController;
@@ -38,7 +40,7 @@ public class PesquisarProduto extends TelaPesquisa {
     protected PesquisarProdutoController controller;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         telaPesquisaView = inflater.inflate(R.layout.fragment_pesquisar_produto, container, false);
 
         listView = telaPesquisaView.findViewById(R.id.listViewProduto);

@@ -1,7 +1,10 @@
 package com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,11 +44,12 @@ public class InserirCodBarraFornecedor extends Fragment implements CadastrarView
             }
         });
 
+        // Suporte para leitor USB de cógido de barras
         txtCodBarra.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 //Só adiciona se a tela de inserir estiver visível
-                if (getUserVisibleHint()) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_UP && i == KeyEvent.KEYCODE_ENTER) {
                         String cod_barra_fornecedor = txtCodBarra.getText().toString().replace("\n", "");
                         controller.inserir(cod_barra_fornecedor, codigos);

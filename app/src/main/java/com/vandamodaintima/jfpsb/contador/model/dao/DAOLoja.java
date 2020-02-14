@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -29,6 +30,8 @@ public class DAOLoja implements IDAO<Loja> {
             contentValues.put("cnpj", loja.getCnpj());
             contentValues.put("nome", loja.getNome());
             contentValues.put("telefone", loja.getTelefone());
+            contentValues.put("endereco", loja.getEndereco());
+            contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
 
             if (loja.getMatriz() != null)
                 contentValues.put("matriz", loja.getMatriz().getCnpj());
@@ -50,7 +53,99 @@ public class DAOLoja implements IDAO<Loja> {
 
     @Override
     public Boolean inserir(List<Loja> lista) {
-        return null;
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Loja loja : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("cnpj", loja.getCnpj());
+                contentValues.put("nome", loja.getNome());
+                contentValues.put("telefone", loja.getTelefone());
+                contentValues.put("endereco", loja.getEndereco());
+                contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+
+                if (loja.getMatriz() != null)
+                    contentValues.put("matriz", loja.getMatriz().getCnpj());
+                else
+                    contentValues.putNull("matriz");
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(Loja loja) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+
+            contentValues.put("cnpj", loja.getCnpj());
+            contentValues.put("nome", loja.getNome());
+            contentValues.put("telefone", loja.getTelefone());
+            contentValues.put("endereco", loja.getEndereco());
+            contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+
+            if (loja.getMatriz() != null)
+                contentValues.put("matriz", loja.getMatriz().getCnpj());
+            else
+                contentValues.putNull("matriz");
+
+            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean inserirOuAtualizar(List<Loja> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+
+            for (Loja loja : lista) {
+                ContentValues contentValues = new ContentValues();
+
+                contentValues.put("cnpj", loja.getCnpj());
+                contentValues.put("nome", loja.getNome());
+                contentValues.put("telefone", loja.getTelefone());
+                contentValues.put("endereco", loja.getEndereco());
+                contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+
+                if (loja.getMatriz() != null)
+                    contentValues.put("matriz", loja.getMatriz().getCnpj());
+                else
+                    contentValues.putNull("matriz");
+
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            conexaoBanco.conexao().setTransactionSuccessful();
+
+            return true;
+        } catch (Exception e) {
+            Log.e(LOG, e.getMessage(), e);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
+        }
+
+        return false;
     }
 
     @Override
@@ -64,6 +159,8 @@ public class DAOLoja implements IDAO<Loja> {
 
             contentValues.put("nome", loja.getNome());
             contentValues.put("telefone", loja.getTelefone());
+            contentValues.put("endereco", loja.getEndereco());
+            contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
 
             if (loja.getMatriz() != null)
                 contentValues.put("matriz", loja.getMatriz().getCnpj());
@@ -108,6 +205,8 @@ public class DAOLoja implements IDAO<Loja> {
                 loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 loja.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
+                loja.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
+                loja.setInscricaoEstadual(cursor.getString(cursor.getColumnIndexOrThrow("inscricaoestadual")));
 
                 if (!cursor.isNull(cursor.getColumnIndexOrThrow("matriz"))) {
                     loja.setMatriz(listarPorId(cursor.getColumnIndexOrThrow("matriz")));

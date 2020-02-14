@@ -1,9 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
@@ -56,12 +56,10 @@ public class TabLayoutBaseView extends ActivityBaseView {
                 TabLayout.Tab tab = tabLayout.newTab();
                 tab.setText(headers[i]);
                 tabLayout.addTab(tab);
-
                 adapter.addFragment(fragments[i], headers[i]);
             }
 
             viewPager.setAdapter(adapter);
-
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

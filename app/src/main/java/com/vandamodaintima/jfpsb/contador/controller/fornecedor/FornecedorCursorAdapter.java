@@ -2,7 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import androidx.cursoradapter.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,7 @@ import com.vandamodaintima.jfpsb.contador.util.EditTextMask;
  */
 
 public class FornecedorCursorAdapter extends CursorAdapter {
-    public FornecedorCursorAdapter(Context context, Cursor c) {
+    FornecedorCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 
@@ -41,7 +41,7 @@ public class FornecedorCursorAdapter extends CursorAdapter {
         labelNome.setText(nome);
 
         if(fantasia == null || fantasia.isEmpty()) {
-            labelFantasia.setText("Não Possui");
+            labelFantasia.setText(view.getResources().getString(R.string.nao_possui));
         }
         else {
             labelFantasia.setText(fantasia);

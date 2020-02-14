@@ -11,6 +11,10 @@ public interface IDAO<T> {
 
     Boolean inserir(List<T> lista);
 
+    Boolean inserirOuAtualizar(T t);
+
+    Boolean inserirOuAtualizar(List<T> lista);
+
     Boolean atualizar(T t, Object... chaves);
 
     Boolean deletar(Object... chaves);
@@ -21,8 +25,8 @@ public interface IDAO<T> {
 
     /**
      * Retorna uma nova instância de uma entidade usando a(s) id(s)
-     * @param ids
-     * @return
+     * @param ids Identificadores da entidade no banco de dados
+     * @return Retorna o objeto encontrado com a ids ou nulo, se não encontrar
      */
     T listarPorId(Object... ids);
 }

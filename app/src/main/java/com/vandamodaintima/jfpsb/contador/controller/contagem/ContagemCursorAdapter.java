@@ -2,7 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
+import androidx.cursoradapter.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +21,6 @@ import static com.vandamodaintima.jfpsb.contador.view.ActivityBaseView.LOG;
 
 public class ContagemCursorAdapter extends CursorAdapter {
     private SimpleDateFormat dateParaDataSQLite = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private SimpleDateFormat dataParaDisplay = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public ContagemCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -49,7 +49,7 @@ public class ContagemCursorAdapter extends CursorAdapter {
         }
 
         labelLojaNome.setText(loja);
-        labelDataCriada.setText(dataParaDisplay.format(data2));
+        labelDataCriada.setText(DateFormat.getDateInstance().format(data2));
 
         if (finalizada > 0) {
             chkFinalizada.setChecked(true);
