@@ -27,7 +27,7 @@ public class Contagem implements Serializable, IModel {
     }
 
     public String getFullDataString() {
-        return DateFormat.getDateInstance().format("dd/MM/yyyy HH:mm:ss");
+        return DateFormat.getDateInstance().format(data);
     }
 
     public String getShortDataString() {

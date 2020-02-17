@@ -78,7 +78,7 @@ public class Contador extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     PERMISSOES_APP);
 
-        Calendar calendar = Calendar.getInstance();
+        /*Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2018);
         calendar.set(Calendar.MONTH, 1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -87,7 +87,7 @@ public class Contador extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
 
         SincronizacaoRemota sincronizacaoRemota = new SincronizacaoRemota(getApplicationContext());
-        sincronizacaoRemota.execute(calendar.getTime());
+        sincronizacaoRemota.execute(calendar.getTime());*/
     }
 
     @Override

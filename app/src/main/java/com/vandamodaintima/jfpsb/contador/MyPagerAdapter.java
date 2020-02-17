@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -24,6 +25,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
         mFragmentTitles.add(title);
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);
