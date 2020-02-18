@@ -78,6 +78,11 @@ public class Contador extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     PERMISSOES_APP);
 
+        // Necessário para funcionar dependência que opera Excel
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+
         /*Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2018);
         calendar.set(Calendar.MONTH, 1);

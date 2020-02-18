@@ -1,8 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
-
 import java.io.Serializable;
 
 /**
@@ -10,15 +7,10 @@ import java.io.Serializable;
  */
 
 public class Fornecedor implements Serializable, IModel {
-    @Element(name = "Cnpj")
     private String cnpj;
-    @Element(name = "Nome")
     private String nome;
-    @Element(name = "Fantasia", required = false)
     private String fantasia;
-    @Element(name = "Email", required = false)
     private String email;
-    @Element(name = "Telefone", required = false)
     private String telefone;
 
     public String getCnpj() {

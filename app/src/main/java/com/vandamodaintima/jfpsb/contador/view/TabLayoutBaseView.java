@@ -1,18 +1,19 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 
-import com.vandamodaintima.jfpsb.contador.MyPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.vandamodaintima.jfpsb.contador.MyPagerAdapter2;
 import com.vandamodaintima.jfpsb.contador.R;
 
 public class TabLayoutBaseView extends ActivityBaseView {
-    private ViewPager viewPager;
+    private ViewPager2 viewPager;
     private TabLayout tabLayout;
-    private MyPagerAdapter adapter;
+    private MyPagerAdapter2 adapter;
 
     private String[] headers;
 
@@ -50,17 +51,25 @@ public class TabLayoutBaseView extends ActivityBaseView {
             viewPager = findViewById(R.id.viewPager);
             tabLayout = findViewById(R.id.tabLayout);
 
-            adapter = new MyPagerAdapter(getSupportFragmentManager());
+            adapter = new MyPagerAdapter2(getSupportFragmentManager(), getLifecycle());
 
             for (int i = 0; i < headers.length; i++) {
                 TabLayout.Tab tab = tabLayout.newTab();
                 tab.setText(headers[i]);
                 tabLayout.addTab(tab);
-                adapter.addFragment(fragments[i], headers[i]);
+                adapter.addFragment(fragments[i]);
             }
 
             viewPager.setAdapter(adapter);
-            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                // override desired callback functions
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+                }
+            });
+            //viewPager.addOnPageChangeListener();
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -70,7 +79,6 @@ public class TabLayoutBaseView extends ActivityBaseView {
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
-
                 }
 
                 @Override
@@ -83,7 +91,7 @@ public class TabLayoutBaseView extends ActivityBaseView {
         }
     }
 
-    public MyPagerAdapter getPagerAdapter() {
+    public MyPagerAdapter2 getPagerAdapter() {
         return adapter;
     }
 

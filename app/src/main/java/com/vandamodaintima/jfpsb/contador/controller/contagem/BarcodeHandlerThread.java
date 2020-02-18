@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 public class BarcodeHandlerThread extends HandlerThread {
     private Handler handler;
-    private AlertDialog.Builder alertaQuantidadeProduto;
 
     private WeakReference<TextureView> textureViewWeakReference;
     private BarcodeDetector barcodeDetector;
@@ -42,14 +41,13 @@ public class BarcodeHandlerThread extends HandlerThread {
     private boolean isCampoQuantChecked = false;
     private boolean textureViewVisible = true;
 
-    public BarcodeHandlerThread(BarcodeDetector barcodeDetector, TextureView textureView, TelaLerCodigoDeBarraController controller, ITelaLerCodigoDeBarra view, Contagem contagemModel) {
+    public BarcodeHandlerThread(BarcodeDetector barcodeDetector, TextureView textureView, TelaLerCodigoDeBarraController controller, ITelaLerCodigoDeBarra view) {
         super("BarcodeHandlerThread");
         this.barcodeDetector = barcodeDetector;
         textureViewWeakReference = new WeakReference<>(textureView);
         this.controller = controller;
         this.view = view;
-        this.contagemModel = contagemModel;
-
+        this.contagemModel = controller.getContagemManager();
         contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
     }
 
@@ -87,10 +85,14 @@ public class BarcodeHandlerThread extends HandlerThread {
                                 view.getContext().startActivity(intent);
                             }
                         } else {
-                            sendEmptyMessage(1);
+                            if (!hasMessages(1))
+                                sendEmptyMessage(1);
                         }
                         break;
                     case 2:
+                        if(hasMessages(2))
+                            break;
+
                         SparseArray<Barcode> sparseArray = (SparseArray<Barcode>) msg.obj;
 
                         Barcode barcode = sparseArray.valueAt(0);
@@ -105,6 +107,9 @@ public class BarcodeHandlerThread extends HandlerThread {
 
                         break;
                     case 3:
+                        if(hasMessages(3))
+                            break;
+
                         String codigo = (String) msg.obj;
                         ArrayList<Produto> produtos = controller.pesquisarProduto(codigo);
 
@@ -132,12 +137,12 @@ public class BarcodeHandlerThread extends HandlerThread {
         };
     }
 
-    public Handler getHandler() {
-        return handler;
-    }
-
     public void setTextureViewVisible(boolean textureViewVisible) {
         this.textureViewVisible = textureViewVisible;
+    }
+
+    public Handler getHandler() {
+        return handler;
     }
 
     private void showAlertaQuantidadeProduto(final Handler handler) {
@@ -146,7 +151,7 @@ public class BarcodeHandlerThread extends HandlerThread {
 
         final EditText txtQuantidade = v.findViewById(R.id.txtQuantidade);
 
-        alertaQuantidadeProduto = new AlertDialog.Builder(v.getContext());
+        AlertDialog.Builder alertaQuantidadeProduto = new AlertDialog.Builder(v.getContext());
         alertaQuantidadeProduto.setView(v);
         alertaQuantidadeProduto.setTitle("Informe a Quantidade");
 
@@ -175,7 +180,7 @@ public class BarcodeHandlerThread extends HandlerThread {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 view.mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
-                handler.sendEmptyMessage(1);
+                handler.sendEmptyMessageDelayed(1, 1500);
             }
         });
 

@@ -1,7 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import org.simpleframework.xml.Element;
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,13 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Contagem implements Serializable, IModel {
-    @Element(name = "Loja")
     private Loja loja;
-    @Element(name = "Data")
     private Date data;
-    @Element(name = "Finalizada")
     private Boolean finalizada;
-    @Element(name = "TipoContagem")
     private TipoContagem tipoContagem;
 
     public Loja getLoja() {

@@ -3,30 +3,12 @@ package com.vandamodaintima.jfpsb.contador.util.sincronizacao;
 import android.content.Context;
 import android.util.Log;
 
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.util.sincronizacao.entidademysql.EntidadeMySQL;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.IXmlStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlContagemProdutoStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlContagemStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlFornecedorStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlLojaStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlMarcaStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlProdutoStrategy;
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.xmlstrategy.XmlTipoContagemStrategy;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileFilter;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,38 +23,20 @@ public class ArquivoEntidade<E extends IModel> {
     private final String diretorio;
     private Context context;
     private Class<E> entidadeTipo;
-    private IXmlStrategy xmlStrategy;
 
     ArquivoEntidade(Context context, Class<E> entidadeTipo) {
         this.context = context;
         this.entidadeTipo = entidadeTipo;
         this.diretorio = "EntidadesSalvas";
-
-        if (entidadeTipo.isAssignableFrom(Contagem.class)) {
-            xmlStrategy = new XmlContagemStrategy();
-        } else if (entidadeTipo.isAssignableFrom(ContagemProduto.class)) {
-            xmlStrategy = new XmlContagemProdutoStrategy();
-        } else if (entidadeTipo.isAssignableFrom(Fornecedor.class)) {
-            xmlStrategy = new XmlFornecedorStrategy();
-        } else if (entidadeTipo.isAssignableFrom(Loja.class)) {
-            xmlStrategy = new XmlLojaStrategy();
-        } else if (entidadeTipo.isAssignableFrom(Marca.class)) {
-            xmlStrategy = new XmlMarcaStrategy();
-        } else if (entidadeTipo.isAssignableFrom(Produto.class)) {
-            xmlStrategy = new XmlProdutoStrategy();
-        } else if (entidadeTipo.isAssignableFrom(TipoContagem.class)) {
-            xmlStrategy = new XmlTipoContagemStrategy();
-        }
     }
 
     public void escreverXml(EntidadeMySQL entidadeMySQL) {
         try {
-            File dir = context.getDir(diretorio, Context.MODE_PRIVATE);
+            /*File dir = context.getDir(diretorio, Context.MODE_PRIVATE);
             File subDir = new File(dir, entidadeTipo.getSimpleName());
             if (!subDir.isDirectory())
                 subDir.mkdir();
-            Serializer serializer = new Persister();
-            xmlStrategy.write(subDir.getPath(), serializer, entidadeMySQL);
+            xmlStrategy.write(subDir.getPath(), serializer, entidadeMySQL);*/
         } catch (Exception e) {
             Log.e("Contador", e.getMessage(), e);
         }
@@ -81,7 +45,7 @@ public class ArquivoEntidade<E extends IModel> {
     ArrayList<EntidadeMySQL> lerXmlLocal(Date lastUpdate) throws Exception {
         ArrayList<EntidadeMySQL> lista = new ArrayList<>();
 
-        File dir = context.getDir(diretorio, Context.MODE_PRIVATE);
+        /*File dir = context.getDir(diretorio, Context.MODE_PRIVATE);
         File subDir = new File(dir, entidadeTipo.getSimpleName());
 
         if (subDir.isDirectory()) {
@@ -96,7 +60,7 @@ public class ArquivoEntidade<E extends IModel> {
                     lista.add(entidadeMySQL);
                 }
             }
-        }
+        }*/
 
         return lista;
     }
@@ -163,7 +127,7 @@ public class ArquivoEntidade<E extends IModel> {
 
         arquivosLocais = caminhoLocal.listFiles();
 
-        Serializer serializer = new Persister();
+        /*Serializer serializer = new Persister();
 
         for (File arquivoLocal : arquivosLocais) {
             if (arquivoLocal.getName().endsWith(".xml")) {
@@ -173,7 +137,7 @@ public class ArquivoEntidade<E extends IModel> {
                     lista.add(entidadeMySQL);
                 }
             }
-        }
+        }*/
 
         return lista;
     }

@@ -53,6 +53,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
             rows[i].getCell(2).setCellValue(p.getPreco());
             rows[i].getCell(3).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
             rows[i].getCell(4).setCellValue(p.getMarca() == null ? "NÃO POSSUI" : p.getMarca().getNome());
+            rows[i].getCell(5).setCellValue((p.getNcm() == null || p.getNcm().length() == 0) ? "NÃO POSSUI" : p.getNcm());
 
             StringBuilder codigos = new StringBuilder();
 
@@ -63,7 +64,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                     codigos.append(",");
             }
 
-            rows[i].getCell(5).setCellValue(codigos.toString());
+            rows[i].getCell(6).setCellValue(codigos.toString());
         }
 
         sheet.setColumnWidth(0, 25 * 256);
@@ -72,6 +73,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
         sheet.setColumnWidth(3, 40 * 256);
         sheet.setColumnWidth(4, 40 * 256);
         sheet.setColumnWidth(5, 40 * 256);
+        sheet.setColumnWidth(6, 50 * 256);
 
         return "Produtos.xlsx";
     }

@@ -19,12 +19,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Lifecycle;
+
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -158,12 +163,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         ((TabLayoutBaseView) getActivity()).getTabLayout().addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                //Guarda se a fragment que contém a textureview está visível ou não
-                if (tab.getPosition() == 0) {
-                    barcodeHandlerThread.setTextureViewVisible(true);
-                } else {
-                    barcodeHandlerThread.setTextureViewVisible(false);
-                }
+                barcodeHandlerThread.setTextureViewVisible(tab.getPosition() == 0);
             }
 
             @Override
@@ -180,9 +180,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         setEscolhaProdutoDialog();
         setProdutoNaoEncontradoDialog();
 
-        openBackgroundThread();
-        iniciaBarcodeThread();
-
         return view;
     }
 
@@ -194,6 +191,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 controller.carregaProduto(produto);
                 int quantidade = data.getIntExtra("quantidade", 1);
                 controller.cadastrar(quantidade);
+                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         }
     }
@@ -205,7 +203,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     }
 
     private void iniciaBarcodeThread() {
-        barcodeHandlerThread = new BarcodeHandlerThread(barcodeDetector, textureView, controller, this, controller.getContagemManager());
+        barcodeHandlerThread = new BarcodeHandlerThread(barcodeDetector, textureView, controller, this);
         barcodeHandlerThread.start();
     }
 
@@ -221,12 +219,16 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
     @Override
     public void abrirProdutoNaoEncontradoDialog(String codigo) {
+        barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
+
         erroMediaPlayer.start();
         this.codigo_pesquisado = codigo;
         produtoNaoEncontradoDialog.show();
     }
 
     public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo) {
+        barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
+
         erroMediaPlayer.start();
         codigo_pesquisado = codigo;
         escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
@@ -256,7 +258,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 Intent intent = new Intent(getContext(), TelaProdutoForContagemForResult.class);
                 intent.putExtra("codigo", codigo_pesquisado);
                 startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
 
@@ -267,7 +268,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 Object model = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                 controller.carregaProduto(model);
                 controller.cadastrar();
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
+                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
 
@@ -275,7 +276,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
+                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
     }
@@ -292,7 +293,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 Intent intent = new Intent(getContext(), TelaProdutoForContagemForResult.class);
                 intent.putExtra("codigo", codigo_pesquisado);
                 startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
         });
 
@@ -301,7 +301,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
                 dialogInterface.dismiss();
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
+                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
     }
@@ -350,6 +350,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     @Override
     public void onResume() {
         super.onResume();
+
         openBackgroundThread();
         iniciaBarcodeThread();
 
@@ -439,7 +440,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         }
     }
 
-    public void setCampoQuantChecked(boolean b) {
+    void setCampoQuantChecked(boolean b) {
         barcodeHandlerThread.setCampoQuantChecked(b);
     }
 }

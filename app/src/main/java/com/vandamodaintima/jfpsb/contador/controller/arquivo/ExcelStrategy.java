@@ -29,7 +29,6 @@ public class ExcelStrategy<T> {
         fonte.setBold(true);
 
         cellStyle.setFont(fonte);
-        cellStyle.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.GREY_40_PERCENT.getIndex());
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 

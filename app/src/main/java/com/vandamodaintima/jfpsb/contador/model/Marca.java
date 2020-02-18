@@ -1,13 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import org.simpleframework.xml.Element;
-
 import java.io.Serializable;
 
 public class Marca implements Serializable, IModel {
-    @Element(name = "Nome")
     private String nome;
-    @Element(name = "Fornecedor", required = false)
     private Fornecedor fornecedor;
 
     public String getNome() {

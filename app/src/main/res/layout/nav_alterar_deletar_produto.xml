@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50sp"
-    android:background="@color/common_google_signin_btn_text_light_pressed"
+    android:background="?attr/colorPrimary"
     android:orientation="horizontal">
 
     <ImageView

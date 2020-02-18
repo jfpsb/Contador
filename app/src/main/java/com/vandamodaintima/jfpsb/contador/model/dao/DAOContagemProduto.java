@@ -164,8 +164,8 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
     @Override
     public Boolean deletar(Object... chaves) {
-        long id = (long) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{String.valueOf(id)});
+        String id = String.valueOf(chaves[0]);
+        int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
         return result > 0;
     }
 

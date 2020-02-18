@@ -1,21 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import org.simpleframework.xml.Element;
-
 import java.io.Serializable;
 
 public class Loja implements Serializable, IModel {
-    @Element(name = "Cnpj")
     private String cnpj;
-    @Element(name = "Matriz", required = false)
     private Loja matriz;
-    @Element(name = "Nome")
     private String nome;
-    @Element(name = "Telefone", required = false)
     private String telefone;
-    @Element(name = "Endereco", required = false)
     private String endereco;
-    @Element(name = "InscricaoEstadual", required = false)
     private String inscricaoEstadual;
 
     public String getCnpj() {
