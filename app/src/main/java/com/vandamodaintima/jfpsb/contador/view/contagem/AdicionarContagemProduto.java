@@ -88,7 +88,7 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        telaVerProdutoContado.realizarPesquisa();
+        //telaVerProdutoContado.realizarPesquisa();
     }
 
     @Override

@@ -20,7 +20,7 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
     private Context mContext;
     private int index = 0;
 
-    ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
+    public ContagemProdutoDialogArrayAdapter(Context context, int resource, List<Produto> objects) {
         super(context, resource, objects);
         this.resourceLayout = resource;
         this.mContext = context;

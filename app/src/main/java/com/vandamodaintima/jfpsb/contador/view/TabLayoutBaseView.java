@@ -3,10 +3,12 @@ package com.vandamodaintima.jfpsb.contador.view;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.vandamodaintima.jfpsb.contador.MyPagerAdapter2;
 import com.vandamodaintima.jfpsb.contador.R;
 
@@ -61,15 +63,6 @@ public class TabLayoutBaseView extends ActivityBaseView {
             }
 
             viewPager.setAdapter(adapter);
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                // override desired callback functions
-
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
-                }
-            });
-            //viewPager.addOnPageChangeListener();
 
             tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -86,6 +79,16 @@ public class TabLayoutBaseView extends ActivityBaseView {
 
                 }
             });
+
+            TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, true, (tab, position) -> {
+                tab.setText(headers[position]);
+                viewPager.setCurrentItem(position, true);
+            });
+
+            tabLayoutMediator.attach();
+
+            viewPager.setCurrentItem(0);
+
         } catch (Exception e) {
             Log.e(LOG, e.getMessage(), e);
         }

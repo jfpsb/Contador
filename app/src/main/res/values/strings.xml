@@ -66,4 +66,6 @@
     <string name="tipo_contagem_dois_pontos">Tipo de Contagem:</string>
     <string name="telefone_dois_pontos">Telefone:</string>
     <string name="nao_possui">Não Possui</string>
+    <string name="inserir_manualmente">Inserir Manualmente</string>
+    <string name="tela_ler_cod_barra_texture_view_description">Toque Na Imagem Da Câmera Para Escanear por Códigos de Barra</string>
 </resources>

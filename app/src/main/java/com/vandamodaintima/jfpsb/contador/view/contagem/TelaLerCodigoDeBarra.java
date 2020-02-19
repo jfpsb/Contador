@@ -18,18 +18,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.Lifecycle;
-
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -42,12 +30,16 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.BarcodeHandlerThread;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
@@ -55,8 +47,7 @@ import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemFor
 import java.util.Collections;
 
 public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBarra {
-    private TextureView textureView;
-    private Button btnInserirManualmente;
+    private TextureViewCodBarraLido textureView;
     private String cameraId;
     private Size previewSize;
     private CameraDevice.StateCallback stateCallback;
@@ -69,7 +60,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
     private Handler cameraBackgroundHandler;
     private HandlerThread cameraBackgroundThread;
-    private BarcodeHandlerThread barcodeHandlerThread;
 
     private BarcodeDetector barcodeDetector;
 
@@ -90,7 +80,7 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ler_codigo_de_barra, container, false);
 
-        btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
+        Button btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
         IAdicionarContagemProduto ownerActivity = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
@@ -138,9 +128,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 setUpCamera();
                 openCamera();
-                //Inicia fila de mensagens de thread que detecta códigos da câmera
-                barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
-                barcodeHandlerThread.getHandler().sendEmptyMessage(1);
             }
 
             @Override
@@ -160,19 +147,9 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
         textureView.setSurfaceTextureListener(surfaceTextureListener);
 
-        ((TabLayoutBaseView) getActivity()).getTabLayout().addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        textureView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                barcodeHandlerThread.setTextureViewVisible(tab.getPosition() == 0);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onClick(View v) {
 
             }
         });
@@ -191,7 +168,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 controller.carregaProduto(produto);
                 int quantidade = data.getIntExtra("quantidade", 1);
                 controller.cadastrar(quantidade);
-                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         }
     }
@@ -200,11 +176,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
         cameraBackgroundThread = new HandlerThread("camera_background_thread");
         cameraBackgroundThread.start();
         cameraBackgroundHandler = new Handler(cameraBackgroundThread.getLooper());
-    }
-
-    private void iniciaBarcodeThread() {
-        barcodeHandlerThread = new BarcodeHandlerThread(barcodeDetector, textureView, controller, this);
-        barcodeHandlerThread.start();
     }
 
     @Override
@@ -219,33 +190,16 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
 
     @Override
     public void abrirProdutoNaoEncontradoDialog(String codigo) {
-        barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
-
         erroMediaPlayer.start();
         this.codigo_pesquisado = codigo;
         produtoNaoEncontradoDialog.show();
     }
 
     public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo) {
-        barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
-
         erroMediaPlayer.start();
         codigo_pesquisado = codigo;
         escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
         escolhaProdutoDialog.show();
-    }
-
-    @Override
-    public void realizarPesquisa() {
-        //Realiza a pesquisa na thread principal (UI thread)
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                TabLayoutBaseView tabLayoutBaseView = (TabLayoutBaseView) getActivity();
-                TelaVerProdutoContado telaVerProdutoContado = (TelaVerProdutoContado) tabLayoutBaseView.getPagerAdapter().getItem(1);
-                telaVerProdutoContado.realizarPesquisa();
-            }
-        });
     }
 
     private void setEscolhaProdutoDialog() {
@@ -268,7 +222,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
                 Object model = lw.getAdapter().getItem(lw.getCheckedItemPosition());
                 controller.carregaProduto(model);
                 controller.cadastrar();
-                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
 
@@ -276,7 +229,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
-                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
     }
@@ -301,12 +253,14 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             public void onClick(DialogInterface dialogInterface, int i) {
                 mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
                 dialogInterface.dismiss();
-                barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 500);
             }
         });
     }
 
     private void setUpCamera() {
+        if (previewSize != null)
+            return;
+
         try {
             for (String id : cameraManager.getCameraIdList()) {
                 CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(id);
@@ -351,15 +305,13 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     public void onResume() {
         super.onResume();
 
-        openBackgroundThread();
-        iniciaBarcodeThread();
+        textureView.setBarcodeDetector(barcodeDetector);
+        textureView.setController(controller);
+        textureView.setView(this);
 
         if (textureView.isAvailable()) {
             setUpCamera();
             openCamera();
-            barcodeHandlerThread.getHandler().removeCallbacksAndMessages(null);
-            barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 2000);
-            realizarPesquisa();
         } else {
             textureView.setSurfaceTextureListener(surfaceTextureListener);
         }
@@ -383,23 +335,11 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
             cameraBackgroundThread = null;
             cameraBackgroundHandler = null;
         }
-
-        if (barcodeHandlerThread != null) {
-            barcodeHandlerThread.quit();
-            barcodeHandlerThread = null;
-        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        closeCamera();
-        closeBackgroudThread();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
         closeCamera();
         closeBackgroudThread();
     }
@@ -441,6 +381,6 @@ public class TelaLerCodigoDeBarra extends Fragment implements ITelaLerCodigoDeBa
     }
 
     void setCampoQuantChecked(boolean b) {
-        barcodeHandlerThread.setCampoQuantChecked(b);
+        textureView.setCampoQuantChecked(b);
     }
 }

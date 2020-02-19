@@ -32,7 +32,6 @@ public class TelaLerCodigoDeBarraController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
-            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
@@ -46,13 +45,12 @@ public class TelaLerCodigoDeBarraController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
-            view.realizarPesquisa();
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
     }
 
-    ArrayList<Produto> pesquisarProduto(String cod_barra) {
+    public ArrayList<Produto> pesquisarProduto(String cod_barra) {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         if (!cod_barra.isEmpty()) {

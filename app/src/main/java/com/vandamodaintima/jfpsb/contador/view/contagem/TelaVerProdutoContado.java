@@ -52,9 +52,14 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
 
         setDeletarContagemProdutoDialog();
 
-        realizarPesquisa();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        controller.pesquisar();
     }
 
     @Override
