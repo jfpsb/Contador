@@ -32,7 +32,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", contagemProduto.getIdentificador());
+            contentValues.put("id", contagemProduto.getIdentifier());
             contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
             contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
             contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
@@ -60,7 +60,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("id", contagemProduto.getIdentificador());
+                contentValues.put("id", contagemProduto.getIdentifier());
                 contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
                 contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
                 contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
@@ -87,7 +87,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", contagemProduto.getIdentificador());
+            contentValues.put("id", contagemProduto.getIdentifier());
             contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
             contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
             contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
@@ -115,7 +115,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("id", contagemProduto.getIdentificador());
+                contentValues.put("id", contagemProduto.getIdentifier());
                 contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
                 contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
                 contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());

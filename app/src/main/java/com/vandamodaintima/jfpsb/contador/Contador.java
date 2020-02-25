@@ -14,21 +14,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.SincronizacaoRemota;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.SocketCliente;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
-import java.util.Calendar;
-
 public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
+    private ConexaoBanco conexaoBanco;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidThreeTen.init(this);
         setContentView(R.layout.activity_contador);
 
         Button btnContador = findViewById(R.id.btnContador);
@@ -77,22 +79,19 @@ public class Contador extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     PERMISSOES_APP);
+    }
 
-        // Necessário para funcionar dependência que opera Excel
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
+        new SocketCliente(getApplicationContext(), conexaoBanco).start();
+    }
 
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2018);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        SincronizacaoRemota sincronizacaoRemota = new SincronizacaoRemota(getApplicationContext());
-        sincronizacaoRemota.execute(calendar.getTime());*/
+    @Override
+    protected void onDestroy() {
+        conexaoBanco.close();
+        super.onDestroy();
     }
 
     @Override

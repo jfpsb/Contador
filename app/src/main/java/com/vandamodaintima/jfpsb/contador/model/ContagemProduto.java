@@ -13,7 +13,7 @@ public class ContagemProduto implements Serializable, IModel {
     }
 
     public String getIdString() {
-        return String.valueOf(getIdentificador());
+        return String.valueOf(getIdentifier());
     }
 
     public void setId(long id) {
@@ -53,7 +53,7 @@ public class ContagemProduto implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return String.valueOf(id);
     }
 }

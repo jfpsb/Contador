@@ -62,7 +62,7 @@ public class Fornecedor implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return cnpj;
     }
 }

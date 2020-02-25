@@ -77,7 +77,7 @@ public class Produto implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return cod_barra;
     }
 }

@@ -31,7 +31,7 @@ public class Marca implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return nome;
     }
 }

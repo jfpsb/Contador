@@ -79,7 +79,7 @@ public class Contagem implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return loja.getCnpj() + data.toString();
     }
 }

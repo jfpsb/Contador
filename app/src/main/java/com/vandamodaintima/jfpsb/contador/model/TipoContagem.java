@@ -35,7 +35,7 @@ public class TipoContagem implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return String.valueOf(id);
     }
 }

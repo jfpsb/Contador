@@ -67,7 +67,7 @@ public class Loja implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public String getIdentifier() {
         return cnpj;
     }
 }
