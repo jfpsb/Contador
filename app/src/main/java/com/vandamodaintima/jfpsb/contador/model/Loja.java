@@ -1,13 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Loja implements Serializable, IModel {
+    @SerializedName(value = "Cnpj")
     private String cnpj;
+    @SerializedName(value = "Matriz")
     private Loja matriz;
+    @SerializedName(value = "Nome")
     private String nome;
+    @SerializedName(value = "Telefone")
     private String telefone;
+    @SerializedName(value = "Endereco")
     private String endereco;
+    @SerializedName(value = "InscricaoEstadual")
     private String inscricaoEstadual;
 
     public String getCnpj() {

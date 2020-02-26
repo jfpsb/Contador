@@ -282,6 +282,14 @@ public class DAOProduto implements IDAO<Produto> {
         return result > 0;
     }
 
+    @Override
+    public void deletar(List<Produto> lista) {
+        for(Produto produto : lista) {
+            String cod_barra = produto.getCod_barra();
+            conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
+        }
+    }
+
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, Produto.getColunas(), null, null, null, null, null, null);
     }

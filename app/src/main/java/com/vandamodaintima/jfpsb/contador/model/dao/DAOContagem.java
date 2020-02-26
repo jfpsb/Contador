@@ -166,6 +166,15 @@ public class DAOContagem implements IDAO<Contagem> {
     }
 
     @Override
+    public void deletar(List<Contagem> lista) {
+        for(Contagem contagem : lista) {
+            String cnpj = contagem.getLoja().getCnpj();
+            String data = contagem.getDataParaSQLite();
+            conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), null, null, null, null, null, null);
     }

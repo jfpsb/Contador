@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,9 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Contagem implements Serializable, IModel {
+    @SerializedName(value = "Loja")
     private Loja loja;
+    @SerializedName(value = "Data")
     private Date data;
+    @SerializedName(value = "Finalizada")
     private Boolean finalizada;
+    @SerializedName(value = "TipoContagem")
     private TipoContagem tipoContagem;
 
     public Loja getLoja() {

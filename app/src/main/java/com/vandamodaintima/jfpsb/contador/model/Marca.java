@@ -1,9 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Marca implements Serializable, IModel {
+    @SerializedName(value = "Nome")
     private String nome;
+    @SerializedName(value = "Fornecedor")
     private Fornecedor fornecedor;
 
     public String getNome() {

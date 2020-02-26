@@ -17,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.IModel;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.OperadoraCartao;
@@ -29,15 +30,20 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOOperadoraCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAORecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
+import com.vandamodaintima.jfpsb.contador.model.dao.IDAO;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -50,7 +56,7 @@ import java.util.Scanner;
 
 public class SocketCliente extends Thread {
     private Context context;
-    private static final String diretorio = "DatabaseLog";
+    private static File dirDatabaseLog = null;
     Gson gson = null;
     private Socket clientSocket;
     private List<DatabaseLogFileInfo> fileInfoLogsRecebidos = new ArrayList<>();
@@ -59,8 +65,9 @@ public class SocketCliente extends Thread {
     public SocketCliente(Context context, ConexaoBanco conexaoBanco) {
         this.context = context;
         this.conexaoBanco = conexaoBanco;
+        dirDatabaseLog = context.getDir("DatabaseLog", Context.MODE_PRIVATE);
 
-        Gson gson = new GsonBuilder()
+        gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
                     @Override
                     public ZonedDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
@@ -74,6 +81,7 @@ public class SocketCliente extends Thread {
                         return new JsonPrimitive(zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
                     }
                 })
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
                 .create();
     }
 
@@ -97,7 +105,7 @@ public class SocketCliente extends Thread {
                 try {
                     String receivedFromServer = bufferedReader.readLine();
 
-                    // Socket foi desconectado pelo lado do cliente
+                    // Socket foi desconectado pelo lado do servidor
                     if (receivedFromServer == null)
                         throw new SocketException("Conexão com Servidor Encerrada");
 
@@ -115,7 +123,7 @@ public class SocketCliente extends Thread {
                             for (DatabaseLogFileInfo databaseLogFileInfo : databaseLogFileInfos) {
                                 fileNamesRequested.add(databaseLogFileInfo.getFileName());
 
-                                File databaseLogFile = new File(diretorio, databaseLogFileInfo.getFileName());
+                                File databaseLogFile = new File(dirDatabaseLog.getPath(), databaseLogFileInfo.getFileName());
                                 Scanner scanner = new Scanner(databaseLogFile);
                                 scanner.useDelimiter("\\Z");
                                 databaseLogFilesRequested.add(scanner.next());
@@ -140,8 +148,6 @@ public class SocketCliente extends Thread {
                             }.getType());
                             List<String> databaseLogFilesDatabaseLogFile = gson.fromJson(databaseLogFilesDatabaseLogFileJson, new TypeToken<ArrayList<String>>() {
                             }.getType());
-                            List<Object> saveUpdateList = new ArrayList<Object>();
-                            List<Object> deleteList = new ArrayList<Object>();
 
                             DAOContagem daoContagem = new DAOContagem(conexaoBanco);
                             DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
@@ -150,6 +156,7 @@ public class SocketCliente extends Thread {
                             DAOMarca daoMarca = new DAOMarca(conexaoBanco);
                             DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
                             DAOProduto daoProduto = new DAOProduto(conexaoBanco);
+                            DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
                             DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
 
                             List<DatabaseLogFile<Contagem>> logsContagem = new ArrayList<DatabaseLogFile<Contagem>>();
@@ -162,29 +169,44 @@ public class SocketCliente extends Thread {
                             List<DatabaseLogFile<RecebimentoCartao>> logsRecebimentoCartao = new ArrayList<DatabaseLogFile<RecebimentoCartao>>();
                             List<DatabaseLogFile<TipoContagem>> logsTipoContagem = new ArrayList<DatabaseLogFile<TipoContagem>>();
 
-                            List<DatabaseLogFile> logs = new ArrayList<>();
-
                             for (int i = 0; i < fileNamesDatabaseLogFile.size(); i++) {
-                                DatabaseLogFile databaseLogFile = gson.fromJson(databaseLogFilesDatabaseLogFile.get(i), new TypeToken<DatabaseLogFile>() {
-                                }.getType());
+                                Type tipoDatabaseLogFile = getGsonType(fileNamesDatabaseLogFile.get(i));
+                                DatabaseLogFile databaseLogFile = gson.fromJson(databaseLogFilesDatabaseLogFile.get(i), tipoDatabaseLogFile);
+
+                                if (databaseLogFile.getFileName().startsWith("Contagem")) {
+                                    logsContagem.add((DatabaseLogFile<Contagem>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("ContagemProduto")) {
+                                    logsContagemProduto.add((DatabaseLogFile<ContagemProduto>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("Fornecedor")) {
+                                    logsFornecedor.add((DatabaseLogFile<Fornecedor>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("Loja")) {
+                                    logsLoja.add((DatabaseLogFile<Loja>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("Marca")) {
+                                    logsMarca.add((DatabaseLogFile<Marca>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("OperadoraCartao")) {
+                                    logsOperadoraCartao.add((DatabaseLogFile<OperadoraCartao>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("Produto")) {
+                                    logsProduto.add((DatabaseLogFile<Produto>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("RecebimentoCartao")) {
+                                    logsRecebimentoCartao.add((DatabaseLogFile<RecebimentoCartao>) databaseLogFile);
+                                } else if (databaseLogFile.getFileName().startsWith("TipoContagem")) {
+                                    logsTipoContagem.add((DatabaseLogFile<TipoContagem>) databaseLogFile);
+                                }
 
                                 DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
                                 databaseLogFileInfo.setFileName(databaseLogFile.getFileName());
                                 fileInfoLogsRecebidos.add(databaseLogFileInfo);
-                                logs.add(databaseLogFile);
-
-                                switch (databaseLogFile.getOperacaoMySQL()) {
-                                    case "INSERT":
-                                        saveUpdateList.add(databaseLogFile.getEntidade());
-                                        break;
-                                    case "UPDATE":
-                                        saveUpdateList.add(databaseLogFile.getEntidade());
-                                        break;
-                                    case "DELETE":
-                                        deleteList.add(databaseLogFile.getEntidade());
-                                        break;
-                                }
                             }
+
+                            persistLogs(daoContagem, logsContagem);
+                            persistLogs(daoContagemProduto, logsContagemProduto);
+                            persistLogs(daoFornecedor, logsFornecedor);
+                            persistLogs(daoLoja, logsLoja);
+                            persistLogs(daoMarca, logsMarca);
+                            persistLogs(daoOperadoraCartao, logsOperadoraCartao);
+                            persistLogs(daoProduto, logsProduto);
+                            persistLogs(daoRecebimentoCartao, logsRecebimentoCartao);
+                            persistLogs(daoTipoContagem, logsTipoContagem);
 
                             break;
                     }
@@ -207,8 +229,6 @@ public class SocketCliente extends Thread {
 
     private void applicationOpening() {
         try {
-            File dirDatabaseLog = context.getDir(diretorio, Context.MODE_PRIVATE);
-
             File[] files = dirDatabaseLog.listFiles();
             List<DatabaseLogFileInfo> databaseLogFileInfos = new ArrayList<>();
 
@@ -231,9 +251,76 @@ public class SocketCliente extends Thread {
                 databaseLogFileInfos.add(databaseLogFileInfo);
             }
 
-            String databaseLogFileInfosJson = "DatabaseLogFileInfo|" + gson.toJson(databaseLogFileInfos);
+            String databaseLogFileInfosJson = "DatabaseLogFileInfo|" + gson.toJson(databaseLogFileInfos) + "\n";
+            clientSocket.getOutputStream().write(databaseLogFileInfosJson.getBytes());
         } catch (IOException ioe) {
             Log.e(ActivityBaseView.LOG, ioe.getMessage(), ioe);
+        }
+    }
+
+    private <E extends IModel> void persistLogs(IDAO<E> dao, List<DatabaseLogFile<E>> logs) {
+        if (logs.size() > 0) {
+            List<E> saveList = new ArrayList<>();
+            List<E> updateList = new ArrayList<>();
+            List<E> deleteList = new ArrayList<>();
+            for (DatabaseLogFile<E> databaseLogFile : logs) {
+                switch (databaseLogFile.getOperacaoMySQL()) {
+                    case "INSERT":
+                        saveList.add(databaseLogFile.getEntidade());
+                        break;
+                    case "UPDATE":
+                        updateList.add(databaseLogFile.getEntidade());
+                        break;
+                    case "DELETE":
+                        deleteList.add(databaseLogFile.getEntidade());
+                        break;
+                }
+            }
+
+            if (saveList.size() > 0) {
+                if (dao.inserir(saveList)) {
+                    for (E e : saveList) {
+                        escreverJson("INSERT", e);
+                    }
+                }
+            }
+
+            if (updateList.size() > 0) {
+                if (dao.inserirOuAtualizar(updateList)) {
+                    for (E e : updateList) {
+                        escreverJson("UPDATE", e);
+                    }
+                }
+            }
+
+            if (deleteList.size() > 0) {
+                dao.deletar(deleteList);
+                for (E e : deleteList) {
+                    escreverJson("DELETE", e);
+                }
+            }
+        }
+    }
+
+    private <E extends IModel> void escreverJson(String operacao, E entidade) {
+        ZonedDateTime lastWriteTime = Instant.now().atZone(ZoneId.systemDefault());
+        DatabaseLogFile<E> databaseLogFile = new DatabaseLogFile<>();
+        databaseLogFile.setLastWriteTime(lastWriteTime);
+        databaseLogFile.setOperacaoMySQL(operacao);
+        databaseLogFile.setEntidade(entidade);
+
+        String json = gson.toJson(databaseLogFile, new TypeToken<DatabaseLogFile<E>>() {
+        }.getType());
+        File logFile = new File(dirDatabaseLog, databaseLogFile.getFileName());
+
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(logFile);
+            fileWriter.write(json);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

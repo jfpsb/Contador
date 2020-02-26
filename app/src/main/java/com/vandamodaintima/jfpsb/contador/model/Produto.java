@@ -1,15 +1,24 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Produto implements Serializable, IModel {
+    @SerializedName(value = "Cod_Barra")
     private String cod_barra;
+    @SerializedName(value = "Codigos")
     private ArrayList<String> cod_barra_fornecedor = new ArrayList<>();
+    @SerializedName(value = "Marca")
     private Marca marca;
+    @SerializedName(value = "Fornecedor")
     private Fornecedor fornecedor;
+    @SerializedName(value = "Descricao")
     private String descricao;
+    @SerializedName(value = "Preco")
     private Double preco;
+    @SerializedName(value = "Ncm")
     private String ncm;
 
     public static String[] getColunas() {

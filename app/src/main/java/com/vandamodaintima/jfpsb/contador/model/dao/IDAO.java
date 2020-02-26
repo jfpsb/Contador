@@ -19,6 +19,8 @@ public interface IDAO<T> {
 
     Boolean deletar(Object... chaves);
 
+    void deletar(List<T> lista);
+
     Cursor listarCursor();
 
     List<T> listar();

@@ -1,9 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class TipoContagem implements Serializable, IModel {
+    @SerializedName(value = "Id")
     private int id;
+    @SerializedName(value = "Nome")
     private String nome;
 
     public TipoContagem() {

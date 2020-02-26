@@ -15,11 +15,9 @@ import java.util.List;
 public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
     private ConexaoBanco conexaoBanco;
     private final String TABELA = "operadoracartao";
-    private DAOFornecedor daoFornecedor;
 
     public DAOOperadoraCartao(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
-        daoFornecedor = new DAOFornecedor(conexaoBanco);
     }
 
     @Override
@@ -58,13 +56,13 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
             for (OperadoraCartao operadoraCartao : lista) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("nome", operadoraCartao.getNome());
-                conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
+                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
                 for (String bancoid : operadoraCartao.getIdentificadoresBanco()) {
                     ContentValues contentBancoId = new ContentValues();
                     contentBancoId.put("identificador", bancoid);
                     contentBancoId.put("operadoracartao", operadoraCartao.getIdentifier());
-                    conexaoBanco.conexao().insertOrThrow("operadorabancoid", null, contentBancoId);
+                    conexaoBanco.conexao().insertWithOnConflict("operadorabancoid", null, contentBancoId, SQLiteDatabase.CONFLICT_IGNORE);
                 }
             }
 
@@ -177,6 +175,14 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
     }
 
     @Override
+    public void deletar(List<OperadoraCartao> lista) {
+        for(OperadoraCartao operadoraCartao : lista) {
+            String identificador = operadoraCartao.getNome();
+            conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{identificador});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, OperadoraCartao.getColunas(), null, null, null, null, null, null);
     }
@@ -196,14 +202,19 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
                 Cursor bancoids = conexaoBanco.conexao().query("operadorabancoid", null, "operadoracartao = ?", new String[]{operadoraCartao.getNome()}, null, null, null, null);
 
                 if(bancoids.getCount() > 0) {
-                    while (cursor.moveToNext()) {
+                    while (bancoids.moveToNext()) {
                         String id = bancoids.getString(bancoids.getColumnIndexOrThrow("identificador"));
                         operadoraCartao.getIdentificadoresBanco().add(id);
                     }
+
+                    bancoids.close();
                 }
+
+                operadoras.add(operadoraCartao);
             }
         }
 
+        cursor.close();
         return operadoras;
     }
 
@@ -211,11 +222,11 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
     public OperadoraCartao listarPorId(Object... ids) {
         OperadoraCartao operadoraCartao = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "nome LIKE ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, OperadoraCartao.getColunas(), "nome LIKE ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if(cursor.getCount() > 0) {
             cursor.moveToFirst();
-
+            operadoraCartao = new OperadoraCartao();
             operadoraCartao.setNome(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
 
             Cursor bancoids = conexaoBanco.conexao().query("operadorabancoid", null, "operadoracartao = ?", new String[]{operadoraCartao.getNome()}, null, null, null, null);
@@ -228,6 +239,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
             }
         }
 
+        cursor.close();
         return operadoraCartao;
     }
 }

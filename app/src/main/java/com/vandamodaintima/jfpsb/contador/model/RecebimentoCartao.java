@@ -1,12 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class RecebimentoCartao implements IModel {
+    @SerializedName(value = "Mes")
     private int mes;
+    @SerializedName(value = "Ano")
     private int ano;
+    @SerializedName(value = "Loja")
     private Loja loja;
+    @SerializedName(value = "OperadoraCartao")
     private OperadoraCartao operadoraCartao;
+    @SerializedName(value = "Recebido")
     private double recebido;
+    @SerializedName(value = "ValoOperadora")
     private double valorOperadora;
+    @SerializedName(value = "Observacao")
     private String observacao;
 
     public int getMes() {
@@ -63,6 +72,10 @@ public class RecebimentoCartao implements IModel {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public static String[] getColunas() {
+        return new String[]{"mes, ano, loja, operadoracartao, recebido, valorOperadora, observacao"};
     }
 
     @Override

@@ -170,6 +170,14 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
     }
 
     @Override
+    public void deletar(List<ContagemProduto> lista) {
+        for(ContagemProduto contagemProduto : lista) {
+            String id = String.valueOf(contagemProduto.getId());
+            conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), null, null, null, null, null, null);
     }
@@ -184,7 +192,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             while (cursor.moveToNext()) {
                 ContagemProduto contagem_produto = new ContagemProduto();
 
-                contagem_produto.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
+                contagem_produto.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 contagem_produto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
 
                 String contagem_loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
@@ -196,6 +204,7 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
                 contagem_produtos.add(contagem_produto);
             }
         }
+
         cursor.close();
         return contagem_produtos;
     }

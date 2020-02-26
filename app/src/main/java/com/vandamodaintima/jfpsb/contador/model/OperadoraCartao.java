@@ -1,10 +1,14 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class OperadoraCartao implements IModel {
+    @SerializedName(value = "Nome")
     private String nome;
+    @SerializedName(value = "IdentificadoresBanco")
     private List<String> identificadoresBanco = new ArrayList<>();
 
     public String getNome() {

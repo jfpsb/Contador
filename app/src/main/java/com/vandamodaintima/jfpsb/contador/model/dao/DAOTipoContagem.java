@@ -132,6 +132,14 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
     }
 
     @Override
+    public void deletar(List<TipoContagem> lista) {
+        for(TipoContagem tipoContagem : lista) {
+            String id = String.valueOf(tipoContagem.getId());
+            conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), null, null, null, null, null, null);
     }

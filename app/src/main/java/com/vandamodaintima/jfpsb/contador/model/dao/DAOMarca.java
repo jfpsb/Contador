@@ -155,6 +155,14 @@ public class DAOMarca implements IDAO<Marca> {
     }
 
     @Override
+    public void deletar(List<Marca> lista) {
+        for(Marca marca : lista) {
+            String nome = marca.getNome();
+            conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, Marca.getColunas(), null, null, null, null, null, null);
     }

@@ -165,6 +165,14 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
     }
 
     @Override
+    public void deletar(List<Fornecedor> lista) {
+        for (Fornecedor fornecedor : lista) {
+            String cnpj = fornecedor.getCnpj();
+            conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), null, null, null, null, null, null);
     }

@@ -188,6 +188,14 @@ public class DAOLoja implements IDAO<Loja> {
     }
 
     @Override
+    public void deletar(List<Loja> lista) {
+        for(Loja loja : lista) {
+            String cnpj = loja.getCnpj();
+            conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+        }
+    }
+
+    @Override
     public Cursor listarCursor() {
         return conexaoBanco.conexao().query(TABELA, Loja.getColunas(), null, null, null, null, "nome", null);
     }
