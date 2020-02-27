@@ -8,14 +8,15 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
+
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-public class DAOContagem implements IDAO<Contagem> {
-    private static final String TABELA = "contagem";
-    private ConexaoBanco conexaoBanco;
+public class DAOContagem extends ADAO<Contagem> {
     private DAOLoja daoLoja;
     private DAOTipoContagem daoTipoContagem;
 
@@ -23,6 +24,7 @@ public class DAOContagem implements IDAO<Contagem> {
         this.conexaoBanco = conexaoBanco;
         daoLoja = new DAOLoja(conexaoBanco);
         daoTipoContagem = new DAOTipoContagem(conexaoBanco);
+        TABELA = "contagem";
     }
 
     @Override
@@ -33,16 +35,16 @@ public class DAOContagem implements IDAO<Contagem> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("loja", contagem.getLoja().getCnpj());
-            contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+            contentValues.put("data", contagem.getDataParaSQLite());
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(contagem);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -59,7 +61,7 @@ public class DAOContagem implements IDAO<Contagem> {
                 ContentValues contentValues = new ContentValues();
 
                 contentValues.put("loja", contagem.getLoja().getCnpj());
-                contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+                contentValues.put("data", contagem.getDataParaSQLite());
                 contentValues.put("finalizada", contagem.getFinalizada());
                 contentValues.put("tipo", contagem.getTipoContagem().getId());
 
@@ -68,9 +70,9 @@ public class DAOContagem implements IDAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -86,16 +88,16 @@ public class DAOContagem implements IDAO<Contagem> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("loja", contagem.getLoja().getCnpj());
-            contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+            contentValues.put("data", contagem.getDataParaSQLite());
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(contagem);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -112,7 +114,7 @@ public class DAOContagem implements IDAO<Contagem> {
                 ContentValues contentValues = new ContentValues();
 
                 contentValues.put("loja", contagem.getLoja().getCnpj());
-                contentValues.put("data", Contagem.getDataSQLite(contagem.getData()));
+                contentValues.put("data", contagem.getDataParaSQLite());
                 contentValues.put("finalizada", contagem.getFinalizada());
                 contentValues.put("tipo", contagem.getTipoContagem().getId());
 
@@ -121,9 +123,9 @@ public class DAOContagem implements IDAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -147,9 +149,9 @@ public class DAOContagem implements IDAO<Contagem> {
             conexaoBanco.conexao().update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{cnpj, data});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(contagem, chaves);
         } catch (SQLException ex) {
-            Log.e(LOG, ex.getMessage(), ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -159,9 +161,16 @@ public class DAOContagem implements IDAO<Contagem> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        Contagem c = listarPorId(chaves);
+
         String cnpj = (String) chaves[0];
         String data = (String) chaves[1];
         long result = conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
+
+        if(result > 0) {
+            escreveDatabaseLogFileDelete(c);
+        }
+
         return result > 0;
     }
 
@@ -170,7 +179,12 @@ public class DAOContagem implements IDAO<Contagem> {
         for(Contagem contagem : lista) {
             String cnpj = contagem.getLoja().getCnpj();
             String data = contagem.getDataParaSQLite();
-            conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
+
+            int result = conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
+
+            if(result > 0) {
+                escreveDatabaseLogFileDelete(contagem);
+            }
         }
     }
 
@@ -229,23 +243,18 @@ public class DAOContagem implements IDAO<Contagem> {
         return contagem;
     }
 
-    public Cursor listarPorLojaPeriodoCursor(String loja, Calendar dataInicial, Calendar dataFinal) {
+    public Cursor listarPorLojaPeriodoCursor(String loja, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada, tipo FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
 
-        dataInicial.set(Calendar.HOUR_OF_DAY, 0);
-        dataInicial.set(Calendar.MINUTE, 0);
-        dataInicial.set(Calendar.SECOND, 0);
+        dataFinal = dataFinal.plusDays(1);
+        dataFinal = dataFinal.minusMinutes(1);
 
-        dataFinal.set(Calendar.HOUR_OF_DAY, 23);
-        dataFinal.set(Calendar.MINUTE, 59);
-        dataFinal.set(Calendar.SECOND, 59);
-
-        String[] selection = new String[]{loja, Contagem.getDataSQLite(dataInicial.getTime()), Contagem.getDataSQLite(dataFinal.getTime())};
+        String[] selection = new String[]{loja, dataInicial.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), dataFinal.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
-    public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, Calendar dataInicial, Calendar dataFinal) {
+    public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
         Cursor cursor = listarPorLojaPeriodoCursor(cnpj, dataInicial, dataFinal);

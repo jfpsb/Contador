@@ -8,16 +8,15 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOLoja implements IDAO<Loja> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "loja";
-
+public class DAOLoja extends ADAO<Loja> {
     public DAOLoja(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
+        TABELA = "loja";
     }
 
     @Override
@@ -41,9 +40,9 @@ public class DAOLoja implements IDAO<Loja> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(loja);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -74,9 +73,9 @@ public class DAOLoja implements IDAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -105,9 +104,9 @@ public class DAOLoja implements IDAO<Loja> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(loja);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -138,9 +137,9 @@ public class DAOLoja implements IDAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -170,9 +169,9 @@ public class DAOLoja implements IDAO<Loja> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(loja, chaves);
         } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR LOJA", ex);
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR LOJA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -182,8 +181,15 @@ public class DAOLoja implements IDAO<Loja> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        Loja loja = listarPorId(chaves);
+
         String cnpj = (String) chaves[0];
         int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+
+        if(result > 0) {
+            escreveDatabaseLogFileDelete(loja);
+        }
+
         return result > 0;
     }
 
@@ -191,7 +197,11 @@ public class DAOLoja implements IDAO<Loja> {
     public void deletar(List<Loja> lista) {
         for(Loja loja : lista) {
             String cnpj = loja.getCnpj();
-            conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+            int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+
+            if(result > 0) {
+                escreveDatabaseLogFileDelete(loja);
+            }
         }
     }
 

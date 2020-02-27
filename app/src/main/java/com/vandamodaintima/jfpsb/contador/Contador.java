@@ -48,6 +48,7 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAORecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.SocketCliente;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
@@ -62,12 +63,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
 
 public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
     private ConexaoBanco conexaoBanco;
+
+    Gson gson = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,86 +131,76 @@ public class Contador extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        //Teste();
+
+        gson = new GsonBuilder()
+                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeGsonAdapter())
+                .create();
+
+        Teste();
         new SocketCliente(getApplicationContext(), conexaoBanco).start();
     }
 
     private void Teste() {
         DAOContagem daoContagem = new DAOContagem(conexaoBanco);
-        /*DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
+        DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
         DAOFornecedor daoFornecedor = new DAOFornecedor(conexaoBanco);
         DAOLoja daoLoja = new DAOLoja(conexaoBanco);
         DAOMarca daoMarca = new DAOMarca(conexaoBanco);
         DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
         DAOProduto daoProduto = new DAOProduto(conexaoBanco);
         DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
-        DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);*/
+        DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
 
         List<Contagem> contagems = daoContagem.listar();
-        /*List<ContagemProduto> contagemProdutos = daoContagemProduto.listar();
+        List<ContagemProduto> contagemProdutos = daoContagemProduto.listar();
         List<Fornecedor> fornecedors = daoFornecedor.listar();
         List<Loja> lojas = daoLoja.listar();
         List<Marca> marcas = daoMarca.listar();
         List<OperadoraCartao> operadoraCartaos = daoOperadoraCartao.listar();
         List<Produto> produtos = daoProduto.listar();
         List<RecebimentoCartao> recebimentoCartaos = daoRecebimentoCartao.listar();
-        List<TipoContagem> tipoContagems = daoTipoContagem.listar();*/
+        List<TipoContagem> tipoContagems = daoTipoContagem.listar();
 
-        for(Contagem contagem : contagems) {
+        for (Contagem contagem : contagems) {
             escreverJson("INSERT", contagem);
         }
 
-        /*for(ContagemProduto ContagemProduto : contagemProdutos) {
+        for (ContagemProduto ContagemProduto : contagemProdutos) {
             escreverJson("INSERT", ContagemProduto);
         }
 
-        for(Fornecedor Fornecedor : fornecedors) {
+        for (Fornecedor Fornecedor : fornecedors) {
             escreverJson("INSERT", Fornecedor);
         }
 
-        for(Loja Loja : lojas) {
+        for (Loja Loja : lojas) {
             escreverJson("INSERT", Loja);
         }
 
-        for(Marca Marca : marcas) {
+        for (Marca Marca : marcas) {
             escreverJson("INSERT", Marca);
         }
 
-        for(OperadoraCartao OperadoraCartao : operadoraCartaos) {
+        for (OperadoraCartao OperadoraCartao : operadoraCartaos) {
             escreverJson("INSERT", OperadoraCartao);
         }
 
-        for(Produto Produto : produtos) {
+        for (Produto Produto : produtos) {
             escreverJson("INSERT", Produto);
         }
 
-        for(RecebimentoCartao RecebimentoCartao : recebimentoCartaos) {
+        for (RecebimentoCartao RecebimentoCartao : recebimentoCartaos) {
             escreverJson("INSERT", RecebimentoCartao);
         }
 
-        for(TipoContagem TipoContagem : tipoContagems) {
+        for (TipoContagem TipoContagem : tipoContagems) {
             escreverJson("INSERT", TipoContagem);
-        }*/
+        }
     }
 
     private <E extends IModel> void escreverJson(String operacao, E entidade) {
         File dirDatabaseLog = getApplicationContext().getDir("DatabaseLog", Context.MODE_PRIVATE);
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
-                .registerTypeAdapter(ZonedDateTime.class, new JsonDeserializer<ZonedDateTime>() {
-                    @Override
-                    public ZonedDateTime deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                        String data = json.getAsJsonPrimitive().getAsString();
-                        return ZonedDateTime.parse(data, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-                    }
-                })
-                .registerTypeAdapter(ZonedDateTime.class, new JsonSerializer<ZonedDateTime>() {
-                    @Override
-                    public JsonElement serialize(ZonedDateTime zonedDateTime, Type type, JsonSerializationContext jsonSerializationContext) {
-                        return new JsonPrimitive(zonedDateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-                    }
-                })
-                .create();
+
         ZonedDateTime lastWriteTime = Instant.now().atZone(ZoneId.systemDefault());
         DatabaseLogFile<E> databaseLogFile = new DatabaseLogFile<>();
         databaseLogFile.setLastWriteTime(lastWriteTime.minusYears(1));

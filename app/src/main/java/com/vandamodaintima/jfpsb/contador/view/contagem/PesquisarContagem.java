@@ -24,6 +24,9 @@ import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -118,17 +121,9 @@ public class PesquisarContagem extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        try {
-            Calendar dataInicial = Calendar.getInstance();
-            Calendar dataFinal = Calendar.getInstance();
-
-            dataInicial.setTime(txtDataParaCalendar.parse(txtDataInicial.getText().toString()));
-            dataFinal.setTime(txtDataParaCalendar.parse(txtDataFinal.getText().toString()));
-
-            controller.pesquisar(dataInicial, dataFinal);
-        } catch (ParseException e) {
-            Log.e(LOG, e.getMessage(), e);
-        }
+        LocalDateTime dataInicial = LocalDateTime.parse(txtDataInicial.getText().toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDateTime dataFinal = LocalDateTime.parse(txtDataFinal.getText().toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        controller.pesquisar(dataInicial, dataFinal);
     }
 
     @Override

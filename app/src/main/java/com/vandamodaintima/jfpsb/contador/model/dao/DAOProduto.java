@@ -2,20 +2,17 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOProduto implements IDAO<Produto> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "produto";
-
+public class DAOProduto extends ADAO<Produto> {
     private DAOMarca daoMarca;
     private DAOFornecedor daoFornecedor;
 
@@ -23,6 +20,7 @@ public class DAOProduto implements IDAO<Produto> {
         this.conexaoBanco = conexaoBanco;
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
+        TABELA = "produto";
     }
 
     @Override
@@ -66,7 +64,7 @@ public class DAOProduto implements IDAO<Produto> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -117,7 +115,7 @@ public class DAOProduto implements IDAO<Produto> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -166,7 +164,7 @@ public class DAOProduto implements IDAO<Produto> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -218,7 +216,7 @@ public class DAOProduto implements IDAO<Produto> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -267,7 +265,7 @@ public class DAOProduto implements IDAO<Produto> {
 
             return true;
         } catch (Exception ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }

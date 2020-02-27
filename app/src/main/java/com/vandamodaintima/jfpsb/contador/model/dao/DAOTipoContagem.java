@@ -7,16 +7,15 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOTipoContagem implements IDAO<TipoContagem> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "tipo_contagem";
-
+public class DAOTipoContagem extends ADAO<TipoContagem> {
     public DAOTipoContagem(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
+        TABELA = "tipo_contagem";
     }
 
     @Override
@@ -29,7 +28,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -52,7 +51,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -70,7 +69,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -93,7 +92,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -116,7 +115,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
 
             return true;
         } catch (Exception ex) {
-            Log.e(LOG, ex.getMessage(), ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }

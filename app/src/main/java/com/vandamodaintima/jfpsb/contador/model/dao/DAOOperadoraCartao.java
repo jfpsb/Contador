@@ -4,20 +4,18 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.OperadoraCartao;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "operadoracartao";
-
+public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     public DAOOperadoraCartao(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
+        TABELA = "operadoracartao";
     }
 
     @Override
@@ -40,7 +38,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -70,7 +68,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -98,7 +96,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -128,7 +126,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -159,7 +157,7 @@ public class DAOOperadoraCartao implements IDAO<OperadoraCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }

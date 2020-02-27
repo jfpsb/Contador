@@ -8,18 +8,18 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOMarca implements IDAO<Marca> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "marca";
+public class DAOMarca extends ADAO<Marca> {
     private DAOFornecedor daoFornecedor;
 
     public DAOMarca(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
         daoFornecedor = new DAOFornecedor(conexaoBanco);
+        TABELA = "marca";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DAOMarca implements IDAO<Marca> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -64,7 +64,7 @@ public class DAOMarca implements IDAO<Marca> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -88,7 +88,7 @@ public class DAOMarca implements IDAO<Marca> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -113,7 +113,7 @@ public class DAOMarca implements IDAO<Marca> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -139,7 +139,7 @@ public class DAOMarca implements IDAO<Marca> {
 
             return true;
         } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR MARCA", ex);
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }

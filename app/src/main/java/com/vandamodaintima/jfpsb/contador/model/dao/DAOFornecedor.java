@@ -8,16 +8,15 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOFornecedor implements IDAO<Fornecedor> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "fornecedor";
-
+public class DAOFornecedor extends ADAO<Fornecedor> {
     public DAOFornecedor(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
+        TABELA = "fornecedor";
     }
 
     @Override
@@ -36,9 +35,9 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(fornecedor);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -65,9 +64,9 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -91,9 +90,9 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(fornecedor);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -120,9 +119,9 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -147,9 +146,9 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(fornecedor, chaves);
         } catch (SQLException ex) {
-            Log.e(LOG, ex.getMessage(), ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -159,8 +158,16 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        Fornecedor f = listarPorId(chaves);
+
         String cnpj = (String) chaves[0];
+
         int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+
+        if (result > 0) {
+            escreveDatabaseLogFileDelete(f);
+        }
+
         return result > 0;
     }
 
@@ -168,7 +175,11 @@ public class DAOFornecedor implements IDAO<Fornecedor> {
     public void deletar(List<Fornecedor> lista) {
         for (Fornecedor fornecedor : lista) {
             String cnpj = fornecedor.getCnpj();
-            conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+            int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
+
+            if (result > 0) {
+                escreveDatabaseLogFileDelete(fornecedor);
+            }
         }
     }
 

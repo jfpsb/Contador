@@ -9,18 +9,18 @@ import android.util.Log;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOContagemProduto implements IDAO<ContagemProduto> {
-    private static final String TABELA = "contagem_produto";
-    private ConexaoBanco conexaoBanco;
+public class DAOContagemProduto extends ADAO<ContagemProduto> {
     private DAOProduto daoProduto;
     private DAOContagem daoContagem;
 
     public DAOContagemProduto(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
+        TABELA = "contagem_produto";
         daoProduto = new DAOProduto(conexaoBanco);
         daoContagem = new DAOContagem(conexaoBanco);
     }
@@ -41,9 +41,9 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(contagemProduto);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -70,9 +70,9 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -96,9 +96,9 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(contagemProduto);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -125,9 +125,9 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -152,9 +152,9 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(contagemProduto, chaves);
         } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR MARCA", ex);
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -164,16 +164,27 @@ public class DAOContagemProduto implements IDAO<ContagemProduto> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        ContagemProduto contagemProduto = listarPorId(chaves);
+
         String id = String.valueOf(chaves[0]);
         int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
+
+        if (result > 0) {
+            escreveDatabaseLogFileDelete(contagemProduto);
+        }
+
         return result > 0;
     }
 
     @Override
     public void deletar(List<ContagemProduto> lista) {
-        for(ContagemProduto contagemProduto : lista) {
+        for (ContagemProduto contagemProduto : lista) {
             String id = String.valueOf(contagemProduto.getId());
-            conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
+            int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
+
+            if (result > 0) {
+                escreveDatabaseLogFileDelete(contagemProduto);
+            }
         }
     }
 

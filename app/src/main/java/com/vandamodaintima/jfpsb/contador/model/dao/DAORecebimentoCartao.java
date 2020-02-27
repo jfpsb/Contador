@@ -7,13 +7,12 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "recebimentocartao";
+public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     private DAOLoja daoLoja;
     private DAOOperadoraCartao daoOperadoraCartao;
 
@@ -21,6 +20,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
         this.conexaoBanco = conexaoBanco;
         daoLoja = new DAOLoja(conexaoBanco);
         daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
+        TABELA = "recebimentocartao";
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -72,7 +72,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -99,7 +99,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -129,7 +129,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -157,7 +157,7 @@ public class DAORecebimentoCartao implements IDAO<RecebimentoCartao> {
 
             return true;
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
