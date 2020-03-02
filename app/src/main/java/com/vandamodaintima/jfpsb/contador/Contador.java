@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.SocketCliente;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
@@ -70,7 +72,7 @@ public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
     private ConexaoBanco conexaoBanco;
-
+    private SocketCliente socketCliente = null;
     Gson gson = null;
 
     @Override
@@ -136,32 +138,34 @@ public class Contador extends AppCompatActivity {
                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeGsonAdapter())
                 .create();
 
-        Teste();
-        new SocketCliente(getApplicationContext(), conexaoBanco).start();
+        if (socketCliente == null) {
+            socketCliente = new SocketCliente(getApplicationContext(), conexaoBanco);
+            socketCliente.start();
+        }
     }
 
     private void Teste() {
-        DAOContagem daoContagem = new DAOContagem(conexaoBanco);
+        /*DAOContagem daoContagem = new DAOContagem(conexaoBanco);
         DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
         DAOFornecedor daoFornecedor = new DAOFornecedor(conexaoBanco);
         DAOLoja daoLoja = new DAOLoja(conexaoBanco);
         DAOMarca daoMarca = new DAOMarca(conexaoBanco);
         DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
         DAOProduto daoProduto = new DAOProduto(conexaoBanco);
-        DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
+        DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);*/
         DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
 
-        List<Contagem> contagems = daoContagem.listar();
+        /*List<Contagem> contagems = daoContagem.listar();
         List<ContagemProduto> contagemProdutos = daoContagemProduto.listar();
         List<Fornecedor> fornecedors = daoFornecedor.listar();
         List<Loja> lojas = daoLoja.listar();
         List<Marca> marcas = daoMarca.listar();
         List<OperadoraCartao> operadoraCartaos = daoOperadoraCartao.listar();
         List<Produto> produtos = daoProduto.listar();
-        List<RecebimentoCartao> recebimentoCartaos = daoRecebimentoCartao.listar();
+        List<RecebimentoCartao> recebimentoCartaos = daoRecebimentoCartao.listar();*/
         List<TipoContagem> tipoContagems = daoTipoContagem.listar();
 
-        for (Contagem contagem : contagems) {
+        /*for (Contagem contagem : contagems) {
             escreverJson("INSERT", contagem);
         }
 
@@ -191,7 +195,7 @@ public class Contador extends AppCompatActivity {
 
         for (RecebimentoCartao RecebimentoCartao : recebimentoCartaos) {
             escreverJson("INSERT", RecebimentoCartao);
-        }
+        }*/
 
         for (TipoContagem TipoContagem : tipoContagems) {
             escreverJson("INSERT", TipoContagem);
@@ -225,6 +229,12 @@ public class Contador extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         conexaoBanco.close();
+        try {
+            socketCliente.getClientSocket().close();
+            socketCliente = null;
+        } catch (IOException e) {
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
+        }
         super.onDestroy();
     }
 

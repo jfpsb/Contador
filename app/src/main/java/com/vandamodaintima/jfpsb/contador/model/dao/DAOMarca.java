@@ -17,7 +17,7 @@ public class DAOMarca extends ADAO<Marca> {
     private DAOFornecedor daoFornecedor;
 
     public DAOMarca(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
         TABELA = "marca";
     }
@@ -37,7 +37,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(marca);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -62,7 +62,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -86,7 +86,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(marca);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -111,7 +111,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -137,7 +137,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(marca, chaves);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
@@ -149,16 +149,24 @@ public class DAOMarca extends ADAO<Marca> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        Marca marca = listarPorId(chaves);
         String nome = (String) chaves[0];
         int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
+
+        if (result > 0)
+            escreveDatabaseLogFileDelete(marca);
+
         return result > 0;
     }
 
     @Override
-    public void deletar(List<Marca> lista) {
-        for(Marca marca : lista) {
+    public void deletarLista(List<Marca> lista) {
+        for (Marca marca : lista) {
             String nome = marca.getNome();
-            conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
+            int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
+
+            if (result > 0)
+                escreveDatabaseLogFileDelete(marca);
         }
     }
 

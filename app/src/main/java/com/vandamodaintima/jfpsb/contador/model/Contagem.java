@@ -6,6 +6,7 @@ import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -31,7 +32,8 @@ public class Contagem implements Serializable, IModel {
     }
 
     public String getFullDataString() {
-        return DateFormat.getDateInstance().format(data);
+        return data.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+        //return DateFormat.getDateInstance().format(data);
     }
 
     public String getShortDataString() {
@@ -43,7 +45,7 @@ public class Contagem implements Serializable, IModel {
     }
 
     public static ZonedDateTime convertStringToDate(String s) {
-        LocalDateTime localDateTime = LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime localDateTime = LocalDateTime.parse(s, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return localDateTime.atZone(ZoneId.systemDefault());
     }
 

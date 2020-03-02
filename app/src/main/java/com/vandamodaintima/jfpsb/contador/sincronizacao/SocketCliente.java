@@ -17,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.model.OperadoraCartao;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
+import com.vandamodaintima.jfpsb.contador.model.dao.ADAO;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
@@ -26,9 +27,12 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOOperadoraCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAORecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.ADAO;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.Period;
+import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
 
 import java.io.BufferedReader;
@@ -39,10 +43,13 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import static org.threeten.bp.ZoneId.systemDefault;
 
 public class SocketCliente extends Thread {
     private Socket clientSocket;
@@ -51,6 +58,7 @@ public class SocketCliente extends Thread {
     private static Gson gson = null;
     private static File dirDatabaseLog = null;
     private OperacoesJsonDatabaseLog operacoesJsonDatabaseLog;
+    private DatabaseLogFileObserver databaseLogFileObserver;
 
     public SocketCliente(Context context, ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
@@ -68,162 +76,175 @@ public class SocketCliente extends Thread {
 
     private void conectar() {
         try {
-            clientSocket = new Socket("192.168.0.15", 3999);
+            Log.i(ActivityBaseView.LOG, "Tentando Conexão Com Servidor");
+
+            clientSocket = new Socket("18.222.177.179", 3999);
+            clientSocket.setSoTimeout(30000);
+
+            Log.i(ActivityBaseView.LOG, "Conexão Efetuada Com Sucesso");
 
             InputStream inputStream = clientSocket.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            if (databaseLogFileObserver == null) {
+                Log.i(ActivityBaseView.LOG, "Iniciando DatabaseLogFileObserver");
+                databaseLogFileObserver = new DatabaseLogFileObserver(gson, dirDatabaseLog, this);
+            }
+
+            databaseLogFileObserver.startWatching();
 
             if (clientSocket.isConnected()) {
                 applicationOpening();
             }
 
-            DatabaseLogFileObserver databaseLogFileObserver = new DatabaseLogFileObserver(gson, dirDatabaseLog, this);
-            databaseLogFileObserver.startWatching();
-
             while (clientSocket.isConnected()) {
-                try {
-                    String receivedFromServer = bufferedReader.readLine();
+                String receivedFromServer = bufferedReader.readLine();
 
-                    // Socket foi desconectado pelo lado do servidor
-                    if (receivedFromServer == null)
-                        throw new SocketException("Conexão com Servidor Encerrada");
+                // Socket foi desconectado pelo lado do servidor
+                if (receivedFromServer == null)
+                    throw new SocketException("Conexão com Servidor Encerrada");
 
-                    String[] receivedSplitted = receivedFromServer.split("\\|");
-                    String receivedId = receivedSplitted[0];
+                String[] receivedSplitted = receivedFromServer.split("\\|");
+                String receivedId = receivedSplitted[0];
 
-                    switch (receivedId) {
-                        case "DatabaseLogFileRequest":
-                            // Recebe do servidor uma lista com os arquivos DatabaseLogFile que o servidor precisa e envia
-                            String dataLogFileRequest = receivedSplitted[1];
-                            List<DatabaseLogFileInfo> databaseLogFileInfos = operacoesJsonDatabaseLog.lerJsonDatabaseLogFileInfo(dataLogFileRequest);
-                            List<String> fileNamesRequested = new ArrayList<>();
-                            List<String> databaseLogFilesRequested = new ArrayList<>();
+                switch (receivedId) {
+                    case "DatabaseLogFileRequest":
+                        // Recebe do servidor uma lista com os arquivos DatabaseLogFile que o servidor precisa e envia
+                        Log.i(ActivityBaseView.LOG, "Lista de Request de DatabaseLogFiles Recebida do Servidor");
+                        String dataLogFileRequest = receivedSplitted[1];
+                        List<DatabaseLogFileInfo> databaseLogFileInfos = operacoesJsonDatabaseLog.lerJsonDatabaseLogFileInfo(dataLogFileRequest);
+                        List<String> fileNamesRequested = new ArrayList<>();
+                        List<String> databaseLogFilesRequested = new ArrayList<>();
 
-                            for (DatabaseLogFileInfo databaseLogFileInfo : databaseLogFileInfos) {
-                                // Guarda nomes dos arquivos de log
-                                fileNamesRequested.add(databaseLogFileInfo.getFileName());
-                                // Guarda conteúdo dos arquivos de log
-                                File databaseLogFile = new File(dirDatabaseLog, databaseLogFileInfo.getFileName());
-                                Scanner scanner = new Scanner(databaseLogFile);
-                                scanner.useDelimiter("\\Z");
-                                databaseLogFilesRequested.add(scanner.next().replace("\r", "").replace("\n", ""));
+                        for (DatabaseLogFileInfo databaseLogFileInfo : databaseLogFileInfos) {
+                            // Guarda nomes dos arquivos de log
+                            fileNamesRequested.add(databaseLogFileInfo.getFileName());
+                            // Guarda conteúdo dos arquivos de log
+                            File databaseLogFile = new File(dirDatabaseLog, databaseLogFileInfo.getFileName());
+                            Scanner scanner = new Scanner(databaseLogFile);
+                            scanner.useDelimiter("\\Z");
+                            databaseLogFilesRequested.add(scanner.next().replace("\r", "").replace("\n", ""));
+                        }
+
+                        // Forma mensagem ao servidor
+                        String fileNamesRequestedJson = gson.toJson(fileNamesRequested);
+                        String databaseLogFilesRequestedJson = gson.toJson(databaseLogFilesRequested);
+
+                        String messageToServer = "DatabaseLogFile";
+                        messageToServer += "|" + fileNamesRequestedJson;
+                        messageToServer += "|" + databaseLogFilesRequestedJson;
+                        messageToServer += "\n"; // Para que o servidor encontre o fim do texto
+
+                        Log.i(ActivityBaseView.LOG, "Enviando DatabaseLogFiles ao Servidor");
+                        clientSocket.getOutputStream().write(messageToServer.getBytes());
+
+                        break;
+                    case "DatabaseLogFile":
+                        // Recebe do servidor uma lista de logs para salvar no cliente
+                        Log.i(ActivityBaseView.LOG, "Recebendo do Servidor Lista de DatabaseLogFiles para Persistir no Banco de Dados");
+                        String fileNamesJson = receivedSplitted[1];
+                        String databaseLogFilesJson = receivedSplitted[2];
+
+                        Type typeStringList = new TypeToken<ArrayList<String>>() {
+                        }.getType();
+
+                        // Lista com nomes dos arquivos recebidos
+                        List<String> fileNames = gson.fromJson(fileNamesJson, typeStringList);
+                        // Lista com conteúdo dos arquivos recebidos
+                        List<String> databaseLogFiles = gson.fromJson(databaseLogFilesJson, typeStringList);
+
+                        DAOContagem daoContagem = new DAOContagem(conexaoBanco);
+                        DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
+                        DAOFornecedor daoFornecedor = new DAOFornecedor(conexaoBanco);
+                        DAOLoja daoLoja = new DAOLoja(conexaoBanco);
+                        DAOMarca daoMarca = new DAOMarca(conexaoBanco);
+                        DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
+                        DAOProduto daoProduto = new DAOProduto(conexaoBanco);
+                        DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
+                        DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
+
+                        List<DatabaseLogFile<Contagem>> logsContagem = new ArrayList<>();
+                        List<DatabaseLogFile<ContagemProduto>> logsContagemProduto = new ArrayList<>();
+                        List<DatabaseLogFile<Fornecedor>> logsFornecedor = new ArrayList<>();
+                        List<DatabaseLogFile<Loja>> logsLoja = new ArrayList<>();
+                        List<DatabaseLogFile<Marca>> logsMarca = new ArrayList<>();
+                        List<DatabaseLogFile<OperadoraCartao>> logsOperadoraCartao = new ArrayList<>();
+                        List<DatabaseLogFile<Produto>> logsProduto = new ArrayList<>();
+                        List<DatabaseLogFile<RecebimentoCartao>> logsRecebimentoCartao = new ArrayList<>();
+                        List<DatabaseLogFile<TipoContagem>> logsTipoContagem = new ArrayList<>();
+
+                        // Para cada arquivo recebido
+                        for (int i = 0; i < fileNames.size(); i++) {
+                            DatabaseLogFile databaseLogFile = null;
+                            String[] fileNameSplitted = fileNames.get(i).split(" ");
+                            String tipoEmString = fileNameSplitted[0];
+
+                            Type tipoDatabaseLogFile = getGsonType(tipoEmString);
+                            databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(databaseLogFiles.get(i), tipoDatabaseLogFile);
+
+                            switch (tipoEmString) {
+                                case "Contagem":
+                                    logsContagem.add((DatabaseLogFile<Contagem>) databaseLogFile);
+                                    break;
+                                case "ContagemProduto":
+                                    logsContagemProduto.add((DatabaseLogFile<ContagemProduto>) databaseLogFile);
+                                    break;
+                                case "Fornecedor":
+                                    logsFornecedor.add((DatabaseLogFile<Fornecedor>) databaseLogFile);
+                                    break;
+                                case "Loja":
+                                    logsLoja.add((DatabaseLogFile<Loja>) databaseLogFile);
+                                    break;
+                                case "Marca":
+                                    logsMarca.add((DatabaseLogFile<Marca>) databaseLogFile);
+                                    break;
+                                case "OperadoraCartao":
+                                    logsOperadoraCartao.add((DatabaseLogFile<OperadoraCartao>) databaseLogFile);
+                                    break;
+                                case "Produto":
+                                    logsProduto.add((DatabaseLogFile<Produto>) databaseLogFile);
+                                    break;
+                                case "RecebimentoCartao":
+                                    logsRecebimentoCartao.add((DatabaseLogFile<RecebimentoCartao>) databaseLogFile);
+                                    break;
+                                case "TipoContagem":
+                                    logsTipoContagem.add((DatabaseLogFile<TipoContagem>) databaseLogFile);
+                                    break;
                             }
 
-                            // Forma mensagem ao servidor
-                            String fileNamesRequestedJson = gson.toJson(fileNamesRequested);
-                            String databaseLogFilesRequestedJson = gson.toJson(databaseLogFilesRequested);
+                            DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
+                            databaseLogFileInfo.setFileName(databaseLogFile.getFileName());
+                            fileInfoLogsRecebidos.add(databaseLogFileInfo);
+                        }
 
-                            String messageToServer = "DatabaseLogFile";
-                            messageToServer += "|" + fileNamesRequestedJson;
-                            messageToServer += "|" + databaseLogFilesRequestedJson;
-                            messageToServer += "\n"; // Para que o servidor encontre o fim do texto
+                        persistLogs(daoContagem, logsContagem);
+                        persistLogs(daoContagemProduto, logsContagemProduto);
+                        persistLogs(daoFornecedor, logsFornecedor);
+                        persistLogs(daoLoja, logsLoja);
+                        persistLogs(daoMarca, logsMarca);
+                        persistLogs(daoOperadoraCartao, logsOperadoraCartao);
+                        persistLogs(daoProduto, logsProduto);
+                        persistLogs(daoRecebimentoCartao, logsRecebimentoCartao);
+                        persistLogs(daoTipoContagem, logsTipoContagem);
 
-                            clientSocket.getOutputStream().write(messageToServer.getBytes());
-
-                            break;
-                        case "DatabaseLogFile":
-                            // Recebe do servidor uma lista de logs para salvar no cliente
-                            String fileNamesJson = receivedSplitted[1];
-                            String databaseLogFilesJson = receivedSplitted[2];
-
-                            Type typeStringList = new TypeToken<ArrayList<String>>() {
-                            }.getType();
-
-                            // Lista com nomes dos arquivos recebidos
-                            List<String> fileNames = gson.fromJson(fileNamesJson, typeStringList);
-                            // Lista com conteúdo dos arquivos recebidos
-                            List<String> databaseLogFiles = gson.fromJson(databaseLogFilesJson, typeStringList);
-
-                            DAOContagem daoContagem = new DAOContagem(conexaoBanco);
-                            DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
-                            DAOFornecedor daoFornecedor = new DAOFornecedor(conexaoBanco);
-                            DAOLoja daoLoja = new DAOLoja(conexaoBanco);
-                            DAOMarca daoMarca = new DAOMarca(conexaoBanco);
-                            DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
-                            DAOProduto daoProduto = new DAOProduto(conexaoBanco);
-                            DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
-                            DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
-
-                            List<DatabaseLogFile<Contagem>> logsContagem = new ArrayList<>();
-                            List<DatabaseLogFile<ContagemProduto>> logsContagemProduto = new ArrayList<>();
-                            List<DatabaseLogFile<Fornecedor>> logsFornecedor = new ArrayList<>();
-                            List<DatabaseLogFile<Loja>> logsLoja = new ArrayList<>();
-                            List<DatabaseLogFile<Marca>> logsMarca = new ArrayList<>();
-                            List<DatabaseLogFile<OperadoraCartao>> logsOperadoraCartao = new ArrayList<>();
-                            List<DatabaseLogFile<Produto>> logsProduto = new ArrayList<>();
-                            List<DatabaseLogFile<RecebimentoCartao>> logsRecebimentoCartao = new ArrayList<>();
-                            List<DatabaseLogFile<TipoContagem>> logsTipoContagem = new ArrayList<>();
-
-                            // Para cada arquivo recebido
-                            for (int i = 0; i < fileNames.size(); i++) {
-                                DatabaseLogFile databaseLogFile = null;
-                                String[] fileNameSplitted = fileNames.get(i).split(" ");
-                                String tipoEmString = fileNameSplitted[0];
-
-                                Type tipoDatabaseLogFile = getGsonType(tipoEmString);
-                                databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(databaseLogFiles.get(i), tipoDatabaseLogFile);
-
-                                switch (tipoEmString) {
-                                    case "Contagem":
-                                        logsContagem.add((DatabaseLogFile<Contagem>) databaseLogFile);
-                                        break;
-                                    case "ContagemProduto":
-                                        logsContagemProduto.add((DatabaseLogFile<ContagemProduto>) databaseLogFile);
-                                        break;
-                                    case "Fornecedor":
-                                        logsFornecedor.add((DatabaseLogFile<Fornecedor>) databaseLogFile);
-                                        break;
-                                    case "Loja":
-                                        logsLoja.add((DatabaseLogFile<Loja>) databaseLogFile);
-                                        break;
-                                    case "Marca":
-                                        logsMarca.add((DatabaseLogFile<Marca>) databaseLogFile);
-                                        break;
-                                    case "OperadoraCartao":
-                                        logsOperadoraCartao.add((DatabaseLogFile<OperadoraCartao>) databaseLogFile);
-                                        break;
-                                    case "Produto":
-                                        logsProduto.add((DatabaseLogFile<Produto>) databaseLogFile);
-                                        break;
-                                    case "RecebimentoCartao":
-                                        logsRecebimentoCartao.add((DatabaseLogFile<RecebimentoCartao>) databaseLogFile);
-                                        break;
-                                    case "TipoContagem":
-                                        logsTipoContagem.add((DatabaseLogFile<TipoContagem>) databaseLogFile);
-                                        break;
-                                }
-
-                                DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
-                                databaseLogFileInfo.setFileName(databaseLogFile.getFileName());
-                                fileInfoLogsRecebidos.add(databaseLogFileInfo);
-                            }
-
-                            persistLogs(daoContagem, logsContagem);
-                            persistLogs(daoContagemProduto, logsContagemProduto);
-                            persistLogs(daoFornecedor, logsFornecedor);
-                            persistLogs(daoLoja, logsLoja);
-                            persistLogs(daoMarca, logsMarca);
-                            persistLogs(daoOperadoraCartao, logsOperadoraCartao);
-                            persistLogs(daoProduto, logsProduto);
-                            persistLogs(daoRecebimentoCartao, logsRecebimentoCartao);
-                            persistLogs(daoTipoContagem, logsTipoContagem);
-
-                            break;
-                    }
-                } catch (SocketException se) {
-                    Log.e(ActivityBaseView.LOG, se.getMessage(), se);
-                    Log.i(ActivityBaseView.LOG, "Erro Ao Receber LOGS");
-                    break;
+                        break;
                 }
             }
         } catch (IOException e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
             Log.i(ActivityBaseView.LOG, "Não É Possível Conectar Ao Servidor. Tentando Novamente Em 30 Segundos");
+
+            if (databaseLogFileObserver != null) {
+                databaseLogFileObserver.stopWatching();
+                databaseLogFileObserver = null;
+            }
+
             try {
                 Thread.sleep(30000);
                 conectar();
             } catch (InterruptedException ex) {
                 Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
+                conectar();
             }
         }
     }
@@ -231,38 +252,48 @@ public class SocketCliente extends Thread {
     /**
      * Executado quando a aplicação é iniciada. Compara os logs locais com os logs remotos e atualiza de acordo
      */
-    private void applicationOpening() {
-        try {
-            // Logs locais
-            File[] files = dirDatabaseLog.listFiles();
-            List<DatabaseLogFileInfo> databaseLogFileInfos = new ArrayList<>();
+    private void applicationOpening() throws IOException {
+        Log.i(ActivityBaseView.LOG, "Iniciando ApplicationOpening()");
+        // Logs locais
+        File[] files = dirDatabaseLog.listFiles();
+        List<DatabaseLogFileInfo> databaseLogFileInfos = new ArrayList<>();
 
-            if (files != null) {
-                for (File file : files) {
-                    DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
-                    String fileName = file.getName();
-                    ZonedDateTime lastModified;
+        if (files != null) {
+            for (File file : files) {
+                LocalDateTime now = LocalDateTime.now(systemDefault());
+                LocalDateTime lastWriteTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault());
+                Period periodo = Period.between(now.toLocalDate(), lastWriteTime.toLocalDate());
 
-                    Scanner scanner = new Scanner(file);
-                    scanner.useDelimiter("\\Z");
+                DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
+                String fileName = file.getName();
+                ZonedDateTime lastModified;
 
-                    Type tipoDatabaseLogFile = getGsonType(fileName);
-                    DatabaseLogFile databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(scanner.next(), tipoDatabaseLogFile);
+                Scanner scanner = new Scanner(file);
+                scanner.useDelimiter("\\Z");
 
-                    lastModified = databaseLogFile.getLastWriteTime();
-                    databaseLogFileInfo.setFileName(fileName);
-                    databaseLogFileInfo.setLastModified(lastModified);
+                Type tipoDatabaseLogFile = getGsonType(fileName);
+                DatabaseLogFile databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(scanner.next(), tipoDatabaseLogFile);
 
-                    databaseLogFileInfos.add(databaseLogFileInfo);
+                // Deleta logs de delete que não foram editados há um ano ou mais
+                if (periodo.getYears() >= 1 && databaseLogFile.getOperacaoMySQL().equals("DELETE")) {
+                    file.delete();
+                    continue;
                 }
-            }
 
-            // Envia as informações para o servidor
-            String databaseLogFileInfosJson = "DatabaseLogFileInfo|" + gson.toJson(databaseLogFileInfos) + "\n";
-            clientSocket.getOutputStream().write(databaseLogFileInfosJson.getBytes());
-        } catch (IOException ioe) {
-            Log.e(ActivityBaseView.LOG, ioe.getMessage(), ioe);
+                lastModified = databaseLogFile.getLastWriteTime();
+                databaseLogFileInfo.setFileName(fileName);
+                databaseLogFileInfo.setLastModified(lastModified);
+
+                databaseLogFileInfos.add(databaseLogFileInfo);
+            }
         }
+
+        Log.i(ActivityBaseView.LOG, "Enviando DatabaseLogFileInfos ao Servidor Para Comparação de Logs");
+
+        // Envia as informações para o servidor
+        String databaseLogFileInfosJson = "DatabaseLogFileInfo|" + gson.toJson(databaseLogFileInfos) + "\n";
+
+        clientSocket.getOutputStream().write(databaseLogFileInfosJson.getBytes());
     }
 
     /**
@@ -286,7 +317,7 @@ public class SocketCliente extends Thread {
 
             if (saveLogs.size() > 0) {
                 List<E> lista = saveLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                if (dao.inserir(lista)) {
+                if (dao.inserirOuAtualizar(lista)) {
                     for (DatabaseLogFile<E> databaseLogFile : saveLogs) {
                         operacoesJsonDatabaseLog.escreverJson(databaseLogFile);
                     }
@@ -304,7 +335,7 @@ public class SocketCliente extends Thread {
 
             if (deleteLogs.size() > 0) {
                 List<E> lista = deleteLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                dao.deletar(lista);
+                dao.deletarLista(lista);
                 for (DatabaseLogFile<E> databaseLogFile : deleteLogs) {
                     operacoesJsonDatabaseLog.escreverJson(databaseLogFile);
                 }
@@ -355,7 +386,7 @@ public class SocketCliente extends Thread {
         }
     }
 
-    public List<DatabaseLogFileInfo> getFileInfoLogsRecebidos() {
+    List<DatabaseLogFileInfo> getFileInfoLogsRecebidos() {
         return fileInfoLogsRecebidos;
     }
 

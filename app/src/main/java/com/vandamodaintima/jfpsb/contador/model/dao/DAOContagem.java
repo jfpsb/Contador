@@ -21,7 +21,7 @@ public class DAOContagem extends ADAO<Contagem> {
     private DAOTipoContagem daoTipoContagem;
 
     public DAOContagem(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoLoja = new DAOLoja(conexaoBanco);
         daoTipoContagem = new DAOTipoContagem(conexaoBanco);
         TABELA = "contagem";
@@ -175,7 +175,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public void deletar(List<Contagem> lista) {
+    public void deletarLista(List<Contagem> lista) {
         for(Contagem contagem : lista) {
             String cnpj = contagem.getLoja().getCnpj();
             String data = contagem.getDataParaSQLite();

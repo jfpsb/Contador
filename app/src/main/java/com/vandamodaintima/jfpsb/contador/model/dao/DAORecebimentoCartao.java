@@ -17,7 +17,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     private DAOOperadoraCartao daoOperadoraCartao;
 
     public DAORecebimentoCartao(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoLoja = new DAOLoja(conexaoBanco);
         daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
         TABELA = "recebimentocartao";
@@ -40,7 +40,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(recebimentoCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -70,7 +70,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -97,7 +97,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(recebimentoCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -127,7 +127,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -155,7 +155,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(recebimentoCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -167,22 +167,30 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        RecebimentoCartao recebimentoCartao = listarPorId(chaves);
         String mes = (String) chaves[0];
         String ano = (String) chaves[1];
         String loja = (String) chaves[2];
         String operadoraCartao = (String) chaves[3];
         int result = conexaoBanco.conexao().delete(TABELA, "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?", new String[]{mes, ano, loja, operadoraCartao});
+
+        if(result > 0)
+            escreveDatabaseLogFileDelete(recebimentoCartao);
+
         return result > 0;
     }
 
     @Override
-    public void deletar(List<RecebimentoCartao> lista) {
+    public void deletarLista(List<RecebimentoCartao> lista) {
         for(RecebimentoCartao recebimentoCartao : lista) {
             String mes = String.valueOf(recebimentoCartao.getMes());
             String ano = String.valueOf(recebimentoCartao.getAno());
             String loja = recebimentoCartao.getLoja().getCnpj();
             String operadoraCartao = recebimentoCartao.getOperadoraCartao().getNome();
-            conexaoBanco.conexao().delete(TABELA, "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?", new String[]{mes, ano, loja, operadoraCartao});
+            int result = conexaoBanco.conexao().delete(TABELA, "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?", new String[]{mes, ano, loja, operadoraCartao});
+
+            if(result > 0)
+                escreveDatabaseLogFileDelete(recebimentoCartao);
         }
     }
 

@@ -121,8 +121,8 @@ public class PesquisarContagem extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        LocalDateTime dataInicial = LocalDateTime.parse(txtDataInicial.getText().toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        LocalDateTime dataFinal = LocalDateTime.parse(txtDataFinal.getText().toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDateTime dataInicial = LocalDateTime.parse(txtDataInicial.getText().toString() + " 00:00:00", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+        LocalDateTime dataFinal = LocalDateTime.parse(txtDataFinal.getText().toString() + " 23:59:59", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
         controller.pesquisar(dataInicial, dataFinal);
     }
 

@@ -19,7 +19,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     private DAOContagem daoContagem;
 
     public DAOContagemProduto(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         TABELA = "contagem_produto";
         daoProduto = new DAOProduto(conexaoBanco);
         daoContagem = new DAOContagem(conexaoBanco);
@@ -177,7 +177,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public void deletar(List<ContagemProduto> lista) {
+    public void deletarLista(List<ContagemProduto> lista) {
         for (ContagemProduto contagemProduto : lista) {
             String id = String.valueOf(contagemProduto.getId());
             int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});

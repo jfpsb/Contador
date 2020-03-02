@@ -17,7 +17,7 @@ public class DAOProduto extends ADAO<Produto> {
     private DAOFornecedor daoFornecedor;
 
     public DAOProduto(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
         TABELA = "produto";
@@ -62,7 +62,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(produto);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -113,7 +113,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -162,7 +162,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(produto);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -214,7 +214,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -263,7 +263,7 @@ public class DAOProduto extends ADAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(produto, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {
@@ -275,16 +275,27 @@ public class DAOProduto extends ADAO<Produto> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        Produto produto = listarPorId(chaves);
+
         String cod_barra = (String) chaves[0];
         int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
+
+        if(result > 0) {
+            escreveDatabaseLogFileDelete(produto);
+        }
+
         return result > 0;
     }
 
     @Override
-    public void deletar(List<Produto> lista) {
+    public void deletarLista(List<Produto> lista) {
         for(Produto produto : lista) {
             String cod_barra = produto.getCod_barra();
-            conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
+            int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
+
+            if(result > 0) {
+                escreveDatabaseLogFileDelete(produto);
+            }
         }
     }
 

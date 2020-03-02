@@ -20,7 +20,8 @@ public abstract class ADAO<T extends IModel> {
     protected ConexaoBanco conexaoBanco;
     private OperacoesJsonDatabaseLog operacoesJsonDatabaseLog;
 
-    ADAO() {
+    ADAO(ConexaoBanco conexaoBanco) {
+        this.conexaoBanco = conexaoBanco;
         File dirDatabaseLog = conexaoBanco.getContext().getDir("DatabaseLog", Context.MODE_PRIVATE);
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeGsonAdapter())
@@ -59,7 +60,7 @@ public abstract class ADAO<T extends IModel> {
 
     public abstract Boolean deletar(Object... chaves);
 
-    abstract void deletar(List<T> lista);
+    public abstract void deletarLista(List<T> lista);
 
     abstract Cursor listarCursor();
 

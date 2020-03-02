@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DAOFornecedor extends ADAO<Fornecedor> {
     public DAOFornecedor(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         TABELA = "fornecedor";
     }
 
@@ -172,7 +172,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public void deletar(List<Fornecedor> lista) {
+    public void deletarLista(List<Fornecedor> lista) {
         for (Fornecedor fornecedor : lista) {
             String cnpj = fornecedor.getCnpj();
             int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});

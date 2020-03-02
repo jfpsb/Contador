@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     public DAOOperadoraCartao(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         TABELA = "operadoracartao";
     }
 
@@ -36,7 +36,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(operadoraCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -66,7 +66,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -94,7 +94,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(operadoraCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -124,7 +124,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -155,7 +155,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{identificador});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(operadoraCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -167,16 +167,24 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
     @Override
     public Boolean deletar(Object... chaves) {
+        OperadoraCartao operadoraCartao = listarPorId(chaves);
         String identificador = (String) chaves[0];
         int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{identificador});
+
+        if(result > 0)
+            escreveDatabaseLogFileDelete(operadoraCartao);
+
         return result > 0;
     }
 
     @Override
-    public void deletar(List<OperadoraCartao> lista) {
+    public void deletarLista(List<OperadoraCartao> lista) {
         for(OperadoraCartao operadoraCartao : lista) {
             String identificador = operadoraCartao.getNome();
-            conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{identificador});
+            int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{identificador});
+
+            if(result > 0)
+                escreveDatabaseLogFileDelete(operadoraCartao);
         }
     }
 
