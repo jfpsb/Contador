@@ -86,7 +86,17 @@ public class Produto implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentifier() {
+    public Object getIdentifier() {
         return cod_barra;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
+        return cod_barra;
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "cod_barra = ?";
     }
 }

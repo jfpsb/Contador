@@ -23,7 +23,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(Marca marca) {
+    public Boolean inserir(Marca marca, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -37,7 +37,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(marca);
+            return super.inserir(marca, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -48,7 +48,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(List<Marca> lista) {
+    public Boolean inserir(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +73,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Marca marca) {
+    public Boolean inserirOuAtualizar(Marca marca, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -86,7 +86,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(marca);
+            return super.inserirOuAtualizar(marca, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -97,7 +97,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Marca> lista) {
+    public Boolean inserirOuAtualizar(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -111,7 +111,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(lista);
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -122,7 +122,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean atualizar(Marca marca, Object... chaves) {
+    public Boolean atualizar(Marca marca, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String nome = (String) chaves[0];
 
@@ -137,37 +137,14 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(marca, chaves);
-        } catch (SQLException ex) {
+            return super.atualizar(marca, writeToJson, sendToServer, chaves);
+        } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        Marca marca = listarPorId(chaves);
-        String nome = (String) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
-
-        if (result > 0)
-            escreveDatabaseLogFileDelete(marca);
-
-        return result > 0;
-    }
-
-    @Override
-    public void deletarLista(List<Marca> lista) {
-        for (Marca marca : lista) {
-            String nome = marca.getNome();
-            int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
-
-            if (result > 0)
-                escreveDatabaseLogFileDelete(marca);
-        }
     }
 
     @Override

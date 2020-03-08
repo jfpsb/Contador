@@ -35,7 +35,17 @@ public class Marca implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentifier() {
+    public Object getIdentifier() {
         return nome;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
+        return nome;
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "nome = ?";
     }
 }

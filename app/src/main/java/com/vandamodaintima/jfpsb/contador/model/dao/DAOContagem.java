@@ -13,6 +13,7 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(Contagem contagem) {
+    public Boolean inserir(Contagem contagem, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -42,7 +43,7 @@ public class DAOContagem extends ADAO<Contagem> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(contagem);
+            return super.inserir(contagem, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -53,7 +54,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(List<Contagem> lista) {
+    public Boolean inserir(List<Contagem> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -70,7 +71,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -81,7 +82,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Contagem contagem) {
+    public Boolean inserirOuAtualizar(Contagem contagem, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -95,7 +96,7 @@ public class DAOContagem extends ADAO<Contagem> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(contagem);
+            return super.inserirOuAtualizar(contagem, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -106,7 +107,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Contagem> lista) {
+    public Boolean inserirOuAtualizar(List<Contagem> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -123,7 +124,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(lista);
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -134,7 +135,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean atualizar(Contagem contagem, Object... chaves) {
+    public Boolean atualizar(Contagem contagem, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
             String data = (String) chaves[1];
@@ -149,43 +150,14 @@ public class DAOContagem extends ADAO<Contagem> {
             conexaoBanco.conexao().update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{cnpj, data});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagem, chaves);
-        } catch (SQLException ex) {
+            return super.atualizar(contagem, writeToJson, sendToServer, chaves);
+        } catch (SQLException | IOException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        Contagem c = listarPorId(chaves);
-
-        String cnpj = (String) chaves[0];
-        String data = (String) chaves[1];
-        long result = conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
-
-        if(result > 0) {
-            escreveDatabaseLogFileDelete(c);
-        }
-
-        return result > 0;
-    }
-
-    @Override
-    public void deletarLista(List<Contagem> lista) {
-        for(Contagem contagem : lista) {
-            String cnpj = contagem.getLoja().getCnpj();
-            String data = contagem.getDataParaSQLite();
-
-            int result = conexaoBanco.conexao().delete(TABELA, "loja = ? AND data = ?", new String[]{cnpj, data});
-
-            if(result > 0) {
-                escreveDatabaseLogFileDelete(contagem);
-            }
-        }
     }
 
     @Override

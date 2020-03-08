@@ -38,22 +38,22 @@ public class ContagemManager implements IManager<Contagem> {
 
     @Override
     public Boolean salvar() {
-        return daoContagem.inserir(contagem);
+        return daoContagem.inserir(contagem, true, true);
     }
 
     @Override
     public Boolean salvar(List<Contagem> lista) {
-        return daoContagem.inserir(lista);
+        return daoContagem.inserir(lista, true, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoContagem.atualizar(contagem, ids);
+        return daoContagem.atualizar(contagem, true, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoContagem.deletar(contagem.getLoja().getCnpj(), contagem.getDataParaSQLite());
+        return daoContagem.deletar(contagem, true, true);
     }
 
     @Override

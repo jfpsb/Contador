@@ -69,7 +69,17 @@ public class Fornecedor implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentifier() {
+    public Object getIdentifier() {
         return cnpj;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
+        return cnpj;
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "cnpj = ?";
     }
 }

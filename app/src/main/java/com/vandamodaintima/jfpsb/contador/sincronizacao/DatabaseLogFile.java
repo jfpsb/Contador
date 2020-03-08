@@ -34,6 +34,6 @@ public class DatabaseLogFile<T extends IModel> {
     }
 
     public String getFileName() {
-        return Entidade.getClass().getSimpleName() + " " + Entidade.getIdentifier() + ".json";
+        return Entidade.getClass().getSimpleName() + " " + Entidade.getDatabaseLogIdentifier() + ".json";
     }
 }

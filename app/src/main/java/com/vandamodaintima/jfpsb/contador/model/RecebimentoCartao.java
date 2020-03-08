@@ -79,7 +79,17 @@ public class RecebimentoCartao implements IModel {
     }
 
     @Override
-    public String getIdentifier() {
-        return String.valueOf(mes) + ano + loja.getIdentifier() + operadoraCartao.getIdentifier();
+    public Object getIdentifier() {
+        return new String[] { String.valueOf(mes), String.valueOf(ano), String.valueOf(loja.getIdentifier()), String.valueOf(operadoraCartao.getIdentifier())};
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
+        return String.valueOf(mes) + ano + loja.getDatabaseLogIdentifier() + operadoraCartao.getDatabaseLogIdentifier();
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?";
     }
 }

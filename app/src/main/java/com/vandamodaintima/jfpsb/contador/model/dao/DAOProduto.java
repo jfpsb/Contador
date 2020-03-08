@@ -24,7 +24,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(Produto produto) {
+    public Boolean inserir(Produto produto, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(produto);
+            return super.inserir(produto, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +73,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(List<Produto> lista) {
+    public Boolean inserir(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -113,7 +113,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -124,7 +124,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Produto produto) {
+    public Boolean inserirOuAtualizar(Produto produto, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -162,7 +162,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(produto);
+            return super.inserirOuAtualizar(produto, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -173,7 +173,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Produto> lista) {
+    public Boolean inserirOuAtualizar(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -214,7 +214,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(lista);
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -225,7 +225,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean atualizar(Produto produto, Object... chaves) {
+    public Boolean atualizar(Produto produto, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String cod_barra = (String) chaves[0];
 
@@ -263,7 +263,7 @@ public class DAOProduto extends ADAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(produto, chaves);
+            return super.atualizar(produto, writeToJson, sendToServer, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {
@@ -271,32 +271,6 @@ public class DAOProduto extends ADAO<Produto> {
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        Produto produto = listarPorId(chaves);
-
-        String cod_barra = (String) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
-
-        if(result > 0) {
-            escreveDatabaseLogFileDelete(produto);
-        }
-
-        return result > 0;
-    }
-
-    @Override
-    public void deletarLista(List<Produto> lista) {
-        for(Produto produto : lista) {
-            String cod_barra = produto.getCod_barra();
-            int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
-
-            if(result > 0) {
-                escreveDatabaseLogFileDelete(produto);
-            }
-        }
     }
 
     public Cursor listarCursor() {

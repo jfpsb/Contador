@@ -55,7 +55,17 @@ public class ContagemProduto implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentifier() {
+    public Object getIdentifier() {
+        return id;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "id = ?";
     }
 }

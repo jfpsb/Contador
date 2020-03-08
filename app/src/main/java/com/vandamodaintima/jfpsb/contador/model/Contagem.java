@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.LocalDateTime;
@@ -9,9 +11,6 @@ import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Contagem implements Serializable, IModel {
     @SerializedName(value = "Loja")
@@ -82,7 +81,17 @@ public class Contagem implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentifier() {
+    public Object getIdentifier() {
+        return new String[] { loja.getCnpj(), getDataParaSQLite()};
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
         return loja.getCnpj() + data.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "loja = ? AND data = ?";
     }
 }

@@ -10,6 +10,7 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(Loja loja) {
+    public Boolean inserir(Loja loja, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -40,7 +41,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(loja);
+            return super.inserir(loja, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -51,7 +52,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(List<Loja> lista) {
+    public Boolean inserir(List<Loja> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -73,7 +74,7 @@ public class DAOLoja extends ADAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -84,7 +85,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Loja loja) {
+    public Boolean inserirOuAtualizar(Loja loja, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -104,7 +105,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(loja);
+            return super.inserirOuAtualizar(loja, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -115,7 +116,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Loja> lista) {
+    public Boolean inserirOuAtualizar(List<Loja> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -137,7 +138,7 @@ public class DAOLoja extends ADAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserirOuAtualizar(lista);
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -148,7 +149,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean atualizar(Loja loja, Object... chaves) {
+    public Boolean atualizar(Loja loja, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
 
@@ -169,40 +170,14 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(loja, chaves);
-        } catch (SQLException ex) {
+            return super.atualizar(loja, writeToJson, sendToServer, chaves);
+        } catch (SQLException | IOException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR LOJA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        Loja loja = listarPorId(chaves);
-
-        String cnpj = (String) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
-
-        if(result > 0) {
-            escreveDatabaseLogFileDelete(loja);
-        }
-
-        return result > 0;
-    }
-
-    @Override
-    public void deletarLista(List<Loja> lista) {
-        for(Loja loja : lista) {
-            String cnpj = loja.getCnpj();
-            int result = conexaoBanco.conexao().delete(TABELA, "cnpj = ?", new String[]{cnpj});
-
-            if(result > 0) {
-                escreveDatabaseLogFileDelete(loja);
-            }
-        }
     }
 
     @Override

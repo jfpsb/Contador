@@ -18,37 +18,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
-import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.OperadoraCartao;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOOperadoraCartao;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAORecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.SocketCliente;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
@@ -59,20 +36,17 @@ import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.List;
 
 public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
     private ConexaoBanco conexaoBanco;
-    private SocketCliente socketCliente = null;
+    private Sincronizacao socketCliente = null;
     Gson gson = null;
 
     @Override
@@ -139,7 +113,7 @@ public class Contador extends AppCompatActivity {
                 .create();
 
         if (socketCliente == null) {
-            socketCliente = new SocketCliente(getApplicationContext(), conexaoBanco);
+            socketCliente = new Sincronizacao(getApplicationContext(), conexaoBanco);
             socketCliente.start();
         }
     }

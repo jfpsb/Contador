@@ -27,22 +27,22 @@ public class ProdutoManager implements IManager<Produto> {
     }
 
     public Boolean salvar() {
-        return daoProduto.inserir(produto);
+        return daoProduto.inserir(produto, true, true);
     }
 
     @Override
     public Boolean salvar(List<Produto> lista) {
-        return daoProduto.inserir(lista);
+        return daoProduto.inserir(lista, true, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoProduto.atualizar(produto, ids);
+        return daoProduto.atualizar(produto, true, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoProduto.deletar(produto.getCod_barra());
+        return daoProduto.deletar(produto, true, true);
     }
 
     public List<Produto> listar() {

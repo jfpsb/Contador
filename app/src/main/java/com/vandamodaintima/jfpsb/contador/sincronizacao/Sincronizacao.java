@@ -37,13 +37,13 @@ import org.threeten.bp.ZonedDateTime;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,22 +51,19 @@ import java.util.stream.Collectors;
 
 import static org.threeten.bp.ZoneId.systemDefault;
 
-public class SocketCliente extends Thread {
-    private Socket clientSocket;
+public class Sincronizacao extends Thread {
+    private static Socket clientSocket;
     private List<DatabaseLogFileInfo> fileInfoLogsRecebidos = new ArrayList<>();
     private ConexaoBanco conexaoBanco;
     private static Gson gson = null;
     private static File dirDatabaseLog = null;
-    private OperacoesJsonDatabaseLog operacoesJsonDatabaseLog;
-    private DatabaseLogFileObserver databaseLogFileObserver;
 
-    public SocketCliente(Context context, ConexaoBanco conexaoBanco) {
+    public Sincronizacao(Context context, ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
         dirDatabaseLog = context.getDir("DatabaseLog", Context.MODE_PRIVATE);
         gson = new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeGsonAdapter())
                 .create();
-        operacoesJsonDatabaseLog = new OperacoesJsonDatabaseLog(gson, dirDatabaseLog);
     }
 
     @Override
@@ -78,20 +75,12 @@ public class SocketCliente extends Thread {
         try {
             Log.i(ActivityBaseView.LOG, "Tentando Conexão Com Servidor");
 
-            clientSocket = new Socket("18.222.177.179", 3999);
-            clientSocket.setSoTimeout(30000);
+            clientSocket = new Socket("192.168.0.15", 3999);
 
             Log.i(ActivityBaseView.LOG, "Conexão Efetuada Com Sucesso");
 
             InputStream inputStream = clientSocket.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            if (databaseLogFileObserver == null) {
-                Log.i(ActivityBaseView.LOG, "Iniciando DatabaseLogFileObserver");
-                databaseLogFileObserver = new DatabaseLogFileObserver(gson, dirDatabaseLog, this);
-            }
-
-            databaseLogFileObserver.startWatching();
 
             if (clientSocket.isConnected()) {
                 applicationOpening();
@@ -112,7 +101,9 @@ public class SocketCliente extends Thread {
                         // Recebe do servidor uma lista com os arquivos DatabaseLogFile que o servidor precisa e envia
                         Log.i(ActivityBaseView.LOG, "Lista de Request de DatabaseLogFiles Recebida do Servidor");
                         String dataLogFileRequest = receivedSplitted[1];
-                        List<DatabaseLogFileInfo> databaseLogFileInfos = operacoesJsonDatabaseLog.lerJsonDatabaseLogFileInfo(dataLogFileRequest);
+                        List<DatabaseLogFileInfo> databaseLogFileInfos = gson.fromJson(dataLogFileRequest, new TypeToken<ArrayList<DatabaseLogFileInfo>>() {
+                        }.getType());
+
                         List<String> fileNamesRequested = new ArrayList<>();
                         List<String> databaseLogFilesRequested = new ArrayList<>();
 
@@ -180,7 +171,7 @@ public class SocketCliente extends Thread {
                             String tipoEmString = fileNameSplitted[0];
 
                             Type tipoDatabaseLogFile = getGsonType(tipoEmString);
-                            databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(databaseLogFiles.get(i), tipoDatabaseLogFile);
+                            databaseLogFile = gson.fromJson(databaseLogFiles.get(i), tipoDatabaseLogFile);
 
                             switch (tipoEmString) {
                                 case "Contagem":
@@ -234,11 +225,6 @@ public class SocketCliente extends Thread {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
             Log.i(ActivityBaseView.LOG, "Não É Possível Conectar Ao Servidor. Tentando Novamente Em 30 Segundos");
 
-            if (databaseLogFileObserver != null) {
-                databaseLogFileObserver.stopWatching();
-                databaseLogFileObserver = null;
-            }
-
             try {
                 Thread.sleep(30000);
                 conectar();
@@ -272,7 +258,7 @@ public class SocketCliente extends Thread {
                 scanner.useDelimiter("\\Z");
 
                 Type tipoDatabaseLogFile = getGsonType(fileName);
-                DatabaseLogFile databaseLogFile = operacoesJsonDatabaseLog.lerJsonDatabaseLogFile(scanner.next(), tipoDatabaseLogFile);
+                DatabaseLogFile databaseLogFile = gson.fromJson(scanner.next(), tipoDatabaseLogFile);
 
                 // Deleta logs de delete que não foram editados há um ano ou mais
                 if (periodo.getYears() >= 1 && databaseLogFile.getOperacaoMySQL().equals("DELETE")) {
@@ -317,30 +303,76 @@ public class SocketCliente extends Thread {
 
             if (saveLogs.size() > 0) {
                 List<E> lista = saveLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                if (dao.inserirOuAtualizar(lista)) {
-                    for (DatabaseLogFile<E> databaseLogFile : saveLogs) {
-                        operacoesJsonDatabaseLog.escreverJson(databaseLogFile);
-                    }
+                try {
+                    dao.inserirOuAtualizar(lista, true, false);
+                } catch (IOException e) {
+                    Log.e(ActivityBaseView.LOG, "Erro ao Persistir Logs: " + e.getMessage(), e);
                 }
             }
 
             if (updateLogs.size() > 0) {
                 List<E> lista = updateLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                if (dao.inserirOuAtualizar(lista)) {
-                    for (DatabaseLogFile<E> databaseLogFile : updateLogs) {
-                        operacoesJsonDatabaseLog.escreverJson(databaseLogFile);
-                    }
+                try {
+                    dao.inserirOuAtualizar(lista, true, false);
+                } catch (IOException e) {
+                    Log.e(ActivityBaseView.LOG, "Erro ao Persistir Logs: " + e.getMessage(), e);
                 }
             }
 
             if (deleteLogs.size() > 0) {
                 List<E> lista = deleteLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                dao.deletarLista(lista);
-                for (DatabaseLogFile<E> databaseLogFile : deleteLogs) {
-                    operacoesJsonDatabaseLog.escreverJson(databaseLogFile);
-                }
+                dao.deletarLista(lista, true, false);
             }
         }
+    }
+
+    public static <E extends IModel> DatabaseLogFile<E> escreverJson(String operacao, E entidade) throws IOException {
+        ZonedDateTime lastWriteTime = Instant.now().atZone(ZoneId.systemDefault());
+
+        DatabaseLogFile<E> databaseLogFile = new DatabaseLogFile<>();
+        databaseLogFile.setLastWriteTime(lastWriteTime);
+        databaseLogFile.setOperacaoMySQL(operacao);
+        databaseLogFile.setEntidade(entidade);
+
+        String json = gson.toJson(databaseLogFile, new TypeToken<DatabaseLogFile<E>>() {
+        }.getType());
+        File logFile = new File(dirDatabaseLog, databaseLogFile.getFileName());
+
+        FileWriter fileWriter;
+
+        fileWriter = new FileWriter(logFile);
+        fileWriter.write(json);
+        fileWriter.flush();
+        fileWriter.close();
+
+        return databaseLogFile;
+    }
+
+    public static <E extends IModel> void sendDatabaseLogFileToServer(DatabaseLogFile<E> databaseLogFile) {
+        Thread t = new Thread(() -> {
+            try {
+                List<String> fileNamesRequested = new ArrayList<>();
+                List<String> databaseLogFilesRequested = new ArrayList<>();
+
+                fileNamesRequested.add(databaseLogFile.getFileName());
+                databaseLogFilesRequested.add(gson.toJson(databaseLogFile));
+
+                String fileNamesRequestedJson = gson.toJson(fileNamesRequested);
+                String databaseLogFilesRequestedJson = gson.toJson(databaseLogFilesRequested);
+
+                String messageToServer = "DatabaseLogFile";
+                messageToServer += "|" + fileNamesRequestedJson;
+                messageToServer += "|" + databaseLogFilesRequestedJson;
+                messageToServer += "\n"; // Para que o servidor encontre o fim do texto
+
+                clientSocket.getOutputStream().write(messageToServer.getBytes());
+
+                Log.i(ActivityBaseView.LOG, "Log enviado ao servidor: " + databaseLogFile.getFileName());
+            } catch (Exception e) {
+                Log.e(ActivityBaseView.LOG, "Erro ao Enviar Log Para Servidor: " + e.getMessage(), e);
+            }
+        });
+        t.start();
     }
 
     /**
@@ -384,10 +416,6 @@ public class SocketCliente extends Thread {
             default:
                 return null;
         }
-    }
-
-    List<DatabaseLogFileInfo> getFileInfoLogsRecebidos() {
-        return fileInfoLogsRecebidos;
     }
 
     public Socket getClientSocket() {
