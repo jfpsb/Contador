@@ -260,8 +260,8 @@ public class Sincronizacao extends Thread {
                 Type tipoDatabaseLogFile = getGsonType(fileName);
                 DatabaseLogFile databaseLogFile = gson.fromJson(scanner.next(), tipoDatabaseLogFile);
 
-                // Deleta logs de delete que não foram editados há um ano ou mais
-                if (periodo.getYears() >= 1 && databaseLogFile.getOperacaoMySQL().equals("DELETE")) {
+                // Deleta logs de delete que não foram editados há 30 dias ou mais
+                if (periodo.getDays() >= 30 && databaseLogFile.getOperacaoMySQL().equals("DELETE")) {
                     file.delete();
                     continue;
                 }
