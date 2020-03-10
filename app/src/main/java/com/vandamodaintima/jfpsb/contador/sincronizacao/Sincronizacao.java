@@ -53,10 +53,10 @@ import static org.threeten.bp.ZoneId.systemDefault;
 
 public class Sincronizacao extends Thread {
     private static Socket clientSocket;
-    private List<DatabaseLogFileInfo> fileInfoLogsRecebidos = new ArrayList<>();
     private ConexaoBanco conexaoBanco;
     private static Gson gson = null;
     private static File dirDatabaseLog = null;
+    private volatile boolean exit = false;
 
     public Sincronizacao(Context context, ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
@@ -75,7 +75,7 @@ public class Sincronizacao extends Thread {
         try {
             Log.i(ActivityBaseView.LOG, "Tentando Conexão Com Servidor");
 
-            clientSocket = new Socket("192.168.0.15", 3999);
+            clientSocket = new Socket("18.229.130.78", 3999);
 
             Log.i(ActivityBaseView.LOG, "Conexão Efetuada Com Sucesso");
 
@@ -86,7 +86,7 @@ public class Sincronizacao extends Thread {
                 applicationOpening();
             }
 
-            while (clientSocket.isConnected()) {
+            while (clientSocket.isConnected() && !exit) {
                 String receivedFromServer = bufferedReader.readLine();
 
                 // Socket foi desconectado pelo lado do servidor
@@ -202,21 +202,20 @@ public class Sincronizacao extends Thread {
                                     logsTipoContagem.add((DatabaseLogFile<TipoContagem>) databaseLogFile);
                                     break;
                             }
-
-                            DatabaseLogFileInfo databaseLogFileInfo = new DatabaseLogFileInfo();
-                            databaseLogFileInfo.setFileName(databaseLogFile.getFileName());
-                            fileInfoLogsRecebidos.add(databaseLogFileInfo);
                         }
 
+                        // Persiste os que não tem chaves estrangeiras antes
+                        persistLogs(daoLoja, logsLoja);
+                        persistLogs(daoFornecedor, logsFornecedor);
+                        persistLogs(daoOperadoraCartao, logsOperadoraCartao);
+                        persistLogs(daoTipoContagem, logsTipoContagem);
+
+                        // The rest is free real state
+                        persistLogs(daoMarca, logsMarca);
+                        persistLogs(daoProduto, logsProduto);
                         persistLogs(daoContagem, logsContagem);
                         persistLogs(daoContagemProduto, logsContagemProduto);
-                        persistLogs(daoFornecedor, logsFornecedor);
-                        persistLogs(daoLoja, logsLoja);
-                        persistLogs(daoMarca, logsMarca);
-                        persistLogs(daoOperadoraCartao, logsOperadoraCartao);
-                        persistLogs(daoProduto, logsProduto);
                         persistLogs(daoRecebimentoCartao, logsRecebimentoCartao);
-                        persistLogs(daoTipoContagem, logsTipoContagem);
 
                         break;
                 }
@@ -304,7 +303,11 @@ public class Sincronizacao extends Thread {
             if (saveLogs.size() > 0) {
                 List<E> lista = saveLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
                 try {
-                    dao.inserirOuAtualizar(lista, true, false);
+                    if (dao.inserirOuAtualizar(lista, false, false)) {
+                        for (DatabaseLogFile<E> databaseLogFile : saveLogs) {
+                            escreverJson(databaseLogFile);
+                        }
+                    }
                 } catch (IOException e) {
                     Log.e(ActivityBaseView.LOG, "Erro ao Persistir Logs: " + e.getMessage(), e);
                 }
@@ -313,7 +316,11 @@ public class Sincronizacao extends Thread {
             if (updateLogs.size() > 0) {
                 List<E> lista = updateLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
                 try {
-                    dao.inserirOuAtualizar(lista, true, false);
+                    if (dao.inserirOuAtualizar(lista, false, false)) {
+                        for (DatabaseLogFile<E> databaseLogFile : updateLogs) {
+                            escreverJson(databaseLogFile);
+                        }
+                    }
                 } catch (IOException e) {
                     Log.e(ActivityBaseView.LOG, "Erro ao Persistir Logs: " + e.getMessage(), e);
                 }
@@ -321,7 +328,14 @@ public class Sincronizacao extends Thread {
 
             if (deleteLogs.size() > 0) {
                 List<E> lista = deleteLogs.stream().map(DatabaseLogFile::getEntidade).collect(Collectors.toList());
-                dao.deletarLista(lista, true, false);
+                dao.deletarLista(lista, false, false);
+                try {
+                    for (DatabaseLogFile<E> databaseLogFile : updateLogs) {
+                        escreverJson(databaseLogFile);
+                    }
+                } catch (IOException e) {
+                    Log.e(ActivityBaseView.LOG, "Erro ao Persistir Logs: " + e.getMessage(), e);
+                }
             }
         }
     }
@@ -334,6 +348,21 @@ public class Sincronizacao extends Thread {
         databaseLogFile.setOperacaoMySQL(operacao);
         databaseLogFile.setEntidade(entidade);
 
+        String json = gson.toJson(databaseLogFile, new TypeToken<DatabaseLogFile<E>>() {
+        }.getType());
+        File logFile = new File(dirDatabaseLog, databaseLogFile.getFileName());
+
+        FileWriter fileWriter;
+
+        fileWriter = new FileWriter(logFile);
+        fileWriter.write(json);
+        fileWriter.flush();
+        fileWriter.close();
+
+        return databaseLogFile;
+    }
+
+    public static <E extends IModel> DatabaseLogFile<E> escreverJson(DatabaseLogFile<E> databaseLogFile) throws IOException {
         String json = gson.toJson(databaseLogFile, new TypeToken<DatabaseLogFile<E>>() {
         }.getType());
         File logFile = new File(dirDatabaseLog, databaseLogFile.getFileName());
@@ -418,7 +447,12 @@ public class Sincronizacao extends Thread {
         }
     }
 
-    public Socket getClientSocket() {
-        return clientSocket;
+    public void shutdownSocket() {
+        try {
+            clientSocket.close();
+            exit = true;
+        } catch (IOException e) {
+            Log.e(ActivityBaseView.LOG, "Erro ao Fechar Socket: " + e.getMessage(), e);
+        }
     }
 }

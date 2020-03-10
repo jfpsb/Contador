@@ -46,8 +46,7 @@ public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
     private ConexaoBanco conexaoBanco;
-    private Sincronizacao socketCliente = null;
-    Gson gson = null;
+    private static Sincronizacao socketCliente = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,107 +107,17 @@ public class Contador extends AppCompatActivity {
         super.onResume();
         conexaoBanco = new ConexaoBanco(getApplicationContext());
 
-        gson = new GsonBuilder()
-                .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeGsonAdapter())
-                .create();
-
         if (socketCliente == null) {
             socketCliente = new Sincronizacao(getApplicationContext(), conexaoBanco);
             socketCliente.start();
         }
     }
 
-    private void Teste() {
-        /*DAOContagem daoContagem = new DAOContagem(conexaoBanco);
-        DAOContagemProduto daoContagemProduto = new DAOContagemProduto(conexaoBanco);
-        DAOFornecedor daoFornecedor = new DAOFornecedor(conexaoBanco);
-        DAOLoja daoLoja = new DAOLoja(conexaoBanco);
-        DAOMarca daoMarca = new DAOMarca(conexaoBanco);
-        DAOOperadoraCartao daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
-        DAOProduto daoProduto = new DAOProduto(conexaoBanco);
-        DAORecebimentoCartao daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);*/
-        DAOTipoContagem daoTipoContagem = new DAOTipoContagem(conexaoBanco);
-
-        /*List<Contagem> contagems = daoContagem.listar();
-        List<ContagemProduto> contagemProdutos = daoContagemProduto.listar();
-        List<Fornecedor> fornecedors = daoFornecedor.listar();
-        List<Loja> lojas = daoLoja.listar();
-        List<Marca> marcas = daoMarca.listar();
-        List<OperadoraCartao> operadoraCartaos = daoOperadoraCartao.listar();
-        List<Produto> produtos = daoProduto.listar();
-        List<RecebimentoCartao> recebimentoCartaos = daoRecebimentoCartao.listar();*/
-        List<TipoContagem> tipoContagems = daoTipoContagem.listar();
-
-        /*for (Contagem contagem : contagems) {
-            escreverJson("INSERT", contagem);
-        }
-
-        for (ContagemProduto ContagemProduto : contagemProdutos) {
-            escreverJson("INSERT", ContagemProduto);
-        }
-
-        for (Fornecedor Fornecedor : fornecedors) {
-            escreverJson("INSERT", Fornecedor);
-        }
-
-        for (Loja Loja : lojas) {
-            escreverJson("INSERT", Loja);
-        }
-
-        for (Marca Marca : marcas) {
-            escreverJson("INSERT", Marca);
-        }
-
-        for (OperadoraCartao OperadoraCartao : operadoraCartaos) {
-            escreverJson("INSERT", OperadoraCartao);
-        }
-
-        for (Produto Produto : produtos) {
-            escreverJson("INSERT", Produto);
-        }
-
-        for (RecebimentoCartao RecebimentoCartao : recebimentoCartaos) {
-            escreverJson("INSERT", RecebimentoCartao);
-        }*/
-
-        for (TipoContagem TipoContagem : tipoContagems) {
-            escreverJson("INSERT", TipoContagem);
-        }
-    }
-
-    private <E extends IModel> void escreverJson(String operacao, E entidade) {
-        File dirDatabaseLog = getApplicationContext().getDir("DatabaseLog", Context.MODE_PRIVATE);
-
-        ZonedDateTime lastWriteTime = Instant.now().atZone(ZoneId.systemDefault());
-        DatabaseLogFile<E> databaseLogFile = new DatabaseLogFile<>();
-        databaseLogFile.setLastWriteTime(lastWriteTime.minusYears(1));
-        databaseLogFile.setOperacaoMySQL(operacao);
-        databaseLogFile.setEntidade(entidade);
-
-        String json = gson.toJson(databaseLogFile, new TypeToken<DatabaseLogFile<E>>() {
-        }.getType());
-        File logFile = new File(dirDatabaseLog, databaseLogFile.getFileName());
-
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(logFile);
-            fileWriter.write(json);
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         conexaoBanco.close();
-        try {
-            socketCliente.getClientSocket().close();
-            socketCliente = null;
-        } catch (IOException e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        }
+        socketCliente.shutdownSocket();
+        socketCliente = null;
         super.onDestroy();
     }
 

@@ -10,6 +10,7 @@ import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DAOTipoContagem extends ADAO<TipoContagem> {
@@ -23,6 +24,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", new Date().getTime());
             contentValues.put("nome", tipoContagem.getNome());
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -44,6 +46,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
+                contentValues.put("id", new Date().getTime());
                 contentValues.put("nome", tipoContagem.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
@@ -65,6 +68,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", tipoContagem.getId());
             contentValues.put("nome", tipoContagem.getNome());
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -86,6 +90,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
+                contentValues.put("id", tipoContagem.getId());
                 contentValues.put("nome", tipoContagem.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
@@ -110,6 +115,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", tipoContagem.getId());
             contentValues.put("nome", tipoContagem.getNome());
 
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
@@ -139,7 +145,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }
@@ -157,7 +163,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             tipoContagem = new TipoContagem();
-            tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+            tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
             tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
@@ -178,7 +184,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }

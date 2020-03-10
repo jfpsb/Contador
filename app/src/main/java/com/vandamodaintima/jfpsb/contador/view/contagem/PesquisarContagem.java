@@ -60,20 +60,10 @@ public class PesquisarContagem extends TelaPesquisa {
         controller = new PesquisarContagemController(this, conexaoBanco);
 
         txtDataInicial.setText(txtDataParaCalendar.format(new Date()));
-        txtDataInicial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker(v);
-            }
-        });
+        txtDataInicial.setOnClickListener(v -> showDatePicker(v));
 
         txtDataFinal.setText(txtDataParaCalendar.format(new Date()));
-        txtDataFinal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker(v);
-            }
-        });
+        txtDataFinal.setOnClickListener(v -> showDatePicker(v));
 
         spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

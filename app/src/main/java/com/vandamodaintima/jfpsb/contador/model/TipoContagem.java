@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class TipoContagem implements Serializable, IModel {
     @SerializedName(value = "Id")
-    private int id;
+    private long id;
     @SerializedName(value = "Nome")
     private String nome;
 
@@ -18,11 +18,11 @@ public class TipoContagem implements Serializable, IModel {
         this.nome = nome;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

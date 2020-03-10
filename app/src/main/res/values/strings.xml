@@ -68,4 +68,5 @@
     <string name="nao_possui">Não Possui</string>
     <string name="inserir_manualmente">Inserir Manualmente</string>
     <string name="tela_ler_cod_barra_texture_view_description">Toque Na Imagem Da Câmera Para Escanear por Códigos de Barra</string>
+    <string name="campo_data">%s/%s/%s</string>
 </resources>

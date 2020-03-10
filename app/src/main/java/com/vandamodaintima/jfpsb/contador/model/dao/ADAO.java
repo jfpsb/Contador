@@ -104,6 +104,7 @@ public abstract class ADAO<T extends IModel> {
     }
 
     public void deletarLista(List<T> lista, boolean writeToJson, boolean sendToServer) {
+
         for (T objeto : lista) {
             Object key = objeto.getIdentifier();
 
