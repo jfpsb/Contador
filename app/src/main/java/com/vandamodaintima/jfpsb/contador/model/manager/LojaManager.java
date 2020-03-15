@@ -35,22 +35,22 @@ public class LojaManager implements IManager<Loja> {
 
     @Override
     public Boolean salvar() {
-        return daoLoja.inserir(loja);
+        return daoLoja.inserir(loja, true, true);
     }
 
     @Override
     public Boolean salvar(List<Loja> lista) {
-        return daoLoja.inserir(lista);
+        return daoLoja.inserir(lista, true, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoLoja.atualizar(loja, ids);
+        return daoLoja.atualizar(loja, true, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoLoja.deletar(loja.getCnpj());
+        return daoLoja.deletar(loja, true, true);
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -36,22 +38,22 @@ public class ContagemManager implements IManager<Contagem> {
 
     @Override
     public Boolean salvar() {
-        return daoContagem.inserir(contagem);
+        return daoContagem.inserir(contagem, true, true);
     }
 
     @Override
     public Boolean salvar(List<Contagem> lista) {
-        return daoContagem.inserir(lista);
+        return daoContagem.inserir(lista, true, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoContagem.atualizar(contagem, ids);
+        return daoContagem.atualizar(contagem, true, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoContagem.deletar(contagem.getLoja().getCnpj(), contagem.getDataParaSQLite());
+        return daoContagem.deletar(contagem, true, true);
     }
 
     @Override
@@ -69,11 +71,11 @@ public class ContagemManager implements IManager<Contagem> {
         contagem = daoContagem.listarPorId(ids);
     }
 
-    public Cursor listarPorLojaPeriodoCursor(String loja, Calendar dataInicial, Calendar dataFinal) {
+    public Cursor listarPorLojaPeriodoCursor(String loja, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         return daoContagem.listarPorLojaPeriodoCursor(loja, dataInicial, dataFinal);
     }
 
-    public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, Calendar dataInicial, Calendar dataFinal) {
+    public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, LocalDateTime dataInicial, LocalDateTime dataFinal) {
         return daoContagem.listarPorLojaPeriodo(cnpj, dataInicial, dataFinal);
     }
 }

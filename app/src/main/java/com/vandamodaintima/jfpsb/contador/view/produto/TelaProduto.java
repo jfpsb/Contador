@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.produto;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -23,8 +24,9 @@ import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
 
 public class TelaProduto extends TabLayoutBaseView {
     protected TelaCadastro cadastrarProduto;
@@ -118,14 +120,16 @@ public class TelaProduto extends TabLayoutBaseView {
     }
 
     private void AbrirEscolhaDiretorioActivity() {
-        Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 
-        DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Produtos Em Excel").allowReadOnlyDirectory(true).
-                build();
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-        startActivityForResult(intentDiretorio, ESCOLHER_DIRETORIO);
+        String fileName = String.format("Produtos em %s.xlsx", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss")));
+
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, ESCOLHER_DIRETORIO);
     }
 
     @Override
@@ -134,13 +138,14 @@ public class TelaProduto extends TabLayoutBaseView {
             case ESCOLHER_ARQUIVO:
                 if (resultCode == RESULT_OK) {
                     Uri uri = data.getData();
-                    controller.importarProdutosDeExcel(uri, getContentResolver());
+                    controller.importarDeExcel(uri, getContentResolver());
                 }
                 break;
             case ESCOLHER_DIRETORIO:
-                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                    String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                    controller.exportarProdutosParaExcel(diretorio);
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null && data.getData() != null) {
+                        controller.exportarParaExcel(data.getData());
+                    }
                 }
                 break;
         }

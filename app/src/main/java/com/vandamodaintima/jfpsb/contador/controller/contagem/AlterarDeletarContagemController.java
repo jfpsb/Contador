@@ -1,6 +1,11 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
+import android.net.Uri;
+
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.ExportarParaExcel;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdutoStrategy;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
@@ -58,31 +63,15 @@ public class AlterarDeletarContagemController {
             contagemManager.getContagem().setTipoContagem((TipoContagem) o);
     }
 
-    public String getFullDataString() {
-        return contagemManager.getContagem().getFullDataString();
-    }
-
-    public String getLojaNome() {
-        return contagemManager.getContagem().getLoja().getNome();
-    }
-
-    public String getLoja() {
-        return contagemManager.getContagem().getLoja().getCnpj();
-    }
-
-    public String getData() {
-        return contagemManager.getContagem().getDataParaSQLite();
-    }
-
-    public boolean getFinalizada() {
-        return  contagemManager.getContagem().getFinalizada();
+    public Contagem getContagem() {
+        return contagemManager.getContagem();
     }
 
     public int getTipoContagemIndex() {
         int index = 0;
 
-        for(TipoContagem tipo : getTipoContagens()) {
-            if(contagemManager.getContagem().getTipoContagem().getId() == tipo.getId()) {
+        for (TipoContagem tipo : getTipoContagens()) {
+            if (contagemManager.getContagem().getTipoContagem().getId() == tipo.getId()) {
                 break;
             }
             index++;
@@ -95,7 +84,7 @@ public class AlterarDeletarContagemController {
         return tipoContagemManager.listar();
     }
 
-    public void exportarParaExcel(String dir) {
-        new ExportarContagemProdutoParaExcel(view.getContext()).execute(dir, contagemProdutoManager.listarPorContagemGroupByProduto(contagemManager.getContagem()));
+    public void exportarParaExcel(Uri uri) {
+        new ExportarParaExcel<Contagem>(view.getContext(), new ExcelStrategy<>(new ExcelContagemProdutoStrategy())).execute(uri, contagemProdutoManager.listarPorContagemGroupByProduto(contagemManager.getContagem()));
     }
 }

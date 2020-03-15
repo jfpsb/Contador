@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -7,10 +9,15 @@ import java.io.Serializable;
  */
 
 public class Fornecedor implements Serializable, IModel {
+    @SerializedName(value = "Cnpj")
     private String cnpj;
+    @SerializedName(value = "Nome")
     private String nome;
+    @SerializedName(value = "Fantasia")
     private String fantasia;
+    @SerializedName(value = "Email")
     private String email;
+    @SerializedName(value = "Telefone")
     private String telefone;
 
     public String getCnpj() {
@@ -62,7 +69,17 @@ public class Fornecedor implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public Object getIdentifier() {
         return cnpj;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
+        return cnpj;
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "cnpj = ?";
     }
 }

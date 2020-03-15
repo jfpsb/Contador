@@ -8,6 +8,9 @@ import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.model.manager.TipoContagemManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class InserirContagemController {
     }
 
     public void cadastrar() {
-        contagemManager.getContagem().setData(new Date());
+        contagemManager.getContagem().setData(Instant.now().atZone(ZoneId.systemDefault()));
         contagemManager.getContagem().setFinalizada(false);
 
         Boolean result = contagemManager.salvar();

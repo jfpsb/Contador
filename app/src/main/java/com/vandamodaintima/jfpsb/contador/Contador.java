@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,25 +11,47 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.vandamodaintima.jfpsb.contador.util.sincronizacao.SincronizacaoRemota;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.IModel;
+import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
 
-import java.util.Calendar;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
+    private ConexaoBanco conexaoBanco;
+    private static Sincronizacao socketCliente = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidThreeTen.init(this);
         setContentView(R.layout.activity_contador);
 
         Button btnContador = findViewById(R.id.btnContador);
@@ -68,6 +91,10 @@ public class Contador extends AppCompatActivity {
             }
         });
 
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
+        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+
         boolean permissaoRead = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         boolean permissaoWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         boolean permissaoCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
@@ -77,22 +104,25 @@ public class Contador extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
                     PERMISSOES_APP);
+    }
 
-        // Necessário para funcionar dependência que opera Excel
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLInputFactory", "com.fasterxml.aalto.stax.InputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl");
-        System.setProperty("org.apache.poi.javax.xml.stream.XMLEventFactory", "com.fasterxml.aalto.stax.EventFactoryImpl");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        conexaoBanco = new ConexaoBanco(getApplicationContext());
 
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2018);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        if (socketCliente == null) {
+            socketCliente = new Sincronizacao(getApplicationContext(), conexaoBanco);
+            socketCliente.start();
+        }
+    }
 
-        SincronizacaoRemota sincronizacaoRemota = new SincronizacaoRemota(getApplicationContext());
-        sincronizacaoRemota.execute(calendar.getTime());*/
+    @Override
+    protected void onDestroy() {
+        conexaoBanco.close();
+        socketCliente.shutdownSocket();
+        socketCliente = null;
+        super.onDestroy();
     }
 
     @Override

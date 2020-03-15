@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.produto;
+package com.vandamodaintima.jfpsb.contador.controller;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,17 +15,21 @@ import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 
-public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> {
-    private Context context;
+public class ImportarExcel<T> extends AsyncTask<Object, Integer, Boolean> {
+    private WeakReference<Context> context;
     private ConexaoBanco conexaoBanco;
+    private ExcelStrategy<T> excelStrategy;
 
-    public ImportarProdutoDeExcel(Context context, ConexaoBanco conexaoBanco) {
-        this.context = context;
+    public ImportarExcel(Context context, ExcelStrategy<T> excelStrategy, ConexaoBanco conexaoBanco) {
+        this.context = new WeakReference<>(context);
+        this.excelStrategy = excelStrategy;
         this.conexaoBanco = conexaoBanco;
     }
 
@@ -38,15 +42,9 @@ public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> 
 
         try {
             inputStream = contentResolver.openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            Log.e("Contador", e.getMessage());
-            return false;
-        }
-
-        try {
-            return new Excel(new ExcelStrategy(new ExcelProdutoStrategy()), inputStream).importar(conexaoBanco);
+            return new Excel(excelStrategy, inputStream).importar(conexaoBanco);
         } catch (IOException e) {
-            Log.e("Contador", e.getMessage());
+            Log.e(ActivityBaseView.LOG, e.getMessage());
         }
 
         return false;
@@ -54,12 +52,12 @@ public class ImportarProdutoDeExcel extends AsyncTask<Object, Integer, Boolean> 
 
     @Override
     public void onPreExecute() {
-        Toast.makeText(context, "Iniciando Importação de Excel", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.get(), "Iniciando Importação de Excel", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPostExecute(Boolean aBoolean) {
         if (aBoolean)
-            Toast.makeText(context, "Produtos Importados Com Sucesso", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.get(), "Importação Executada Com Sucesso", Toast.LENGTH_SHORT).show();
     }
 }

@@ -7,29 +7,31 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class DAOTipoContagem implements IDAO<TipoContagem> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "tipo_contagem";
-
+public class DAOTipoContagem extends ADAO<TipoContagem> {
     public DAOTipoContagem(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
+        TABELA = "tipo_contagem";
     }
 
     @Override
-    public Boolean inserir(TipoContagem tipoContagem) {
+    public Boolean inserir(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", new Date().getTime());
             contentValues.put("nome", tipoContagem.getNome());
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
-            return true;
+
+            return super.inserir(tipoContagem, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -38,21 +40,22 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserir(List<TipoContagem> lista) {
+    public Boolean inserir(List<TipoContagem> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
+                contentValues.put("id", new Date().getTime());
                 contentValues.put("nome", tipoContagem.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -61,16 +64,18 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(TipoContagem tipoContagem) {
+    public Boolean inserirOuAtualizar(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", tipoContagem.getId());
             contentValues.put("nome", tipoContagem.getNome());
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
-            return true;
+
+            return super.inserirOuAtualizar(tipoContagem, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -79,21 +84,22 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<TipoContagem> lista) {
+    public Boolean inserirOuAtualizar(List<TipoContagem> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
+                contentValues.put("id", tipoContagem.getId());
                 contentValues.put("nome", tipoContagem.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -102,33 +108,27 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
     }
 
     @Override
-    public Boolean atualizar(TipoContagem tipoContagem, Object... chaves) {
+    public Boolean atualizar(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String id = String.valueOf(chaves[0]);
 
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
+            contentValues.put("id", tipoContagem.getId());
             contentValues.put("nome", tipoContagem.getNome());
 
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(tipoContagem, writeToJson, sendToServer, chaves);
         } catch (Exception ex) {
-            Log.e(LOG, ex.getMessage(), ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        String id = String.valueOf(chaves[0]);
-        int result = conexaoBanco.conexao().delete(TABELA, "id = ?", new String[]{id});
-        return result > 0;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }
@@ -163,7 +163,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             tipoContagem = new TipoContagem();
-            tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+            tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
             tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
@@ -184,7 +184,7 @@ public class DAOTipoContagem implements IDAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getInt(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }

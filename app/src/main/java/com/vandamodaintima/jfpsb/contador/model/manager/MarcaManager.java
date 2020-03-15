@@ -36,22 +36,22 @@ public class MarcaManager implements IManager<Marca> {
 
     @Override
     public Boolean salvar() {
-        return daoMarca.inserir(marca);
+        return daoMarca.inserir(marca, true, true);
     }
 
     @Override
     public Boolean salvar(List<Marca> lista) {
-        return daoMarca.inserir(lista);
+        return daoMarca.inserir(lista, true, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoMarca.atualizar(marca, ids);
+        return daoMarca.atualizar(marca, true, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoMarca.deletar(marca.getNome());
+        return daoMarca.deletar(marca, true, true);
     }
 
     @Override

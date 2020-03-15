@@ -1,9 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class TipoContagem implements Serializable, IModel {
-    private int id;
+    @SerializedName(value = "Id")
+    private long id;
+    @SerializedName(value = "Nome")
     private String nome;
 
     public TipoContagem() {
@@ -14,11 +18,11 @@ public class TipoContagem implements Serializable, IModel {
         this.nome = nome;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -35,7 +39,17 @@ public class TipoContagem implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public Object getIdentifier() {
+        return id;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "id = ?";
     }
 }

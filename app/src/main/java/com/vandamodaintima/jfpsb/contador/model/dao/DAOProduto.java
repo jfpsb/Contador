@@ -2,31 +2,29 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOProduto implements IDAO<Produto> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "produto";
-
+public class DAOProduto extends ADAO<Produto> {
     private DAOMarca daoMarca;
     private DAOFornecedor daoFornecedor;
 
     public DAOProduto(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
+        TABELA = "produto";
     }
 
     @Override
-    public Boolean inserir(Produto produto) {
+    public Boolean inserir(Produto produto, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -64,9 +62,9 @@ public class DAOProduto implements IDAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(produto, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -75,7 +73,7 @@ public class DAOProduto implements IDAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(List<Produto> lista) {
+    public Boolean inserir(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -115,9 +113,9 @@ public class DAOProduto implements IDAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -126,7 +124,7 @@ public class DAOProduto implements IDAO<Produto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Produto produto) {
+    public Boolean inserirOuAtualizar(Produto produto, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -164,9 +162,9 @@ public class DAOProduto implements IDAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(produto, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -175,7 +173,7 @@ public class DAOProduto implements IDAO<Produto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Produto> lista) {
+    public Boolean inserirOuAtualizar(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -216,9 +214,9 @@ public class DAOProduto implements IDAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -227,7 +225,7 @@ public class DAOProduto implements IDAO<Produto> {
     }
 
     @Override
-    public Boolean atualizar(Produto produto, Object... chaves) {
+    public Boolean atualizar(Produto produto, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String cod_barra = (String) chaves[0];
 
@@ -265,21 +263,14 @@ public class DAOProduto implements IDAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.atualizar(produto, writeToJson, sendToServer, chaves);
         } catch (Exception ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        String cod_barra = (String) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "cod_barra = ?", new String[]{cod_barra});
-        return result > 0;
     }
 
     public Cursor listarCursor() {

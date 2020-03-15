@@ -8,6 +8,9 @@ import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
 import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,7 +29,7 @@ public class PesquisarContagemController {
         view.setListViewAdapter(contagemArrayAdapter);
     }
 
-    public void pesquisar(Calendar dataInicial, Calendar dataFinal) {
+    public void pesquisar(LocalDateTime dataInicial, LocalDateTime dataFinal) {
         ArrayList<Contagem> contagems = contagemManager.listarPorLojaPeriodo(contagemManager.getContagem().getLoja().getCnpj(), dataInicial, dataFinal);
 
         if (contagems.size() == 0) {

@@ -8,22 +8,22 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOMarca implements IDAO<Marca> {
-    private ConexaoBanco conexaoBanco;
-    private final String TABELA = "marca";
+public class DAOMarca extends ADAO<Marca> {
     private DAOFornecedor daoFornecedor;
 
     public DAOMarca(ConexaoBanco conexaoBanco) {
-        this.conexaoBanco = conexaoBanco;
+        super(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
+        TABELA = "marca";
     }
 
     @Override
-    public Boolean inserir(Marca marca) {
+    public Boolean inserir(Marca marca, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -37,9 +37,9 @@ public class DAOMarca implements IDAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(marca, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -48,7 +48,7 @@ public class DAOMarca implements IDAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(List<Marca> lista) {
+    public Boolean inserir(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,9 +62,9 @@ public class DAOMarca implements IDAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserir(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -73,7 +73,7 @@ public class DAOMarca implements IDAO<Marca> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Marca marca) {
+    public Boolean inserirOuAtualizar(Marca marca, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -86,9 +86,9 @@ public class DAOMarca implements IDAO<Marca> {
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(marca, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -97,7 +97,7 @@ public class DAOMarca implements IDAO<Marca> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(List<Marca> lista) {
+    public Boolean inserirOuAtualizar(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -111,9 +111,9 @@ public class DAOMarca implements IDAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
+            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
         } catch (Exception e) {
-            Log.e(LOG, e.getMessage(), e);
+            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -122,7 +122,7 @@ public class DAOMarca implements IDAO<Marca> {
     }
 
     @Override
-    public Boolean atualizar(Marca marca, Object... chaves) {
+    public Boolean atualizar(Marca marca, boolean writeToJson, boolean sendToServer, Object... chaves) {
         try {
             String nome = (String) chaves[0];
 
@@ -137,21 +137,14 @@ public class DAOMarca implements IDAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return true;
-        } catch (SQLException ex) {
-            Log.e(LOG, "ERRO AO ATUALIZAR MARCA", ex);
+            return super.atualizar(marca, writeToJson, sendToServer, chaves);
+        } catch (Exception ex) {
+            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
 
         return false;
-    }
-
-    @Override
-    public Boolean deletar(Object... chaves) {
-        String nome = (String) chaves[0];
-        int result = conexaoBanco.conexao().delete(TABELA, "nome = ?", new String[]{nome});
-        return result > 0;
     }
 
     @Override

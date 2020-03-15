@@ -1,19 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ContagemProduto implements Serializable, IModel {
+    @SerializedName(value = "Id")
     private long id;
+    @SerializedName(value = "Contagem")
     private Contagem contagem;
+    @SerializedName(value = "Produto")
     private Produto produto;
+    @SerializedName(value = "Quant")
     private int quant;
 
     public long getId() {
         return id;
-    }
-
-    public String getIdString() {
-        return String.valueOf(getIdentificador());
     }
 
     public void setId(long id) {
@@ -53,7 +55,17 @@ public class ContagemProduto implements Serializable, IModel {
     }
 
     @Override
-    public String getIdentificador() {
+    public Object getIdentifier() {
+        return id;
+    }
+
+    @Override
+    public String getDatabaseLogIdentifier() {
         return String.valueOf(id);
+    }
+
+    @Override
+    public String getDeleteWhereClause() {
+        return "id = ?";
     }
 }

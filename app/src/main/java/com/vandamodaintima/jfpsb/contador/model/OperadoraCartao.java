@@ -2,13 +2,14 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Marca implements Serializable, IModel {
+public class OperadoraCartao implements IModel {
     @SerializedName(value = "Nome")
     private String nome;
-    @SerializedName(value = "Fornecedor")
-    private Fornecedor fornecedor;
+    @SerializedName(value = "IdentificadoresBanco")
+    private List<String> identificadoresBanco = new ArrayList<>();
 
     public String getNome() {
         return nome;
@@ -18,20 +19,16 @@ public class Marca implements Serializable, IModel {
         this.nome = nome;
     }
 
-    public Fornecedor getFornecedor() {
-        return fornecedor;
+    public List<String> getIdentificadoresBanco() {
+        return identificadoresBanco;
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
-        this.fornecedor = fornecedor;
+    public void setIdentificadoresBanco(List<String> identificadoresBanco) {
+        this.identificadoresBanco = identificadoresBanco;
     }
 
     public static String[] getColunas() {
-        return new String[]{"nome as _id", "fornecedor"};
-    }
-
-    public static String[] getHeaders() {
-        return new String[]{"Nome", "Fornecedor"};
+        return new String[]{"nome as _id"};
     }
 
     @Override

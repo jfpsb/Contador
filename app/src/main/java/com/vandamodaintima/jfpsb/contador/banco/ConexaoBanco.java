@@ -12,10 +12,12 @@ import java.io.Serializable;
 public class ConexaoBanco implements Serializable {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 4;
+    private static final int VERSAO_BANCO = 6;
     private SQLiteHelper sqLiteHelper;
+    private Context context;
 
     public ConexaoBanco(Context context) {
+        this.context = context;
         sqLiteHelper = new SQLiteHelper(context, NOME_BANCO, VERSAO_BANCO);
         conn = sqLiteHelper.getWritableDatabase();
     }
@@ -30,5 +32,9 @@ public class ConexaoBanco implements Serializable {
 
         if (sqLiteHelper != null)
             sqLiteHelper.close();
+    }
+
+    public Context getContext() {
+        return context;
     }
 }

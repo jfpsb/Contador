@@ -1,16 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,9 +31,6 @@ import com.vandamodaintima.jfpsb.contador.controller.contagem.AlterarDeletarCont
 import com.vandamodaintima.jfpsb.contador.controller.contagem.SpinnerTipoContagemAdapter;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
-
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.util.List;
 
@@ -71,9 +73,9 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         setAlertBuilderAtualizar();
         setAlertBuilderDeletar();
 
-        txtData.setText(controller.getFullDataString());
-        txtLoja.setText(controller.getLojaNome());
-        checkBoxFinalizada.setChecked(controller.getFinalizada());
+        txtData.setText(controller.getContagem().getFullDataString());
+        txtLoja.setText(controller.getContagem().getLoja().getNome());
+        checkBoxFinalizada.setChecked(controller.getContagem().getFinalizada());
 
         spinnerTipoContagem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -101,8 +103,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                 switch (id) {
                     case R.id.menuItemVerProdutos:
                         Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-                        visualizarContagem.putExtra("loja", controller.getLoja());
-                        visualizarContagem.putExtra("data", controller.getData());
+                        visualizarContagem.putExtra("loja", controller.getContagem().getLoja().getCnpj());
+                        visualizarContagem.putExtra("data", controller.getContagem().getDataParaSQLite());
                         startActivity(visualizarContagem);
                         break;
                     case R.id.menuItemExportarContagemExcel:
@@ -121,8 +123,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                         break;
                     case R.id.menuItemAdicionarContagem:
                         Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-                        intent.putExtra("loja", controller.getLoja());
-                        intent.putExtra("data", controller.getData());
+                        intent.putExtra("loja", controller.getContagem().getLoja().getCnpj());
+                        intent.putExtra("data", controller.getContagem().getDataParaSQLite());
                         startActivity(intent);
                         break;
                 }
@@ -192,15 +194,16 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
     }
 
     private void AbrirEscolhaDiretorioActivity() {
-        Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 
-        DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Contagem Em Excel").allowReadOnlyDirectory(true).
-                build();
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+        String fileName = String.format("Contagem %s - %s.xlsx", controller.getContagem().getLoja().getNome(), controller.getContagem().getFullDataStringForFileName());
 
-        startActivityForResult(intentDiretorio, ESCOLHER_DIRETORIO);
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, ESCOLHER_DIRETORIO);
     }
 
     @Override
@@ -208,9 +211,10 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ESCOLHER_DIRETORIO) {
-            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                controller.exportarParaExcel(diretorio);
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null && data.getData() != null) {
+                    controller.exportarParaExcel(data.getData());
+                }
             }
         }
     }
