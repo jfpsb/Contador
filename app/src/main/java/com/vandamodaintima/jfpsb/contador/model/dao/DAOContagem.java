@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import org.threeten.bp.LocalDateTime;
@@ -41,6 +42,19 @@ public class DAOContagem extends ADAO<Contagem> {
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
+
+            for(ContagemProduto contagemProduto : contagem.getContagens()) {
+                ContentValues values = new ContentValues();
+
+                values.put("id", contagemProduto.getId());
+                values.put("produto", contagemProduto.getProduto().getCod_barra());
+                values.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                values.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                values.put("quant", contagemProduto.getQuant());
+
+                conexaoBanco.conexao().insertOrThrow("contagem_produto", null, values);
+            }
+
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return super.inserir(contagem, writeToJson, sendToServer);
@@ -67,6 +81,18 @@ public class DAOContagem extends ADAO<Contagem> {
                 contentValues.put("tipo", contagem.getTipoContagem().getId());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+                for(ContagemProduto contagemProduto : contagem.getContagens()) {
+                    ContentValues values = new ContentValues();
+
+                    values.put("id", contagemProduto.getId());
+                    values.put("produto", contagemProduto.getProduto().getCod_barra());
+                    values.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                    values.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                    values.put("quant", contagemProduto.getQuant());
+
+                    conexaoBanco.conexao().insertWithOnConflict("contagem_produto", null, values, SQLiteDatabase.CONFLICT_IGNORE);
+                }
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -94,6 +120,19 @@ public class DAOContagem extends ADAO<Contagem> {
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+
+            for(ContagemProduto contagemProduto : contagem.getContagens()) {
+                ContentValues values = new ContentValues();
+
+                values.put("id", contagemProduto.getId());
+                values.put("produto", contagemProduto.getProduto().getCod_barra());
+                values.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                values.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                values.put("quant", contagemProduto.getQuant());
+
+                conexaoBanco.conexao().insertWithOnConflict("contagem_produto", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return super.inserirOuAtualizar(contagem, writeToJson, sendToServer);
@@ -120,6 +159,18 @@ public class DAOContagem extends ADAO<Contagem> {
                 contentValues.put("tipo", contagem.getTipoContagem().getId());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+
+                for(ContagemProduto contagemProduto : contagem.getContagens()) {
+                    ContentValues values = new ContentValues();
+
+                    values.put("id", contagemProduto.getId());
+                    values.put("produto", contagemProduto.getProduto().getCod_barra());
+                    values.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                    values.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                    values.put("quant", contagemProduto.getQuant());
+
+                    conexaoBanco.conexao().insertWithOnConflict("contagem_produto", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                }
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -147,7 +198,22 @@ public class DAOContagem extends ADAO<Contagem> {
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
+            conexaoBanco.conexao().delete("contagem_produto", "contagem_loja = ? AND contagem_data = ?", (String[]) contagem.getIdentifier());
+
             conexaoBanco.conexao().update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{cnpj, data});
+
+            for(ContagemProduto contagemProduto : contagem.getContagens()) {
+                ContentValues values = new ContentValues();
+
+                values.put("id", contagemProduto.getId());
+                values.put("produto", contagemProduto.getProduto().getCod_barra());
+                values.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
+                values.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                values.put("quant", contagemProduto.getQuant());
+
+                conexaoBanco.conexao().insertOrThrow("contagem_produto", null, values);
+            }
+
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return super.atualizar(contagem, writeToJson, sendToServer, chaves);

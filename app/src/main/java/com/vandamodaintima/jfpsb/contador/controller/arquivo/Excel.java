@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -20,12 +22,14 @@ public class Excel {
     private XSSFSheet sheet;
     private FormulaEvaluator formulaEvaluator;
     private ExcelStrategy excelStrategy;
+    private ContentResolver contentResolver;
 
-    public Excel(ExcelStrategy excelStrategy) {
+    public Excel(ContentResolver contentResolver, ExcelStrategy excelStrategy) {
         workbook = new XSSFWorkbook();
         sheet = workbook.createSheet();
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
         this.excelStrategy = excelStrategy;
+        this.contentResolver = contentResolver;
     }
 
     public Excel(ExcelStrategy excelStrategy, InputStream inputStream) throws IOException {
@@ -35,21 +39,17 @@ public class Excel {
         this.excelStrategy = excelStrategy;
     }
 
-    public Boolean exportar(String dir, Object lista) {
+    public Boolean exportar(Uri uri, Object lista) {
         OutputStream outputStream = null;
 
-        String nomeArquivo = excelStrategy.escreveDados(workbook, sheet, lista);
-
-        File arquivo = new File(dir, nomeArquivo);
+        excelStrategy.escreveDados(workbook, sheet, lista);
 
         try {
-            outputStream = new FileOutputStream(arquivo.getAbsolutePath());
+            outputStream = contentResolver.openOutputStream(uri);
             workbook.write(outputStream);
             return true;
-        } catch (FileNotFoundException fe) {
+        } catch (IOException fe) {
             Log.e("Contador", fe.getMessage(), fe);
-        } catch (IOException ie) {
-            Log.e("Contador", ie.getMessage(), ie);
         } finally {
             try {
                 if (outputStream != null) {

@@ -11,6 +11,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Contagem implements Serializable, IModel {
     @SerializedName(value = "Loja")
@@ -22,6 +23,9 @@ public class Contagem implements Serializable, IModel {
     @SerializedName(value = "TipoContagem")
     private TipoContagem tipoContagem;
 
+    @SerializedName(value = "Contagens")
+    private List<ContagemProduto> contagens;
+
     public Loja getLoja() {
         return loja;
     }
@@ -32,7 +36,10 @@ public class Contagem implements Serializable, IModel {
 
     public String getFullDataString() {
         return data.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
-        //return DateFormat.getDateInstance().format(data);
+    }
+
+    public String getFullDataStringForFileName() {
+        return data.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss"));
     }
 
     public String getShortDataString() {
@@ -70,6 +77,14 @@ public class Contagem implements Serializable, IModel {
 
     public void setTipoContagem(TipoContagem tipoContagem) {
         this.tipoContagem = tipoContagem;
+    }
+
+    public List<ContagemProduto> getContagens() {
+        return contagens;
+    }
+
+    public void setContagens(List<ContagemProduto> contagens) {
+        this.contagens = contagens;
     }
 
     public static String[] getColunas() {

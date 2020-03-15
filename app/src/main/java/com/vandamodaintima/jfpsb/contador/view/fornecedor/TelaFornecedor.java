@@ -1,13 +1,16 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -18,8 +21,9 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.TelaFornecedorController;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.format.DateTimeFormatter;
 
 public class TelaFornecedor extends TabLayoutBaseView {
 
@@ -79,7 +83,7 @@ public class TelaFornecedor extends TabLayoutBaseView {
                 Boolean permissaoRead = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
                 Boolean permissaoWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
-                if(permissaoRead && permissaoWrite) {
+                if (permissaoRead && permissaoWrite) {
                     AbrirEscolhaDiretorioActivity();
                 } else {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
@@ -104,14 +108,16 @@ public class TelaFornecedor extends TabLayoutBaseView {
     }
 
     private void AbrirEscolhaDiretorioActivity() {
-        Intent intentDiretorio = new Intent(this, DirectoryChooserActivity.class);
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 
-        DirectoryChooserConfig config = DirectoryChooserConfig.builder().
-                newDirectoryName("Contador - Fornecedor Em Excel").allowReadOnlyDirectory(true).
-                build();
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        intentDiretorio.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-        startActivityForResult(intentDiretorio, ESCOLHER_DIRETORIO);
+        String fileName = String.format("Fornecedores em %s.xlsx", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss")));
+
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, ESCOLHER_DIRETORIO);
     }
 
     @Override
@@ -124,9 +130,10 @@ public class TelaFornecedor extends TabLayoutBaseView {
                 }
                 break;
             case ESCOLHER_DIRETORIO:
-                if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                    String diretorio = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                    controller.exportarFornecedoresParaExcel(diretorio);
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null && data.getData() != null) {
+                        controller.exportarParaExcel(data.getData());
+                    }
                 }
                 break;
             case CADASTRAR_MANUALMENTE:
