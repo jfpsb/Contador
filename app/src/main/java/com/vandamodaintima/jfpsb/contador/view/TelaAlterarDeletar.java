@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
@@ -52,6 +53,8 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         navigationView = findViewById(R.id.alterarDeletarNavigationView);
         actionBarDrawerToggle.syncState();
+
+        AndroidThreeTen.init(getContext());
     }
 
     /**

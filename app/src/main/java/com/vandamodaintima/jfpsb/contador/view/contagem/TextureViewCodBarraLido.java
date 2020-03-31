@@ -37,7 +37,7 @@ public class TextureViewCodBarraLido extends TextureView {
 
     public TextureViewCodBarraLido(Context context) {
         super(context);
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(context, R.layout.item_contagem_produto_dialog, new ArrayList<Produto>());
+        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(context, R.layout.item_contagem_produto_dialog, new ArrayList<>());
     }
 
     public TextureViewCodBarraLido(Context context, AttributeSet attributeSet) {
@@ -117,7 +117,7 @@ public class TextureViewCodBarraLido extends TextureView {
 
     public void setController(TelaLerCodigoDeBarraController controller) {
         this.controller = controller;
-        contagemModel = controller.getContagemManager();
+        contagemModel = controller.getContagem();
     }
 
     public ITelaLerCodigoDeBarra getView() {

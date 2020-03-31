@@ -23,9 +23,6 @@ public class Contagem implements Serializable, IModel {
     @SerializedName(value = "TipoContagem")
     private TipoContagem tipoContagem;
 
-    @SerializedName(value = "Contagens")
-    private List<ContagemProduto> contagens;
-
     public Loja getLoja() {
         return loja;
     }
@@ -77,14 +74,6 @@ public class Contagem implements Serializable, IModel {
 
     public void setTipoContagem(TipoContagem tipoContagem) {
         this.tipoContagem = tipoContagem;
-    }
-
-    public List<ContagemProduto> getContagens() {
-        return contagens;
-    }
-
-    public void setContagens(List<ContagemProduto> contagens) {
-        this.contagens = contagens;
     }
 
     public static String[] getColunas() {

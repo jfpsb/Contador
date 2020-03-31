@@ -69,7 +69,7 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
             } else {
                 item.setChecked(true);
             }
-            telaLerCodigo.setCampoQuantChecked(item.isChecked());
+            telaLerCodigo.setCampoQuantidadeMarcado(item.isChecked());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -88,7 +88,6 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //telaVerProdutoContado.realizarPesquisa();
     }
 
     @Override

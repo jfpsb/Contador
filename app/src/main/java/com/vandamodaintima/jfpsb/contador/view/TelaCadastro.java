@@ -1,9 +1,16 @@
 package com.vandamodaintima.jfpsb.contador.view;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
@@ -11,6 +18,12 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 public abstract class TelaCadastro extends Fragment implements CadastrarView {
     protected View telaCadastroView;
     protected ConexaoBanco conexaoBanco;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     public void onDestroy() {

@@ -51,7 +51,6 @@ public class Contador extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AndroidThreeTen.init(this);
         setContentView(R.layout.activity_contador);
 
         Button btnContador = findViewById(R.id.btnContador);
@@ -110,6 +109,8 @@ public class Contador extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         conexaoBanco = new ConexaoBanco(getApplicationContext());
+
+        AndroidThreeTen.init(this);
 
         if (socketCliente == null) {
             socketCliente = new Sincronizacao(getApplicationContext(), conexaoBanco);

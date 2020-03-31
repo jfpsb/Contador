@@ -19,6 +19,8 @@
         android:layout_marginLeft="35sp"
         android:layout_marginRight="35sp"
         android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:focusedByDefault="true"
         android:text="1" />
 
 </LinearLayout>

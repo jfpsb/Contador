@@ -73,7 +73,7 @@ public class TelaLerCodigoDeBarraController {
             contagemProdutoManager.getContagemProduto().setProduto((Produto) o);
     }
 
-    public Contagem getContagemManager() {
+    public Contagem getContagem() {
         return contagemProdutoManager.getContagemProduto().getContagem();
     }
 }

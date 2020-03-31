@@ -48,7 +48,7 @@
 
         <TableRow>
 
-            <com.vandamodaintima.jfpsb.contador.view.contagem.TextureViewCodBarraLido
+            <TextureView
                 android:id="@+id/textureView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
