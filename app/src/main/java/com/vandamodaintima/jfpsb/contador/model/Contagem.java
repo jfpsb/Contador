@@ -13,7 +13,7 @@ import org.threeten.bp.format.FormatStyle;
 import java.io.Serializable;
 import java.util.List;
 
-public class Contagem implements Serializable, IModel {
+public class Contagem implements Serializable, IModel, Cloneable {
     @SerializedName(value = "Loja")
     private Loja loja;
     @SerializedName(value = "Data")
@@ -97,5 +97,11 @@ public class Contagem implements Serializable, IModel {
     @Override
     public String getDeleteWhereClause() {
         return "loja = ? AND data = ?";
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

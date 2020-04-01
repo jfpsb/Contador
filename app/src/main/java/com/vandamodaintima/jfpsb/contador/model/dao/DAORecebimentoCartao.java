@@ -24,7 +24,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean inserir(RecebimentoCartao recebimentoCartao, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(RecebimentoCartao recebimentoCartao) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -40,7 +40,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(recebimentoCartao, writeToJson, sendToServer);
+            return super.inserir(recebimentoCartao);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -51,7 +51,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean inserir(List<RecebimentoCartao> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<RecebimentoCartao> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -70,7 +70,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -81,64 +81,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(RecebimentoCartao recebimentoCartao, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("mes", recebimentoCartao.getMes());
-            contentValues.put("ano", recebimentoCartao.getAno());
-            contentValues.put("loja", recebimentoCartao.getLoja().getCnpj());
-            contentValues.put("operadoracartao", recebimentoCartao.getOperadoraCartao().getNome());
-            contentValues.put("recebido", recebimentoCartao.getRecebido());
-            contentValues.put("valoroperadora", recebimentoCartao.getValorOperadora());
-            contentValues.put("observacao", recebimentoCartao.getObservacao());
-
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(recebimentoCartao, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<RecebimentoCartao> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (RecebimentoCartao recebimentoCartao : lista) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("mes", recebimentoCartao.getMes());
-                contentValues.put("ano", recebimentoCartao.getAno());
-                contentValues.put("loja", recebimentoCartao.getLoja().getCnpj());
-                contentValues.put("operadoracartao", recebimentoCartao.getOperadoraCartao().getNome());
-                contentValues.put("recebido", recebimentoCartao.getRecebido());
-                contentValues.put("valoroperadora", recebimentoCartao.getValorOperadora());
-                contentValues.put("observacao", recebimentoCartao.getObservacao());
-
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(RecebimentoCartao recebimentoCartao, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(RecebimentoCartao recebimentoCartao, Object... chaves) {
         try {
             String mes = (String) chaves[0];
             String ano = (String) chaves[1];
@@ -155,7 +98,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(recebimentoCartao, writeToJson, sendToServer, chaves);
+            return super.atualizar(recebimentoCartao, chaves);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -222,5 +165,10 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
         cursor.close();
         return recebimento;
+    }
+
+    @Override
+    public int getMaxId() {
+        return 0;
     }
 }

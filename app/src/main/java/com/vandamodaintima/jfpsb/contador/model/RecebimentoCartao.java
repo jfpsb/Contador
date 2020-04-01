@@ -2,7 +2,9 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RecebimentoCartao implements IModel {
+import java.io.Serializable;
+
+public class RecebimentoCartao implements IModel, Serializable {
     @SerializedName(value = "Mes")
     private int mes;
     @SerializedName(value = "Ano")

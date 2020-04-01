@@ -21,7 +21,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean inserir(Fornecedor fornecedor, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(Fornecedor fornecedor) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -36,7 +36,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(fornecedor, writeToJson, sendToServer);
+            return super.inserir(fornecedor);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -47,7 +47,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean inserir(List<Fornecedor> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<Fornecedor> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -65,7 +65,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -76,62 +76,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Fornecedor fornecedor, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("cnpj", fornecedor.getCnpj());
-            contentValues.put("nome", fornecedor.getNome());
-            contentValues.put("fantasia", fornecedor.getFantasia());
-            contentValues.put("email", fornecedor.getEmail());
-            contentValues.put("telefone", fornecedor.getTelefone());
-
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(fornecedor, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<Fornecedor> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (Fornecedor f : lista) {
-                ContentValues contentValues = new ContentValues();
-
-                contentValues.put("cnpj", f.getCnpj());
-                contentValues.put("nome", f.getNome());
-                contentValues.put("fantasia", f.getFantasia());
-                contentValues.put("email", f.getEmail());
-                contentValues.put("telefone", f.getTelefone());
-
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(Fornecedor fornecedor, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Fornecedor fornecedor, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
 
@@ -147,8 +92,8 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(fornecedor, writeToJson, sendToServer, chaves);
-        } catch (SQLException | IOException ex) {
+            return super.atualizar(fornecedor, chaves);
+        } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
@@ -202,6 +147,11 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
 
         cursor.close();
         return fornecedor;
+    }
+
+    @Override
+    public int getMaxId() {
+        return 0;
     }
 
     public Fornecedor listarPorIdOuNome(String termo) {

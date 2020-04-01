@@ -2,10 +2,11 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperadoraCartao implements IModel {
+public class OperadoraCartao implements IModel, Serializable {
     @SerializedName(value = "Nome")
     private String nome;
     @SerializedName(value = "IdentificadoresBanco")

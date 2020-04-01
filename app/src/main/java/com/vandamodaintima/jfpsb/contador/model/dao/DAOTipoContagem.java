@@ -20,7 +20,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserir(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(TipoContagem tipoContagem) {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
@@ -29,7 +29,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(tipoContagem, writeToJson, sendToServer);
+            return super.inserir(tipoContagem);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -40,7 +40,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserir(List<TipoContagem> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<TipoContagem> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -53,7 +53,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -64,51 +64,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("id", tipoContagem.getId());
-            contentValues.put("nome", tipoContagem.getNome());
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(tipoContagem, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<TipoContagem> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (TipoContagem tipoContagem : lista) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("id", tipoContagem.getId());
-                contentValues.put("nome", tipoContagem.getNome());
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(TipoContagem tipoContagem, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(TipoContagem tipoContagem, Object... chaves) {
         try {
             String id = String.valueOf(chaves[0]);
 
@@ -121,7 +77,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(tipoContagem, writeToJson, sendToServer, chaves);
+            return super.atualizar(tipoContagem, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
@@ -170,6 +126,20 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         cursor.close();
 
         return tipoContagem;
+    }
+
+    @Override
+    public int getMaxId() {
+        int maxId = 0;
+        String sql = "SELECT max(id) as maxId from tipocontagem";
+        Cursor cursor = conexaoBanco.conexao().rawQuery(sql, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            maxId = cursor.getInt(0);
+        }
+
+        return maxId;
     }
 
     public Cursor listarPorNomeCursor(String nome) {

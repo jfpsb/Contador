@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,36 +10,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.IModel;
-import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
-import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
-import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProduto;
-
-import org.threeten.bp.Instant;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZonedDateTime;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 
 public class Contador extends AppCompatActivity {
 

@@ -23,7 +23,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(Marca marca, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(Marca marca) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -37,7 +37,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(marca, writeToJson, sendToServer);
+            return super.inserir(marca);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -48,7 +48,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<Marca> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,56 +73,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Marca marca, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("nome", marca.getNome());
-            if (marca.getFornecedor() != null) {
-                contentValues.put("fornecedor", marca.getFornecedor().getCnpj());
-            }
-
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(marca, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<Marca> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (Marca marca : lista) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("nome", marca.getNome());
-                if (marca.getFornecedor() != null) {
-                    contentValues.put("fornecedor", marca.getFornecedor().getCnpj());
-                }
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(Marca marca, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Marca marca, Object... chaves) {
         try {
             String nome = (String) chaves[0];
 
@@ -137,7 +88,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(marca, writeToJson, sendToServer, chaves);
+            return super.atualizar(marca, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
@@ -185,6 +136,11 @@ public class DAOMarca extends ADAO<Marca> {
 
         cursor.close();
         return marca;
+    }
+
+    @Override
+    public int getMaxId() {
+        return 0;
     }
 
     public Cursor listarPorNomeCursor(String nome) {

@@ -38,12 +38,12 @@ public class ContagemManager implements IManager<Contagem> {
 
     @Override
     public Boolean salvar() {
-        return daoContagem.inserir(contagem, true, true);
+        return daoContagem.inserir(contagem);
     }
 
     @Override
     public Boolean salvar(List<Contagem> lista) {
-        return daoContagem.inserir(lista, true, true);
+        return daoContagem.inserir(lista);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ContagemManager implements IManager<Contagem> {
 
     @Override
     public Boolean deletar() {
-        return daoContagem.deletar(contagem, true, true);
+        return daoContagem.deletar(contagem);
     }
 
     @Override

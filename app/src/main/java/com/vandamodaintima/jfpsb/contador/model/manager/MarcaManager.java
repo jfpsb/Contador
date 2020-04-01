@@ -36,12 +36,12 @@ public class MarcaManager implements IManager<Marca> {
 
     @Override
     public Boolean salvar() {
-        return daoMarca.inserir(marca, true, true);
+        return daoMarca.inserir(marca);
     }
 
     @Override
     public Boolean salvar(List<Marca> lista) {
-        return daoMarca.inserir(lista, true, true);
+        return daoMarca.inserir(lista);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MarcaManager implements IManager<Marca> {
 
     @Override
     public Boolean deletar() {
-        return daoMarca.deletar(marca, true, true);
+        return daoMarca.deletar(marca);
     }
 
     @Override

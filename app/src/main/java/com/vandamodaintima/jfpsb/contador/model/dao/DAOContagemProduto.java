@@ -27,7 +27,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean inserir(ContagemProduto contagemProduto, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(ContagemProduto contagemProduto) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -42,7 +42,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(contagemProduto, writeToJson, sendToServer);
+            return super.inserir(contagemProduto);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -53,7 +53,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean inserir(List<ContagemProduto> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<ContagemProduto> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -71,7 +71,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -82,62 +82,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(ContagemProduto contagemProduto, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("id", contagemProduto.getId());
-            contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
-            contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
-            contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
-            contentValues.put("quant", contagemProduto.getQuant());
-
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(contagemProduto, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<ContagemProduto> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (ContagemProduto contagemProduto : lista) {
-
-                ContentValues contentValues = new ContentValues();
-
-                contentValues.put("id", contagemProduto.getId());
-                contentValues.put("produto", contagemProduto.getProduto().getCod_barra());
-                contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
-                contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
-                contentValues.put("quant", contagemProduto.getQuant());
-
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(ContagemProduto contagemProduto, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(ContagemProduto contagemProduto, Object... chaves) {
         try {
             long id = (long) chaves[0];
 
@@ -153,8 +98,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagemProduto, writeToJson, sendToServer, chaves);
-        } catch (SQLException | IOException ex) {
+            return super.atualizar(contagemProduto, chaves);
+        } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
@@ -217,6 +162,11 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
 
         cursor.close();
         return contagem_produto;
+    }
+
+    @Override
+    public int getMaxId() {
+        return 0;
     }
 
     public Cursor listarPorContagemCursor(Contagem contagem) {

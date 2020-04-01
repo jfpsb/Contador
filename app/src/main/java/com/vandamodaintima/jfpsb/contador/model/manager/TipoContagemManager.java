@@ -27,12 +27,12 @@ public class TipoContagemManager implements IManager<TipoContagem> {
 
     @Override
     public Boolean salvar() {
-        return daoTipoContagem.inserir(tipoContagem, true, true);
+        return daoTipoContagem.inserir(tipoContagem);
     }
 
     @Override
     public Boolean salvar(List<TipoContagem> lista) {
-        return daoTipoContagem.inserir(lista, true, true);
+        return daoTipoContagem.inserir(lista);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class TipoContagemManager implements IManager<TipoContagem> {
 
     @Override
     public Boolean deletar() {
-        return daoTipoContagem.deletar(tipoContagem, true, true);
+        return daoTipoContagem.deletar(tipoContagem);
     }
 
     @Override

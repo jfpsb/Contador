@@ -37,12 +37,12 @@ public class ContagemProdutoManager implements IManager<ContagemProduto> {
 
     @Override
     public Boolean salvar() {
-        return daoContagemProduto.inserir(contagemProduto, true, true);
+        return daoContagemProduto.inserir(contagemProduto);
     }
 
     @Override
     public Boolean salvar(List<ContagemProduto> lista) {
-        return daoContagemProduto.inserir(lista, true, true);
+        return daoContagemProduto.inserir(lista);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ContagemProdutoManager implements IManager<ContagemProduto> {
 
     @Override
     public Boolean deletar() {
-        return daoContagemProduto.deletar(contagemProduto, true, true);
+        return daoContagemProduto.deletar(contagemProduto);
     }
 
     @Override

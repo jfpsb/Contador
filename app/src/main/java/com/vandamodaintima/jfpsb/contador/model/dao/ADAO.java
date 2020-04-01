@@ -1,25 +1,23 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.DatabaseLogFile;
+import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
+import com.vandamodaintima.jfpsb.contador.sincronizacao.DBLog;
 import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.ZonedDateTimeGsonAdapter;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class ADAO<T extends IModel> {
+public abstract class ADAO<T extends IModel & Serializable> {
     protected String TABELA;
     protected ConexaoBanco conexaoBanco;
 
@@ -27,56 +25,43 @@ public abstract class ADAO<T extends IModel> {
         this.conexaoBanco = conexaoBanco;
     }
 
-    public Boolean inserir(T t, boolean writeToJson, boolean sendToServer) throws IOException {
-        if (writeToJson) {
-            DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("INSERT", t);
-            if(sendToServer)
-                Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-        }
+    public Boolean inserir(T t) {
+        Sincronizacao.addTransientLog(t, "INSERIR");
+        Sincronizacao.writeLog();
+        Sincronizacao.sendLog();
         return true;
     }
 
-    public Boolean inserir(List<T> lista, boolean writeToJson, boolean sendToServer) throws IOException {
-        if (writeToJson) {
-            for (T t : lista) {
-                DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("INSERT", t);
-                if(sendToServer)
-                    Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-            }
-        }
+    public Boolean inserir(List<T> lista) {
+        for (T t : lista)
+            Sincronizacao.addTransientLog(t, "INSERIR");
+
+        Sincronizacao.writeLog();
+        Sincronizacao.sendLog();
+
         return true;
     }
 
-    public Boolean inserirOuAtualizar(T t, boolean writeToJson, boolean sendToServer) throws IOException {
-        if (writeToJson) {
-            DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("UPDATE", t);
-            if(sendToServer)
-                Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-        }
+    public Boolean atualizar(T t, Object... chaves) {
+        Sincronizacao.addTransientLog(t, "UPDATE");
+        Sincronizacao.writeLog();
+        Sincronizacao.sendLog();
         return true;
     }
 
-    public Boolean inserirOuAtualizar(List<T> lista, boolean writeToJson, boolean sendToServer) throws IOException {
-        if (writeToJson) {
-            for (T t : lista) {
-                DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("INSERT", t);
-                if(sendToServer)
-                    Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-            }
+    public void replicate(T entity) {
+        T t = listarPorId(entity.getIdentifier());
+
+        if (t == null) {
+            inserir(entity);
+        } else {
+            atualizar(entity, entity.getIdentifier());
         }
-        return true;
+
+        Sincronizacao.writeLog();
     }
 
-    public Boolean atualizar(T t, boolean writeToJson, boolean sendToServer, Object... chaves) throws IOException {
-        if (writeToJson) {
-            DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("UPDATE", t);
-            if(sendToServer)
-                Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-        }
-        return true;
-    }
-
-    public Boolean deletar(T objeto, boolean writeToJson, boolean sendToServer) {
+    public Boolean deletar(T objeto) {
         Object key = objeto.getIdentifier();
 
         if (!(key instanceof String[])) {
@@ -85,25 +70,18 @@ public abstract class ADAO<T extends IModel> {
 
         long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
 
-        if (result > 0 && writeToJson) {
-            try {
-                DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("DELETE", objeto);
-                if(sendToServer)
-                    Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-            } catch (IOException io) {
-                Log.e(ActivityBaseView.LOG, "Erro ao Escrever Log em DELETE. Inserindo Novamente em Banco de Dados: " + io.getMessage(), io);
-                try {
-                    inserir(objeto, true, true);
-                } catch (IOException e) {
-                    Log.e(ActivityBaseView.LOG, "Erro ao Inserir Log Novamente: " + e.getMessage(), e);
-                }
-            }
+        if (result > 0) {
+            Sincronizacao.addTransientLog(objeto, "DELETE");
+            Sincronizacao.writeLog();
+            Sincronizacao.sendLog();
         }
 
         return result > 0;
     }
 
-    public void deletarLista(List<T> lista, boolean writeToJson, boolean sendToServer) {
+    public void deletarLista(List<T> lista) {
+        if (lista.size() == 0)
+            return;
 
         for (T objeto : lista) {
             Object key = objeto.getIdentifier();
@@ -114,21 +92,13 @@ public abstract class ADAO<T extends IModel> {
 
             long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
 
-            if (result > 0 && writeToJson) {
-                try {
-                    DatabaseLogFile<T> databaseLogFile = Sincronizacao.escreverJson("DELETE", objeto);
-                    if(sendToServer)
-                        Sincronizacao.sendDatabaseLogFileToServer(databaseLogFile);
-                } catch (IOException io) {
-                    Log.e(ActivityBaseView.LOG, "Erro ao Escrever Log em DELETE. Inserindo Novamente em Banco de Dados: " + io.getMessage(), io);
-                    try {
-                        inserir(objeto, true, true);
-                    } catch (IOException e) {
-                        Log.e(ActivityBaseView.LOG, "Erro ao Inserir Log Novamente: " + e.getMessage(), e);
-                    }
-                }
+            if (result > 0) {
+                Sincronizacao.addTransientLog(objeto, "DELETE");
             }
         }
+
+        Sincronizacao.writeLog();
+        Sincronizacao.sendLog();
     }
 
     public abstract Cursor listarCursor();
@@ -141,5 +111,7 @@ public abstract class ADAO<T extends IModel> {
      * @param ids Identificadores da entidade no banco de dados
      * @return Retorna o objeto encontrado com a ids ou nulo, se não encontrar
      */
-    abstract T listarPorId(Object... ids);
+    public abstract T listarPorId(Object... ids);
+
+    public abstract int getMaxId();
 }

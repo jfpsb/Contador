@@ -35,12 +35,12 @@ public class LojaManager implements IManager<Loja> {
 
     @Override
     public Boolean salvar() {
-        return daoLoja.inserir(loja, true, true);
+        return daoLoja.inserir(loja);
     }
 
     @Override
     public Boolean salvar(List<Loja> lista) {
-        return daoLoja.inserir(lista, true, true);
+        return daoLoja.inserir(lista);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LojaManager implements IManager<Loja> {
 
     @Override
     public Boolean deletar() {
-        return daoLoja.deletar(loja, true, true);
+        return daoLoja.deletar(loja);
     }
 
     @Override

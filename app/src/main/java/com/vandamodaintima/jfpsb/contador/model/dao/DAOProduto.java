@@ -24,7 +24,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(Produto produto, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(Produto produto) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(produto, writeToJson, sendToServer);
+            return super.inserir(produto);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +73,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
+    public Boolean inserir(List<Produto> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -113,7 +113,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, writeToJson, sendToServer);
+            return super.inserir(lista);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -124,108 +124,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserirOuAtualizar(Produto produto, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            ContentValues contentValues = new ContentValues();
-
-            contentValues.put("cod_barra", produto.getCod_barra());
-            contentValues.put("descricao", produto.getDescricao());
-            contentValues.put("preco", produto.getPreco());
-            contentValues.put("ncm", produto.getNcm());
-
-            if (produto.getFornecedor() != null) {
-                contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
-            } else {
-                contentValues.putNull("fornecedor");
-            }
-
-            if (produto.getMarca() != null) {
-                contentValues.put("marca", produto.getMarca().getNome());
-            } else {
-                contentValues.putNull("marca");
-            }
-
-            conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-
-            for (int i = 0; i < produto.getCod_barra_fornecedor().size(); i++) {
-                String codigo = produto.getCod_barra_fornecedor().get(i);
-
-                ContentValues content = new ContentValues();
-
-                content.put("produto", produto.getCod_barra());
-                content.put("codigo", codigo);
-
-                conexaoBanco.conexao().insertWithOnConflict("cod_barra_fornecedor", null, content, SQLiteDatabase.CONFLICT_REPLACE);
-            }
-
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(produto, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean inserirOuAtualizar(List<Produto> lista, boolean writeToJson, boolean sendToServer) {
-        try {
-            conexaoBanco.conexao().beginTransaction();
-
-            for (Produto p : lista) {
-                ContentValues contentValues = new ContentValues();
-
-                contentValues.put("cod_barra", p.getCod_barra());
-                contentValues.put("descricao", p.getDescricao());
-                contentValues.put("preco", p.getPreco());
-                contentValues.put("ncm", p.getNcm());
-
-                if (p.getFornecedor() != null) {
-                    contentValues.put("fornecedor", p.getFornecedor().getCnpj());
-                } else {
-                    contentValues.putNull("fornecedor");
-                }
-
-                if (p.getMarca() != null) {
-                    contentValues.put("marca", p.getMarca().getNome());
-                } else {
-                    contentValues.putNull("marca");
-                }
-
-                conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-                conexaoBanco.conexao().delete("cod_barra_fornecedor", "produto = ?", new String[]{p.getCod_barra()});
-
-                for (int i = 0; i < p.getCod_barra_fornecedor().size(); i++) {
-                    String codigo = p.getCod_barra_fornecedor().get(i);
-
-                    ContentValues content = new ContentValues();
-
-                    content.put("produto", p.getCod_barra());
-                    content.put("codigo", codigo);
-
-                    conexaoBanco.conexao().insertOrThrow("cod_barra_fornecedor", null, content);
-                }
-            }
-
-            conexaoBanco.conexao().setTransactionSuccessful();
-
-            return super.inserirOuAtualizar(lista, writeToJson, sendToServer);
-        } catch (Exception e) {
-            Log.e(ActivityBaseView.LOG, e.getMessage(), e);
-        } finally {
-            conexaoBanco.conexao().endTransaction();
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean atualizar(Produto produto, boolean writeToJson, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Produto produto, Object... chaves) {
         try {
             String cod_barra = (String) chaves[0];
 
@@ -263,7 +162,7 @@ public class DAOProduto extends ADAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(produto, writeToJson, sendToServer, chaves);
+            return super.atualizar(produto, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {
@@ -353,6 +252,20 @@ public class DAOProduto extends ADAO<Produto> {
         cursor.close();
 
         return p;
+    }
+
+    @Override
+    public int getMaxId() {
+        int maxId = 0;
+        String sql = "SELECT max(CAST(cod_barra as SIGNED)) as maxId from produto";
+        Cursor cursor = conexaoBanco.conexao().rawQuery(sql, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            maxId = cursor.getInt(0);
+        }
+
+        return maxId;
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
@@ -451,9 +364,7 @@ public class DAOProduto extends ADAO<Produto> {
 
     public Cursor listarPorMarcaCursor(String marca) {
         String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN marca ON produto.marca = marca.nome WHERE (marca = nome OR marca IS NULL) AND nome LIKE ? ORDER BY descricao";
-
         String[] selection = new String[]{"%" + marca + "%"};
-
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
@@ -497,9 +408,7 @@ public class DAOProduto extends ADAO<Produto> {
 
     public Cursor listarPorFornecedorCursor(String fornecedor) {
         String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao";
-
         String[] selection = new String[]{"%" + fornecedor + "%"};
-
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
