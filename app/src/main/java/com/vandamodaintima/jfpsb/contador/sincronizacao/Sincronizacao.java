@@ -49,6 +49,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 public class Sincronizacao extends Thread {
@@ -202,6 +204,18 @@ public class Sincronizacao extends Thread {
                 String receivedId = receivedSplitted[0];
 
                 switch (receivedId) {
+                    case "LogResponse":
+                        //Quando o servidor termina de enviar seus logs
+                        //Aguarda 10 segundos para mandar os logs locais para o servidor
+                        Timer t = new Timer();
+                        t.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                sendLog();
+                                t.cancel();
+                            }
+                        }, 10000);
+                        break;
                     case "Log":
                         String tipoEntidade = receivedSplitted[1];
                         String json = receivedSplitted[2];
