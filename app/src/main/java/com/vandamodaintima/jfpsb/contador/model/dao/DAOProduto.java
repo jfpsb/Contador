@@ -24,7 +24,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(Produto produto) {
+    public Boolean inserir(Produto produto, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(produto);
+            return super.inserir(produto, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +73,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(List<Produto> lista) {
+    public Boolean inserir(List<Produto> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -113,7 +113,7 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -124,7 +124,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean atualizar(Produto produto, Object... chaves) {
+    public Boolean atualizar(Produto produto, boolean sendToServer, Object... chaves) {
         try {
             String cod_barra = (String) chaves[0];
 
@@ -162,7 +162,7 @@ public class DAOProduto extends ADAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(produto, chaves);
+            return super.atualizar(produto, sendToServer, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {

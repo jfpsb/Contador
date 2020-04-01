@@ -27,7 +27,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean inserir(ContagemProduto contagemProduto) {
+    public Boolean inserir(ContagemProduto contagemProduto, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -42,7 +42,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(contagemProduto);
+            return super.inserir(contagemProduto, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -53,7 +53,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean inserir(List<ContagemProduto> lista) {
+    public Boolean inserir(List<ContagemProduto> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -71,7 +71,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -82,7 +82,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean atualizar(ContagemProduto contagemProduto, Object... chaves) {
+    public Boolean atualizar(ContagemProduto contagemProduto, boolean sendToServer, Object... chaves) {
         try {
             long id = (long) chaves[0];
 
@@ -98,7 +98,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagemProduto, chaves);
+            return super.atualizar(contagemProduto, sendToServer, chaves);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {

@@ -20,7 +20,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserir(TipoContagem tipoContagem) {
+    public Boolean inserir(TipoContagem tipoContagem, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
@@ -29,7 +29,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(tipoContagem);
+            return super.inserir(tipoContagem, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -40,7 +40,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean inserir(List<TipoContagem> lista) {
+    public Boolean inserir(List<TipoContagem> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -53,7 +53,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -64,7 +64,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean atualizar(TipoContagem tipoContagem, Object... chaves) {
+    public Boolean atualizar(TipoContagem tipoContagem, boolean sendToServer, Object... chaves) {
         try {
             String id = String.valueOf(chaves[0]);
 
@@ -77,7 +77,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(tipoContagem, chaves);
+            return super.atualizar(tipoContagem, sendToServer, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

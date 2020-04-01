@@ -107,6 +107,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsContagem = gson.fromJson(json, new TypeToken<ArrayList<DBLog<Contagem>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Contagens Locais Recuperadas: ");
         }
 
         if (new File(logDir, "ContagemProduto.json").exists()) {
@@ -114,6 +115,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsContagemProduto = gson.fromJson(json, new TypeToken<ArrayList<DBLog<ContagemProduto>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "ContagemProdutos Locais Recuperadas");
         }
 
         if (new File(logDir, "Fornecedor.json").exists()) {
@@ -121,6 +123,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsFornecedor = gson.fromJson(json, new TypeToken<ArrayList<DBLog<Fornecedor>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Fornecedores Locais Recuperados");
         }
 
         if (new File(logDir, "Loja.json").exists()) {
@@ -128,6 +131,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsLoja = gson.fromJson(json, new TypeToken<ArrayList<DBLog<Loja>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Lojas Locais Recuperadas");
         }
 
         if (new File(logDir, "Marca.json").exists()) {
@@ -135,6 +139,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsMarca = gson.fromJson(json, new TypeToken<ArrayList<DBLog<Marca>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Marcas Locais Recuperadas");
         }
 
         if (new File(logDir, "OperadoraCartao.json").exists()) {
@@ -142,6 +147,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsOperadoraCartao = gson.fromJson(json, new TypeToken<ArrayList<DBLog<OperadoraCartao>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Operadoras Locais Recuperadas");
         }
 
         if (new File(logDir, "Produto.json").exists()) {
@@ -149,6 +155,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsProduto = gson.fromJson(json, new TypeToken<ArrayList<DBLog<Produto>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Produtos Locais Recuperados");
         }
 
         if (new File(logDir, "RecebimentoCartao.json").exists()) {
@@ -156,6 +163,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsRecebimentoCartao = gson.fromJson(json, new TypeToken<ArrayList<DBLog<RecebimentoCartao>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Recebimentos Locais Recuperados");
         }
 
         if (new File(logDir, "TipoContagem.json").exists()) {
@@ -163,6 +171,7 @@ public class Sincronizacao extends Thread {
             if (json != null && !json.equals(""))
                 logsTipoContagem = gson.fromJson(json, new TypeToken<ArrayList<DBLog<TipoContagem>>>() {
                 }.getType());
+            Log.i(ActivityBaseView.LOG, "Tipos Locais Recuperados");
         }
 
         conectar();
@@ -219,12 +228,12 @@ public class Sincronizacao extends Thread {
                                                 c = dao.listarPorId(contagemLocal.getIdentifier());
                                             }
 
-                                            dao.inserir(contagemLocal);
+                                            dao.inserir(contagemLocal, true);
                                         }
                                     } else if (log.getOperacao().equals("UPDATE")) {
-                                        dao.atualizar(log.getEntidade());
+                                        dao.atualizar(log.getEntidade(), false);
                                     } else {
-                                        dao.deletar(log.getEntidade());
+                                        dao.deletar(log.getEntidade(), false);
                                     }
                                 }
                                 break;
@@ -248,12 +257,12 @@ public class Sincronizacao extends Thread {
                                                 c = dao.listarPorId(contagemProdutoLocal.getIdentifier());
                                             }
 
-                                            dao.inserir(contagemProdutoLocal);
+                                            dao.inserir(contagemProdutoLocal, true);
                                         }
                                     } else if (log.getOperacao().equals("UPDATE")) {
-                                        dao.atualizar(log.getEntidade());
+                                        dao.atualizar(log.getEntidade(), false);
                                     } else {
-                                        dao.deletar(log.getEntidade());
+                                        dao.deletar(log.getEntidade(), false);
                                     }
                                 }
                                 break;
@@ -302,12 +311,12 @@ public class Sincronizacao extends Thread {
                                                 c = dao.listarPorId(produtoLocal.getIdentifier());
                                             }
 
-                                            dao.inserir(produtoLocal);
+                                            dao.inserir(produtoLocal, true);
                                         }
                                     } else if (log.getOperacao().equals("UPDATE")) {
-                                        dao.atualizar(log.getEntidade());
+                                        dao.atualizar(log.getEntidade(), false);
                                     } else {
-                                        dao.deletar(log.getEntidade());
+                                        dao.deletar(log.getEntidade(), false);
                                     }
                                 }
                                 break;
@@ -338,12 +347,12 @@ public class Sincronizacao extends Thread {
                                                 c = dao.listarPorId(tipoLocal.getIdentifier());
                                             }
 
-                                            dao.inserir(tipoLocal);
+                                            dao.inserir(tipoLocal, true);
                                         }
                                     } else if (log.getOperacao().equals("UPDATE")) {
-                                        dao.atualizar(log.getEntidade());
+                                        dao.atualizar(log.getEntidade(), false);
                                     } else {
-                                        dao.deletar(log.getEntidade());
+                                        dao.deletar(log.getEntidade(), false);
                                     }
                                 }
                                 break;
@@ -369,9 +378,9 @@ public class Sincronizacao extends Thread {
             if (log.getOperacao().equals("INSERT")) {
                 dao.replicate(log.getEntidade());
             } else if (log.getOperacao().equals("UPDATE")) {
-                dao.atualizar(log.getEntidade());
+                dao.atualizar(log.getEntidade(), false);
             } else {
-                dao.deletar(log.getEntidade());
+                dao.deletar(log.getEntidade(), false);
             }
         }
     }
@@ -395,6 +404,7 @@ public class Sincronizacao extends Thread {
             TRANSIENTSENDTIPOCONTAGEM.addAll(logsTipoContagem.stream().filter(f -> f.getModificadoEm().isAfter(lastSync)).collect(Collectors.toList()));
 
             String logRequest = "LogRequest|" + lastSync.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) + "\n";
+            Log.i(ActivityBaseView.LOG, "Enviado Request de Logs");
 
             clientSocket.getOutputStream().write(logRequest.getBytes());
         } catch (SocketException se) {
@@ -526,107 +536,111 @@ public class Sincronizacao extends Thread {
     }
 
     public static void sendLog() {
-        try {
-            if (TRANSIENTSENDCONTAGEM.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDCONTAGEM);
-                String mensagemAoServidor = "Log|Contagem|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDCONTAGEM.clear();
+        Thread thread = new Thread(() -> {
+            try {
+                if (TRANSIENTSENDCONTAGEM.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDCONTAGEM);
+                    String mensagemAoServidor = "Log|Contagem|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDCONTAGEM.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "CONTAGEM: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "CONTAGEM: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDCONTAGEMPRODUTO.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDCONTAGEMPRODUTO);
-                String mensagemAoServidor = "Log|ContagemProduto|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDCONTAGEMPRODUTO.clear();
+            try {
+                if (TRANSIENTSENDCONTAGEMPRODUTO.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDCONTAGEMPRODUTO);
+                    String mensagemAoServidor = "Log|ContagemProduto|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDCONTAGEMPRODUTO.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "CONTAGEMPRODUTO: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "CONTAGEMPRODUTO: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDFORNECEDOR.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDFORNECEDOR);
-                String mensagemAoServidor = "Log|Fornecedor|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDFORNECEDOR.clear();
+            try {
+                if (TRANSIENTSENDFORNECEDOR.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDFORNECEDOR);
+                    String mensagemAoServidor = "Log|Fornecedor|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDFORNECEDOR.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "FORNECEDOR: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "FORNECEDOR: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDLOJA.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDLOJA);
-                String mensagemAoServidor = "Log|Loja|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDLOJA.clear();
+            try {
+                if (TRANSIENTSENDLOJA.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDLOJA);
+                    String mensagemAoServidor = "Log|Loja|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDLOJA.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "LOJA: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "LOJA: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDMARCA.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDMARCA);
-                String mensagemAoServidor = "Log|Marca|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDMARCA.clear();
+            try {
+                if (TRANSIENTSENDMARCA.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDMARCA);
+                    String mensagemAoServidor = "Log|Marca|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDMARCA.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "MARCA: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "MARCA: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDOPERADORACARTAO.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDOPERADORACARTAO);
-                String mensagemAoServidor = "Log|OperadoraCartao|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDOPERADORACARTAO.clear();
+            try {
+                if (TRANSIENTSENDOPERADORACARTAO.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDOPERADORACARTAO);
+                    String mensagemAoServidor = "Log|OperadoraCartao|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDOPERADORACARTAO.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "OPERADORACARTAO: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "OPERADORACARTAO: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDPRODUTO.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDPRODUTO);
-                String mensagemAoServidor = "Log|Produto|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDPRODUTO.clear();
+            try {
+                if (TRANSIENTSENDPRODUTO.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDPRODUTO);
+                    String mensagemAoServidor = "Log|Produto|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDPRODUTO.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "PRODUTO: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "PRODUTO: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDRECEBIMENTOCARTAO.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDRECEBIMENTOCARTAO);
-                String mensagemAoServidor = "Log|RecebimentoCartao|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDRECEBIMENTOCARTAO.clear();
+            try {
+                if (TRANSIENTSENDRECEBIMENTOCARTAO.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDRECEBIMENTOCARTAO);
+                    String mensagemAoServidor = "Log|RecebimentoCartao|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDRECEBIMENTOCARTAO.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "RECEBIMENTOCARTAO: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "RECEBIMENTOCARTAO: " + ex.getMessage(), ex);
-        }
 
-        try {
-            if (TRANSIENTSENDTIPOCONTAGEM.size() > 0) {
-                String json = gson.toJson(TRANSIENTSENDTIPOCONTAGEM);
-                String mensagemAoServidor = "Log|TipoContagem|" + json + "\n";
-                clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
-                TRANSIENTSENDTIPOCONTAGEM.clear();
+            try {
+                if (TRANSIENTSENDTIPOCONTAGEM.size() > 0) {
+                    String json = gson.toJson(TRANSIENTSENDTIPOCONTAGEM);
+                    String mensagemAoServidor = "Log|TipoContagem|" + json + "\n";
+                    clientSocket.getOutputStream().write(mensagemAoServidor.getBytes());
+                    TRANSIENTSENDTIPOCONTAGEM.clear();
+                }
+            } catch (Exception ex) {
+                Log.e(ActivityBaseView.LOG, "TIPOCONTAGEM: " + ex.getMessage(), ex);
             }
-        } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "TIPOCONTAGEM: " + ex.getMessage(), ex);
-        }
 
-        lastSync = Instant.now().atZone(ZoneId.systemDefault());
-        writeAllText(lastSyncFile, lastSync.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            lastSync = Instant.now().atZone(ZoneId.systemDefault());
+            writeAllText(lastSyncFile, lastSync.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        });
+
+        thread.start();
     }
 
     public static void addTransientLog(Object entidade, String operacao) {

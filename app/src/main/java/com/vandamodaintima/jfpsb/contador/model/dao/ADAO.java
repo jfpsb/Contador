@@ -25,27 +25,30 @@ public abstract class ADAO<T extends IModel & Serializable> {
         this.conexaoBanco = conexaoBanco;
     }
 
-    public Boolean inserir(T t) {
-        Sincronizacao.addTransientLog(t, "INSERIR");
+    public Boolean inserir(T t, boolean sendToServer) {
+        Sincronizacao.addTransientLog(t, "INSERT");
         Sincronizacao.writeLog();
-        Sincronizacao.sendLog();
+        if (sendToServer)
+            Sincronizacao.sendLog();
         return true;
     }
 
-    public Boolean inserir(List<T> lista) {
+    public Boolean inserir(List<T> lista, boolean sendToServer) {
         for (T t : lista)
-            Sincronizacao.addTransientLog(t, "INSERIR");
+            Sincronizacao.addTransientLog(t, "INSERT");
 
         Sincronizacao.writeLog();
-        Sincronizacao.sendLog();
+        if (sendToServer)
+            Sincronizacao.sendLog();
 
         return true;
     }
 
-    public Boolean atualizar(T t, Object... chaves) {
+    public Boolean atualizar(T t, boolean sendToServer, Object... chaves) {
         Sincronizacao.addTransientLog(t, "UPDATE");
         Sincronizacao.writeLog();
-        Sincronizacao.sendLog();
+        if (sendToServer)
+            Sincronizacao.sendLog();
         return true;
     }
 
@@ -53,15 +56,15 @@ public abstract class ADAO<T extends IModel & Serializable> {
         T t = listarPorId(entity.getIdentifier());
 
         if (t == null) {
-            inserir(entity);
+            inserir(entity, false);
         } else {
-            atualizar(entity, entity.getIdentifier());
+            atualizar(entity, false, entity.getIdentifier());
         }
 
         Sincronizacao.writeLog();
     }
 
-    public Boolean deletar(T objeto) {
+    public Boolean deletar(T objeto, boolean sendToServer) {
         Object key = objeto.getIdentifier();
 
         if (!(key instanceof String[])) {
@@ -73,13 +76,14 @@ public abstract class ADAO<T extends IModel & Serializable> {
         if (result > 0) {
             Sincronizacao.addTransientLog(objeto, "DELETE");
             Sincronizacao.writeLog();
-            Sincronizacao.sendLog();
+            if (sendToServer)
+                Sincronizacao.sendLog();
         }
 
         return result > 0;
     }
 
-    public void deletarLista(List<T> lista) {
+    public void deletarLista(List<T> lista, boolean sendToServer) {
         if (lista.size() == 0)
             return;
 
@@ -98,7 +102,8 @@ public abstract class ADAO<T extends IModel & Serializable> {
         }
 
         Sincronizacao.writeLog();
-        Sincronizacao.sendLog();
+        if (sendToServer)
+            Sincronizacao.sendLog();
     }
 
     public abstract Cursor listarCursor();

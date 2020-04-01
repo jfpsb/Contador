@@ -24,7 +24,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean inserir(RecebimentoCartao recebimentoCartao) {
+    public Boolean inserir(RecebimentoCartao recebimentoCartao, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -40,7 +40,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(recebimentoCartao);
+            return super.inserir(recebimentoCartao, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -51,7 +51,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean inserir(List<RecebimentoCartao> lista) {
+    public Boolean inserir(List<RecebimentoCartao> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -70,7 +70,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -81,7 +81,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean atualizar(RecebimentoCartao recebimentoCartao, Object... chaves) {
+    public Boolean atualizar(RecebimentoCartao recebimentoCartao, boolean sendToServer, Object... chaves) {
         try {
             String mes = (String) chaves[0];
             String ano = (String) chaves[1];
@@ -98,7 +98,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(recebimentoCartao, chaves);
+            return super.atualizar(recebimentoCartao, sendToServer, chaves);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {

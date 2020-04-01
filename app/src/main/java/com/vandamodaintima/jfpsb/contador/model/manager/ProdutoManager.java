@@ -27,12 +27,12 @@ public class ProdutoManager implements IManager<Produto> {
     }
 
     public Boolean salvar() {
-        return daoProduto.inserir(produto);
+        return daoProduto.inserir(produto, true);
     }
 
     @Override
     public Boolean salvar(List<Produto> lista) {
-        return daoProduto.inserir(lista);
+        return daoProduto.inserir(lista, true);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ProdutoManager implements IManager<Produto> {
 
     @Override
     public Boolean deletar() {
-        return daoProduto.deletar(produto);
+        return daoProduto.deletar(produto, true);
     }
 
     public List<Produto> listar() {

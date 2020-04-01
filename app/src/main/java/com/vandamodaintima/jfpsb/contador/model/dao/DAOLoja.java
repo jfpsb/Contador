@@ -21,7 +21,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(Loja loja) {
+    public Boolean inserir(Loja loja, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -41,7 +41,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(loja);
+            return super.inserir(loja, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -52,7 +52,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(List<Loja> lista) {
+    public Boolean inserir(List<Loja> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -74,7 +74,7 @@ public class DAOLoja extends ADAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -85,7 +85,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean atualizar(Loja loja, Object... chaves) {
+    public Boolean atualizar(Loja loja, boolean sendToServer, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
 
@@ -106,7 +106,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(loja, chaves);
+            return super.atualizar(loja, sendToServer, chaves);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR LOJA", ex);
         } finally {

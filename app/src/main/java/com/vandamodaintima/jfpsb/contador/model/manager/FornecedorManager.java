@@ -35,22 +35,22 @@ public class FornecedorManager implements IManager<Fornecedor> {
 
     @Override
     public Boolean salvar() {
-        return daoFornecedor.inserir(fornecedor);
+        return daoFornecedor.inserir(fornecedor, true);
     }
 
     @Override
     public Boolean salvar(List<Fornecedor> lista) {
-        return daoFornecedor.inserir(lista);
+        return daoFornecedor.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoFornecedor.atualizar(fornecedor, true, true, ids);
+        return daoFornecedor.atualizar(fornecedor, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoFornecedor.deletar(fornecedor);
+        return daoFornecedor.deletar(fornecedor, true);
     }
 
     @Override

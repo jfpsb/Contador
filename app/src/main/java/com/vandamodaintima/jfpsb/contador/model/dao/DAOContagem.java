@@ -29,7 +29,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(Contagem contagem) {
+    public Boolean inserir(Contagem contagem, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -44,7 +44,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(contagem);
+            return super.inserir(contagem, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -55,7 +55,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(List<Contagem> lista) {
+    public Boolean inserir(List<Contagem> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -72,7 +72,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -83,7 +83,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean atualizar(Contagem contagem, Object... chaves) {
+    public Boolean atualizar(Contagem contagem, boolean sendToServer, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
             String data = (String) chaves[1];
@@ -99,7 +99,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagem, chaves);
+            return super.atualizar(contagem, sendToServer, chaves);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

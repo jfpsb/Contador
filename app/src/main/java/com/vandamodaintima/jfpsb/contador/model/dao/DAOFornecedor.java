@@ -21,7 +21,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean inserir(Fornecedor fornecedor) {
+    public Boolean inserir(Fornecedor fornecedor, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -36,7 +36,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(fornecedor);
+            return super.inserir(fornecedor, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -47,7 +47,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean inserir(List<Fornecedor> lista) {
+    public Boolean inserir(List<Fornecedor> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -65,7 +65,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -76,7 +76,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean atualizar(Fornecedor fornecedor, Object... chaves) {
+    public Boolean atualizar(Fornecedor fornecedor, boolean sendToServer, Object... chaves) {
         try {
             String cnpj = (String) chaves[0];
 
@@ -92,7 +92,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(fornecedor, chaves);
+            return super.atualizar(fornecedor, sendToServer, chaves);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

@@ -37,22 +37,22 @@ public class ContagemProdutoManager implements IManager<ContagemProduto> {
 
     @Override
     public Boolean salvar() {
-        return daoContagemProduto.inserir(contagemProduto);
+        return daoContagemProduto.inserir(contagemProduto, true);
     }
 
     @Override
     public Boolean salvar(List<ContagemProduto> lista) {
-        return daoContagemProduto.inserir(lista);
+        return daoContagemProduto.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar(Object... ids) {
-        return daoContagemProduto.atualizar(contagemProduto, true, true, ids);
+        return daoContagemProduto.atualizar(contagemProduto, true, ids);
     }
 
     @Override
     public Boolean deletar() {
-        return daoContagemProduto.deletar(contagemProduto);
+        return daoContagemProduto.deletar(contagemProduto, true);
     }
 
     @Override

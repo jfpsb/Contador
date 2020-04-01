@@ -23,7 +23,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(Marca marca) {
+    public Boolean inserir(Marca marca, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -37,7 +37,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(marca);
+            return super.inserir(marca, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -48,7 +48,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(List<Marca> lista) {
+    public Boolean inserir(List<Marca> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +62,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +73,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean atualizar(Marca marca, Object... chaves) {
+    public Boolean atualizar(Marca marca, boolean sendToServer, Object... chaves) {
         try {
             String nome = (String) chaves[0];
 
@@ -88,7 +88,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(marca, chaves);
+            return super.atualizar(marca, sendToServer, chaves);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {

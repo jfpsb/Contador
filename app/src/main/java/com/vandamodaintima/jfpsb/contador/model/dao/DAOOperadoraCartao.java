@@ -19,7 +19,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean inserir(OperadoraCartao operadoraCartao) {
+    public Boolean inserir(OperadoraCartao operadoraCartao, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -36,7 +36,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(operadoraCartao);
+            return super.inserir(operadoraCartao, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -47,7 +47,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean inserir(List<OperadoraCartao> lista) {
+    public Boolean inserir(List<OperadoraCartao> lista, boolean sendToServer) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -66,7 +66,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista);
+            return super.inserir(lista, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -77,7 +77,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean atualizar(OperadoraCartao operadoraCartao, Object... chaves) {
+    public Boolean atualizar(OperadoraCartao operadoraCartao, boolean sendToServer, Object... chaves) {
         try {
             String identificador = (String) chaves[0];
             conexaoBanco.conexao().beginTransaction();
@@ -97,7 +97,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{identificador});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(operadoraCartao);
+            return super.atualizar(operadoraCartao, sendToServer, operadoraCartao.getIdentifier());
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
