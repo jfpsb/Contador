@@ -183,7 +183,7 @@ public class Sincronizacao extends Thread {
         try {
             Log.i(ActivityBaseView.LOG, "Tentando Conexão Com Servidor");
             //18.229.130.78
-            clientSocket = new Socket("192.168.0.15", 3999);
+            clientSocket = new Socket("18.229.130.78", 3999);
             Log.i(ActivityBaseView.LOG, "Conexão Efetuada Com Sucesso");
 
             InputStream inputStream = clientSocket.getInputStream();
