@@ -10,7 +10,6 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,6 +162,8 @@ public class DAOLoja extends ADAO<Loja> {
             loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
             loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
             loja.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
+            loja.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
+            loja.setInscricaoEstadual(cursor.getString(cursor.getColumnIndexOrThrow("inscricaoestadual")));
 
             if (!cursor.isNull(cursor.getColumnIndexOrThrow("matriz"))) {
                 loja.setMatriz(listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("matriz"))));
@@ -194,7 +195,12 @@ public class DAOLoja extends ADAO<Loja> {
                 loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 loja.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
-                loja.setMatriz(listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("matriz"))));
+                loja.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
+                loja.setInscricaoEstadual(cursor.getString(cursor.getColumnIndexOrThrow("inscricaoestadual")));
+
+                if (!cursor.isNull(cursor.getColumnIndexOrThrow("matriz"))) {
+                    loja.setMatriz(listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("matriz"))));
+                }
 
                 lojas.add(loja);
             }
@@ -216,6 +222,8 @@ public class DAOLoja extends ADAO<Loja> {
                 loja.setCnpj(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 loja.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 loja.setTelefone(cursor.getString(cursor.getColumnIndexOrThrow("telefone")));
+                loja.setEndereco(cursor.getString(cursor.getColumnIndexOrThrow("endereco")));
+                loja.setInscricaoEstadual(cursor.getString(cursor.getColumnIndexOrThrow("inscricaoestadual")));
 
                 lojas.add(loja);
             }

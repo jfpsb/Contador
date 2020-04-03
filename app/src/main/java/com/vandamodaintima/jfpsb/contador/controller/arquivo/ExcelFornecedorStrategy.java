@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -64,7 +62,7 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
         ArrayList<Fornecedor> fornecedores = new ArrayList<>();
-        FornecedorManager fornecedorManager = new FornecedorManager(conexaoBanco);
+        Fornecedor fornecedorManager = new Fornecedor(conexaoBanco);
 
         Row cabecalho = sheet.getRow(0);
         int numCols = cabecalho.getPhysicalNumberOfCells();

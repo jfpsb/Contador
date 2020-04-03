@@ -21,6 +21,9 @@ public class CadastrarLoja extends TelaCadastro {
     private Button btnCadastrar;
     private EditText txtNome;
     private EditText txtCnpj;
+    private EditText txtTelefone;
+    private EditText txtEndereco;
+    private EditText txtInscricaoEstadual;
     private Spinner spinnerMatrizes;
 
     private CadastrarLojaController controller;
@@ -36,6 +39,9 @@ public class CadastrarLoja extends TelaCadastro {
         btnCadastrar = viewInflate.findViewById(R.id.btnCadastrar);
         txtCnpj = viewInflate.findViewById(R.id.txtCnpj);
         txtNome = viewInflate.findViewById(R.id.txtNome);
+        txtTelefone = viewInflate.findViewById(R.id.txtTelefone);
+        txtEndereco = viewInflate.findViewById(R.id.txtEndereco);
+        txtInscricaoEstadual = viewInflate.findViewById(R.id.txtInscricaoEstadual);
         spinnerMatrizes = viewInflate.findViewById(R.id.spinnerMatrizes);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
@@ -43,9 +49,12 @@ public class CadastrarLoja extends TelaCadastro {
             public void onClick(View view) {
                 String cnpj = txtCnpj.getText().toString();
                 String nome = txtNome.getText().toString().trim().toUpperCase();
+                String telefone = txtTelefone.getText().toString().trim();
+                String endereco = txtEndereco.getText().toString().trim();
+                String inscricaoEstadual = txtInscricaoEstadual.getText().toString().trim();
                 Object matriz = spinnerMatrizes.getSelectedItem();
                 controller.carregaMatriz(matriz);
-                controller.cadastrar(cnpj, nome);
+                controller.cadastrar(cnpj, nome, telefone, endereco, inscricaoEstadual);
             }
         });
 

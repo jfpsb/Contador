@@ -69,4 +69,8 @@
     <string name="inserir_manualmente">Inserir Manualmente</string>
     <string name="tela_ler_cod_barra_texture_view_description">Toque Na Imagem Da Câmera Para Escanear por Códigos de Barra</string>
     <string name="campo_data">%s/%s/%s</string>
+    <string name="endereco_dois_pontos">Endereço:</string>
+    <string name="inscricao_estadual_dois_pontos">Inscrição Estadual:</string>
+    <string name="hint_digite_nome_operadora">Digite o Nome da Operadora</string>
+    <string name="cadastro_de_operadora">Cadastro de Operadora de Cartão</string>
 </resources>

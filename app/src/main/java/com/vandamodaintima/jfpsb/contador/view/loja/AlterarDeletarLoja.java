@@ -23,6 +23,9 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
     private EditText txtCnpj;
     private EditText txtNome;
+    private EditText txtTelefone;
+    private EditText txtEndereco;
+    private EditText txtInscricaoEstadual;
     private Spinner spinnerMatrizes;
     AlterarDeletarLojaController controller;
 

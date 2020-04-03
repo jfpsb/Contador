@@ -3,8 +3,9 @@ package com.vandamodaintima.jfpsb.contador.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class Loja implements Serializable, IModel {
+public class Loja implements Serializable, IModel<Loja> {
     @SerializedName(value = "Cnpj")
     private String cnpj;
     @SerializedName(value = "Matriz")
@@ -80,12 +81,42 @@ public class Loja implements Serializable, IModel {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return cnpj;
+    public String getDeleteWhereClause() {
+        return "cnpj = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "cnpj = ?";
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<Loja> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<Loja> listar() {
+        return null;
+    }
+
+    @Override
+    public Loja listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }

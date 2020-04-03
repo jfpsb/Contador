@@ -3,8 +3,9 @@ package com.vandamodaintima.jfpsb.contador.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class RecebimentoCartao implements IModel, Serializable {
+public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializable {
     @SerializedName(value = "Mes")
     private int mes;
     @SerializedName(value = "Ano")
@@ -86,12 +87,42 @@ public class RecebimentoCartao implements IModel, Serializable {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return String.valueOf(mes) + ano + loja.getDatabaseLogIdentifier() + operadoraCartao.getDatabaseLogIdentifier();
+    public String getDeleteWhereClause() {
+        return "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "mes = ? AND ano = ? AND loja = ? AND operadoracartao = ?";
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<RecebimentoCartao> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<RecebimentoCartao> listar() {
+        return null;
+    }
+
+    @Override
+    public RecebimentoCartao listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }

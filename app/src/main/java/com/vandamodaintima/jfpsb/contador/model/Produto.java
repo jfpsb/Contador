@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Produto implements Serializable, IModel {
+public class Produto implements Serializable, IModel<Produto> {
     @SerializedName(value = "Cod_Barra")
     private String cod_barra;
     @SerializedName(value = "Codigos")
@@ -91,12 +92,42 @@ public class Produto implements Serializable, IModel {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return cod_barra;
+    public String getDeleteWhereClause() {
+        return "cod_barra = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "cod_barra = ?";
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<Produto> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<Produto> listar() {
+        return null;
+    }
+
+    @Override
+    public Produto listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }

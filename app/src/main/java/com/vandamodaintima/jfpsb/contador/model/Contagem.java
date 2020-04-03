@@ -13,7 +13,7 @@ import org.threeten.bp.format.FormatStyle;
 import java.io.Serializable;
 import java.util.List;
 
-public class Contagem implements Serializable, IModel, Cloneable {
+public class Contagem implements Serializable, IModel<Contagem> {
     @SerializedName(value = "Loja")
     private Loja loja;
     @SerializedName(value = "Data")
@@ -90,18 +90,42 @@ public class Contagem implements Serializable, IModel, Cloneable {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return loja.getCnpj() + data.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-    }
-
-    @Override
     public String getDeleteWhereClause() {
         return "loja = ? AND data = ?";
     }
 
-    @NonNull
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<Contagem> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<Contagem> listar() {
+        return null;
+    }
+
+    @Override
+    public Contagem listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }

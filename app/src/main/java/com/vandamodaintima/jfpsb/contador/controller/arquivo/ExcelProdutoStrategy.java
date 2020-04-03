@@ -4,9 +4,6 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.MarcaManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;

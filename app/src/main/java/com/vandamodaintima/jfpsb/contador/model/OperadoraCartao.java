@@ -1,12 +1,23 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOOperadoraCartao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperadoraCartao implements IModel, Serializable {
+public class OperadoraCartao implements IModel<OperadoraCartao>, Serializable {
+    private DAOOperadoraCartao daoOperadoraCartao;
+
+    public OperadoraCartao() {
+    }
+
+    public OperadoraCartao(ConexaoBanco conexaoBanco) {
+        daoOperadoraCartao = new DAOOperadoraCartao(conexaoBanco);
+    }
+
     @SerializedName(value = "Nome")
     private String nome;
     @SerializedName(value = "IdentificadoresBanco")
@@ -38,12 +49,49 @@ public class OperadoraCartao implements IModel, Serializable {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return nome;
+    public String getDeleteWhereClause() {
+        return "nome = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "nome = ?";
+    public Boolean salvar() {
+        return daoOperadoraCartao.inserir(this, true);
+    }
+
+    @Override
+    public Boolean salvar(List<OperadoraCartao> lista) {
+        return daoOperadoraCartao.inserir(lista, true);
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return daoOperadoraCartao.atualizar(this, true, this.getIdentifier());
+    }
+
+    @Override
+    public Boolean deletar() {
+        return daoOperadoraCartao.deletar(this, true);
+    }
+
+    @Override
+    public List<OperadoraCartao> listar() {
+        return daoOperadoraCartao.listar();
+    }
+
+    @Override
+    public OperadoraCartao listarPorId(Object... ids) {
+        return daoOperadoraCartao.listarPorId(ids);
+    }
+
+    @Override
+    /**
+     * Carrega no objeto atual os dados da entidade retornada pelas ids fornecidas
+     */
+    public void load(Object... ids) {
+        OperadoraCartao operadoraCartao = daoOperadoraCartao.listarPorId(ids);
+        if (operadoraCartao != null) {
+            setNome(operadoraCartao.getNome());
+            setIdentificadoresBanco(operadoraCartao.getIdentificadoresBanco());
+        }
     }
 }

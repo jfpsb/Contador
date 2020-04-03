@@ -1,14 +1,25 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Fornecedor implements Serializable, IModel {
+public class Fornecedor implements Serializable, IModel<Fornecedor> {
+    private DAOFornecedor daoFornecedor;
+
+    public Fornecedor(){}
+
+    public Fornecedor(ConexaoBanco conexaoBanco) {
+        daoFornecedor = new DAOFornecedor(conexaoBanco);
+    }
+
     @SerializedName(value = "Cnpj")
     private String cnpj;
     @SerializedName(value = "Nome")
@@ -74,12 +85,42 @@ public class Fornecedor implements Serializable, IModel {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return cnpj;
+    public String getDeleteWhereClause() {
+        return "cnpj = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "cnpj = ?";
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<Fornecedor> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<Fornecedor> listar() {
+        return null;
+    }
+
+    @Override
+    public Fornecedor listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }

@@ -18,7 +18,7 @@ public class CadastrarLojaController {
         lojaManager = new LojaManager(conexaoBanco);
     }
 
-    public void cadastrar(String cnpj, String nome) {
+    public void cadastrar(String cnpj, String nome, String telefone, String endereco, String inscricaoEstadual) {
         if (cnpj.isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Estar Vazio");
             return;
@@ -35,6 +35,9 @@ public class CadastrarLojaController {
 
         lojaManager.getLoja().setCnpj(cnpj);
         lojaManager.getLoja().setNome(nome);
+        lojaManager.getLoja().setTelefone(telefone);
+        lojaManager.getLoja().setEndereco(endereco);
+        lojaManager.getLoja().setInscricaoEstadual(inscricaoEstadual);
 
         Boolean result = lojaManager.salvar();
 

@@ -3,8 +3,9 @@ package com.vandamodaintima.jfpsb.contador.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class ContagemProduto implements Serializable, IModel {
+public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     @SerializedName(value = "Id")
     private long id;
     @SerializedName(value = "Contagem")
@@ -60,12 +61,42 @@ public class ContagemProduto implements Serializable, IModel {
     }
 
     @Override
-    public String getDatabaseLogIdentifier() {
-        return String.valueOf(id);
+    public String getDeleteWhereClause() {
+        return "id = ?";
     }
 
     @Override
-    public String getDeleteWhereClause() {
-        return "id = ?";
+    public Boolean salvar() {
+        return null;
+    }
+
+    @Override
+    public Boolean salvar(List<ContagemProduto> lista) {
+        return null;
+    }
+
+    @Override
+    public Boolean atualizar() {
+        return null;
+    }
+
+    @Override
+    public Boolean deletar() {
+        return null;
+    }
+
+    @Override
+    public List<ContagemProduto> listar() {
+        return null;
+    }
+
+    @Override
+    public ContagemProduto listarPorId(Object... ids) {
+        return null;
+    }
+
+    @Override
+    public void load(Object... ids) {
+
     }
 }
