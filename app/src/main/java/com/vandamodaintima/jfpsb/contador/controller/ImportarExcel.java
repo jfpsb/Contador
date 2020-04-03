@@ -8,16 +8,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;

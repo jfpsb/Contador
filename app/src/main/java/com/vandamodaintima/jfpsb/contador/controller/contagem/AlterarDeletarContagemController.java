@@ -7,33 +7,31 @@ import com.vandamodaintima.jfpsb.contador.controller.ExportarParaExcel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.TipoContagemManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 import java.util.List;
 
 public class AlterarDeletarContagemController {
     AlterarDeletarView view;
-    private ContagemManager contagemManager;
-    private ContagemProdutoManager contagemProdutoManager;
-    private TipoContagemManager tipoContagemManager;
+    private Contagem contagemModel;
+    private ContagemProduto contagemProdutoModel;
+    private TipoContagem tipoContagemModel;
     private ConexaoBanco conexaoBanco;
 
     public AlterarDeletarContagemController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        contagemManager = new ContagemManager(conexaoBanco);
-        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
-        tipoContagemManager = new TipoContagemManager(conexaoBanco);
+        contagemModel = new Contagem(conexaoBanco);
+        contagemProdutoModel = new ContagemProduto(conexaoBanco);
+        tipoContagemModel = new TipoContagem(conexaoBanco);
     }
 
     public void atualizar(Boolean finalizada) {
-        contagemManager.getContagem().setFinalizada(finalizada);
+        contagemModel.setFinalizada(finalizada);
 
-        Boolean result = contagemManager.atualizar(contagemManager.getContagem().getLoja().getCnpj(), contagemManager.getContagem().getDataParaSQLite());
+        Boolean result = contagemModel.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Atualizada Com Sucesso");
@@ -44,7 +42,7 @@ public class AlterarDeletarContagemController {
     }
 
     public void deletar() {
-        Boolean result = contagemManager.deletar();
+        Boolean result = contagemModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Deletada Com Sucesso");
@@ -55,23 +53,23 @@ public class AlterarDeletarContagemController {
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemManager.load(loja, data);
+        contagemModel.load(loja, data);
     }
 
     public void carregaTipoContagem(Object o) {
         if (o instanceof TipoContagem)
-            contagemManager.getContagem().setTipoContagem((TipoContagem) o);
+            contagemModel.setTipoContagem((TipoContagem) o);
     }
 
     public Contagem getContagem() {
-        return contagemManager.getContagem();
+        return contagemModel;
     }
 
     public int getTipoContagemIndex() {
         int index = 0;
 
         for (TipoContagem tipo : getTipoContagens()) {
-            if (contagemManager.getContagem().getTipoContagem().getId() == tipo.getId()) {
+            if (contagemModel.getTipoContagem().getId() == tipo.getId()) {
                 break;
             }
             index++;
@@ -81,10 +79,10 @@ public class AlterarDeletarContagemController {
     }
 
     public List<TipoContagem> getTipoContagens() {
-        return tipoContagemManager.listar();
+        return tipoContagemModel.listar();
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<Contagem>(view.getContext(), new ExcelStrategy<>(new ExcelContagemProdutoStrategy())).execute(uri, contagemProdutoManager.listarPorContagemGroupByProduto(contagemManager.getContagem()));
+        new ExportarParaExcel<Contagem>(view.getContext(), new ExcelStrategy<>(new ExcelContagemProdutoStrategy())).execute(uri, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
     }
 }

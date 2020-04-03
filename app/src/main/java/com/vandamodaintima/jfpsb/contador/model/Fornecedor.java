@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
@@ -14,7 +16,8 @@ import java.util.List;
 public class Fornecedor implements Serializable, IModel<Fornecedor> {
     private DAOFornecedor daoFornecedor;
 
-    public Fornecedor(){}
+    public Fornecedor() {
+    }
 
     public Fornecedor(ConexaoBanco conexaoBanco) {
         daoFornecedor = new DAOFornecedor(conexaoBanco);
@@ -122,5 +125,13 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public Fornecedor listarPorIdOuNome(String stringCellValue) {
+        return daoFornecedor.listarPorIdOuNome(stringCellValue);
+    }
+
+    public Cursor listarPorCnpjNomeFantasiaCursor(String termo) {
+        return daoFornecedor.listarPorCnpjNomeFantasiaCursor(termo);
     }
 }

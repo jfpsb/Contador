@@ -4,26 +4,22 @@ import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
-
-import java.util.Date;
 
 public class PesquisarProdutoController {
     protected PesquisarView view;
     private ProdutoCursorAdapter produtoAdapter;
-    protected ProdutoManager produtoManager;
+    protected Produto produtoModel;
 
     public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        produtoManager = new ProdutoManager(conexaoBanco);
+        produtoModel = new Produto(conexaoBanco);
         produtoAdapter = new ProdutoCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(produtoAdapter);
     }
 
     public void pesquisarPorDescricao(String termo) {
-        Cursor cursor = produtoManager.listarPorDescricaoCursor(termo);
+        Cursor cursor = produtoModel.listarPorDescricaoCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -33,7 +29,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoManager.listarPorCodBarraCursor(termo);
+        Cursor cursor = produtoModel.listarPorCodBarraCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -43,7 +39,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoManager.listarPorFornecedorCursor(termo);
+        Cursor cursor = produtoModel.listarPorFornecedorCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -53,7 +49,7 @@ public class PesquisarProdutoController {
             return;
         }
 
-        Cursor cursor = produtoManager.listarPorMarcaCursor(termo);
+        Cursor cursor = produtoModel.listarPorMarcaCursor(termo);
         mudarAdapter(cursor);
     }
 
@@ -69,19 +65,19 @@ public class PesquisarProdutoController {
     }
 
     public void carregaProduto(String id) {
-        produtoManager.load(id);
+        produtoModel.load(id);
     }
 
     public void carregaProduto(Object o) {
         if (o instanceof Produto)
-            produtoManager.setProduto((Produto) o);
+            produtoModel = ((Produto) o);
     }
 
     public Produto getProduto() {
-        return produtoManager.getProduto();
+        return produtoModel;
     }
 
     public void addCodBarraFornecedor(String codigo) {
-        produtoManager.getProduto().getCod_barra_fornecedor().add(codigo);
+        produtoModel.getCod_barra_fornecedor().add(codigo);
     }
 }

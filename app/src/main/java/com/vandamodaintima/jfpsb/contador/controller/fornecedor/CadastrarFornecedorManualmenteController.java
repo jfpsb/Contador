@@ -2,30 +2,28 @@ package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorManualmenteController {
-    private FornecedorManager fornecedorManager;
+    private Fornecedor fornecedorModel;
     private CadastrarView view;
 
     public CadastrarFornecedorManualmenteController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorManager = new FornecedorManager(conexaoBanco);
+        fornecedorModel = new Fornecedor(conexaoBanco);
     }
 
-    public void cadastrar(Fornecedor fornecedor) {
-        if (fornecedor.getCnpj().trim().isEmpty()) {
+    public void cadastrar() {
+        if (fornecedorModel.getCnpj().trim().isEmpty()) {
             view.mensagemAoUsuario("O CNPJ do Fornecedor Não Pode Ser Vazio");
             return;
         }
-        if (fornecedor.getNome().trim().isEmpty()) {
+        if (fornecedorModel.getNome().trim().isEmpty()) {
             view.mensagemAoUsuario("O Nome do Fornecedor Não Pode Ser Vazia");
             return;
         }
 
-        fornecedorManager.setFornecedor(fornecedor);
-        Boolean result = fornecedorManager.salvar();
+        Boolean result = fornecedorModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");

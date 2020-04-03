@@ -1,11 +1,21 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class Marca implements Serializable, IModel<Marca> {
+    private DAOMarca daoMarca;
+
+    public Marca(){}
+
+    public Marca(ConexaoBanco conexaoBanco) {
+        daoMarca = new DAOMarca(conexaoBanco);
+    }
+
     @SerializedName(value = "Nome")
     private String nome;
     @SerializedName(value = "Fornecedor")

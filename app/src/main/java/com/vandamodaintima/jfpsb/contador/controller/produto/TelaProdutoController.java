@@ -9,22 +9,21 @@ import com.vandamodaintima.jfpsb.contador.controller.ImportarExcel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
 public class TelaProdutoController {
-    private ProdutoManager produtoManager;
+    private Produto produtoModel;
     private TabLayoutBaseView view;
     private ConexaoBanco conexaoBanco;
 
     public TelaProdutoController(TabLayoutBaseView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produtoManager = new ProdutoManager(conexaoBanco);
+        produtoModel = new Produto(conexaoBanco);
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<Produto>(view.getApplicationContext(), new ExcelStrategy<>(new ExcelProdutoStrategy())).execute(uri, produtoManager.listar());
+        new ExportarParaExcel<Produto>(view.getApplicationContext(), new ExcelStrategy<>(new ExcelProdutoStrategy())).execute(uri, produtoModel.listar());
     }
 
     public void importarDeExcel(Uri uri, ContentResolver contentResolver) {

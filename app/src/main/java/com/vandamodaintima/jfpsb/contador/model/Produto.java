@@ -1,12 +1,25 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Produto implements Serializable, IModel<Produto> {
+    private DAOProduto daoProduto;
+
+    public Produto() {
+    }
+
+    public Produto(ConexaoBanco conexaoBanco) {
+        daoProduto = new DAOProduto(conexaoBanco);
+    }
+
     @SerializedName(value = "Cod_Barra")
     private String cod_barra;
     @SerializedName(value = "Codigos")
@@ -129,5 +142,25 @@ public class Produto implements Serializable, IModel<Produto> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public ArrayList<Produto> listarPorCodBarra(String codigo) {
+        return daoProduto.listarPorCodBarra(codigo);
+    }
+
+    public Cursor listarPorDescricaoCursor(String termo) {
+        return daoProduto.listarPorDescricaoCursor(termo);
+    }
+
+    public Cursor listarPorCodBarraCursor(String termo) {
+        return daoProduto.listarPorCodBarraCursor(termo);
+    }
+
+    public Cursor listarPorFornecedorCursor(String termo) {
+        return daoProduto.listarPorFornecedorCursor(termo);
+    }
+
+    public Cursor listarPorMarcaCursor(String termo) {
+        return listarPorMarcaCursor(termo);
     }
 }

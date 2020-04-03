@@ -4,23 +4,22 @@ import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarFornecedorController {
     private PesquisarView view;
-    private FornecedorManager fornecedorManager;
+    private Fornecedor fornecedorModel;
     private FornecedorCursorAdapter fornecedorCursorAdapter;
 
     public PesquisarFornecedorController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorManager = new FornecedorManager(conexaoBanco);
+        fornecedorModel = new Fornecedor(conexaoBanco);
         fornecedorCursorAdapter = new FornecedorCursorAdapter(view.getContext(), null);
         view.setListViewAdapter(fornecedorCursorAdapter);
     }
 
     public void pesquisa(String termo) {
-        Cursor cursor = fornecedorManager.listarPorCnpjNomeFantasiaCursor(termo);
+        Cursor cursor = fornecedorModel.listarPorCnpjNomeFantasiaCursor(termo);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Fornecedores Não Encontrados");
@@ -33,10 +32,10 @@ public class PesquisarFornecedorController {
     }
 
     public void carregaFornecedor(String id) {
-        fornecedorManager.load(id);
+        fornecedorModel.load(id);
     }
 
     public Fornecedor getFornecedor() {
-        return fornecedorManager.getFornecedor();
+        return fornecedorModel;
     }
 }

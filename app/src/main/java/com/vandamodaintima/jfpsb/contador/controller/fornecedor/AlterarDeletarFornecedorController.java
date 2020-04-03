@@ -2,26 +2,24 @@ package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.AlterarDeletarFornecedor;
 
 public class AlterarDeletarFornecedorController {
-    private FornecedorManager fornecedorManager;
+    private Fornecedor fornecedorModel;
     private AlterarDeletarFornecedor view;
 
     public AlterarDeletarFornecedorController(AlterarDeletarFornecedor view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        fornecedorManager = new FornecedorManager(conexaoBanco);
+        fornecedorModel = new Fornecedor(conexaoBanco);
     }
 
-    public void atualizar(Fornecedor fornecedor) {
-        if (fornecedor.getNome().trim().isEmpty()) {
+    public void atualizar() {
+        if (fornecedorModel.getNome().trim().isEmpty()) {
             view.mensagemAoUsuario("Nome De Fornecedor Não Pode Ser Vazio");
             return;
         }
 
-        fornecedorManager.setFornecedor(fornecedor);
-        Boolean result = fornecedorManager.atualizar(fornecedorManager.getFornecedor().getCnpj());
+        Boolean result = fornecedorModel.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Atualizado Com Sucesso");
@@ -32,7 +30,7 @@ public class AlterarDeletarFornecedorController {
     }
 
     public void deletar() {
-        Boolean result = fornecedorManager.deletar();
+        Boolean result = fornecedorModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Deletado Com Sucesso");
@@ -51,10 +49,10 @@ public class AlterarDeletarFornecedorController {
     }
 
     public void carregaFornecedor(String id) {
-        fornecedorManager.load(id);
+        fornecedorModel.load(id);
     }
 
     public Fornecedor getFornecedor() {
-        return fornecedorManager.getFornecedor();
+        return fornecedorModel;
     }
 }

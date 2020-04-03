@@ -1,11 +1,19 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Loja implements Serializable, IModel<Loja> {
+    private DAOLoja daoLoja;
+
     @SerializedName(value = "Cnpj")
     private String cnpj;
     @SerializedName(value = "Matriz")
@@ -18,6 +26,13 @@ public class Loja implements Serializable, IModel<Loja> {
     private String endereco;
     @SerializedName(value = "InscricaoEstadual")
     private String inscricaoEstadual;
+
+    public Loja() {
+    }
+
+    public Loja(ConexaoBanco conexaoBanco) {
+        daoLoja = new DAOLoja(conexaoBanco);
+    }
 
     public String getCnpj() {
         return cnpj;
@@ -118,5 +133,13 @@ public class Loja implements Serializable, IModel<Loja> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public ArrayList<Loja> listarMatrizes() {
+        return daoLoja.listarMatrizes();
+    }
+
+    public Cursor listarPorNomeCnpjCursor(String termo) {
+        return daoLoja.listarPorNomeCnpjCursor(termo);
     }
 }

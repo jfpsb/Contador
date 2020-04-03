@@ -1,11 +1,15 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class TipoContagem implements Serializable, IModel<TipoContagem> {
+    private DAOTipoContagem daoTipoContagem;
+
     @SerializedName(value = "Id")
     private long id;
     @SerializedName(value = "Nome")
@@ -14,9 +18,8 @@ public class TipoContagem implements Serializable, IModel<TipoContagem> {
     public TipoContagem() {
     }
 
-    public TipoContagem(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
+    public TipoContagem(ConexaoBanco conexaoBanco) {
+        daoTipoContagem = new DAOTipoContagem(conexaoBanco);
     }
 
     public long getId() {

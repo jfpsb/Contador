@@ -3,26 +3,26 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemProdutoManager;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.contagem.VisualizarProdutosContagem;
 
 public class VisualizarProdutosContagemController {
-    private ContagemManager contagemManager;
-    private ContagemProdutoManager contagemProdutoManager;
+    private Contagem contagemModel;
+    private ContagemProduto contagemProdutoModel;
     private VisualizarProdutosContagem view;
     private ContagemProdutoCursorAdapter contagemProdutoCursorAdapter;
 
     public VisualizarProdutosContagemController(VisualizarProdutosContagem view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        contagemManager = new ContagemManager(conexaoBanco);
-        contagemProdutoManager = new ContagemProdutoManager(conexaoBanco);
+        contagemModel = new Contagem(conexaoBanco);
+        contagemProdutoModel = new ContagemProduto(conexaoBanco);
         contagemProdutoCursorAdapter = new ContagemProdutoCursorAdapter(view.getApplicationContext(), null);
         view.setListViewAdaper(contagemProdutoCursorAdapter);
     }
 
     public void pesquisar() {
-        Cursor cursor = contagemProdutoManager.listarPorContagemGroupByProdutoCursor(contagemManager.getContagem());
+        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByProdutoCursor(contagemModel);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos Na Contagem");
@@ -33,6 +33,6 @@ public class VisualizarProdutosContagemController {
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemManager.load(loja, data);
+        contagemModel.load(loja, data);
     }
 }

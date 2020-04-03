@@ -3,6 +3,8 @@ package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
+import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -78,9 +80,9 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
         ArrayList<Produto> produtos = new ArrayList<>();
-        ProdutoManager produtoManager = new ProdutoManager(conexaoBanco);
-        FornecedorManager fornecedorManager = new FornecedorManager(conexaoBanco);
-        MarcaManager marcaManager = new MarcaManager(conexaoBanco);
+        Produto produtoModel = new Produto(conexaoBanco);
+        Fornecedor fornecedorModel = new Fornecedor(conexaoBanco);
+        Marca marcaModel = new Marca(conexaoBanco);
 
         Row cabecalho = sheet.getRow(0);
         int numCols = cabecalho.getPhysicalNumberOfCells();
@@ -149,9 +151,9 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
                         stringBuilder.append(cnpj);
                         cnpj = stringBuilder.toString();
                     }
-                    p.setFornecedor(fornecedorManager.listarPorId(cnpj));
+                    p.setFornecedor(fornecedorModel.listarPorId(cnpj));
                 } else if (fornecedor.getCellTypeEnum() == CellType.STRING) {
-                    p.setFornecedor(fornecedorManager.listarPorIdOuNome(fornecedor.getStringCellValue()));
+                    p.setFornecedor(fornecedorModel.listarPorIdOuNome(fornecedor.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrado ou Vazio");
                     p.setFornecedor(null);
@@ -160,7 +162,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
 
             if (marca != null && marca.getCellTypeEnum() != CellType.BLANK) {
                 if (marca.getCellTypeEnum() == CellType.STRING) {
-                    p.setMarca(marcaManager.listarPorId(marca.getStringCellValue()));
+                    p.setMarca(marcaModel.listarPorId(marca.getStringCellValue()));
                 } else {
                     Log.i("Contador", "Fornecedor Não Encontrada ou Vazia");
                     p.setMarca(null);
@@ -188,7 +190,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
             produtos.add(p);
         }
 
-        return produtoManager.salvar(produtos);
+        return produtoModel.salvar(produtos);
     }
 
     @Override

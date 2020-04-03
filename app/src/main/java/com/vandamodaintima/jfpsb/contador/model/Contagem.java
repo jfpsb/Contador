@@ -3,6 +3,8 @@ package com.vandamodaintima.jfpsb.contador.model;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
 
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
@@ -11,9 +13,19 @@ import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Contagem implements Serializable, IModel<Contagem> {
+    private DAOContagem daoContagem;
+
+    public Contagem() {
+    }
+
+    public Contagem(ConexaoBanco conexaoBanco) {
+        daoContagem = new DAOContagem(conexaoBanco);
+    }
+
     @SerializedName(value = "Loja")
     private Loja loja;
     @SerializedName(value = "Data")
@@ -86,7 +98,7 @@ public class Contagem implements Serializable, IModel<Contagem> {
 
     @Override
     public Object getIdentifier() {
-        return new String[] { loja.getCnpj(), getDataParaSQLite()};
+        return new String[]{loja.getCnpj(), getDataParaSQLite()};
     }
 
     @Override
@@ -127,5 +139,9 @@ public class Contagem implements Serializable, IModel<Contagem> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, LocalDateTime dataInicial, LocalDateTime dataFinal) {
+        return daoContagem.listarPorLojaPeriodo(cnpj, dataInicial, dataFinal);
     }
 }

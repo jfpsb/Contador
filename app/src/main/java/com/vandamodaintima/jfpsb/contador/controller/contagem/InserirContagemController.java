@@ -1,37 +1,34 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
-import com.vandamodaintima.jfpsb.contador.model.manager.ContagemManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
-import com.vandamodaintima.jfpsb.contador.model.manager.TipoContagemManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 
-import java.util.Date;
 import java.util.List;
 
 public class InserirContagemController {
     private CadastrarView view;
-    private ContagemManager contagemManager;
-    private LojaManager lojaManager;
-    private TipoContagemManager tipoContagemManager;
+    private Contagem contagemModel;
+    private Loja lojaModel;
+    private TipoContagem tipoContagemModel;
 
     public InserirContagemController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        contagemManager = new ContagemManager(conexaoBanco);
-        lojaManager = new LojaManager(conexaoBanco);
-        tipoContagemManager = new TipoContagemManager(conexaoBanco);
+        contagemModel = new Contagem(conexaoBanco);
+        lojaModel = new Loja(conexaoBanco);
+        tipoContagemModel = new TipoContagem(conexaoBanco);
     }
 
     public void cadastrar() {
-        contagemManager.getContagem().setData(Instant.now().atZone(ZoneId.systemDefault()));
-        contagemManager.getContagem().setFinalizada(false);
+        contagemModel.setData(Instant.now().atZone(ZoneId.systemDefault()));
+        contagemModel.setFinalizada(false);
 
-        Boolean result = contagemManager.salvar();
+        Boolean result = contagemModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem Cadastrada Com Sucesso");
@@ -43,19 +40,19 @@ public class InserirContagemController {
 
     public void carregaLoja(Object o) {
         if (o instanceof Loja)
-            contagemManager.getContagem().setLoja((Loja) o);
+            contagemModel.setLoja((Loja) o);
     }
 
     public void carregaTipoContagem(Object o) {
         if (o instanceof TipoContagem)
-            contagemManager.getContagem().setTipoContagem((TipoContagem) o);
+            contagemModel.setTipoContagem((TipoContagem) o);
     }
 
     public List<Loja> getLojas() {
-        return lojaManager.listar();
+        return lojaModel.listar();
     }
 
     public List<TipoContagem> getTipoContagens() {
-        return tipoContagemManager.listar();
+        return tipoContagemModel.listar();
     }
 }

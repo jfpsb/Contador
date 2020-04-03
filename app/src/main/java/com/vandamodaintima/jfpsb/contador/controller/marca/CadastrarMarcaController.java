@@ -2,27 +2,24 @@ package com.vandamodaintima.jfpsb.contador.controller.marca;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
-import com.vandamodaintima.jfpsb.contador.model.manager.MarcaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarMarcaController {
     private CadastrarView view;
-    private MarcaManager marcaManager;
+    private Marca marcaModel;
 
     public CadastrarMarcaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        marcaManager = new MarcaManager(conexaoBanco);
+        marcaModel = new Marca(conexaoBanco);
     }
 
-    public Boolean cadastrar(String nome) {
-        if (nome.isEmpty()) {
+    public Boolean cadastrar() {
+        if (marcaModel.getNome().isEmpty()) {
             view.mensagemAoUsuario("Nome da Marca Não Pode Ser Vazio");
             return false;
         }
 
-        marcaManager.getMarca().setNome(nome);
-
-        Boolean result = marcaManager.salvar();
+        Boolean result = marcaModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Marca Cadastrada Com Sucesso");
@@ -36,6 +33,6 @@ public class CadastrarMarcaController {
     }
 
     public Marca getMarca() {
-        return marcaManager.getMarca();
+        return marcaModel;
     }
 }

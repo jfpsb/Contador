@@ -1,11 +1,24 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
+    private DAOContagemProduto daoContagemProduto;
+
+    public ContagemProduto() {
+    }
+
+    public ContagemProduto(ConexaoBanco conexaoBanco) {
+        daoContagemProduto = new DAOContagemProduto(conexaoBanco);
+    }
+
     @SerializedName(value = "Id")
     private long id;
     @SerializedName(value = "Contagem")
@@ -98,5 +111,21 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public Object listarPorContagemGroupByProduto() {
+        return daoContagemProduto.listarPorContagemGroupByProduto(contagem);
+    }
+
+    public Object listarPorContagemGroupByProduto(Contagem contagemModel) {
+        return daoContagemProduto.listarPorContagemGroupByProduto(contagemModel);
+    }
+
+    public Cursor listarPorContagemCursor(Contagem contagem) {
+        return daoContagemProduto.listarPorContagemCursor(contagem);
+    }
+
+    public Cursor listarPorContagemGroupByProdutoCursor(Contagem contagemModel) {
+        return daoContagemProduto.listarPorContagemGroupByProdutoCursor(contagemModel);
     }
 }

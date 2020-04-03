@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 import java.util.ArrayList;
@@ -10,12 +9,12 @@ import java.util.ArrayList;
 public class AlterarDeletarLojaController {
     private AlterarDeletarView view;
     private ConexaoBanco conexaoBanco;
-    private LojaManager lojaManager;
+    private Loja lojaModel;
 
     public AlterarDeletarLojaController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        lojaManager = new LojaManager(conexaoBanco);
+        lojaModel = new Loja(conexaoBanco);
     }
 
     public void atualizar(String nome) {
@@ -24,13 +23,13 @@ public class AlterarDeletarLojaController {
             return;
         }
 
-        if (lojaManager.getLoja().getMatriz().getCnpj().equals("0")) {
-            lojaManager.getLoja().setMatriz(null);
+        if (lojaModel.getMatriz().getCnpj().equals("0")) {
+            lojaModel.setMatriz(null);
         }
 
-        lojaManager.getLoja().setNome(nome);
+        //TODO: arrumar na view
 
-        Boolean result = lojaManager.atualizar(lojaManager.getLoja().getCnpj());
+        Boolean result = lojaModel.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Loja Atualizada Com Sucesso");
@@ -41,7 +40,7 @@ public class AlterarDeletarLojaController {
     }
 
     public void deletar() {
-        Boolean result = lojaManager.deletar();
+        Boolean result = lojaModel.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Loja Deletada Com Sucesso");
@@ -58,20 +57,20 @@ public class AlterarDeletarLojaController {
         loja.setNome("SEM MATRIZ");
 
         matrizes.add(loja);
-        matrizes.addAll(lojaManager.listarMatrizes());
+        matrizes.addAll(lojaModel.listarMatrizes());
 
         return matrizes;
     }
 
     public void carregaMatriz(Object o) {
         if (o instanceof Loja)
-            lojaManager.getLoja().setMatriz((Loja) o);
+            lojaModel.setMatriz((Loja) o);
     }
 
     public int getMatrizIndex(String cnpj) {
         int index = 0, aux = 1;
 
-        for (Loja loja : lojaManager.listarMatrizes()) {
+        for (Loja loja : lojaModel.listarMatrizes()) {
             if (loja.getCnpj().equals(cnpj)) {
                 index = aux;
                 break;
@@ -83,10 +82,10 @@ public class AlterarDeletarLojaController {
     }
 
     public void carregaLoja(String id) {
-        lojaManager.load(id);
+        lojaModel.load(id);
     }
 
     public Loja getLoja() {
-        return lojaManager.getLoja();
+        return lojaModel;
     }
 }

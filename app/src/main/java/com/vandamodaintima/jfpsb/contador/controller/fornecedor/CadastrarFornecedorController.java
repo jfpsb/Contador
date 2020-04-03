@@ -2,34 +2,32 @@ package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.model.manager.FornecedorManager;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorController {
     protected CadastrarFornecedor view;
-    private FornecedorManager fornecedorManager;
+    private Fornecedor fornecedorModel;
     private ConexaoBanco conexaoBanco;
 
     public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarFornecedor) view;
         this.conexaoBanco = conexaoBanco;
-        fornecedorManager = new FornecedorManager(conexaoBanco);
+        fornecedorModel = new Fornecedor(conexaoBanco);
     }
 
-    public void cadastrar(Fornecedor fornecedor) {
-        if (fornecedor.getCnpj().isEmpty()) {
+    public void cadastrar() {
+        if (fornecedorModel.getCnpj().isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Ser Vazio");
             return;
         }
 
-        if (fornecedor.getNome().isEmpty()) {
+        if (fornecedorModel.getNome().isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
             return;
         }
 
-        fornecedorManager.setFornecedor(fornecedor);
-        Boolean result = fornecedorManager.salvar();
+        Boolean result = fornecedorModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Fornecedor Cadastrado Com Sucesso");
@@ -49,7 +47,7 @@ public class CadastrarFornecedorController {
 
     public void checaCnpj(String cnpj) {
         if (!cnpj.isEmpty()) {
-            Fornecedor fornecedor = fornecedorManager.listarPorId(cnpj);
+            Fornecedor fornecedor = fornecedorModel.listarPorId(cnpj);
 
             if (fornecedor != null) {
                 view.bloqueiaCampos();
@@ -60,6 +58,6 @@ public class CadastrarFornecedorController {
     }
 
     public Fornecedor getFornecedor() {
-        return fornecedorManager.getFornecedor();
+        return fornecedorModel;
     }
 }

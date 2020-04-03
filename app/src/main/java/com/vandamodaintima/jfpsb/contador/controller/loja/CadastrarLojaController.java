@@ -2,44 +2,37 @@ package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.model.manager.LojaManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;
 
 public class CadastrarLojaController {
     private CadastrarView view;
-    private LojaManager lojaManager;
+    private Loja lojaModel;
     private ConexaoBanco conexaoBanco;
 
     public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        lojaManager = new LojaManager(conexaoBanco);
+        lojaModel = new Loja(conexaoBanco);
     }
 
-    public void cadastrar(String cnpj, String nome, String telefone, String endereco, String inscricaoEstadual) {
-        if (cnpj.isEmpty()) {
+    public void cadastrar() {
+        if (lojaModel.getCnpj().isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Estar Vazio");
             return;
         }
 
-        if (nome.isEmpty()) {
+        if (lojaModel.getNome().isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Estar Vazio");
             return;
         }
 
-        if (lojaManager.getLoja().getMatriz().getCnpj().equals("0")) {
-            lojaManager.getLoja().setMatriz(null);
+        if (lojaModel.getMatriz().getCnpj().equals("0")) {
+            lojaModel.setMatriz(null);
         }
 
-        lojaManager.getLoja().setCnpj(cnpj);
-        lojaManager.getLoja().setNome(nome);
-        lojaManager.getLoja().setTelefone(telefone);
-        lojaManager.getLoja().setEndereco(endereco);
-        lojaManager.getLoja().setInscricaoEstadual(inscricaoEstadual);
-
-        Boolean result = lojaManager.salvar();
+        Boolean result = lojaModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Loja Cadastrada Com Sucesso!");
@@ -57,17 +50,17 @@ public class CadastrarLojaController {
         loja.setNome("SEM MATRIZ");
 
         matrizes.add(loja);
-        matrizes.addAll(lojaManager.listarMatrizes());
+        matrizes.addAll(lojaModel.listarMatrizes());
 
         return matrizes;
     }
 
     public void resetaLoja() {
-        lojaManager.resetaModelo();
+        lojaModel = new Loja(conexaoBanco);
     }
 
     public void carregaMatriz(Object o) {
         if (o instanceof Loja)
-            lojaManager.getLoja().setMatriz((Loja) o);
+            lojaModel.setMatriz((Loja) o);
     }
 }
