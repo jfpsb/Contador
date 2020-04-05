@@ -63,4 +63,8 @@ public class CadastrarLojaController {
         if (o instanceof Loja)
             lojaModel.setMatriz((Loja) o);
     }
+
+    public Loja getLoja() {
+        return lojaModel;
+    }
 }

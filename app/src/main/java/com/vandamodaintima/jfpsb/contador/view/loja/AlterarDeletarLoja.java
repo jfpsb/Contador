@@ -114,10 +114,9 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    String nome = txtNome.getText().toString().toUpperCase();
-                    Object matriz = spinnerMatrizes.getSelectedItem();
-                    controller.carregaMatriz(matriz);
-                    controller.atualizar(nome);
+                    controller.getLoja().setNome(txtNome.getText().toString().toUpperCase());
+                    controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
+                    controller.atualizar();
                 } catch (Exception e) {
                     Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(LOG, e.getMessage(), e);

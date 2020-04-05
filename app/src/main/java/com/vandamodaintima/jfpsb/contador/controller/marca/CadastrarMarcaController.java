@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.marca;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -34,5 +35,13 @@ public class CadastrarMarcaController {
 
     public Marca getMarca() {
         return marcaModel;
+    }
+
+    public void setFornecedorNull() {
+        marcaModel.setFornecedor(null);
+    }
+
+    public void carregaFornecedor(Fornecedor fornecedor) {
+        marcaModel.setFornecedor(fornecedor);
     }
 }

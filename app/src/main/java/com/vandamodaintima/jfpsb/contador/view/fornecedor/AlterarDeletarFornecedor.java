@@ -86,22 +86,17 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar implements IApo
         alertBuilderAtualizar.setTitle("Atualizar Fornecedor");
         alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Fornecedor " + controller.getFornecedor().getCnpj() + " - " + controller.getFornecedor().getNome() + "?");
 
-        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    Fornecedor fornecedor = new Fornecedor();
+        alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
+            try {
+                controller.getFornecedor().setCnpj(txtCnpj.getText().toString());
+                controller.getFornecedor().setNome(txtNome.getText().toString().toUpperCase());
+                controller.getFornecedor().setFantasia(txtFantasia.getText().toString().toUpperCase());
+                controller.getFornecedor().setEmail(txtEmail.getText().toString().toUpperCase());
+                controller.getFornecedor().setTelefone(txtTelefone.getText().toString());
 
-                    fornecedor.setCnpj(txtCnpj.getText().toString());
-                    fornecedor.setNome(txtNome.getText().toString().toUpperCase());
-                    fornecedor.setFantasia(txtFantasia.getText().toString().toUpperCase());
-                    fornecedor.setEmail(txtEmail.getText().toString().toUpperCase());
-                    fornecedor.setTelefone(txtTelefone.getText().toString());
-
-                    controller.atualizar(fornecedor);
-                } catch (Exception e) {
-                    Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                controller.atualizar();
+            } catch (Exception e) {
+                Toast.makeText(AlterarDeletarFornecedor.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

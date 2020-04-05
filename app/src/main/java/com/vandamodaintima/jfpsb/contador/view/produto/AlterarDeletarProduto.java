@@ -164,6 +164,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
@@ -230,9 +231,16 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String descricao = txtDescricao.getText().toString().toUpperCase();
-                double preco = Double.parseDouble(txtPreco.getText().toString());
-                controller.atualizar(descricao, preco);
+                controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
+
+                if(txtPreco.getText().length() > 0 && controller.isDouble(txtPreco.getText().toString())) {
+                    controller.getProduto().setPreco(Double.valueOf(txtPreco.getText().toString()));
+                } else {
+                    controller.getProduto().setPreco(0.0);
+                    txtPreco.setText("0");
+                }
+                //TODO: NCM
+                controller.atualizar();
             }
         });
 

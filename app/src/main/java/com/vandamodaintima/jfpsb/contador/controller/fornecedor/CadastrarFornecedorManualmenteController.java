@@ -5,6 +5,7 @@ import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 public class CadastrarFornecedorManualmenteController {
+
     private Fornecedor fornecedorModel;
     private CadastrarView view;
 
@@ -31,5 +32,9 @@ public class CadastrarFornecedorManualmenteController {
         } else {
             view.mensagemAoUsuario("Erro ao Cadastrar Fornecedor");
         }
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedorModel;
     }
 }

@@ -61,7 +61,6 @@ public class RetornarFornecedor<View extends IAposPesquisarFornecedor> extends A
 
                 while (jsonReader.hasNext()) {
                     String indice = jsonReader.nextName();
-
                     switch (indice) {
                         case "nome":
                             nome = jsonReader.nextString();

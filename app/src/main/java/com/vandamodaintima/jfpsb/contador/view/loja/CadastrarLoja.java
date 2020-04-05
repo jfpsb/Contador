@@ -44,18 +44,14 @@ public class CadastrarLoja extends TelaCadastro {
         txtInscricaoEstadual = viewInflate.findViewById(R.id.txtInscricaoEstadual);
         spinnerMatrizes = viewInflate.findViewById(R.id.spinnerMatrizes);
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cnpj = txtCnpj.getText().toString();
-                String nome = txtNome.getText().toString().trim().toUpperCase();
-                String telefone = txtTelefone.getText().toString().trim();
-                String endereco = txtEndereco.getText().toString().trim();
-                String inscricaoEstadual = txtInscricaoEstadual.getText().toString().trim();
-                Object matriz = spinnerMatrizes.getSelectedItem();
-                controller.carregaMatriz(matriz);
-                controller.cadastrar(cnpj, nome, telefone, endereco, inscricaoEstadual);
-            }
+        btnCadastrar.setOnClickListener(view -> {
+            controller.getLoja().setCnpj(txtCnpj.getText().toString());
+            controller.getLoja().setNome(txtNome.getText().toString().trim().toUpperCase());
+            controller.getLoja().setTelefone(txtTelefone.getText().toString().trim());
+            controller.getLoja().setEndereco(txtEndereco.getText().toString().trim());
+            controller.getLoja().setInscricaoEstadual(txtInscricaoEstadual.getText().toString().trim());
+            controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
+            controller.cadastrar();
         });
 
         ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());

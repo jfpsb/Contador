@@ -67,12 +67,7 @@ public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarF
             }
         });
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                controller.pesquisarNaReceita(txtCnpj.getText().toString());
-            }
-        });
+        btnCadastrar.setOnClickListener(view -> controller.pesquisarNaReceita(txtCnpj.getText().toString()));
 
         return viewInflate;
     }
@@ -107,19 +102,15 @@ public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarF
 
         alertaCadastro.setMessage(mensagem);
 
-        alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                controller.cadastrar(fornecedor);
-            }
+        alertaCadastro.setPositiveButton("Sim", (dialog, which) -> {
+            controller.getFornecedor().setCnpj(fornecedor.getCnpj());
+            controller.getFornecedor().setNome(fornecedor.getNome());
+            controller.getFornecedor().setFantasia(fornecedor.getFantasia());
+            controller.getFornecedor().setEmail(fornecedor.getEmail());
+            controller.getFornecedor().setTelefone(fornecedor.getTelefone());
+            controller.cadastrar();
         });
-
-        alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Fornecedor Não Foi Cadastrado");
-            }
-        });
+        alertaCadastro.setNegativeButton("Não", (dialog, which) -> mensagemAoUsuario("Fornecedor Não Foi Cadastrado"));
 
         alertaCadastro.show();
     }

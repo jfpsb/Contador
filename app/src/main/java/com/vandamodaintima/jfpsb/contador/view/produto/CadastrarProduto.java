@@ -71,58 +71,46 @@ public class CadastrarProduto extends TelaCadastro {
         lblCodRepetido = telaCadastroView.findViewById(R.id.lblCodRepetido);
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
 
-        btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
-                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
-            }
+        btnEscolherFornecedor.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
+            startActivityForResult(intent, ESCOLHER_FORNECEDOR);
         });
 
-        btnEscolherMarca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TelaMarcaForResult.class);
-                startActivityForResult(intent, ESCOLHER_MARCA);
-            }
+        btnEscolherMarca.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TelaMarcaForResult.class);
+            startActivityForResult(intent, ESCOLHER_MARCA);
         });
 
-        btnGerenciarCodBarraFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
-                intent.putExtra("codigos", controller.getProduto().getCod_barra_fornecedor());
-                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
-            }
+        btnGerenciarCodBarraFornecedor.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
+            intent.putExtra("codigos", controller.getProduto().getCod_barra_fornecedor());
+            startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
         });
 
-        btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.setFornecedorNull();
-                txtFornecedor.getText().clear();
-                Toast.makeText(getContext(), "Fornecedor Foi Removido Deste Produto", Toast.LENGTH_SHORT).show();
-            }
+        btnRemoverFornecedor.setOnClickListener(v -> {
+            controller.setFornecedorNull();
+            txtFornecedor.getText().clear();
+            Toast.makeText(getContext(), "Fornecedor Foi Removido Deste Produto", Toast.LENGTH_SHORT).show();
         });
 
-        btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.setMarcaNull();
-                txtMarca.getText().clear();
-                Toast.makeText(getContext(), "Marca Foi Removida Deste Produto", Toast.LENGTH_SHORT).show();
-            }
+        btnRemoverMarca.setOnClickListener(v -> {
+            controller.setMarcaNull();
+            txtMarca.getText().clear();
+            Toast.makeText(getContext(), "Marca Foi Removida Deste Produto", Toast.LENGTH_SHORT).show();
         });
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String cod_barra = txtCodBarra.getText().toString();
-                String descricao = txtDescricao.getText().toString();
-                String preco = txtPreco.getText().toString();
+        btnCadastrar.setOnClickListener(view -> {
+            controller.getProduto().setCod_barra(txtCodBarra.getText().toString());
+            controller.getProduto().setDescricao(txtDescricao.getText().toString());
 
-                controller.cadastrar(cod_barra, descricao, preco);
+            if(txtPreco.getText().length() > 0 && controller.isDouble(txtPreco.getText().toString())) {
+                controller.getProduto().setPreco(Double.valueOf(txtPreco.getText().toString()));
+            } else {
+                controller.getProduto().setPreco(0.0);
+                txtPreco.setText("0");
             }
+
+            controller.cadastrar();
         });
 
         txtCodBarra.addTextChangedListener(new TextWatcher() {
@@ -184,8 +172,7 @@ public class CadastrarProduto extends TelaCadastro {
         txtPreco.getText().clear();
         txtMarca.getText().clear();
         txtFornecedor.getText().clear();
-
-        controller.resetaProduto();
+        controller.reset();
     }
 
     @Override

@@ -1,63 +1,48 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
-import com.vandamodaintima.jfpsb.contador.model.manager.ProdutoManager;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.produto.CadastrarProduto;
 
-public class CadastrarProdutoController {
+public class CadastrarProdutoController implements IController {
 
     private CadastrarProduto view;
-    private ProdutoManager produtoManager;
+    private Produto produtoModel;
     ConexaoBanco conexaoBanco;
 
     public CadastrarProdutoController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarProduto) view;
         this.conexaoBanco = conexaoBanco;
-        produtoManager = new ProdutoManager(conexaoBanco);
+        produtoModel = new Produto(conexaoBanco);
     }
 
-    public void cadastrar(String cod_barra, String descricao, String preco) {
+    public void cadastrar() {
         Double p = 0.0;
 
-        if (cod_barra.trim().isEmpty()) {
+        if (produtoModel.getCod_barra().trim().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
         }
 
-        if (descricao.trim().isEmpty()) {
+        if (produtoModel.getDescricao().trim().isEmpty()) {
             view.mensagemAoUsuario("Descrição Não Pode Estar Vazio");
             return;
         }
 
-        if (preco.trim().isEmpty()) {
-            view.mensagemAoUsuario("Preço Não Pode Ser Vazio");
+        if (produtoModel.getPreco() <= 0.0) {
+            view.mensagemAoUsuario("Preço Não Pode Ser Zero ou Menor que Zero");
             return;
-        } else {
-            try {
-                p = Double.parseDouble(preco);
-                if (p <= 0) {
-                    view.mensagemAoUsuario("Preço Não Pode Ser Zero");
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                view.mensagemAoUsuario("Preço Informado Inválido");
-                return;
-            }
         }
 
-        produtoManager.getProduto().setCod_barra(cod_barra);
-        produtoManager.getProduto().setDescricao(descricao.trim().toUpperCase());
-        produtoManager.getProduto().setPreco(p);
-
-        Boolean result = produtoManager.salvar();
+        Boolean result = produtoModel.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
-            view.aposCadastro(produtoManager.getProduto().getCod_barra());
+            view.aposCadastro(produtoModel.getCod_barra());
         } else {
             view.mensagemAoUsuario("Produto Não Foi Cadastrado");
         }
@@ -65,7 +50,7 @@ public class CadastrarProdutoController {
 
     public void checaCodigoBarra(String codigo) {
         if (!codigo.isEmpty()) {
-            Produto produto = produtoManager.listarPorId(codigo);
+            Produto produto = produtoModel.listarPorId(codigo);
 
             if (produto != null) {
                 view.bloqueiaCampos();
@@ -76,26 +61,36 @@ public class CadastrarProdutoController {
     }
 
     public void carregaFornecedor(Fornecedor fornecedor) {
-        produtoManager.getProduto().setFornecedor(fornecedor);
+        produtoModel.setFornecedor(fornecedor);
     }
 
     public void carregaMarca(Marca marca) {
-        produtoManager.getProduto().setMarca(marca);
+        produtoModel.setMarca(marca);
     }
 
     public void setFornecedorNull() {
-        produtoManager.getProduto().setFornecedor(null);
+        produtoModel.setFornecedor(null);
     }
 
     public void setMarcaNull() {
-        produtoManager.getProduto().setMarca(null);
-    }
-
-    public void resetaProduto() {
-        produtoManager.resetaModelo();
+        produtoModel.setMarca(null);
     }
 
     public Produto getProduto() {
-        return produtoManager.getProduto();
+        return produtoModel;
+    }
+
+    public boolean isDouble(String d) {
+        try {
+            Double.valueOf(d);
+            return true;
+        } catch (NumberFormatException ne) {
+            return false;
+        }
+    }
+
+    @Override
+    public void reset() {
+        produtoModel = new Produto(conexaoBanco);
     }
 }

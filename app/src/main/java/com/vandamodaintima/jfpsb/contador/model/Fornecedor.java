@@ -19,6 +19,10 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
     public Fornecedor() {
     }
 
+    public Fornecedor(String nome) {
+        this.nome = nome;
+    }
+
     public Fornecedor(ConexaoBanco conexaoBanco) {
         daoFornecedor = new DAOFornecedor(conexaoBanco);
     }

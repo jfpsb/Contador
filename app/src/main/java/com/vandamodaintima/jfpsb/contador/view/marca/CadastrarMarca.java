@@ -1,7 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.view.marca;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.marca.CadastrarMarcaController;
+import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
+import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 
 import static com.vandamodaintima.jfpsb.contador.view.ActivityBaseView.LOG;
 
@@ -21,7 +26,11 @@ public class CadastrarMarca extends TelaCadastro {
 
     protected AlertDialog.Builder alertaCadastro;
     private EditText txtNome;
+    private Button btnEscolherFornecedor;
+    private Button btnRemoverFornecedor;
+    private EditText txtFornecedor;
     private Button btnCadastrar;
+    private static final int ESCOLHER_FORNECEDOR = 1;
     protected CadastrarMarcaController controller;
 
     @Override
@@ -29,6 +38,9 @@ public class CadastrarMarca extends TelaCadastro {
         telaCadastroView = inflater.inflate(R.layout.fragment_cadastrar_marca, container, false);
 
         txtNome = telaCadastroView.findViewById(R.id.txtNome);
+        btnEscolherFornecedor = telaCadastroView.findViewById(R.id.btnEscolherFornecedor);
+        btnRemoverFornecedor = telaCadastroView.findViewById(R.id.btnRemoverFornecedor);
+        txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
         btnCadastrar = telaCadastroView.findViewById(R.id.btnCadastrar);
 
         conexaoBanco = new ConexaoBanco(getContext());
@@ -46,6 +58,17 @@ public class CadastrarMarca extends TelaCadastro {
             }
         });
 
+        btnEscolherFornecedor.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), TelaFornecedorForResult.class);
+            startActivityForResult(intent, ESCOLHER_FORNECEDOR);
+        });
+
+        btnRemoverFornecedor.setOnClickListener(v -> {
+            controller.setFornecedorNull();
+            txtFornecedor.getText().clear();
+            Toast.makeText(getContext(), "Fornecedor Foi Removido Desta Marca", Toast.LENGTH_SHORT).show();
+        });
+
         return telaCadastroView;
     }
 
@@ -59,7 +82,8 @@ public class CadastrarMarca extends TelaCadastro {
         alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                controller.cadastrar(nome);
+                controller.getMarca().setNome(nome);
+                controller.cadastrar();
             }
         });
 
@@ -71,6 +95,20 @@ public class CadastrarMarca extends TelaCadastro {
         });
 
         alertaCadastro.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ESCOLHER_FORNECEDOR:
+                if (resultCode == Activity.RESULT_OK) {
+                    Fornecedor fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
+                    controller.carregaFornecedor(fornecedor);
+                    txtFornecedor.setText(controller.getMarca().getFornecedor().getNome());
+                }
+                break;
+        }
     }
 
     @Override

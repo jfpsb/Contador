@@ -46,15 +46,12 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fornecedor fornecedor = new Fornecedor();
-
-                fornecedor.setCnpj(txtCnpj.getText().toString());
-                fornecedor.setNome(txtNome.getText().toString());
-                fornecedor.setFantasia(txtFantasia.getText().toString());
-                fornecedor.setEmail(txtEmail.getText().toString());
-                fornecedor.setTelefone(txtTelefone.getText().toString());
-
-                controller.cadastrar(fornecedor);
+                controller.getFornecedor().setCnpj(txtCnpj.getText().toString());
+                controller.getFornecedor().setNome(txtNome.getText().toString());
+                controller.getFornecedor().setFantasia(txtFantasia.getText().toString());
+                controller.getFornecedor().setEmail(txtEmail.getText().toString());
+                controller.getFornecedor().setTelefone(txtTelefone.getText().toString());
+                controller.cadastrar();
             }
         });
     }

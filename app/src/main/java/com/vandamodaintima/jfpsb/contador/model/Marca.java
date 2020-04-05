@@ -1,5 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
@@ -88,5 +90,9 @@ public class Marca implements Serializable, IModel<Marca> {
     @Override
     public void load(Object... ids) {
 
+    }
+
+    public Cursor listarPorNomeCursor(String nome) {
+        return daoMarca.listarPorNomeCursor(nome);
     }
 }

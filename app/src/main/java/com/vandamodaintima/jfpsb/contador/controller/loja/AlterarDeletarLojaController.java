@@ -1,12 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 import java.util.ArrayList;
 
-public class AlterarDeletarLojaController {
+public class AlterarDeletarLojaController implements IController {
     private AlterarDeletarView view;
     private ConexaoBanco conexaoBanco;
     private Loja lojaModel;
@@ -17,8 +18,8 @@ public class AlterarDeletarLojaController {
         lojaModel = new Loja(conexaoBanco);
     }
 
-    public void atualizar(String nome) {
-        if (nome.trim().isEmpty()) {
+    public void atualizar() {
+        if (lojaModel.getNome().trim().isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
             return;
         }
@@ -26,8 +27,6 @@ public class AlterarDeletarLojaController {
         if (lojaModel.getMatriz().getCnpj().equals("0")) {
             lojaModel.setMatriz(null);
         }
-
-        //TODO: arrumar na view
 
         Boolean result = lojaModel.atualizar();
 
@@ -87,5 +86,10 @@ public class AlterarDeletarLojaController {
 
     public Loja getLoja() {
         return lojaModel;
+    }
+
+    @Override
+    public void reset() {
+        lojaModel = new Loja(conexaoBanco);
     }
 }

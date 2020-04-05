@@ -45,6 +45,46 @@
                 android:textSize="20sp" />
         </TableRow>
 
+        <TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/fornecedor_dois_pontos"
+                android:textColor="#000"
+                android:textSize="22sp" />
+        </TableRow>
+
+        <TableRow>
+            <EditText
+                android:id="@+id/txtFornecedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:hint="@string/escolha_fornecedor_hint"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+            <Button
+                android:id="@+id/btnEscolherFornecedor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/escolher_fornecedor"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnRemoverFornecedor"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/remover_fornecedor"
+                android:textColor="#ff00"
+                android:textSize="18sp" />
+        </TableRow>
+
     </TableLayout>
 
     <RelativeLayout
