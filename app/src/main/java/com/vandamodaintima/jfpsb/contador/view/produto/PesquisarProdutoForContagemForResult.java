@@ -28,13 +28,9 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-
         //Código de barras usado na pesquisa inicial
         codigo = getArguments().getString("codigo");
-
         controller = new PesquisarProdutoForContagemForResultController(this, conexaoBanco);
-        setAlertaQuantidadeProduto();
-
         return view;
     }
 
@@ -43,6 +39,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaProduto(cod_barra);
+        setAlertaQuantidadeProduto();
         alertaQuantidadeProduto.show();
     }
 
@@ -56,32 +53,29 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         alertaQuantidadeProduto.setView(view);
         alertaQuantidadeProduto.setTitle("Informe a Quantidade");
 
-        alertaQuantidadeProduto.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String txtQuant = txtQuantidade.getText().toString();
-                int quantidade = 1;
+        alertaQuantidadeProduto.setPositiveButton("Confirmar", (dialogInterface, i) -> {
+            String txtQuant = txtQuantidade.getText().toString();
+            int quantidade = 1;
 
-                if (!txtQuant.isEmpty()) {
-                    quantidade = Integer.parseInt(txtQuant);
-                }
-
-                if (quantidade < 1) {
-                    mensagemAoUsuario("Informe Uma Quantidade Válida");
-                    return;
-                }
-
-                if (codigo != null && !codigo.isEmpty())
-                    controller.addCodBarraFornecedor(codigo);
-
-                ((PesquisarProdutoForContagemForResultController)controller).atualizar();
-
-                Intent intent = new Intent();
-                intent.putExtra("produto", controller.getProduto());
-                intent.putExtra("quantidade", quantidade);
-                getActivity().setResult(Activity.RESULT_OK, intent);
-                getActivity().finish();
+            if (!txtQuant.isEmpty()) {
+                quantidade = Integer.parseInt(txtQuant);
             }
+
+            if (quantidade < 1) {
+                mensagemAoUsuario("Informe Uma Quantidade Válida");
+                return;
+            }
+
+            if (codigo != null && !codigo.isEmpty())
+                controller.addCodBarraFornecedor(codigo);
+
+            ((PesquisarProdutoForContagemForResultController)controller).atualizar();
+
+            Intent intent = new Intent();
+            intent.putExtra("produto", controller.getProduto());
+            intent.putExtra("quantidade", quantidade);
+            getActivity().setResult(Activity.RESULT_OK, intent);
+            getActivity().finish();
         });
 
         alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

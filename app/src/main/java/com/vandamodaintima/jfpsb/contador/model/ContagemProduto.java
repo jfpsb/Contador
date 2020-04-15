@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
@@ -10,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
-    private DAOContagemProduto daoContagemProduto;
+    private transient DAOContagemProduto daoContagemProduto;
 
     public ContagemProduto() {
     }
@@ -80,37 +81,43 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoContagemProduto.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<ContagemProduto> lista) {
-        return null;
+        return daoContagemProduto.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoContagemProduto.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoContagemProduto.deletar(this, true);
     }
 
     @Override
     public List<ContagemProduto> listar() {
-        return null;
+        return daoContagemProduto.listar();
     }
 
     @Override
     public ContagemProduto listarPorId(Object... ids) {
-        return null;
+        return daoContagemProduto.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        ContagemProduto contagemProduto = listarPorId(ids);
+        if (contagemProduto != null) {
+            id = contagemProduto.getId();
+            contagem = contagemProduto.getContagem();
+            produto = contagemProduto.getProduto();
+            quant = contagemProduto.getQuant();
+        }
     }
 
     public Object listarPorContagemGroupByProduto() {

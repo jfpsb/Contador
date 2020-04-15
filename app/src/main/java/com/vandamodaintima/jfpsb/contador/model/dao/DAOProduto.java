@@ -124,9 +124,9 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean atualizar(Produto produto, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Produto produto, boolean sendToServer) {
         try {
-            String cod_barra = (String) chaves[0];
+            String cod_barra = (String) produto.getIdentifier();
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -162,7 +162,7 @@ public class DAOProduto extends ADAO<Produto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(produto, sendToServer, chaves);
+            return super.atualizar(produto, sendToServer);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
         } finally {

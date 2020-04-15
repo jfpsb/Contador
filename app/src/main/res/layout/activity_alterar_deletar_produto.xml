@@ -181,7 +181,7 @@
                     android:textSize="22sp" />
             </TableRow>
 
-            <TableRow android:layout_marginBottom="80sp">
+            <TableRow>
                 <EditText
                     android:id="@+id/txtPreco"
                     android:layout_width="match_parent"
@@ -191,6 +191,30 @@
                     android:textColor="#000"
                     android:textSize="20sp" />
             </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/ncm_dois_pontos"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow android:paddingBottom="80sp">
+
+                <EditText
+                    android:id="@+id/txtNcm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textSize="20sp" />
+            </TableRow>
+
+
         </TableLayout>
     </ScrollView>
 

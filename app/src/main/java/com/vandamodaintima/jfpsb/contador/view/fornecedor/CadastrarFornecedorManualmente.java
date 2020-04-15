@@ -43,16 +43,13 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new CadastrarFornecedorManualmenteController(this, conexaoBanco);
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                controller.getFornecedor().setCnpj(txtCnpj.getText().toString());
-                controller.getFornecedor().setNome(txtNome.getText().toString());
-                controller.getFornecedor().setFantasia(txtFantasia.getText().toString());
-                controller.getFornecedor().setEmail(txtEmail.getText().toString());
-                controller.getFornecedor().setTelefone(txtTelefone.getText().toString());
-                controller.cadastrar();
-            }
+        btnCadastrar.setOnClickListener(view -> {
+            controller.getFornecedor().setCnpj(txtCnpj.getText().toString());
+            controller.getFornecedor().setNome(txtNome.getText().toString());
+            controller.getFornecedor().setFantasia(txtFantasia.getText().toString());
+            controller.getFornecedor().setEmail(txtEmail.getText().toString());
+            controller.getFornecedor().setTelefone(txtTelefone.getText().toString());
+            controller.cadastrar();
         });
     }
 
@@ -62,6 +59,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
         txtNome.getText().clear();
         txtFantasia.getText().clear();
         txtEmail.getText().clear();
+        controller.reset();
     }
 
     @Override

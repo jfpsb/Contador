@@ -1,11 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
-public class CadastrarFornecedorController {
+public class CadastrarFornecedorController implements IController {
     protected CadastrarFornecedor view;
     private Fornecedor fornecedorModel;
     private ConexaoBanco conexaoBanco;
@@ -59,5 +60,10 @@ public class CadastrarFornecedorController {
 
     public Fornecedor getFornecedor() {
         return fornecedorModel;
+    }
+
+    @Override
+    public void reset() {
+        fornecedorModel = new Fornecedor(conexaoBanco);
     }
 }

@@ -1,5 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOOperadoraCartao;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperadoraCartao implements IModel<OperadoraCartao>, Serializable {
-    private DAOOperadoraCartao daoOperadoraCartao;
+    private transient DAOOperadoraCartao daoOperadoraCartao;
 
     public OperadoraCartao() {
     }
@@ -65,7 +66,7 @@ public class OperadoraCartao implements IModel<OperadoraCartao>, Serializable {
 
     @Override
     public Boolean atualizar() {
-        return daoOperadoraCartao.atualizar(this, true, this.getIdentifier());
+        return daoOperadoraCartao.atualizar(this, true);
     }
 
     @Override

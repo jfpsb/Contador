@@ -83,11 +83,12 @@ public class AlterarDeletarProdutoController {
         return produtoModel;
     }
 
-    public boolean isDouble(String toString) {
+    public boolean setPreco(String preco) {
         try {
-            Double.valueOf(toString);
+            produtoModel.setPreco(Double.valueOf(preco));
             return true;
         } catch (NumberFormatException ne) {
+            produtoModel.setPreco(0.0);
             return false;
         }
     }

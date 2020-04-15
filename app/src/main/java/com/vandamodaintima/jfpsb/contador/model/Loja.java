@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOLoja;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Loja implements Serializable, IModel<Loja> {
-    private DAOLoja daoLoja;
+    private transient DAOLoja daoLoja;
 
     @SerializedName(value = "Cnpj")
     private String cnpj;
@@ -28,6 +29,10 @@ public class Loja implements Serializable, IModel<Loja> {
     private String inscricaoEstadual;
 
     public Loja() {
+    }
+
+    public Loja(String nome) {
+        this.nome = nome;
     }
 
     public Loja(ConexaoBanco conexaoBanco) {
@@ -102,37 +107,45 @@ public class Loja implements Serializable, IModel<Loja> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoLoja.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<Loja> lista) {
-        return null;
+        return daoLoja.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoLoja.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoLoja.deletar(this, true);
     }
 
     @Override
     public List<Loja> listar() {
-        return null;
+        return daoLoja.listar();
     }
 
     @Override
     public Loja listarPorId(Object... ids) {
-        return null;
+        return daoLoja.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        Loja loja = listarPorId(ids);
+        if (loja != null) {
+            cnpj = loja.getCnpj();
+            nome = loja.getNome();
+            endereco = loja.getEndereco();
+            telefone = loja.getTelefone();
+            matriz = loja.getMatriz();
+            inscricaoEstadual = loja.getInscricaoEstadual();
+        }
     }
 
     public ArrayList<Loja> listarMatrizes() {

@@ -65,7 +65,7 @@ public class CadastrarLoja extends TelaCadastro {
         txtNome.getText().clear();
         txtCnpj.getText().clear();
         spinnerMatrizes.setSelection(0);
-        controller.resetaLoja();
+        controller.reset();
     }
 
     @Override

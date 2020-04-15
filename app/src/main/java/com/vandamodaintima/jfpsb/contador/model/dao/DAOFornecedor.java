@@ -76,9 +76,9 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     @Override
-    public Boolean atualizar(Fornecedor fornecedor, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Fornecedor fornecedor, boolean sendToServer) {
         try {
-            String cnpj = (String) chaves[0];
+            String cnpj = (String) fornecedor.getIdentifier();
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -92,7 +92,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(fornecedor, sendToServer, chaves);
+            return super.atualizar(fornecedor, sendToServer);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

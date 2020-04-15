@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Produto implements Serializable, IModel<Produto> {
-    private DAOProduto daoProduto;
+    private transient DAOProduto daoProduto;
 
     public Produto() {
     }
@@ -20,7 +21,7 @@ public class Produto implements Serializable, IModel<Produto> {
         daoProduto = new DAOProduto(conexaoBanco);
     }
 
-    @SerializedName(value = "Cod_Barra")
+    @SerializedName(value = "CodBarra")
     private String cod_barra;
     @SerializedName(value = "Codigos")
     private ArrayList<String> cod_barra_fornecedor = new ArrayList<>();
@@ -111,37 +112,46 @@ public class Produto implements Serializable, IModel<Produto> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoProduto.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<Produto> lista) {
-        return null;
+        return daoProduto.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoProduto.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoProduto.deletar(this, true);
     }
 
     @Override
     public List<Produto> listar() {
-        return null;
+        return daoProduto.listar();
     }
 
     @Override
     public Produto listarPorId(Object... ids) {
-        return null;
+        return daoProduto.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        Produto produto = listarPorId(ids);
+        if(produto!=null) {
+            cod_barra = produto.getCod_barra();
+            cod_barra_fornecedor = produto.getCod_barra_fornecedor();
+            marca = produto.getMarca();
+            fornecedor = produto.getFornecedor();
+            descricao = produto.getDescricao();
+            preco = produto.getPreco();
+            ncm = produto.getNcm();
+        }
     }
 
     public ArrayList<Produto> listarPorCodBarra(String codigo) {
@@ -161,6 +171,6 @@ public class Produto implements Serializable, IModel<Produto> {
     }
 
     public Cursor listarPorMarcaCursor(String termo) {
-        return listarPorMarcaCursor(termo);
+        return daoProduto.listarPorMarcaCursor(termo);
     }
 }

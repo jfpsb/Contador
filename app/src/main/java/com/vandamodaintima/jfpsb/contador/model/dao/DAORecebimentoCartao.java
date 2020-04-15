@@ -81,8 +81,9 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     }
 
     @Override
-    public Boolean atualizar(RecebimentoCartao recebimentoCartao, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(RecebimentoCartao recebimentoCartao, boolean sendToServer) {
         try {
+            Object[] chaves = (Object[]) recebimentoCartao.getIdentifier();
             String mes = (String) chaves[0];
             String ano = (String) chaves[1];
             String loja = (String) chaves[2];
@@ -98,7 +99,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(recebimentoCartao, sendToServer, chaves);
+            return super.atualizar(recebimentoCartao, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {

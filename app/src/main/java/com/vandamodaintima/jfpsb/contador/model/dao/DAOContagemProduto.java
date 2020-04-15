@@ -82,9 +82,9 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     @Override
-    public Boolean atualizar(ContagemProduto contagemProduto, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(ContagemProduto contagemProduto, boolean sendToServer) {
         try {
-            long id = (long) chaves[0];
+            long id = (long) contagemProduto.getIdentifier();
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -98,7 +98,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagemProduto, sendToServer, chaves);
+            return super.atualizar(contagemProduto, sendToServer);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {

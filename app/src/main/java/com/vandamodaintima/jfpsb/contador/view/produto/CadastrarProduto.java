@@ -40,6 +40,7 @@ public class CadastrarProduto extends TelaCadastro {
     private EditText txtPreco;
     private EditText txtFornecedor;
     private EditText txtMarca;
+    private EditText txtNcm;
     private TextView lblCodRepetido;
 
     private Animation slidedown;
@@ -68,6 +69,7 @@ public class CadastrarProduto extends TelaCadastro {
         txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
         txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
         txtMarca = telaCadastroView.findViewById(R.id.txtMarca);
+        txtNcm = telaCadastroView.findViewById(R.id.txtNcm);
         lblCodRepetido = telaCadastroView.findViewById(R.id.lblCodRepetido);
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
 
@@ -101,14 +103,12 @@ public class CadastrarProduto extends TelaCadastro {
 
         btnCadastrar.setOnClickListener(view -> {
             controller.getProduto().setCod_barra(txtCodBarra.getText().toString());
-            controller.getProduto().setDescricao(txtDescricao.getText().toString());
+            controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
+            controller.getProduto().setNcm(txtNcm.getText().toString());
+            boolean precoResult = controller.setPreco(txtPreco.getText().toString());
 
-            if(txtPreco.getText().length() > 0 && controller.isDouble(txtPreco.getText().toString())) {
-                controller.getProduto().setPreco(Double.valueOf(txtPreco.getText().toString()));
-            } else {
-                controller.getProduto().setPreco(0.0);
-                txtPreco.setText("0");
-            }
+            if (!precoResult)
+                txtPreco.setText("0.0");
 
             controller.cadastrar();
         });

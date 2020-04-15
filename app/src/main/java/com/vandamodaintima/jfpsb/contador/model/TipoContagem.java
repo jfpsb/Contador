@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TipoContagem implements Serializable, IModel<TipoContagem> {
-    private DAOTipoContagem daoTipoContagem;
+    private transient DAOTipoContagem daoTipoContagem;
 
     @SerializedName(value = "Id")
     private long id;
@@ -54,36 +54,40 @@ public class TipoContagem implements Serializable, IModel<TipoContagem> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoTipoContagem.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<TipoContagem> lista) {
-        return null;
+        return daoTipoContagem.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoTipoContagem.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoTipoContagem.deletar(this, true);
     }
 
     @Override
     public List<TipoContagem> listar() {
-        return null;
+        return daoTipoContagem.listar();
     }
 
     @Override
     public TipoContagem listarPorId(Object... ids) {
-        return null;
+        return daoTipoContagem.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        TipoContagem tipoContagem = listarPorId(ids);
+        if (tipoContagem != null) {
+            id = tipoContagem.getId();
+            nome = tipoContagem.getNome();
+        }
     }
 }

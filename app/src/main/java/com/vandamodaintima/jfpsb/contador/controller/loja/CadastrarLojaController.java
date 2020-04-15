@@ -1,12 +1,13 @@
 package com.vandamodaintima.jfpsb.contador.controller.loja;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
 import java.util.ArrayList;
 
-public class CadastrarLojaController {
+public class CadastrarLojaController implements IController {
     private CadastrarView view;
     private Loja lojaModel;
     private ConexaoBanco conexaoBanco;
@@ -28,7 +29,7 @@ public class CadastrarLojaController {
             return;
         }
 
-        if (lojaModel.getMatriz().getCnpj().equals("0")) {
+        if (lojaModel.getMatriz().getCnpj() == null) {
             lojaModel.setMatriz(null);
         }
 
@@ -45,18 +46,10 @@ public class CadastrarLojaController {
 
     public ArrayList<Loja> getMatrizes() {
         ArrayList<Loja> matrizes = new ArrayList<>();
-        Loja loja = new Loja();
-        loja.setCnpj("0");
-        loja.setNome("SEM MATRIZ");
-
+        Loja loja = new Loja("SEM MATRIZ");
         matrizes.add(loja);
         matrizes.addAll(lojaModel.listarMatrizes());
-
         return matrizes;
-    }
-
-    public void resetaLoja() {
-        lojaModel = new Loja(conexaoBanco);
     }
 
     public void carregaMatriz(Object o) {
@@ -66,5 +59,10 @@ public class CadastrarLojaController {
 
     public Loja getLoja() {
         return lojaModel;
+    }
+
+    @Override
+    public void reset() {
+        lojaModel = new Loja(conexaoBanco);
     }
 }

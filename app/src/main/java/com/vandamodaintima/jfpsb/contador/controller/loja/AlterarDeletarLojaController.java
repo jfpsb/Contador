@@ -24,7 +24,7 @@ public class AlterarDeletarLojaController implements IController {
             return;
         }
 
-        if (lojaModel.getMatriz().getCnpj().equals("0")) {
+        if (lojaModel.getMatriz().getCnpj() == null) {
             lojaModel.setMatriz(null);
         }
 
@@ -51,13 +51,9 @@ public class AlterarDeletarLojaController implements IController {
 
     public ArrayList<Loja> getMatrizes() {
         ArrayList<Loja> matrizes = new ArrayList<>();
-        Loja loja = new Loja();
-        loja.setCnpj("0");
-        loja.setNome("SEM MATRIZ");
-
+        Loja loja = new Loja("SEM MATRIZ");
         matrizes.add(loja);
         matrizes.addAll(lojaModel.listarMatrizes());
-
         return matrizes;
     }
 

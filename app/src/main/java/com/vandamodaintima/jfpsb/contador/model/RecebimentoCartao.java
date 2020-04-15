@@ -1,11 +1,23 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAORecebimentoCartao;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializable {
+    private transient DAORecebimentoCartao daoRecebimentoCartao;
+
+    public RecebimentoCartao() {
+    }
+
+    public RecebimentoCartao(ConexaoBanco conexaoBanco) {
+        daoRecebimentoCartao = new DAORecebimentoCartao(conexaoBanco);
+    }
+
     @SerializedName(value = "Mes")
     private int mes;
     @SerializedName(value = "Ano")
@@ -83,7 +95,7 @@ public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializabl
 
     @Override
     public Object getIdentifier() {
-        return new String[] { String.valueOf(mes), String.valueOf(ano), String.valueOf(loja.getIdentifier()), String.valueOf(operadoraCartao.getIdentifier())};
+        return new String[]{String.valueOf(mes), String.valueOf(ano), String.valueOf(loja.getIdentifier()), String.valueOf(operadoraCartao.getIdentifier())};
     }
 
     @Override
@@ -93,36 +105,45 @@ public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializabl
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoRecebimentoCartao.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<RecebimentoCartao> lista) {
-        return null;
+        return daoRecebimentoCartao.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoRecebimentoCartao.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoRecebimentoCartao.deletar(this, true);
     }
 
     @Override
     public List<RecebimentoCartao> listar() {
-        return null;
+        return daoRecebimentoCartao.listar();
     }
 
     @Override
     public RecebimentoCartao listarPorId(Object... ids) {
-        return null;
+        return daoRecebimentoCartao.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        RecebimentoCartao recebimentoCartao = listarPorId(ids);
+        if (recebimentoCartao != null) {
+            mes = recebimentoCartao.getMes();
+            ano = recebimentoCartao.getAno();
+            loja = recebimentoCartao.getLoja();
+            operadoraCartao = recebimentoCartao.getOperadoraCartao();
+            recebido = recebimentoCartao.getRecebido();
+            valorOperadora = recebimentoCartao.getValorOperadora();
+            observacao = recebimentoCartao.getObservacao();
+        }
     }
 }

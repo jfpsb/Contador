@@ -80,6 +80,16 @@ public class CadastrarProdutoController implements IController {
         return produtoModel;
     }
 
+    public boolean setPreco(String preco) {
+        try {
+            produtoModel.setPreco(Double.valueOf(preco));
+            return true;
+        } catch (NumberFormatException ne) {
+            produtoModel.setPreco(0.0);
+            return false;
+        }
+    }
+
     public boolean isDouble(String d) {
         try {
             Double.valueOf(d);

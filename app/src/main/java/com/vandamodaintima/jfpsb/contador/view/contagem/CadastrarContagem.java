@@ -17,6 +17,8 @@ import com.vandamodaintima.jfpsb.contador.controller.contagem.SpinnerTipoContage
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
+import java.util.Objects;
+
 public class CadastrarContagem extends TelaCadastro {
 
     private Button btnCadastrar;
@@ -35,40 +37,13 @@ public class CadastrarContagem extends TelaCadastro {
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new InserirContagemController(this, conexaoBanco);
 
-        btnCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                controller.cadastrar();
-            }
+        btnCadastrar.setOnClickListener(view -> {
+            controller.carregaLoja(spinnerLoja.getSelectedItem());
+            controller.carregaTipoContagem(spinnerTipoContagem.getSelectedItem());
+            controller.cadastrar();
         });
 
-        spinnerLoja.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Object o = spinnerLoja.getSelectedItem();
-                controller.carregaLoja(o);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        spinnerTipoContagem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Object o = spinnerTipoContagem.getSelectedItem();
-                controller.carregaTipoContagem(o);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        ArrayAdapter spinnerLojaAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
+        ArrayAdapter spinnerLojaAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
         spinnerLoja.setAdapter(spinnerLojaAdapter);
 
         ArrayAdapter spinnerTipoContagemAdapter = new SpinnerTipoContagemAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getTipoContagens());
@@ -81,6 +56,7 @@ public class CadastrarContagem extends TelaCadastro {
     public void limparCampos() {
         spinnerLoja.setSelection(0);
         spinnerTipoContagem.setSelection(0);
+        controller.reset();
     }
 
     @Override

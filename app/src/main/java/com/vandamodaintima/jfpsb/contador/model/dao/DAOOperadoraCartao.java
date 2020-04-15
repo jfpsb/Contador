@@ -77,9 +77,9 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean atualizar(OperadoraCartao operadoraCartao, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(OperadoraCartao operadoraCartao, boolean sendToServer) {
         try {
-            String identificador = (String) chaves[0];
+            String identificador = (String) operadoraCartao.getIdentifier();
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
@@ -97,7 +97,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{identificador});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(operadoraCartao, sendToServer, operadoraCartao.getIdentifier());
+            return super.atualizar(operadoraCartao, sendToServer);
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {

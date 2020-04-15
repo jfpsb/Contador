@@ -8,16 +8,12 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.AdicionarContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 
 public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdicionarContagemProduto {
 
     private ConexaoBanco conexaoBanco;
-    private AdicionarContagemProdutoController controller;
-
-    private static final int TELA_SELECIONAR_PRODUTO = 1;
 
     private TelaLerCodigoDeBarra telaLerCodigo;
     private TelaVerProdutoContado telaVerProdutoContado;
@@ -37,8 +33,6 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
         String data = getIntent().getStringExtra("data");
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AdicionarContagemProdutoController(this, conexaoBanco);
-        controller.carregaContagem(loja, data);
 
         Bundle bundle = new Bundle();
         bundle.putString("loja", loja);

@@ -2,17 +2,20 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOMarca;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Marca implements Serializable, IModel<Marca> {
-    private DAOMarca daoMarca;
+    private transient DAOMarca daoMarca;
 
-    public Marca(){}
+    public Marca() {
+    }
 
     public Marca(ConexaoBanco conexaoBanco) {
         daoMarca = new DAOMarca(conexaoBanco);
@@ -59,40 +62,48 @@ public class Marca implements Serializable, IModel<Marca> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoMarca.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<Marca> lista) {
-        return null;
+        return daoMarca.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoMarca.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoMarca.deletar(this, true);
     }
 
     @Override
     public List<Marca> listar() {
-        return null;
+        return daoMarca.listar();
     }
 
     @Override
     public Marca listarPorId(Object... ids) {
-        return null;
+        return daoMarca.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        Marca marca = listarPorId(ids);
+        if (marca != null) {
+            nome = marca.getNome();
+            fornecedor = marca.getFornecedor();
+        }
     }
 
     public Cursor listarPorNomeCursor(String nome) {
         return daoMarca.listarPorNomeCursor(nome);
+    }
+
+    public ArrayList<Marca> listarPorNome(String nome) {
+        return daoMarca.listarPorNome(nome);
     }
 }

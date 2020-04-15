@@ -26,42 +26,42 @@ public abstract class ADAO<T extends IModel & Serializable> {
     }
 
     public Boolean inserir(T t, boolean sendToServer) {
-        Sincronizacao.addTransientLog(t, "INSERT");
+        /*Sincronizacao.addTransientLog(t, "INSERT");
         Sincronizacao.writeLog();
         if (sendToServer)
-            Sincronizacao.sendLog();
+            Sincronizacao.sendLog();*/
         return true;
     }
 
     public Boolean inserir(List<T> lista, boolean sendToServer) {
-        for (T t : lista)
+        /*for (T t : lista)
             Sincronizacao.addTransientLog(t, "INSERT");
 
         Sincronizacao.writeLog();
         if (sendToServer)
-            Sincronizacao.sendLog();
+            Sincronizacao.sendLog();*/
 
         return true;
     }
 
-    public Boolean atualizar(T t, boolean sendToServer, Object... chaves) {
-        Sincronizacao.addTransientLog(t, "UPDATE");
+    public Boolean atualizar(T t, boolean sendToServer) {
+        /*Sincronizacao.addTransientLog(t, "UPDATE");
         Sincronizacao.writeLog();
         if (sendToServer)
-            Sincronizacao.sendLog();
+            Sincronizacao.sendLog();*/
         return true;
     }
 
     public void replicate(T entity) {
-        T t = listarPorId(entity.getIdentifier());
+        /*T t = listarPorId(entity.getIdentifier());
 
         if (t == null) {
             inserir(entity, false);
         } else {
-            atualizar(entity, false, entity.getIdentifier());
+            atualizar(entity, false);
         }
 
-        Sincronizacao.writeLog();
+        Sincronizacao.writeLog();*/
     }
 
     public Boolean deletar(T objeto, boolean sendToServer) {
@@ -73,12 +73,12 @@ public abstract class ADAO<T extends IModel & Serializable> {
 
         long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
 
-        if (result > 0) {
+        /*if (result > 0) {
             Sincronizacao.addTransientLog(objeto, "DELETE");
             Sincronizacao.writeLog();
             if (sendToServer)
                 Sincronizacao.sendLog();
-        }
+        }*/
 
         return result > 0;
     }
@@ -96,12 +96,12 @@ public abstract class ADAO<T extends IModel & Serializable> {
 
             long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
 
-            if (result > 0) {
+            /*if (result > 0) {
                 Sincronizacao.addTransientLog(objeto, "DELETE");
-            }
+            }*/
         }
 
-        Sincronizacao.writeLog();
+        //Sincronizacao.writeLog();
         if (sendToServer)
             Sincronizacao.sendLog();
     }

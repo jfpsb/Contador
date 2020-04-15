@@ -22,7 +22,9 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
 
         //Coloca o código da pesquisa no produto a ser cadastrado
         String codigo = getArguments().getString("codigo");
-        controller.getProduto().getCod_barra_fornecedor().add(codigo);
+        if (codigo != null)
+            controller.getProduto().getCod_barra_fornecedor().add(codigo);
+
         setAlertaQuantidadeProduto();
 
         return view;
@@ -43,33 +45,25 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
         alertaQuantidadeProduto.setView(view);
         alertaQuantidadeProduto.setTitle("Informe a Quantidade");
 
-        alertaQuantidadeProduto.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String txtQuant = txtQuantidade.getText().toString();
+        alertaQuantidadeProduto.setPositiveButton("Confirmar", (dialogInterface, i) -> {
+            String txtQuant = txtQuantidade.getText().toString();
 
-                if (!txtQuant.isEmpty()) {
-                    int quantidade = Integer.parseInt(txtQuant);
+            if (!txtQuant.isEmpty()) {
+                int quantidade = Integer.parseInt(txtQuant);
 
-                    if (quantidade < 1) {
-                        mensagemAoUsuario("Informe Uma Quantidade Válida");
-                        return;
-                    }
-
-                    Intent intent = new Intent();
-                    intent.putExtra("produto", controller.getProduto().getCod_barra());
-                    intent.putExtra("quantidade", quantidade);
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
+                if (quantidade < 1) {
+                    mensagemAoUsuario("Informe Uma Quantidade Válida");
+                    return;
                 }
+
+                Intent intent = new Intent();
+                intent.putExtra("produto", controller.getProduto());
+                intent.putExtra("quantidade", quantidade);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
             }
         });
 
-        alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
-            }
-        });
+        alertaQuantidadeProduto.setNegativeButton("Cancelar", (dialogInterface, i) -> mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada"));
     }
 }

@@ -110,17 +110,17 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
         alertBuilderAtualizar.setTitle("Atualizar Loja");
         alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar a Loja " + controller.getLoja().getNome() + "?");
 
-        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                try {
-                    controller.getLoja().setNome(txtNome.getText().toString().toUpperCase());
-                    controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
-                    controller.atualizar();
-                } catch (Exception e) {
-                    Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e(LOG, e.getMessage(), e);
-                }
+        alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
+            try {
+                controller.getLoja().setNome(txtNome.getText().toString().trim().toUpperCase());
+                controller.getLoja().setTelefone(txtTelefone.getText().toString().trim());
+                controller.getLoja().setEndereco(txtEndereco.getText().toString().trim());
+                controller.getLoja().setInscricaoEstadual(txtInscricaoEstadual.getText().toString().trim());
+                controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
+                controller.atualizar();
+            } catch (Exception e) {
+                Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(LOG, e.getMessage(), e);
             }
         });
 

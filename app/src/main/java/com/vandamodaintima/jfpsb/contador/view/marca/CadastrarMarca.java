@@ -79,20 +79,12 @@ public class CadastrarMarca extends TelaCadastro {
         String mensagem = "Deseja Cadastrar a Marca " + nome + "?";
         alertaCadastro.setMessage(mensagem);
 
-        alertaCadastro.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                controller.getMarca().setNome(nome);
-                controller.cadastrar();
-            }
+        alertaCadastro.setPositiveButton("Sim", (dialog, which) -> {
+            controller.getMarca().setNome(nome);
+            controller.cadastrar();
         });
 
-        alertaCadastro.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mensagemAoUsuario("Marca Não Foi Cadastrada");
-            }
-        });
+        alertaCadastro.setNegativeButton("Não", (dialog, which) -> mensagemAoUsuario("Marca Não Foi Cadastrada"));
 
         alertaCadastro.show();
     }
@@ -114,6 +106,7 @@ public class CadastrarMarca extends TelaCadastro {
     @Override
     public void limparCampos() {
         txtNome.getText().clear();
+        controller.reset();
     }
 
     @Override

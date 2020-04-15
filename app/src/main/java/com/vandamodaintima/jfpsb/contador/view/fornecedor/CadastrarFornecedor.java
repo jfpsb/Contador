@@ -75,6 +75,7 @@ public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarF
     @Override
     public void limparCampos() {
         txtCnpj.getText().clear();
+        controller.reset();
     }
 
     @Override

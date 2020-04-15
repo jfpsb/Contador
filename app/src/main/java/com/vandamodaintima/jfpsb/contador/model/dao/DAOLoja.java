@@ -84,9 +84,9 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean atualizar(Loja loja, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Loja loja, boolean sendToServer) {
         try {
-            String cnpj = (String) chaves[0];
+            String cnpj = (String) loja.getIdentifier();
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -105,7 +105,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(loja, sendToServer, chaves);
+            return super.atualizar(loja, sendToServer);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR LOJA", ex);
         } finally {

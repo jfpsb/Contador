@@ -83,8 +83,9 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean atualizar(Contagem contagem, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Contagem contagem, boolean sendToServer) {
         try {
+            Object[] chaves = (Object[]) contagem.getIdentifier();
             String cnpj = (String) chaves[0];
             String data = (String) chaves[1];
 
@@ -99,7 +100,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagem, sendToServer, chaves);
+            return super.atualizar(contagem, sendToServer);
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

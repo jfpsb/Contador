@@ -31,6 +31,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private EditText txtPreco;
     private EditText txtFornecedor;
     private EditText txtMarca;
+    private EditText txtNcm;
     private Button btnEscolherFornecedor;
     private Button btnEscolherMarca;
     private Button btnGerenciarCodBarraFornecedor;
@@ -63,6 +64,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
+        txtNcm = findViewById(R.id.txtNcm);
         btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
         btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
         btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
@@ -92,68 +94,50 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             txtMarca.setText(controller.getProduto().getMarca().getNome());
         }
 
-        btnEscolherFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlterarDeletarProduto.this, TelaFornecedorForResult.class);
-                startActivityForResult(intent, ESCOLHER_FORNECEDOR);
+        btnEscolherFornecedor.setOnClickListener(v -> {
+            Intent intent = new Intent(AlterarDeletarProduto.this, TelaFornecedorForResult.class);
+            startActivityForResult(intent, ESCOLHER_FORNECEDOR);
+        });
+
+        btnEscolherMarca.setOnClickListener(v -> {
+            Intent intent = new Intent(AlterarDeletarProduto.this, TelaMarcaForResult.class);
+            startActivityForResult(intent, ESCOLHER_MARCA);
+        });
+
+        btnGerenciarCodBarraFornecedor.setOnClickListener(v -> {
+            Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
+            intent.putExtra("codigos", controller.getCodBarraFornecedor());
+            intent.putExtra("produto", controller.getProduto().getCod_barra());
+            startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
+        });
+
+        btnRemoverFornecedor.setOnClickListener(v -> {
+            if (controller.getProduto().getFornecedor() != null) {
+                alertaRemoverFornecedor.show();
+            } else {
+                mensagemAoUsuario("Produto Não Possui Fornecedor");
             }
         });
 
-        btnEscolherMarca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlterarDeletarProduto.this, TelaMarcaForResult.class);
-                startActivityForResult(intent, ESCOLHER_MARCA);
+        btnRemoverMarca.setOnClickListener(v -> {
+            if (controller.getProduto().getMarca() != null) {
+                alertaRemoverMarca.show();
+            } else {
+                mensagemAoUsuario("Produto Não Possui Marca");
             }
         });
 
-        btnGerenciarCodBarraFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
-                intent.putExtra("codigos", controller.getCodBarraFornecedor());
-                intent.putExtra("produto", controller.getProduto().getCod_barra());
-                startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            int id1 = menuItem.getItemId();
+
+            switch (id1) {
+                case R.id.menuItemDeletar:
+                    AlertDialog alertDialog = alertBuilderDeletar.create();
+                    alertDialog.show();
+                    break;
             }
-        });
 
-        btnRemoverFornecedor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (controller.getProduto().getFornecedor() != null) {
-                    alertaRemoverFornecedor.show();
-                } else {
-                    mensagemAoUsuario("Produto Não Possui Fornecedor");
-                }
-            }
-        });
-
-        btnRemoverMarca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (controller.getProduto().getMarca() != null) {
-                    alertaRemoverMarca.show();
-                } else {
-                    mensagemAoUsuario("Produto Não Possui Marca");
-                }
-            }
-        });
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-
-                switch (id) {
-                    case R.id.menuItemDeletar:
-                        AlertDialog alertDialog = alertBuilderDeletar.create();
-                        alertDialog.show();
-                        break;
-                }
-
-                return true;
-            }
+            return true;
         });
     }
 
@@ -206,20 +190,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Produto");
         alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + controller.getProduto().getCod_barra() + " - " + controller.getProduto().getDescricao() + "?");
-
-        alertBuilderDeletar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                controller.deletar();
-            }
-        });
-
-        alertBuilderDeletar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show();
-            }
-        });
+        alertBuilderDeletar.setPositiveButton("Sim", (dialogInterface, i) -> controller.deletar());
+        alertBuilderDeletar.setNegativeButton("Não", (dialogInterface, i) -> Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -228,28 +200,18 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderAtualizar.setTitle("Atualizar Produto");
         alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + controller.getProduto().getCod_barra() + " - " + controller.getProduto().getDescricao() + "?");
 
-        alertBuilderAtualizar.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
+        alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
+            controller.getProduto().setDescricao(txtDescricao.getText().toString());
+            controller.getProduto().setNcm(txtNcm.getText().toString());
+            boolean precoResult = controller.setPreco(txtPreco.getText().toString());
 
-                if(txtPreco.getText().length() > 0 && controller.isDouble(txtPreco.getText().toString())) {
-                    controller.getProduto().setPreco(Double.valueOf(txtPreco.getText().toString()));
-                } else {
-                    controller.getProduto().setPreco(0.0);
-                    txtPreco.setText("0");
-                }
-                //TODO: NCM
-                controller.atualizar();
-            }
+            if (!precoResult)
+                txtPreco.setText("0.0");
+
+            controller.atualizar();
         });
 
-        alertBuilderAtualizar.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show();
-            }
-        });
+        alertBuilderAtualizar.setNegativeButton("Não", (dialog, which) -> Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Alterado", Toast.LENGTH_SHORT).show());
     }
 
     private void setAlertaRemoverFornecedor() {
@@ -257,21 +219,13 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverFornecedor.setTitle("Remover Fornecedor");
         alertaRemoverFornecedor.setMessage("Tem Certeza Que Deseja Remover o Fornecedor Deste Produto?");
 
-        alertaRemoverFornecedor.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                controller.setFornecedorNull();
-                txtFornecedor.getText().clear();
-                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
-            }
+        alertaRemoverFornecedor.setPositiveButton("Sim", (dialog, which) -> {
+            controller.setFornecedorNull();
+            txtFornecedor.getText().clear();
+            Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Removido", Toast.LENGTH_SHORT).show();
         });
 
-        alertaRemoverFornecedor.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Não Foi Removido", Toast.LENGTH_SHORT).show();
-            }
-        });
+        alertaRemoverFornecedor.setNegativeButton("Não", (dialog, which) -> Toast.makeText(AlterarDeletarProduto.this, "Fornecedor Não Foi Removido", Toast.LENGTH_SHORT).show());
     }
 
     private void setAlertaRemoverMarca() {
@@ -279,20 +233,12 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertaRemoverMarca.setTitle("Remover Marca");
         alertaRemoverMarca.setMessage("Tem Certeza Que Deseja Remover a Marca Deste Produto?");
 
-        alertaRemoverMarca.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                controller.setMarcaNull();
-                txtMarca.getText().clear();
-                Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
-            }
+        alertaRemoverMarca.setPositiveButton("Sim", (dialog, which) -> {
+            controller.setMarcaNull();
+            txtMarca.getText().clear();
+            Toast.makeText(AlterarDeletarProduto.this, "Marca Removida", Toast.LENGTH_SHORT).show();
         });
 
-        alertaRemoverMarca.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AlterarDeletarProduto.this, "Marca Não Foi Removida", Toast.LENGTH_SHORT).show();
-            }
-        });
+        alertaRemoverMarca.setNegativeButton("Não", (dialog, which) -> Toast.makeText(AlterarDeletarProduto.this, "Marca Não Foi Removida", Toast.LENGTH_SHORT).show());
     }
 }

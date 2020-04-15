@@ -73,9 +73,9 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean atualizar(Marca marca, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(Marca marca, boolean sendToServer) {
         try {
-            String nome = (String) chaves[0];
+            String nome = (String) marca.getIdentifier();
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -88,7 +88,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(marca, sendToServer, chaves);
+            return super.atualizar(marca, sendToServer);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
         } finally {

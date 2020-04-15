@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOFornecedor;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 
 public class Fornecedor implements Serializable, IModel<Fornecedor> {
-    private DAOFornecedor daoFornecedor;
+    private transient DAOFornecedor daoFornecedor;
 
     public Fornecedor() {
     }
@@ -98,37 +99,44 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoFornecedor.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<Fornecedor> lista) {
-        return null;
+        return daoFornecedor.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoFornecedor.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoFornecedor.deletar(this, true);
     }
 
     @Override
     public List<Fornecedor> listar() {
-        return null;
+        return daoFornecedor.listar();
     }
 
     @Override
     public Fornecedor listarPorId(Object... ids) {
-        return null;
+        return daoFornecedor.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        Fornecedor fornecedor = listarPorId(ids);
+        if(fornecedor!= null) {
+            cnpj = fornecedor.getCnpj();
+            nome = fornecedor.getNome();
+            fantasia = fornecedor.getFantasia();
+            email = fornecedor.getEmail();
+            telefone = fornecedor.getTelefone();
+        }
     }
 
     public Fornecedor listarPorIdOuNome(String stringCellValue) {

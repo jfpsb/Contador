@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.sincronizacao;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -502,7 +501,7 @@ public class Sincronizacao extends Thread {
 
         if (TRANSIENTWRITELOJA.size() > 0) {
             logsLoja.addAll(TRANSIENTWRITELOJA);
-            String json = gson.toJson(logsLoja);
+            String json = gson.toJson(logsLoja, new TypeToken<ArrayList<DBLog<Loja>>>(){}.getType());
             writeAllText(new File(logDir, "Loja.json"), json);
             TRANSIENTSENDLOJA.addAll(TRANSIENTWRITELOJA);
             TRANSIENTWRITELOJA.clear();

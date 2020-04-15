@@ -64,9 +64,9 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     @Override
-    public Boolean atualizar(TipoContagem tipoContagem, boolean sendToServer, Object... chaves) {
+    public Boolean atualizar(TipoContagem tipoContagem, boolean sendToServer) {
         try {
-            String id = String.valueOf(chaves[0]);
+            String id = String.valueOf(tipoContagem.getIdentifier());
 
             conexaoBanco.conexao().beginTransaction();
 
@@ -77,7 +77,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(tipoContagem, sendToServer, chaves);
+            return super.atualizar(tipoContagem, sendToServer);
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {

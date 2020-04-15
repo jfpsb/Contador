@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -77,6 +77,7 @@
             </TableRow>
 
             <TableRow>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,6 +88,7 @@
             </TableRow>
 
             <TableRow>
+
                 <EditText
                     android:id="@+id/txtFornecedor"
                     android:layout_width="match_parent"
@@ -98,6 +100,7 @@
             </TableRow>
 
             <TableRow>
+
                 <Button
                     android:id="@+id/btnEscolherFornecedor"
                     android:layout_width="0dp"
@@ -192,10 +195,32 @@
                     android:textSize="22sp" />
             </TableRow>
 
-            <TableRow android:paddingBottom="80sp">
+            <TableRow>
 
                 <EditText
                     android:id="@+id/txtPreco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/ncm_dois_pontos"
+                    android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow android:paddingBottom="80sp">
+
+                <EditText
+                    android:id="@+id/txtNcm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

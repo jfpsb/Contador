@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import androidx.annotation.NonNull;
-
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Contagem implements Serializable, IModel<Contagem> {
-    private DAOContagem daoContagem;
+    private transient DAOContagem daoContagem;
 
     public Contagem() {
     }
@@ -108,37 +107,43 @@ public class Contagem implements Serializable, IModel<Contagem> {
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoContagem.inserir(this, true);
     }
 
     @Override
     public Boolean salvar(List<Contagem> lista) {
-        return null;
+        return daoContagem.inserir(lista, true);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoContagem.atualizar(this, true);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoContagem.deletar(this, true);
     }
 
     @Override
     public List<Contagem> listar() {
-        return null;
+        return daoContagem.listar();
     }
 
     @Override
     public Contagem listarPorId(Object... ids) {
-        return null;
+        return daoContagem.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        Contagem contagem = listarPorId(ids);
+        if (contagem != null) {
+            loja = contagem.getLoja();
+            data = contagem.getData();
+            finalizada = contagem.getFinalizada();
+            tipoContagem = contagem.getTipoContagem();
+        }
     }
 
     public ArrayList<Contagem> listarPorLojaPeriodo(String cnpj, LocalDateTime dataInicial, LocalDateTime dataFinal) {
