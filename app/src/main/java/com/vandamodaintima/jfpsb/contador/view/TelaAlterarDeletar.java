@@ -62,12 +62,9 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
      */
     protected void setBtnAtualizar() {
         btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnAtualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = alertBuilderAtualizar.create();
-                alertDialog.show();
-            }
+        btnAtualizar.setOnClickListener(view -> {
+            AlertDialog alertDialog = alertBuilderAtualizar.create();
+            alertDialog.show();
         });
     }
 

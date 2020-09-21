@@ -2,13 +2,8 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,14 +14,12 @@ import com.vandamodaintima.jfpsb.contador.controller.produto.AlterarDeletarProdu
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
-import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
 
-import java.util.ArrayList;
-
 public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private EditText txtCodBarra;
+    private EditText txtCodBarraFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
@@ -34,7 +27,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private EditText txtNcm;
     private Button btnEscolherFornecedor;
     private Button btnEscolherMarca;
-    private Button btnGerenciarCodBarraFornecedor;
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
 
@@ -42,7 +34,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
-    private static final int TELA_COD_BARRA_FORNECEDOR = 3;
 
     private AlertDialog.Builder alertaRemoverFornecedor;
     private AlertDialog.Builder alertaRemoverMarca;
@@ -60,6 +51,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         setBtnAtualizar();
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
+        txtCodBarraFornecedor = findViewById(R.id.txtCodBarraFornecedor);
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
@@ -67,7 +59,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         txtNcm = findViewById(R.id.txtNcm);
         btnEscolherFornecedor = findViewById(R.id.btnEscolherFornecedor);
         btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
-        btnGerenciarCodBarraFornecedor = findViewById(R.id.btnGerenciarCodBarraFornecedor);
         btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
         btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
 
@@ -83,6 +74,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         setAlertBuilderAtualizar();
 
         txtCodBarra.setText(controller.getProduto().getCod_barra());
+        txtCodBarraFornecedor.setText(controller.getProduto().getCod_barra_fornecedor());
         txtDescricao.setText(controller.getProduto().getDescricao());
         txtPreco.setText(String.valueOf(controller.getProduto().getPreco()));
 
@@ -102,13 +94,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnEscolherMarca.setOnClickListener(v -> {
             Intent intent = new Intent(AlterarDeletarProduto.this, TelaMarcaForResult.class);
             startActivityForResult(intent, ESCOLHER_MARCA);
-        });
-
-        btnGerenciarCodBarraFornecedor.setOnClickListener(v -> {
-            Intent intent = new Intent(AlterarDeletarProduto.this, TelaCodBarraFornecedor.class);
-            intent.putExtra("codigos", controller.getCodBarraFornecedor());
-            intent.putExtra("produto", controller.getProduto().getCod_barra());
-            startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
         });
 
         btnRemoverFornecedor.setOnClickListener(v -> {
@@ -170,18 +155,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                     mensagemAoUsuario("Marca Não Foi Escolhida");
                 }
                 break;
-            case TELA_COD_BARRA_FORNECEDOR:
-                if (resultCode == RESULT_OK) {
-                    ArrayList<String> codigos = (ArrayList<String>) data.getSerializableExtra("codigos");
-
-                    if (controller.getCodBarraFornecedor().equals(codigos)) {
-                        mensagemAoUsuario("Cód. de Barras de Fornecedores Não Foram Alterados");
-                    } else {
-                        controller.setCodBarraFornecedor(codigos);
-                        mensagemAoUsuario("A Lista de Códigos Será Consolidada ao Apertar em \"Atualizar\"");
-                    }
-                }
-                break;
         }
     }
 
@@ -202,6 +175,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
             controller.getProduto().setDescricao(txtDescricao.getText().toString());
+            controller.getProduto().setCod_barra_fornecedor(txtCodBarraFornecedor.getText().toString());
             controller.getProduto().setNcm(txtNcm.getText().toString());
             boolean precoResult = controller.setPreco(txtPreco.getText().toString());
 

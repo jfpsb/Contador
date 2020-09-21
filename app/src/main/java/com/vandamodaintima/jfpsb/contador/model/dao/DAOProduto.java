@@ -31,6 +31,7 @@ public class DAOProduto extends ADAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("cod_barra", produto.getCod_barra());
+            contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
             contentValues.put("ncm", produto.getNcm());
@@ -48,18 +49,6 @@ public class DAOProduto extends ADAO<Produto> {
             }
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
-
-            for (int i = 0; i < produto.getCod_barra_fornecedor().size(); i++) {
-                String codigo = produto.getCod_barra_fornecedor().get(i);
-
-                ContentValues content = new ContentValues();
-
-                content.put("produto", produto.getCod_barra());
-                content.put("codigo", codigo);
-
-                conexaoBanco.conexao().insertOrThrow("cod_barra_fornecedor", null, content);
-            }
-
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return super.inserir(produto, sendToServer);
@@ -81,6 +70,7 @@ public class DAOProduto extends ADAO<Produto> {
                 ContentValues contentValues = new ContentValues();
 
                 contentValues.put("cod_barra", p.getCod_barra());
+                contentValues.put("cod_barra_fornecedor", p.getCod_barra_fornecedor());
                 contentValues.put("descricao", p.getDescricao());
                 contentValues.put("preco", p.getPreco());
                 contentValues.put("ncm", p.getNcm());
@@ -98,17 +88,6 @@ public class DAOProduto extends ADAO<Produto> {
                 }
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-
-                for (int i = 0; i < p.getCod_barra_fornecedor().size(); i++) {
-                    String codigo = p.getCod_barra_fornecedor().get(i);
-
-                    ContentValues content = new ContentValues();
-
-                    content.put("produto", p.getCod_barra());
-                    content.put("codigo", codigo);
-
-                    conexaoBanco.conexao().insertWithOnConflict("cod_barra_fornecedor", null, content, SQLiteDatabase.CONFLICT_IGNORE);
-                }
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -133,19 +112,9 @@ public class DAOProduto extends ADAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("descricao", produto.getDescricao());
+            contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
             contentValues.put("preco", produto.getPreco());
             contentValues.put("ncm", produto.getNcm());
-
-            conexaoBanco.conexao().delete("cod_barra_fornecedor", "produto = ?", new String[]{cod_barra});
-
-            for (String codigo : produto.getCod_barra_fornecedor()) {
-                ContentValues contentCodigos = new ContentValues();
-
-                contentCodigos.put("produto", produto.getCod_barra());
-                contentCodigos.put("codigo", codigo);
-
-                conexaoBanco.conexao().insertOrThrow("cod_barra_fornecedor", null, contentCodigos);
-            }
 
             if (produto.getFornecedor() != null) {
                 contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
@@ -186,24 +155,10 @@ public class DAOProduto extends ADAO<Produto> {
                 Produto p = new Produto();
 
                 p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-                Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", null, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-                if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                    ArrayList<String> codigos = new ArrayList<>();
-
-                    while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                    }
-
-                    p.setCod_barra_fornecedor(codigos);
-                }
-
-                cursorCodigoBarraFornecedor.close();
-
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
@@ -227,24 +182,10 @@ public class DAOProduto extends ADAO<Produto> {
             cursor.moveToFirst();
 
             p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
+            p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
             p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
             p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
             p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-            Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", new String[]{"ROWID as _id", "codigo", "produto"}, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-            if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                ArrayList<String> codigos = new ArrayList<>();
-
-                while (cursorCodigoBarraFornecedor.moveToNext()) {
-                    codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                }
-
-                p.setCod_barra_fornecedor(codigos);
-            }
-
-            cursorCodigoBarraFornecedor.close();
-
             p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
             p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
         }
@@ -269,7 +210,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
-        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN cod_barra_fornecedor ON produto.cod_barra = cod_barra_fornecedor.produto WHERE produto.cod_barra LIKE ? OR cod_barra_fornecedor.codigo LIKE ? GROUP BY produto ORDER BY cod_barra";
+        String sql = "SELECT cod_barra as _id, * FROM produto WHERE cod_barra LIKE ? OR cod_barra_fornecedor LIKE ? ORDER BY cod_barra";
 
         String[] selection = new String[]{"%" + cod_barra + "%", "%" + cod_barra + "%"};
 
@@ -286,24 +227,10 @@ public class DAOProduto extends ADAO<Produto> {
                 Produto p = new Produto();
 
                 p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-                Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", null, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-                if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                    ArrayList<String> codigos = new ArrayList<>();
-
-                    while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                    }
-
-                    p.setCod_barra_fornecedor(codigos);
-                }
-
-                cursorCodigoBarraFornecedor.close();
-
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
 
@@ -334,24 +261,10 @@ public class DAOProduto extends ADAO<Produto> {
                 Produto p = new Produto();
 
                 p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-                Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", null, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-                if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                    ArrayList<String> codigos = new ArrayList<>();
-
-                    while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                    }
-
-                    p.setCod_barra_fornecedor(codigos);
-                }
-
-                cursorCodigoBarraFornecedor.close();
-
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
@@ -378,24 +291,10 @@ public class DAOProduto extends ADAO<Produto> {
                 Produto p = new Produto();
 
                 p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-                Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", null, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-                if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                    ArrayList<String> codigos = new ArrayList<>();
-
-                    while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                    }
-
-                    p.setCod_barra_fornecedor(codigos);
-                }
-
-                cursorCodigoBarraFornecedor.close();
-
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
             }
@@ -422,24 +321,10 @@ public class DAOProduto extends ADAO<Produto> {
                 Produto p = new Produto();
 
                 p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
-
-                Cursor cursorCodigoBarraFornecedor = conexaoBanco.conexao().query("cod_barra_fornecedor", null, "produto = ?", new String[]{p.getCod_barra()}, null, null, null, null);
-
-                if (cursorCodigoBarraFornecedor.getCount() > 0) {
-                    ArrayList<String> codigos = new ArrayList<>();
-
-                    while (cursorCodigoBarraFornecedor.moveToNext()) {
-                        codigos.add(cursorCodigoBarraFornecedor.getString(cursorCodigoBarraFornecedor.getColumnIndexOrThrow("codigo")));
-                    }
-
-                    p.setCod_barra_fornecedor(codigos);
-                }
-
-                cursorCodigoBarraFornecedor.close();
-
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
 

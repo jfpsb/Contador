@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
@@ -23,8 +22,8 @@ public class Produto implements Serializable, IModel<Produto> {
 
     @SerializedName(value = "CodBarra")
     private String cod_barra;
-    @SerializedName(value = "Codigos")
-    private ArrayList<String> cod_barra_fornecedor = new ArrayList<>();
+    @SerializedName(value = "Codigo_Fornecedor")
+    private String cod_barra_fornecedor;
     @SerializedName(value = "Marca")
     private Marca marca;
     @SerializedName(value = "Fornecedor")
@@ -37,11 +36,11 @@ public class Produto implements Serializable, IModel<Produto> {
     private String ncm;
 
     public static String[] getColunas() {
-        return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca", "ncm"};
+        return new String[]{"cod_barra as _id", "cod_barra_fornecedor", "descricao", "preco", "fornecedor", "marca", "ncm"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Fornecedor", "Marca", "NCM", "Cód. de Barra de Fornecedor"};
+        return new String[]{"Cód. De Barra", "Cód. de Barra de Fornecedor", "Descrição", "Preço", "Fornecedor", "Marca", "NCM"};
     }
 
     public String getCod_barra() {
@@ -52,11 +51,11 @@ public class Produto implements Serializable, IModel<Produto> {
         this.cod_barra = cod_barra;
     }
 
-    public ArrayList<String> getCod_barra_fornecedor() {
+    public String getCod_barra_fornecedor() {
         return cod_barra_fornecedor;
     }
 
-    public void setCod_barra_fornecedor(ArrayList<String> cod_barra_fornecedor) {
+    public void setCod_barra_fornecedor(String cod_barra_fornecedor) {
         this.cod_barra_fornecedor = cod_barra_fornecedor;
     }
 

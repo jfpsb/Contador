@@ -20,10 +20,12 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        //Coloca o código da pesquisa no produto a ser cadastrado
+        //Se for informado o código de barras ao abrir a tela
         String codigo = getArguments().getString("codigo");
-        if (codigo != null)
-            controller.getProduto().getCod_barra_fornecedor().add(codigo);
+        if (codigo != null) {
+            txtCodBarra.setText(codigo);
+            controller.getProduto().setCod_barra(codigo);
+        }
 
         setAlertaQuantidadeProduto();
 

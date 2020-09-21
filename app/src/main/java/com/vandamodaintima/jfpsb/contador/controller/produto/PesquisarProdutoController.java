@@ -76,8 +76,4 @@ public class PesquisarProdutoController {
     public Produto getProduto() {
         return produtoModel;
     }
-
-    public void addCodBarraFornecedor(String codigo) {
-        produtoModel.getCod_barra_fornecedor().add(codigo);
-    }
 }

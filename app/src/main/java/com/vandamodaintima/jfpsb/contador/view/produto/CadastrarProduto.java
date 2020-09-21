@@ -22,20 +22,17 @@ import com.vandamodaintima.jfpsb.contador.controller.produto.CadastrarProdutoCon
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
-import com.vandamodaintima.jfpsb.contador.view.codbarrafornecedor.TelaCodBarraFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
-
-import java.util.ArrayList;
 
 public class CadastrarProduto extends TelaCadastro {
     private Button btnCadastrar;
     private Button btnEscolherFornecedor;
     private Button btnEscolherMarca;
-    private Button btnGerenciarCodBarraFornecedor;
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
-    private EditText txtCodBarra;
+    protected EditText txtCodBarra;
+    private EditText txtCodBarraFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
@@ -49,7 +46,6 @@ public class CadastrarProduto extends TelaCadastro {
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
-    private static final int TELA_COD_BARRA_FORNECEDOR = 3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -61,10 +57,10 @@ public class CadastrarProduto extends TelaCadastro {
         btnCadastrar = telaCadastroView.findViewById(R.id.btnCadastrar);
         btnEscolherFornecedor = telaCadastroView.findViewById(R.id.btnEscolherFornecedor);
         btnEscolherMarca = telaCadastroView.findViewById(R.id.btnEscolherMarca);
-        btnGerenciarCodBarraFornecedor = telaCadastroView.findViewById(R.id.btnGerenciarCodBarraFornecedor);
         btnRemoverFornecedor = telaCadastroView.findViewById(R.id.btnRemoverFornecedor);
         btnRemoverMarca = telaCadastroView.findViewById(R.id.btnRemoverMarca);
         txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
+        txtCodBarraFornecedor = telaCadastroView.findViewById(R.id.txtCodBarraFornecedor);
         txtDescricao = telaCadastroView.findViewById(R.id.txtDescricao);
         txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
         txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
@@ -83,12 +79,6 @@ public class CadastrarProduto extends TelaCadastro {
             startActivityForResult(intent, ESCOLHER_MARCA);
         });
 
-        btnGerenciarCodBarraFornecedor.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), TelaCodBarraFornecedor.class);
-            intent.putExtra("codigos", controller.getProduto().getCod_barra_fornecedor());
-            startActivityForResult(intent, TELA_COD_BARRA_FORNECEDOR);
-        });
-
         btnRemoverFornecedor.setOnClickListener(v -> {
             controller.setFornecedorNull();
             txtFornecedor.getText().clear();
@@ -103,6 +93,7 @@ public class CadastrarProduto extends TelaCadastro {
 
         btnCadastrar.setOnClickListener(view -> {
             controller.getProduto().setCod_barra(txtCodBarra.getText().toString());
+            controller.getProduto().setCod_barra_fornecedor(txtCodBarraFornecedor.getText().toString());
             controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
             controller.getProduto().setNcm(txtNcm.getText().toString());
             boolean precoResult = controller.setPreco(txtPreco.getText().toString());
@@ -148,18 +139,6 @@ public class CadastrarProduto extends TelaCadastro {
                     Marca marca = (Marca) data.getSerializableExtra("marca");
                     controller.carregaMarca(marca);
                     txtMarca.setText(controller.getProduto().getMarca().getNome());
-                }
-                break;
-            case TELA_COD_BARRA_FORNECEDOR:
-                if (resultCode == Activity.RESULT_OK) {
-                    ArrayList<String> codigos = (ArrayList<String>) data.getSerializableExtra("codigos");
-
-                    if (codigos.equals(controller.getProduto().getCod_barra_fornecedor())) {
-                        Toast.makeText(getContext(), "Cód. de Barras de Fornecedores Não Foram Alterados", Toast.LENGTH_SHORT).show();
-                    } else {
-                        controller.getProduto().setCod_barra_fornecedor(codigos);
-                        Toast.makeText(getContext(), "A Lista de Códigos Será Consolidada ao Apertar em \"Cadastrar\"", Toast.LENGTH_LONG).show();
-                    }
                 }
                 break;
         }

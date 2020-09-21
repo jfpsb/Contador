@@ -63,14 +63,6 @@ public class AlterarDeletarProdutoController {
         produtoModel.setMarca(marca);
     }
 
-    public ArrayList<String> getCodBarraFornecedor() {
-        return produtoModel.getCod_barra_fornecedor();
-    }
-
-    public void setCodBarraFornecedor(ArrayList<String> codigos) {
-        produtoModel.setCod_barra_fornecedor(codigos);
-    }
-
     public void setFornecedorNull() {
         produtoModel.setFornecedor(null);
     }

@@ -66,9 +66,6 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                 return;
             }
 
-            if (codigo != null && !codigo.isEmpty())
-                controller.addCodBarraFornecedor(codigo);
-
             ((PesquisarProdutoForContagemForResultController)controller).atualizar();
 
             Intent intent = new Intent();

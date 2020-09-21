@@ -74,4 +74,5 @@
     <string name="hint_digite_nome_operadora">Digite o Nome da Operadora</string>
     <string name="cadastro_de_operadora">Cadastro de Operadora de Cartão</string>
     <string name="ncm_dois_pontos">NCM:</string>
+    <string name="cod_barras_fornecedor_dois_pontos">Cód. De Barras De Fornecedor:</string>
 </resources>

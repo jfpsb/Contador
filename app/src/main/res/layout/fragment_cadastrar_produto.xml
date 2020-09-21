@@ -65,14 +65,22 @@
             </TableRow>
 
             <TableRow>
-
-                <Button
-                    android:id="@+id/btnGerenciarCodBarraFornecedor"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/gerenciar_cod_de_barras_de_fornecedor"
+                    android:text="@string/cod_barras_fornecedor_dois_pontos"
                     android:textColor="#000"
+                    android:textSize="22sp" />
+            </TableRow>
+
+            <TableRow>
+
+                <EditText
+                    android:id="@+id/txtCodBarraFornecedor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:textSize="20sp" />
             </TableRow>
 
