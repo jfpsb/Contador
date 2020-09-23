@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
         CellStyle cellStyle = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
@@ -134,5 +134,10 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     @Override
     public String[] getHeaders() {
         return Fornecedor.getHeaders();
+    }
+
+    @Override
+    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+        return 0;
     }
 }

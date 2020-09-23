@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProduto> {
     @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
         CellStyle estiloCelula = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
@@ -30,16 +30,17 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
 
         ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
 
-        Row[] rows = new Row[contagensProduto.size()];
+        Row[] dataRows = new Row[contagensProduto.size()];
 
         CellStyle estiloCelulaMonetario = workbook.createCellStyle();
         estiloCelulaMonetario.cloneStyleFrom(estiloCelula);
         estiloCelulaMonetario.setDataFormat((short) 8);
 
-        for (int i = 1; i <= rows.length; i++) {
-            rows[i - 1] = sheet.createRow(i);
+        //Configurando os tipos de célula
+        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
+            dataRows[i - linhaConteudo] = sheet.createRow(i);
             for (int j = 0; j < ContagemProduto.getHeaders().length; j++) {
-                Cell cell = rows[i - 1].createCell(j);
+                Cell cell = dataRows[i - linhaConteudo].createCell(j);
                 if (j == 2) {
                     cell.setCellStyle(estiloCelulaMonetario);
                 } else {
@@ -48,21 +49,25 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
             }
         }
 
-        for (int i = 1; i <= rows.length; i++) {
-            Cell cell = rows[i - 1].createCell(4);
+        //Configurando coluna de valor total
+        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
+            Cell cell = dataRows[i - linhaConteudo].createCell(4);
             cell.setCellStyle(estiloCelulaMonetario);
             cell.setCellType(CellType.FORMULA);
             String output = String.format("%s*%s", "C" + (i + 1), "D" + (i + 1));
             cell.setCellFormula(output);
         }
 
-        for (int i = 0; i < rows.length; i++) {
-            ContagemProduto contagemProduto = contagensProduto.get(i);
+        linhaConteudo++;
 
-            rows[i].getCell(0).setCellValue(contagemProduto.getProduto().getCod_barra());
-            rows[i].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
-            rows[i].getCell(2).setCellValue(contagemProduto.getProduto().getPreco());
-            rows[i].getCell(3).setCellValue(contagemProduto.getQuant());
+        //Colocando valores em células
+        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
+            ContagemProduto contagemProduto = contagensProduto.get(i - linhaConteudo);
+
+            dataRows[i - linhaConteudo].getCell(0).setCellValue(contagemProduto.getProduto().getCod_barra());
+            dataRows[i - linhaConteudo].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
+            dataRows[i - linhaConteudo].getCell(2).setCellValue(contagemProduto.getProduto().getPreco());
+            dataRows[i - linhaConteudo].getCell(3).setCellValue(contagemProduto.getQuant());
         }
 
         sheet.setColumnWidth(0, 25 * 256);
@@ -82,5 +87,28 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
     @Override
     public String[] getHeaders() {
         return ContagemProduto.getHeaders();
+    }
+
+    @Override
+    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        int linha = 0;
+        ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
+
+        Font fonte = workbook.createFont();
+        fonte.setFontName("Arial");
+        fonte.setFontHeightInPoints((short) 16);
+        fonte.setBold(true);
+
+        cellStyle.setFont(fonte);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        Row cabecalho = sheet.createRow(linha++);
+        Cell cellLoja = cabecalho.createCell(0);
+        cellLoja.setCellStyle(cellStyle);
+        cellLoja.setCellValue("Loja: " + contagensProduto.get(0).getContagem().getLoja().getNome());
+
+        return linha;
     }
 }

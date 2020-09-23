@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
     @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
         CellStyle cellStyle = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
@@ -63,5 +63,10 @@ public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
     @Override
     public String[] getHeaders() {
         return Loja.getHeaders();
+    }
+
+    @Override
+    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+        return 0;
     }
 }

@@ -20,6 +20,9 @@ public class ExcelStrategy<T> {
     }
 
     String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+        //Retorna linha onde próximo conteúdo começa
+        int linha = excelStrategy.escreveAntesCabecalho(workbook, sheet, lista);
+
         //Estilo da primeira linha
         CellStyle cellStyle = workbook.createCellStyle();
 
@@ -32,7 +35,7 @@ public class ExcelStrategy<T> {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        Row cabecalho = sheet.createRow(0);
+        Row cabecalho = sheet.createRow(linha);
 
         for(int i = 0; i < excelStrategy.getHeaders().length; i++) {
             Cell cell = cabecalho.createCell(i);
@@ -40,10 +43,10 @@ public class ExcelStrategy<T> {
             cell.setCellStyle(cellStyle);
         }
 
-        return excelStrategy.escreveDados(workbook, sheet, lista);
+        return excelStrategy.escreveDados(workbook, sheet, lista, ++linha);
     }
 
     Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
-        return  excelStrategy.lerInserirDados(workbook, sheet, conexaoBanco);
+        return excelStrategy.lerInserirDados(workbook, sheet, conexaoBanco);
     }
 }

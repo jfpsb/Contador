@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
     @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
         CellStyle cellStyle = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
@@ -57,12 +57,12 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
         }
 
         sheet.setColumnWidth(0, 25 * 256);
-        sheet.setColumnWidth(1, 70 * 256);
-        sheet.setColumnWidth(2, 40 * 256);
-        sheet.setColumnWidth(3, 40 * 256);
+        sheet.setColumnWidth(1, 30 * 256);
+        sheet.setColumnWidth(2, 55 * 256);
+        sheet.setColumnWidth(3, 15 * 256);
         sheet.setColumnWidth(4, 40 * 256);
         sheet.setColumnWidth(5, 40 * 256);
-        sheet.setColumnWidth(6, 50 * 256);
+        sheet.setColumnWidth(6, 35 * 256);
 
         return "Produtos.xlsx";
     }
@@ -176,5 +176,10 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
     @Override
     public String[] getHeaders() {
         return Produto.getHeaders();
+    }
+
+    @Override
+    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
+        return 0;
     }
 }
