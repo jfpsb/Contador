@@ -36,24 +36,24 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
 
         Row[] rows = new Row[produtos.size()];
 
-        for (int i = 1; i <= rows.length; i++) {
-            rows[i - 1] = sheet.createRow(i);
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
+            rows[i - linhaConteudo] = sheet.createRow(i);
             for (int j = 0; j < Produto.getHeaders().length; j++) {
-                Cell cell = rows[i - 1].createCell(j);
+                Cell cell = rows[i - linhaConteudo].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
-        for (int i = 0; i < rows.length; i++) {
-            Produto p = produtos.get(i);
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
+            Produto p = produtos.get(i - linhaConteudo);
 
-            rows[i].getCell(0).setCellValue(p.getCod_barra());
-            rows[i].getCell(1).setCellValue(p.getCod_barra_fornecedor());
-            rows[i].getCell(2).setCellValue(p.getDescricao());
-            rows[i].getCell(3).setCellValue(p.getPreco());
-            rows[i].getCell(4).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
-            rows[i].getCell(5).setCellValue(p.getMarca() == null ? "NÃO POSSUI" : p.getMarca().getNome());
-            rows[i].getCell(6).setCellValue((p.getNcm() == null || p.getNcm().length() == 0) ? "NÃO POSSUI" : p.getNcm());
+            rows[i - linhaConteudo].getCell(0).setCellValue(p.getCod_barra());
+            rows[i - linhaConteudo].getCell(1).setCellValue(p.getCod_barra_fornecedor());
+            rows[i - linhaConteudo].getCell(2).setCellValue(p.getDescricao());
+            rows[i - linhaConteudo].getCell(3).setCellValue(p.getPreco());
+            rows[i - linhaConteudo].getCell(4).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
+            rows[i - linhaConteudo].getCell(5).setCellValue(p.getMarca() == null ? "NÃO POSSUI" : p.getMarca().getNome());
+            rows[i - linhaConteudo].getCell(6).setCellValue((p.getNcm() == null || p.getNcm().length() == 0) ? "NÃO POSSUI" : p.getNcm());
         }
 
         sheet.setColumnWidth(0, 25 * 256);

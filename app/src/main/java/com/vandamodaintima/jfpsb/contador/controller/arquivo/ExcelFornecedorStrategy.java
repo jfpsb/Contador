@@ -34,21 +34,21 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
 
         Row[] rows = new Row[fornecedores.size()];
 
-        for (int i = 1; i <= rows.length; i++) {
-            rows[i - 1] = sheet.createRow(i);
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
+            rows[i - linhaConteudo] = sheet.createRow(i);
             for (int j = 0; j < Fornecedor.getHeaders().length; j++) {
-                Cell cell = rows[i - 1].createCell(j);
+                Cell cell = rows[i - linhaConteudo].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
-        for (int i = 0; i < rows.length; i++) {
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
             Fornecedor f = fornecedores.get(i);
 
-            rows[i].getCell(0).setCellValue(f.getCnpj());
-            rows[i].getCell(1).setCellValue(f.getNome());
-            rows[i].getCell(2).setCellValue(f.getFantasia());
-            rows[i].getCell(3).setCellValue(f.getEmail());
+            rows[i - linhaConteudo].getCell(0).setCellValue(f.getCnpj());
+            rows[i - linhaConteudo].getCell(1).setCellValue(f.getNome());
+            rows[i - linhaConteudo].getCell(2).setCellValue(f.getFantasia());
+            rows[i - linhaConteudo].getCell(3).setCellValue(f.getEmail());
         }
 
         sheet.setColumnWidth(0, 30 * 256);

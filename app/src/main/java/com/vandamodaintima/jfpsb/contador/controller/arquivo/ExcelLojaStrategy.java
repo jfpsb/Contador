@@ -30,21 +30,21 @@ public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
 
         Row[] rows = new Row[lojas.size()];
 
-        for (int i = 1; i <= rows.length; i++) {
-            rows[i - 1] = sheet.createRow(i);
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
+            rows[i - linhaConteudo] = sheet.createRow(i);
             for (int j = 0; j < Loja.getColunas().length; j++) {
-                Cell cell = rows[i - 1].createCell(j);
+                Cell cell = rows[i - linhaConteudo].createCell(j);
                 cell.setCellStyle(cellStyle);
             }
         }
 
-        for (int i = 0; i < rows.length; i++) {
+        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
             Loja l = lojas.get(i);
 
-            rows[i].getCell(0).setCellValue(l.getCnpj());
-            rows[i].getCell(1).setCellValue(l.getNome());
-            rows[i].getCell(2).setCellValue(l.getMatriz().getNome());
-            rows[i].getCell(3).setCellValue(l.getTelefone());
+            rows[i - linhaConteudo].getCell(0).setCellValue(l.getCnpj());
+            rows[i - linhaConteudo].getCell(1).setCellValue(l.getNome());
+            rows[i - linhaConteudo].getCell(2).setCellValue(l.getMatriz().getNome());
+            rows[i - linhaConteudo].getCell(3).setCellValue(l.getTelefone());
         }
 
         sheet.setColumnWidth(0, 25 * 256);
