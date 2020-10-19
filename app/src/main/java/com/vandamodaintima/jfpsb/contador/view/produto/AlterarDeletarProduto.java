@@ -73,8 +73,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         setAlertBuilderDeletar();
         setAlertBuilderAtualizar();
 
-        txtCodBarra.setText(controller.getProduto().getCod_barra());
-        txtCodBarraFornecedor.setText(controller.getProduto().getCod_barra_fornecedor());
+        txtCodBarra.setText(controller.getProduto().getCodBarra());
         txtDescricao.setText(controller.getProduto().getDescricao());
         txtPreco.setText(String.valueOf(controller.getProduto().getPreco()));
 
@@ -162,7 +161,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Deletar Produto");
-        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + controller.getProduto().getCod_barra() + " - " + controller.getProduto().getDescricao() + "?");
+        alertBuilderDeletar.setMessage("Tem Certeza Que Deseja Deletar o Produto " + controller.getProduto().getCodBarra() + " - " + controller.getProduto().getDescricao() + "?");
         alertBuilderDeletar.setPositiveButton("Sim", (dialogInterface, i) -> controller.deletar());
         alertBuilderDeletar.setNegativeButton("Não", (dialogInterface, i) -> Toast.makeText(AlterarDeletarProduto.this, "Produto Não foi Deletado", Toast.LENGTH_SHORT).show());
     }
@@ -171,11 +170,10 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Produto");
-        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + controller.getProduto().getCod_barra() + " - " + controller.getProduto().getDescricao() + "?");
+        alertBuilderAtualizar.setMessage("Tem Certeza Que Deseja Atualizar o Produto " + controller.getProduto().getCodBarra() + " - " + controller.getProduto().getDescricao() + "?");
 
         alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
             controller.getProduto().setDescricao(txtDescricao.getText().toString());
-            controller.getProduto().setCod_barra_fornecedor(txtCodBarraFornecedor.getText().toString());
             controller.getProduto().setNcm(txtNcm.getText().toString());
             boolean precoResult = controller.setPreco(txtPreco.getText().toString());
 

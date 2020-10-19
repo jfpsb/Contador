@@ -42,6 +42,10 @@ public class TipoContagem implements Serializable, IModel<TipoContagem> {
         return new String[]{"id as _id", "nome"};
     }
 
+    public static String[] getHeaders() {
+        return new String[0];
+    }
+
     @Override
     public Object getIdentifier() {
         return id;
@@ -54,22 +58,22 @@ public class TipoContagem implements Serializable, IModel<TipoContagem> {
 
     @Override
     public Boolean salvar() {
-        return daoTipoContagem.inserir(this, true);
+        return daoTipoContagem.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<TipoContagem> lista) {
-        return daoTipoContagem.inserir(lista, true);
+        return daoTipoContagem.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoTipoContagem.atualizar(this, true);
+        return daoTipoContagem.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoTipoContagem.deletar(this, true);
+        return daoTipoContagem.deletar(this);
     }
 
     @Override

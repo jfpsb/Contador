@@ -27,7 +27,8 @@ public abstract class TelaCadastro extends Fragment implements CadastrarView {
 
     @Override
     public void onDestroy() {
-        conexaoBanco.close();
+        if (conexaoBanco != null)
+            conexaoBanco.close();
         super.onDestroy();
     }
 
@@ -40,7 +41,7 @@ public abstract class TelaCadastro extends Fragment implements CadastrarView {
     public void aposCadastro(Object... args) {
         Fragment fragment = null;
 
-        if(getActivity() != null)
+        if (getActivity() != null)
             fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
 
         if (fragment instanceof PesquisarView)

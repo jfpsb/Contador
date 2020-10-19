@@ -44,6 +44,10 @@ public class OperadoraCartao implements IModel<OperadoraCartao>, Serializable {
         return new String[]{"nome as _id"};
     }
 
+    public static String[] getHeaders() {
+        return new String[0];
+    }
+
     @Override
     public Object getIdentifier() {
         return nome;
@@ -56,22 +60,22 @@ public class OperadoraCartao implements IModel<OperadoraCartao>, Serializable {
 
     @Override
     public Boolean salvar() {
-        return daoOperadoraCartao.inserir(this, true);
+        return daoOperadoraCartao.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<OperadoraCartao> lista) {
-        return daoOperadoraCartao.inserir(lista, true);
+        return daoOperadoraCartao.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoOperadoraCartao.atualizar(this, true);
+        return daoOperadoraCartao.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoOperadoraCartao.deletar(this, true);
+        return daoOperadoraCartao.deletar(this);
     }
 
     @Override

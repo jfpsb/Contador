@@ -107,22 +107,22 @@ public class Loja implements Serializable, IModel<Loja> {
 
     @Override
     public Boolean salvar() {
-        return daoLoja.inserir(this, true);
+        return daoLoja.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<Loja> lista) {
-        return daoLoja.inserir(lista, true);
+        return daoLoja.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoLoja.atualizar(this, true);
+        return daoLoja.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoLoja.deletar(this, true);
+        return daoLoja.deletar(this);
     }
 
     @Override

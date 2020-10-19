@@ -24,6 +24,7 @@ import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
+import com.vandamodaintima.jfpsb.contador.view.produto.grade.GerenciarGrades;
 
 public class CadastrarProduto extends TelaCadastro {
     private Button btnCadastrar;
@@ -31,8 +32,8 @@ public class CadastrarProduto extends TelaCadastro {
     private Button btnEscolherMarca;
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
+    private Button btnGerenciarGrades;
     protected EditText txtCodBarra;
-    private EditText txtCodBarraFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
@@ -59,8 +60,8 @@ public class CadastrarProduto extends TelaCadastro {
         btnEscolherMarca = telaCadastroView.findViewById(R.id.btnEscolherMarca);
         btnRemoverFornecedor = telaCadastroView.findViewById(R.id.btnRemoverFornecedor);
         btnRemoverMarca = telaCadastroView.findViewById(R.id.btnRemoverMarca);
+        btnGerenciarGrades = telaCadastroView.findViewById(R.id.btnGerenciarGrades);
         txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
-        txtCodBarraFornecedor = telaCadastroView.findViewById(R.id.txtCodBarraFornecedor);
         txtDescricao = telaCadastroView.findViewById(R.id.txtDescricao);
         txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
         txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
@@ -68,6 +69,11 @@ public class CadastrarProduto extends TelaCadastro {
         txtNcm = telaCadastroView.findViewById(R.id.txtNcm);
         lblCodRepetido = telaCadastroView.findViewById(R.id.lblCodRepetido);
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
+
+        btnGerenciarGrades.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), GerenciarGrades.class);
+            startActivity(intent);
+        });
 
         btnEscolherFornecedor.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TelaFornecedorForResult.class);
@@ -92,8 +98,7 @@ public class CadastrarProduto extends TelaCadastro {
         });
 
         btnCadastrar.setOnClickListener(view -> {
-            controller.getProduto().setCod_barra(txtCodBarra.getText().toString());
-            controller.getProduto().setCod_barra_fornecedor(txtCodBarraFornecedor.getText().toString());
+            controller.getProduto().setCodBarra(txtCodBarra.getText().toString());
             controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
             controller.getProduto().setNcm(txtNcm.getText().toString());
             boolean precoResult = controller.setPreco(txtPreco.getText().toString());

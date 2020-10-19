@@ -59,7 +59,7 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
                 }
             });
 
-            String s = p.getCod_barra() + " - " + p.getDescricao();
+            String s = p.getCodBarra() + " - " + p.getDescricao();
             txtProduto.setText(s);
         }
 

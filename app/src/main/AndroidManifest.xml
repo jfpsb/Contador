@@ -45,6 +45,10 @@
 
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
+        <activity android:name=".view.produto.grade.GerenciarGrades"
+            android:label="@string/gerenciar_grades"
+            android:theme="@style/TabAppTheme.NoActionBar"/>
+
         <activity
             android:name=".view.produto.AlterarDeletarProduto"
             android:label="Alterar/Deletar Produto"

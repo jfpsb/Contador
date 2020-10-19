@@ -19,7 +19,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean inserir(OperadoraCartao operadoraCartao, boolean sendToServer) {
+    public Boolean inserir(OperadoraCartao operadoraCartao) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -36,7 +36,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(operadoraCartao, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -47,7 +47,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean inserir(List<OperadoraCartao> lista, boolean sendToServer) {
+    public Boolean inserir(List<OperadoraCartao> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -66,7 +66,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -77,7 +77,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Boolean atualizar(OperadoraCartao operadoraCartao, boolean sendToServer) {
+    public Boolean atualizar(OperadoraCartao operadoraCartao) {
         try {
             String identificador = (String) operadoraCartao.getIdentifier();
             conexaoBanco.conexao().beginTransaction();
@@ -97,7 +97,7 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{identificador});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(operadoraCartao, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -108,15 +108,10 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
     }
 
     @Override
-    public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, OperadoraCartao.getColunas(), null, null, null, null, null, null);
-    }
-
-    @Override
     public List<OperadoraCartao> listar() {
         ArrayList<OperadoraCartao> operadoras = new ArrayList<>();
 
-        Cursor cursor = listarCursor();
+        Cursor cursor = listarCursor(OperadoraCartao.getColunas());
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -162,6 +157,8 @@ public class DAOOperadoraCartao extends ADAO<OperadoraCartao> {
                     operadoraCartao.getIdentificadoresBanco().add(id);
                 }
             }
+
+            bancoids.close();
         }
 
         cursor.close();

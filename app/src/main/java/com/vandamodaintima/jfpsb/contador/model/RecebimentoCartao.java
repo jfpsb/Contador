@@ -93,6 +93,10 @@ public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializabl
         return new String[]{"mes, ano, loja, operadoracartao, recebido, valorOperadora, observacao"};
     }
 
+    public static String[] getHeaders() {
+        return new String[0];
+    }
+
     @Override
     public Object getIdentifier() {
         return new String[]{String.valueOf(mes), String.valueOf(ano), String.valueOf(loja.getIdentifier()), String.valueOf(operadoraCartao.getIdentifier())};
@@ -105,22 +109,22 @@ public class RecebimentoCartao implements IModel<RecebimentoCartao>, Serializabl
 
     @Override
     public Boolean salvar() {
-        return daoRecebimentoCartao.inserir(this, true);
+        return daoRecebimentoCartao.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<RecebimentoCartao> lista) {
-        return daoRecebimentoCartao.inserir(lista, true);
+        return daoRecebimentoCartao.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoRecebimentoCartao.atualizar(this, true);
+        return daoRecebimentoCartao.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoRecebimentoCartao.deletar(this, true);
+        return daoRecebimentoCartao.deletar(this);
     }
 
     @Override

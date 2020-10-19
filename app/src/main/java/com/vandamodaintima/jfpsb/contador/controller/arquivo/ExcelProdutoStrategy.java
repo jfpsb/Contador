@@ -47,8 +47,7 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
         for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
             Produto p = produtos.get(i - linhaConteudo);
 
-            rows[i - linhaConteudo].getCell(0).setCellValue(p.getCod_barra());
-            rows[i - linhaConteudo].getCell(1).setCellValue(p.getCod_barra_fornecedor());
+            rows[i - linhaConteudo].getCell(0).setCellValue(p.getCodBarra());
             rows[i - linhaConteudo].getCell(2).setCellValue(p.getDescricao());
             rows[i - linhaConteudo].getCell(3).setCellValue(p.getPreco());
             rows[i - linhaConteudo].getCell(4).setCellValue(p.getFornecedor() == null ? "NÃO POSSUI" : p.getFornecedor().getNome());
@@ -97,9 +96,9 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
 
             if (cod_barra != null && cod_barra.getCellTypeEnum() != CellType.BLANK) {
                 if (cod_barra.getCellTypeEnum() == CellType.STRING) {
-                    p.setCod_barra(cod_barra.getStringCellValue());
+                    p.setCodBarra(cod_barra.getStringCellValue());
                 } else if (cod_barra.getCellTypeEnum() == CellType.NUMERIC) {
-                    p.setCod_barra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue()));
+                    p.setCodBarra(String.format(Locale.ENGLISH, "%.0f", cod_barra.getNumericCellValue()));
                 } else {
                     Log.i("Contador", "Código de Barra Vazio");
                     continue;
@@ -108,9 +107,9 @@ public class ExcelProdutoStrategy implements IExcelStrategy<Produto> {
 
             if (codbarrafornecedor != null && codbarrafornecedor.getCellTypeEnum() != CellType.BLANK) {
                 if (codbarrafornecedor.getCellTypeEnum() == CellType.STRING) {
-                    p.setCod_barra(codbarrafornecedor.getStringCellValue());
+                    p.setCodBarra(codbarrafornecedor.getStringCellValue());
                 } else if (codbarrafornecedor.getCellTypeEnum() == CellType.NUMERIC) {
-                    p.setCod_barra(String.format(Locale.ENGLISH, "%.0f", codbarrafornecedor.getNumericCellValue()));
+                    p.setCodBarra(String.format(Locale.ENGLISH, "%.0f", codbarrafornecedor.getNumericCellValue()));
                 }
             }
 

@@ -99,22 +99,22 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
 
     @Override
     public Boolean salvar() {
-        return daoFornecedor.inserir(this, true);
+        return daoFornecedor.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<Fornecedor> lista) {
-        return daoFornecedor.inserir(lista, true);
+        return daoFornecedor.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoFornecedor.atualizar(this, true);
+        return daoFornecedor.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoFornecedor.deletar(this, true);
+        return daoFornecedor.deletar(this);
     }
 
     @Override

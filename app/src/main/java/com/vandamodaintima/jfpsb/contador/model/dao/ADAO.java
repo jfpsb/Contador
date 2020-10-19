@@ -3,21 +3,12 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
-import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.DBLog;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
-import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-import org.threeten.bp.Instant;
-import org.threeten.bp.ZoneId;
-
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class ADAO<T extends IModel & Serializable> {
+public abstract class ADAO<T extends IModel<T> & Serializable> {
     protected String TABELA;
     protected ConexaoBanco conexaoBanco;
 
@@ -25,46 +16,13 @@ public abstract class ADAO<T extends IModel & Serializable> {
         this.conexaoBanco = conexaoBanco;
     }
 
-    public Boolean inserir(T t, boolean sendToServer) {
-        /*Sincronizacao.addTransientLog(t, "INSERT");
-        Sincronizacao.writeLog();
-        if (sendToServer)
-            Sincronizacao.sendLog();*/
-        return true;
-    }
+    public abstract Boolean inserir(T t);
 
-    public Boolean inserir(List<T> lista, boolean sendToServer) {
-        /*for (T t : lista)
-            Sincronizacao.addTransientLog(t, "INSERT");
+    public abstract Boolean inserir(List<T> lista);
 
-        Sincronizacao.writeLog();
-        if (sendToServer)
-            Sincronizacao.sendLog();*/
+    public abstract Boolean atualizar(T t);
 
-        return true;
-    }
-
-    public Boolean atualizar(T t, boolean sendToServer) {
-        /*Sincronizacao.addTransientLog(t, "UPDATE");
-        Sincronizacao.writeLog();
-        if (sendToServer)
-            Sincronizacao.sendLog();*/
-        return true;
-    }
-
-    public void replicate(T entity) {
-        /*T t = listarPorId(entity.getIdentifier());
-
-        if (t == null) {
-            inserir(entity, false);
-        } else {
-            atualizar(entity, false);
-        }
-
-        Sincronizacao.writeLog();*/
-    }
-
-    public Boolean deletar(T objeto, boolean sendToServer) {
+    public Boolean deletar(T objeto) {
         Object key = objeto.getIdentifier();
 
         if (!(key instanceof String[])) {
@@ -73,17 +31,10 @@ public abstract class ADAO<T extends IModel & Serializable> {
 
         long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
 
-        /*if (result > 0) {
-            Sincronizacao.addTransientLog(objeto, "DELETE");
-            Sincronizacao.writeLog();
-            if (sendToServer)
-                Sincronizacao.sendLog();
-        }*/
-
         return result > 0;
     }
 
-    public void deletarLista(List<T> lista, boolean sendToServer) {
+    public void deletarLista(List<T> lista) {
         if (lista.size() == 0)
             return;
 
@@ -93,20 +44,13 @@ public abstract class ADAO<T extends IModel & Serializable> {
             if (!(key instanceof String[])) {
                 key = new String[]{String.valueOf(key)};
             }
-
-            long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
-
-            /*if (result > 0) {
-                Sincronizacao.addTransientLog(objeto, "DELETE");
-            }*/
+            conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
         }
-
-        //Sincronizacao.writeLog();
-        if (sendToServer)
-            Sincronizacao.sendLog();
     }
 
-    public abstract Cursor listarCursor();
+    public Cursor listarCursor(String[] colunas) {
+        return conexaoBanco.conexao().query(TABELA, colunas, null, null, null, null, null, null);
+    }
 
     public abstract List<T> listar();
 

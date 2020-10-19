@@ -29,12 +29,7 @@ public abstract class TelaPesquisa extends Fragment implements PesquisarView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                cliqueEmItemLista(adapterView, i);
-            }
-        });
+        listView.setOnItemClickListener((adapterView, view, i, l) -> cliqueEmItemLista(adapterView, i));
 
         return telaPesquisaView;
     }

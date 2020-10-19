@@ -65,23 +65,15 @@
             </TableRow>
 
             <TableRow>
-                <TextView
+
+                <Button
+                    android:id="@+id/btnGerenciarGrades"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_margin="5sp"
                     android:layout_weight="1"
-                    android:text="@string/cod_barras_fornecedor_dois_pontos"
-                    android:textColor="#000"
+                    android:padding="15sp"
+                    android:text="@string/gerenciar_grades"
                     android:textSize="22sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/txtCodBarraFornecedor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="20sp" />
             </TableRow>
 
             <TableRow>

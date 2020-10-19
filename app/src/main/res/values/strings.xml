@@ -75,4 +75,16 @@
     <string name="cadastro_de_operadora">Cadastro de Operadora de Cartão</string>
     <string name="ncm_dois_pontos">NCM:</string>
     <string name="cod_barras_fornecedor_dois_pontos">Cód. De Barras De Fornecedor:</string>
+    <string name="gerenciar_grades">Gerenciar Grades</string>
+    <string name="inserir_produto_grade">Inserir Grade de Produto</string>
+    <string name="pesquisar_por">Pesquisar Por:</string>
+    <string name="produtos_listados">Produtos Listados:</string>
+    <string name="tipo_grade_dois_pontos">Tipo de Grade:</string>
+    <string name="grade_dois_pontos">Grade:</string>
+    <string name="btn_inserir_em_formacao_atual_grade">Inserir em Formação Atual</string>
+    <string name="grade_formacao_atual_dois_pontos">Formação Atual:</string>
+    <string name="inserir_grade">Inserir Grade</string>
+    <string name="grades_de_produto">Grades de Produto</string>
+    <string name="placeholder">PLACEHOLDER</string>
+    <string name="imagem_barcode">Imagem Representando um Código de Barras]</string>
 </resources>

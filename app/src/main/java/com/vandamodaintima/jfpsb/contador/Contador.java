@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.sincronizacao.Sincronizacao;
 import com.vandamodaintima.jfpsb.contador.view.contagem.TelaContador;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedor;
 import com.vandamodaintima.jfpsb.contador.view.loja.TelaLoja;
@@ -27,7 +26,6 @@ public class Contador extends AppCompatActivity {
 
     private static final int PERMISSOES_APP = 1;
     private ConexaoBanco conexaoBanco;
-    private static Sincronizacao socketCliente = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

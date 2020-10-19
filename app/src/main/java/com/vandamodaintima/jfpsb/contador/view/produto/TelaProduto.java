@@ -32,10 +32,6 @@ public class TelaProduto extends TabLayoutBaseView {
     protected TelaCadastro cadastrarProduto;
     protected TelaPesquisa pesquisarProduto;
 
-    private AlphaAnimation inAnimation;
-    private AlphaAnimation outAnimation;
-    private LinearLayout progressBarHolder;
-    private TextView txtProgressStatus;
     private ConexaoBanco conexaoBanco;
 
     private TelaProdutoController controller;
@@ -60,9 +56,6 @@ public class TelaProduto extends TabLayoutBaseView {
         stub2.inflate();
 
         setFragments();
-
-        progressBarHolder = findViewById(R.id.progressBarHolder);
-        txtProgressStatus = findViewById(R.id.txtProgressStatus);
 
         setViewPagerTabLayout(pesquisarProduto, cadastrarProduto);
 

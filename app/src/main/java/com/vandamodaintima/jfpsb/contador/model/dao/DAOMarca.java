@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.model.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -23,7 +22,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(Marca marca, boolean sendToServer) {
+    public Boolean inserir(Marca marca) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -37,7 +36,7 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(marca, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -48,7 +47,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean inserir(List<Marca> lista, boolean sendToServer) {
+    public Boolean inserir(List<Marca> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -62,7 +61,7 @@ public class DAOMarca extends ADAO<Marca> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -73,7 +72,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Boolean atualizar(Marca marca, boolean sendToServer) {
+    public Boolean atualizar(Marca marca) {
         try {
             String nome = (String) marca.getIdentifier();
 
@@ -88,9 +87,9 @@ public class DAOMarca extends ADAO<Marca> {
             conexaoBanco.conexao().update(TABELA, contentValues, "nome = ?", new String[]{nome});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(marca, sendToServer);
+            return true;
         } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR MARCA", ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -99,15 +98,10 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     @Override
-    public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, Marca.getColunas(), null, null, null, null, null, null);
-    }
-
-    @Override
     public List<Marca> listar() {
         ArrayList<Marca> marcas = new ArrayList<>();
 
-        Cursor cursor = listarCursor();
+        Cursor cursor = listarCursor(Marca.getColunas());
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

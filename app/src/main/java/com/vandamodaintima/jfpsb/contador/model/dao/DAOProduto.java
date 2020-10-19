@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
@@ -15,23 +17,32 @@ import java.util.List;
 public class DAOProduto extends ADAO<Produto> {
     private DAOMarca daoMarca;
     private DAOFornecedor daoFornecedor;
+    private DAOProdutoGrade daoProdutoGrade;
 
     public DAOProduto(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
         TABELA = "produto";
+        daoProdutoGrade = new DAOProdutoGrade(conexaoBanco, this);
+    }
+
+    public DAOProduto(ConexaoBanco conexaoBanco, DAOProdutoGrade daoProdutoGrade) {
+        super(conexaoBanco);
+        daoMarca = new DAOMarca(conexaoBanco);
+        daoFornecedor = new DAOFornecedor(conexaoBanco);
+        this.daoProdutoGrade = daoProdutoGrade;
+        TABELA = "produto";
     }
 
     @Override
-    public Boolean inserir(Produto produto, boolean sendToServer) {
+    public Boolean inserir(Produto produto) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("cod_barra", produto.getCod_barra());
-            contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
+            contentValues.put("cod_barra", produto.getCodBarra());
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("preco", produto.getPreco());
             contentValues.put("ncm", produto.getNcm());
@@ -49,9 +60,30 @@ public class DAOProduto extends ADAO<Produto> {
             }
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
+
+            if (produto.getGrades().size() > 0) {
+                for (ProdutoGrade grade : produto.getGrades()) {
+                    ContentValues gradesValues = new ContentValues();
+                    gradesValues.put("cod_barra", grade.getCodBarra());
+                    gradesValues.put("produto", grade.getProduto().getCodBarra());
+                    gradesValues.put("preco", grade.getPreco());
+
+                    conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+
+                    if (grade.getSubGrades().size() > 0) {
+                        for (SubGrade subGrade : grade.getSubGrades()) {
+                            ContentValues subGradeValues = new ContentValues();
+                            subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
+                            subGradeValues.put("grade", subGrade.getGrade().getId());
+                            conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
+                        }
+                    }
+                }
+            }
+
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(produto, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -62,15 +94,14 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean inserir(List<Produto> lista, boolean sendToServer) {
+    public Boolean inserir(List<Produto> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
             for (Produto p : lista) {
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("cod_barra", p.getCod_barra());
-                contentValues.put("cod_barra_fornecedor", p.getCod_barra_fornecedor());
+                contentValues.put("cod_barra", p.getCodBarra());
                 contentValues.put("descricao", p.getDescricao());
                 contentValues.put("preco", p.getPreco());
                 contentValues.put("ncm", p.getNcm());
@@ -88,11 +119,31 @@ public class DAOProduto extends ADAO<Produto> {
                 }
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+                if (p.getGrades().size() > 0) {
+                    for (ProdutoGrade grade : p.getGrades()) {
+                        ContentValues gradesValues = new ContentValues();
+                        gradesValues.put("cod_barra", grade.getCodBarra());
+                        gradesValues.put("produto", grade.getProduto().getCodBarra());
+                        gradesValues.put("preco", grade.getPreco());
+
+                        conexaoBanco.conexao().insertWithOnConflict("produto_grade", null, gradesValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+                        if (grade.getSubGrades().size() > 0) {
+                            for (SubGrade subGrade : grade.getSubGrades()) {
+                                ContentValues subGradeValues = new ContentValues();
+                                subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
+                                subGradeValues.put("grade", subGrade.getGrade().getId());
+                                conexaoBanco.conexao().insertWithOnConflict("sub_grade", null, subGradeValues, SQLiteDatabase.CONFLICT_IGNORE);
+                            }
+                        }
+                    }
+                }
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -103,7 +154,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     @Override
-    public Boolean atualizar(Produto produto, boolean sendToServer) {
+    public Boolean atualizar(Produto produto) {
         try {
             String cod_barra = (String) produto.getIdentifier();
 
@@ -112,7 +163,6 @@ public class DAOProduto extends ADAO<Produto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("descricao", produto.getDescricao());
-            contentValues.put("cod_barra_fornecedor", produto.getCod_barra_fornecedor());
             contentValues.put("preco", produto.getPreco());
             contentValues.put("ncm", produto.getNcm());
 
@@ -128,12 +178,35 @@ public class DAOProduto extends ADAO<Produto> {
                 contentValues.putNull("marca");
             }
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra = ?", new String[]{cod_barra});
+            conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra LIKE ?", new String[]{cod_barra});
+
+            conexaoBanco.conexao().delete("produto_grade", "produto LIKE ?", new String[]{cod_barra});
+
+            if (produto.getGrades().size() > 0) {
+                for (ProdutoGrade grade : produto.getGrades()) {
+                    ContentValues gradesValues = new ContentValues();
+                    gradesValues.put("cod_barra", grade.getCodBarra());
+                    gradesValues.put("produto", grade.getProduto().getCodBarra());
+                    gradesValues.put("preco", grade.getPreco());
+
+                    conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+
+                    if (grade.getSubGrades().size() > 0) {
+                        for (SubGrade subGrade : grade.getSubGrades()) {
+                            ContentValues subGradeValues = new ContentValues();
+                            subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
+                            subGradeValues.put("grade", subGrade.getGrade().getId());
+                            conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
+                        }
+                    }
+                }
+            }
+
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(produto, sendToServer);
+            return true;
         } catch (Exception ex) {
-            Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR PRODUTO", ex);
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
@@ -141,26 +214,22 @@ public class DAOProduto extends ADAO<Produto> {
         return false;
     }
 
-    public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, Produto.getColunas(), null, null, null, null, null, null);
-    }
-
     public ArrayList<Produto> listar() {
         ArrayList<Produto> produtos = new ArrayList<>();
 
-        Cursor cursor = listarCursor();
+        Cursor cursor = listarCursor(Produto.getColunas());
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Produto p = new Produto();
 
-                p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+                p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+                p.setGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }
@@ -174,20 +243,20 @@ public class DAOProduto extends ADAO<Produto> {
     public Produto listarPorId(Object... ids) {
         Produto p = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "cod_barra = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), "cod_barra = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             p = new Produto();
 
             cursor.moveToFirst();
 
-            p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
-            p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+            p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
             p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
             p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
             p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
             p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
             p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+            p.setGrades(daoProdutoGrade.listarPorProduto(p));
         }
 
         cursor.close();
@@ -206,14 +275,14 @@ public class DAOProduto extends ADAO<Produto> {
             maxId = cursor.getInt(0);
         }
 
+        cursor.close();
+
         return maxId;
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
-        String sql = "SELECT cod_barra as _id, * FROM produto WHERE cod_barra LIKE ? OR cod_barra_fornecedor LIKE ? ORDER BY cod_barra";
-
+        String sql = "SELECT p.cod_barra as _id, * FROM produto AS p LEFT JOIN produto_grade AS pg WHERE p.cod_barra LIKE ? OR pg.cod_barra LIKE ? ORDER BY cod_barra";
         String[] selection = new String[]{"%" + cod_barra + "%", "%" + cod_barra + "%"};
-
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
@@ -226,13 +295,13 @@ public class DAOProduto extends ADAO<Produto> {
             while (cursor.moveToNext()) {
                 Produto p = new Produto();
 
-                p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+                p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+                p.setGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }
@@ -244,10 +313,8 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorDescricaoCursor(String descricao) {
-        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND descricao LIKE ? ORDER BY descricao";
-
+        String sql = "SELECT cod_barra as _id, * FROM produto WHERE descricao LIKE ? ORDER BY descricao";
         String[] selection = new String[]{"%" + descricao + "%"};
-
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
@@ -260,13 +327,13 @@ public class DAOProduto extends ADAO<Produto> {
             while (cursor.moveToNext()) {
                 Produto p = new Produto();
 
-                p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+                p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+                p.setGrades(daoProdutoGrade.listarPorProduto(p));
             }
         }
 
@@ -276,7 +343,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorMarcaCursor(String marca) {
-        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN marca ON produto.marca = marca.nome WHERE (marca = nome OR marca IS NULL) AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, * FROM produto AS p INNER JOIN marca AS m ON p.marca = m.nome WHERE marca = nome AND nome LIKE ? ORDER BY descricao";
         String[] selection = new String[]{"%" + marca + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -290,13 +357,13 @@ public class DAOProduto extends ADAO<Produto> {
             while (cursor.moveToNext()) {
                 Produto p = new Produto();
 
-                p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+                p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
+                p.setGrades(daoProdutoGrade.listarPorProduto(p));
             }
         }
 
@@ -306,7 +373,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorFornecedorCursor(String fornecedor) {
-        String sql = "SELECT cod_barra as _id, * FROM produto LEFT JOIN fornecedor ON produto.fornecedor = fornecedor.cnpj WHERE (fornecedor = cnpj OR fornecedor IS NULL) AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT cod_barra as _id, * FROM produto AS p INNER JOIN fornecedor AS f ON produto.fornecedor = fornecedor.cnpj WHERE p.fornecedor = f.cnpj AND nome LIKE ? ORDER BY descricao";
         String[] selection = new String[]{"%" + fornecedor + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -320,13 +387,13 @@ public class DAOProduto extends ADAO<Produto> {
             while (cursor.moveToNext()) {
                 Produto p = new Produto();
 
-                p.setCod_barra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
-                p.setCod_barra_fornecedor(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_fornecedor")));
+                p.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
                 p.setDescricao(cursor.getString(cursor.getColumnIndexOrThrow("descricao")));
                 p.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
+                p.setGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }

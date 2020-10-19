@@ -13,7 +13,6 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(Contagem contagem, boolean sendToServer) {
+    public Boolean inserir(Contagem contagem) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -44,7 +43,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(contagem, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -55,7 +54,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean inserir(List<Contagem> lista, boolean sendToServer) {
+    public Boolean inserir(List<Contagem> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -72,7 +71,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -83,7 +82,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Boolean atualizar(Contagem contagem, boolean sendToServer) {
+    public Boolean atualizar(Contagem contagem) {
         try {
             Object[] chaves = (Object[]) contagem.getIdentifier();
             String cnpj = (String) chaves[0];
@@ -100,7 +99,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(contagem, sendToServer);
+            return true;
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
@@ -111,15 +110,10 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     @Override
-    public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), null, null, null, null, null, null);
-    }
-
-    @Override
     public List<Contagem> listar() {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
-        Cursor cursor = listarCursor();
+        Cursor cursor = listarCursor(Contagem.getColunas());
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -145,7 +139,7 @@ public class DAOContagem extends ADAO<Contagem> {
     public Contagem listarPorId(Object... ids) {
         Contagem contagem = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), "loja = ? AND data = ?", new String[]{String.valueOf(ids[0]), String.valueOf(ids[1])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "loja = ? AND data = ?", new String[]{String.valueOf(ids[0]), String.valueOf(ids[1])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

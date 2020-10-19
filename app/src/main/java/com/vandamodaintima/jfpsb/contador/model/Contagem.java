@@ -91,6 +91,10 @@ public class Contagem implements Serializable, IModel<Contagem> {
         return new String[]{"ROWID as _id", "loja", "data", "finalizada", "tipo"};
     }
 
+    public static String[] getHeaders() {
+        return new String[0];
+    }
+
     public static String getDataSQLite(ZonedDateTime data) {
         return data.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
@@ -107,22 +111,22 @@ public class Contagem implements Serializable, IModel<Contagem> {
 
     @Override
     public Boolean salvar() {
-        return daoContagem.inserir(this, true);
+        return daoContagem.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<Contagem> lista) {
-        return daoContagem.inserir(lista, true);
+        return daoContagem.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoContagem.atualizar(this, true);
+        return daoContagem.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoContagem.deletar(this, true);
+        return daoContagem.deletar(this);
     }
 
     @Override

@@ -10,7 +10,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -64,7 +63,7 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
             ContagemProduto contagemProduto = contagensProduto.get(i - linhaConteudo);
 
-            dataRows[i - linhaConteudo].getCell(0).setCellValue(contagemProduto.getProduto().getCod_barra());
+            dataRows[i - linhaConteudo].getCell(0).setCellValue(contagemProduto.getProduto().getCodBarra());
             dataRows[i - linhaConteudo].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
             dataRows[i - linhaConteudo].getCell(2).setCellValue(contagemProduto.getProduto().getPreco());
             dataRows[i - linhaConteudo].getCell(3).setCellValue(contagemProduto.getQuant());

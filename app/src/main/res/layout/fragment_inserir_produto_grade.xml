@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dip">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7sp"
+                android:layout_weight="1"
+                android:background="@color/cardview_dark_background"
+                android:text="@string/inserir_produto_grade"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cod_de_barras_dois_pontos"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/txtCodBarra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="0sp"
+                android:padding="15sp"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnLerCodigoBarras"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:background="@drawable/barcode_reader_small" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/preco_dois_pontos"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/txtPreco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tipo_grade_dois_pontos"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <Spinner
+                android:id="@+id/spinnerTipoGrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/grade_dois_pontos"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <Spinner
+                android:id="@+id/spinnerGrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/btnInserirFormacaoAtualGrade"
+                android:layout_weight="1"
+                android:text="@string/btn_inserir_em_formacao_atual_grade"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:layout_weight="1"
+                android:text="@string/grade_formacao_atual_dois_pontos"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <ListView
+                android:id="@+id/listViewGradeFormacaoAtual"
+                android:layout_weight="1">
+
+            </ListView>
+        </TableRow>
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnInserir"
+            style="@style/BtnGreen"
+            android:text="@string/inserir_grade" />
+
+    </RelativeLayout>
+</RelativeLayout>
+

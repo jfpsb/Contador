@@ -14,18 +14,11 @@ public interface IModel<T> {
      * @return
      */
     String getDeleteWhereClause();
-
     Boolean salvar();
-
     Boolean salvar(List<T> lista);
-
     Boolean atualizar();
-
     Boolean deletar();
-
     List<T> listar();
-
     T listarPorId(Object... ids);
-
     void load(Object... ids);
 }

@@ -62,22 +62,22 @@ public class Marca implements Serializable, IModel<Marca> {
 
     @Override
     public Boolean salvar() {
-        return daoMarca.inserir(this, true);
+        return daoMarca.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<Marca> lista) {
-        return daoMarca.inserir(lista, true);
+        return daoMarca.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoMarca.atualizar(this, true);
+        return daoMarca.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoMarca.deletar(this, true);
+        return daoMarca.deletar(this);
     }
 
     @Override

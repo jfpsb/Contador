@@ -81,22 +81,22 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
 
     @Override
     public Boolean salvar() {
-        return daoContagemProduto.inserir(this, true);
+        return daoContagemProduto.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<ContagemProduto> lista) {
-        return daoContagemProduto.inserir(lista, true);
+        return daoContagemProduto.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoContagemProduto.atualizar(this, true);
+        return daoContagemProduto.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoContagemProduto.deletar(this, true);
+        return daoContagemProduto.deletar(this);
     }
 
     @Override

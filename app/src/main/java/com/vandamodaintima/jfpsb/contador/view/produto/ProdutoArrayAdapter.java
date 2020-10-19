@@ -37,7 +37,7 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
         Produto produto = produtos.get(position);
 
         labelDescricao.setText(produto.getDescricao());
-        labelCodBarra.setText(produto.getCod_barra());
+        labelCodBarra.setText(produto.getCodBarra());
         labelPreco.setText(String.format(produto.getPreco().toString(), Locale.getDefault()));
 
         return convertView;

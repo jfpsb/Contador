@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,7 @@ public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
         String codigo = getArguments().getString("codigo");
         if (codigo != null) {
             txtCodBarra.setText(codigo);
-            controller.getProduto().setCod_barra(codigo);
+            controller.getProduto().setCodBarra(codigo);
         }
 
         setAlertaQuantidadeProduto();

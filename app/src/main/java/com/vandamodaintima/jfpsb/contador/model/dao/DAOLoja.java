@@ -20,7 +20,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(Loja loja, boolean sendToServer) {
+    public Boolean inserir(Loja loja) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -40,7 +40,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(loja, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -51,7 +51,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean inserir(List<Loja> lista, boolean sendToServer) {
+    public Boolean inserir(List<Loja> lista) {
         try {
             conexaoBanco.conexao().beginTransaction();
 
@@ -73,7 +73,7 @@ public class DAOLoja extends ADAO<Loja> {
             }
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.inserir(lista, sendToServer);
+            return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -84,7 +84,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Boolean atualizar(Loja loja, boolean sendToServer) {
+    public Boolean atualizar(Loja loja) {
         try {
             String cnpj = (String) loja.getIdentifier();
 
@@ -105,7 +105,7 @@ public class DAOLoja extends ADAO<Loja> {
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();
 
-            return super.atualizar(loja, sendToServer);
+            return true;
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, "ERRO AO ATUALIZAR LOJA", ex);
         } finally {
@@ -116,15 +116,10 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     @Override
-    public Cursor listarCursor() {
-        return conexaoBanco.conexao().query(TABELA, Loja.getColunas(), null, null, null, null, "nome", null);
-    }
-
-    @Override
     public List<Loja> listar() {
         ArrayList<Loja> lojas = new ArrayList<>();
 
-        Cursor cursor = listarCursor();
+        Cursor cursor = listarCursor(Loja.getColunas());
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

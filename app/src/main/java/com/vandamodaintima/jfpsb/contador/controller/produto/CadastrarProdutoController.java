@@ -23,7 +23,7 @@ public class CadastrarProdutoController implements IController {
     public void cadastrar() {
         Double p = 0.0;
 
-        if (produtoModel.getCod_barra().trim().isEmpty()) {
+        if (produtoModel.getCodBarra().trim().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
         }
@@ -42,7 +42,7 @@ public class CadastrarProdutoController implements IController {
 
         if (result) {
             view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
-            view.aposCadastro(produtoModel.getCod_barra());
+            view.aposCadastro(produtoModel.getCodBarra());
         } else {
             view.mensagemAoUsuario("Produto Não Foi Cadastrado");
         }

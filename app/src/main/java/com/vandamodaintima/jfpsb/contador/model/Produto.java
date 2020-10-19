@@ -21,9 +21,7 @@ public class Produto implements Serializable, IModel<Produto> {
     }
 
     @SerializedName(value = "CodBarra")
-    private String cod_barra;
-    @SerializedName(value = "Codigo_Fornecedor")
-    private String cod_barra_fornecedor;
+    private String codBarra;
     @SerializedName(value = "Marca")
     private Marca marca;
     @SerializedName(value = "Fornecedor")
@@ -34,29 +32,23 @@ public class Produto implements Serializable, IModel<Produto> {
     private Double preco;
     @SerializedName(value = "Ncm")
     private String ncm;
+    @SerializedName(value = "Grades")
+    private List<ProdutoGrade> grades = new ArrayList<>();
 
     public static String[] getColunas() {
-        return new String[]{"cod_barra as _id", "cod_barra_fornecedor", "descricao", "preco", "fornecedor", "marca", "ncm"};
+        return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca", "ncm"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód. De Barra", "Cód. de Barra de Fornecedor", "Descrição", "Preço", "Fornecedor", "Marca", "NCM"};
+        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Fornecedor", "Marca", "NCM"};
     }
 
-    public String getCod_barra() {
-        return cod_barra;
+    public String getCodBarra() {
+        return codBarra;
     }
 
-    public void setCod_barra(String cod_barra) {
-        this.cod_barra = cod_barra;
-    }
-
-    public String getCod_barra_fornecedor() {
-        return cod_barra_fornecedor;
-    }
-
-    public void setCod_barra_fornecedor(String cod_barra_fornecedor) {
-        this.cod_barra_fornecedor = cod_barra_fornecedor;
+    public void setCodBarra(String codBarra) {
+        this.codBarra = codBarra;
     }
 
     public Marca getMarca() {
@@ -99,9 +91,17 @@ public class Produto implements Serializable, IModel<Produto> {
         this.ncm = ncm;
     }
 
+    public List<ProdutoGrade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<ProdutoGrade> grades) {
+        this.grades = grades;
+    }
+
     @Override
     public Object getIdentifier() {
-        return cod_barra;
+        return codBarra;
     }
 
     @Override
@@ -111,22 +111,22 @@ public class Produto implements Serializable, IModel<Produto> {
 
     @Override
     public Boolean salvar() {
-        return daoProduto.inserir(this, true);
+        return daoProduto.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<Produto> lista) {
-        return daoProduto.inserir(lista, true);
+        return daoProduto.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return daoProduto.atualizar(this, true);
+        return daoProduto.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return daoProduto.deletar(this, true);
+        return daoProduto.deletar(this);
     }
 
     @Override
@@ -142,9 +142,8 @@ public class Produto implements Serializable, IModel<Produto> {
     @Override
     public void load(Object... ids) {
         Produto produto = listarPorId(ids);
-        if(produto!=null) {
-            cod_barra = produto.getCod_barra();
-            cod_barra_fornecedor = produto.getCod_barra_fornecedor();
+        if (produto != null) {
+            codBarra = produto.getCodBarra();
             marca = produto.getMarca();
             fornecedor = produto.getFornecedor();
             descricao = produto.getDescricao();
