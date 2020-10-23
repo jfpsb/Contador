@@ -24,36 +24,11 @@
 
         <TableRow>
 
-            <Button
-                android:id="@+id/btnInserirManualmente"
-                android:layout_weight="1"
-                android:text="@string/inserir_manualmente"
-                android:textSize="18sp" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10sp"
-                android:layout_marginTop="5sp"
-                android:layout_marginRight="10sp"
-                android:layout_marginBottom="5sp"
-                android:layout_weight="1"
-                android:text="@string/tela_ler_cod_barra_texture_view_description"
-                android:textAlignment="center"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow>
-
             <TextureView
                 android:id="@+id/textureView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:contentDescription="@string/tela_ler_cod_barra_texture_view_description" />
+                android:layout_weight="1" />
         </TableRow>
 
     </TableLayout>

@@ -48,15 +48,12 @@ public class ContagemProdutoDialogArrayAdapter extends ArrayAdapter<Produto> {
 
             //Lida com a seleção do radiobutton pq por algum motivo parou de funcionar sozinho então fiz manualmente.
             //Se sobreescrever o onClickListener não funciona então tem que usar o setOnTouchListener
-            txtProduto.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    // Ao tocar na opção, salva em index a posição do item selecionado
-                    index = (int) view.getTag();
-                    notifyDataSetChanged();
-                    view.performClick();
-                    return false;
-                }
+            txtProduto.setOnTouchListener((view, motionEvent) -> {
+                // Ao tocar na opção, salva em index a posição do item selecionado
+                index = (int) view.getTag();
+                notifyDataSetChanged();
+                view.performClick();
+                return false;
             });
 
             String s = p.getCodBarra() + " - " + p.getDescricao();

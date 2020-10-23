@@ -43,11 +43,17 @@
             android:label="@string/title_activity_base"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
+        <activity
+            android:name=".view.produto.grade.TelaLerCodigoBarrasCadastrarProduto"
+            android:label="@string/leitura_de_codigo_de_barras"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
-        <activity android:name=".view.produto.grade.GerenciarGrades"
+        <activity
+            android:name=".view.produto.grade.GerenciarGrades"
             android:label="@string/gerenciar_grades"
-            android:theme="@style/TabAppTheme.NoActionBar"/>
+            android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
             android:name=".view.produto.AlterarDeletarProduto"

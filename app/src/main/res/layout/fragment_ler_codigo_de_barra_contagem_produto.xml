@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dip"
+                android:layout_weight="1"
+                android:text="@string/leitura_codigo"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="19sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/btnInserirManualmente"
+                android:layout_weight="1"
+                android:text="@string/inserir_manualmente"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow/>
+
+        <TableRow>
+
+            <TextureView
+                android:id="@+id/textureView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>

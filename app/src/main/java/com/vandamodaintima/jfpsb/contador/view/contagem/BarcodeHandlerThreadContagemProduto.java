@@ -2,13 +2,13 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
@@ -34,7 +34,7 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class BarcodeHandlerThread extends HandlerThread {
+public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
     private Handler handler;
 
     private WeakReference<TextureView> textureView;
@@ -45,8 +45,8 @@ public class BarcodeHandlerThread extends HandlerThread {
     private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
     private boolean isCampoQuantChecked = false;
 
-    public BarcodeHandlerThread(ITelaLerCodigoDeBarra view, TextureView textureView, TelaLerCodigoDeBarraController controller, BarcodeDetector barcodeDetector) {
-        super("BarcodeHandlerThread");
+    public BarcodeHandlerThreadContagemProduto(ITelaLerCodigoDeBarra view, TextureView textureView, TelaLerCodigoDeBarraController controller, BarcodeDetector barcodeDetector) {
+        super("BarcodeHandlerThreadContagemProduto");
 
         this.view = view;
         this.textureView = new WeakReference<>(textureView);
@@ -60,7 +60,7 @@ public class BarcodeHandlerThread extends HandlerThread {
     @SuppressLint("HandlerLeak")
     @Override
     protected void onLooperPrepared() {
-        handler = new Handler() {
+        handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -74,7 +74,6 @@ public class BarcodeHandlerThread extends HandlerThread {
 
                             if (barcodeSparseArray.size() == 0) {
                                 sendEmptyMessageDelayed(1, 250);
-                                //sendEmptyMessage(1);
                             } else if (barcodeSparseArray.size() == 1) {
                                 Log.i(ActivityBaseView.LOG, "Um Código de Barras Encontrado");
                                 Message message = handler.obtainMessage();

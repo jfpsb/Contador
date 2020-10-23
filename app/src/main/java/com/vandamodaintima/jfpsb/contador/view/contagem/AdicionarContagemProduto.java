@@ -15,7 +15,7 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
 
     private ConexaoBanco conexaoBanco;
 
-    private TelaLerCodigoDeBarra telaLerCodigo;
+    private TelaLerCodigoDeBarraContagemProduto telaLerCodigo;
     private TelaVerProdutoContado telaVerProdutoContado;
 
     public AdicionarContagemProduto() {
@@ -38,7 +38,7 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
         bundle.putString("loja", loja);
         bundle.putString("data", data);
 
-        telaLerCodigo = new TelaLerCodigoDeBarra();
+        telaLerCodigo = new TelaLerCodigoDeBarraContagemProduto();
         telaVerProdutoContado = new TelaVerProdutoContado();
 
         telaLerCodigo.setArguments(bundle);

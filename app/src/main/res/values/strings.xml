@@ -67,7 +67,6 @@
     <string name="telefone_dois_pontos">Telefone:</string>
     <string name="nao_possui">Não Possui</string>
     <string name="inserir_manualmente">Inserir Manualmente</string>
-    <string name="tela_ler_cod_barra_texture_view_description">Toque Na Imagem Da Câmera Para Escanear por Códigos de Barra</string>
     <string name="campo_data">%s/%s/%s</string>
     <string name="endereco_dois_pontos">Endereço:</string>
     <string name="inscricao_estadual_dois_pontos">Inscrição Estadual:</string>
@@ -86,5 +85,6 @@
     <string name="inserir_grade">Inserir Grade</string>
     <string name="grades_de_produto">Grades de Produto</string>
     <string name="placeholder">PLACEHOLDER</string>
-    <string name="imagem_barcode">Imagem Representando um Código de Barras]</string>
+    <string name="imagem_barcode">Imagem Representando um Código de Barras</string>
+    <string name="leitura_de_codigo_de_barras">Leitura de Cód. De Barras</string>
 </resources>
