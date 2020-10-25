@@ -1,11 +1,23 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoGrade;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class TipoGrade implements IModel<TipoGrade>, Serializable {
+    private transient DAOTipoGrade daoTipoGrade;
+
     private int id;
     private String nome;
+
+    public TipoGrade() {
+    }
+
+    public TipoGrade(ConexaoBanco conexaoBanco) {
+        daoTipoGrade = new DAOTipoGrade(conexaoBanco);
+    }
 
     public int getId() {
         return id;
@@ -25,54 +37,58 @@ public class TipoGrade implements IModel<TipoGrade>, Serializable {
 
     @Override
     public Object getIdentifier() {
-        return null;
+        return id;
     }
 
     @Override
     public String getDeleteWhereClause() {
-        return null;
+        return "id = ?";
     }
 
     @Override
     public Boolean salvar() {
-        return null;
+        return daoTipoGrade.inserir(this);
     }
 
     @Override
     public Boolean salvar(List<TipoGrade> lista) {
-        return null;
+        return daoTipoGrade.inserir(lista);
     }
 
     @Override
     public Boolean atualizar() {
-        return null;
+        return daoTipoGrade.atualizar(this);
     }
 
     @Override
     public Boolean deletar() {
-        return null;
+        return daoTipoGrade.deletar(this);
     }
 
     @Override
     public List<TipoGrade> listar() {
-        return null;
+        return daoTipoGrade.listar();
     }
 
     @Override
     public TipoGrade listarPorId(Object... ids) {
-        return null;
+        return daoTipoGrade.listarPorId(ids);
     }
 
     @Override
     public void load(Object... ids) {
-
+        TipoGrade tipoGrade = listarPorId(ids);
+        if (tipoGrade != null) {
+            this.id = tipoGrade.id;
+            this.nome = tipoGrade.nome;
+        }
     }
 
     public static String[] getColunas() {
-        return new String[0];
+        return new String[]{"id as _id", "nome"};
     }
 
     public static String[] getHeaders() {
-        return new String[0];
+        return new String[]{"Nome"};
     }
 }

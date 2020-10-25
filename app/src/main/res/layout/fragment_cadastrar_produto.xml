@@ -21,10 +21,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="7sp"
                     android:layout_weight="1"
+                    android:background="@color/cardview_dark_background"
                     android:text="@string/cadastro_de_produto"
                     android:textAlignment="center"
-                    android:textColor="#000"
+                    android:textColor="#fff"
                     android:textSize="26sp"
                     android:textStyle="bold" />
             </TableRow>
@@ -62,6 +64,31 @@
                     android:textColor="#FF0000"
                     android:textSize="18sp"
                     android:visibility="gone" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="3sp">
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="@string/numero_de_grades"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/txtQuantidadeGrades"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5sp"
+                        android:paddingEnd="5sp"
+                        android:text="0"
+                        android:textSize="20sp" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>

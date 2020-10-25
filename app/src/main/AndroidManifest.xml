@@ -51,7 +51,7 @@
         <activity android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
 
         <activity
-            android:name=".view.produto.grade.GerenciarGrades"
+            android:name=".view.produto.grade.GerenciarProdutoGrades"
             android:label="@string/gerenciar_grades"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
@@ -68,11 +68,6 @@
         <activity
             android:name=".view.marca.TelaMarcaForResult"
             android:label="Marca Para Produto"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity
-            android:name=".view.codbarrafornecedor.TelaCodBarraFornecedor"
-            android:label="Códigos de Barra de Fornecedor"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity

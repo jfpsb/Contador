@@ -3,7 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorManualmenteController;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 
@@ -49,7 +48,7 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
             controller.getFornecedor().setFantasia(txtFantasia.getText().toString());
             controller.getFornecedor().setEmail(txtEmail.getText().toString());
             controller.getFornecedor().setTelefone(txtTelefone.getText().toString());
-            controller.cadastrar();
+            controller.salvar();
         });
     }
 

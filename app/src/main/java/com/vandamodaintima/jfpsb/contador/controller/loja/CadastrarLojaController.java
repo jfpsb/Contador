@@ -18,7 +18,7 @@ public class CadastrarLojaController implements IController {
         lojaModel = new Loja(conexaoBanco);
     }
 
-    public void cadastrar() {
+    public void salvar() {
         if (lojaModel.getCnpj().isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Estar Vazio");
             return;

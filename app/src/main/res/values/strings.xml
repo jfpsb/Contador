@@ -87,4 +87,7 @@
     <string name="placeholder">PLACEHOLDER</string>
     <string name="imagem_barcode">Imagem Representando um Código de Barras</string>
     <string name="leitura_de_codigo_de_barras">Leitura de Cód. De Barras</string>
+    <string name="grade">Grade</string>
+    <string name="tipo_grade">Tipo de Grade</string>
+    <string name="numero_de_grades">Nº de Grades:</string>
 </resources>

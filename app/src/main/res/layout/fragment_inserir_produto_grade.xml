@@ -39,9 +39,11 @@
                 android:id="@+id/txtCodBarra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="0sp"
+                android:layout_weight="1"
+                android:inputType="text"
                 android:padding="15sp"
+                android:autofillHints="no"
                 android:textSize="18sp" />
 
             <Button
@@ -127,8 +129,30 @@
                 android:layout_marginBottom="5sp"
                 android:layout_weight="1"
                 android:text="@string/grade_formacao_atual_dois_pontos"
-                android:textSize="17sp"
+                android:textAlignment="center"
+                android:textSize="18sp"
                 android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tipo_grade"
+                android:textAlignment="center"
+                android:textSize="17sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/grade"
+                android:textAlignment="center"
+                android:textSize="17sp" />
+
+
         </TableRow>
 
         <TableRow>

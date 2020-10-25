@@ -15,4 +15,10 @@ public class SQLiteHelper extends SQLiteAssetHelper {
     public SQLiteHelper(Context context, String nomeBanco, int versaoBanco) {
         super(context, nomeBanco, null, versaoBanco);
     }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON");
+    }
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOTipoGrade extends ADAO<TipoGrade> {
-    DAOTipoGrade(ConexaoBanco conexaoBanco) {
+    public DAOTipoGrade(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         TABELA = "tipo_grade";
     }
@@ -87,7 +87,7 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
     @Override
     public List<TipoGrade> listar() {
         ArrayList<TipoGrade> tipoGrades = new ArrayList<>();
-        Cursor cursor = listarCursor(TipoGrade.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

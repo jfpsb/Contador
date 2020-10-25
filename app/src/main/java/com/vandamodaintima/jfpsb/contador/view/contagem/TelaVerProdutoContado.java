@@ -58,7 +58,6 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
     @Override
     public void onResume() {
         super.onResume();
-
         controller.pesquisar();
     }
 

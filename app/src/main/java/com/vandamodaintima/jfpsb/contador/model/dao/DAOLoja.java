@@ -119,7 +119,7 @@ public class DAOLoja extends ADAO<Loja> {
     public List<Loja> listar() {
         ArrayList<Loja> lojas = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Loja.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
+import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     public List<TipoContagem> listar() {
         ArrayList<TipoContagem> tipoContagems = new ArrayList<>();
 
-        Cursor cursor = listarCursor(TipoContagem.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

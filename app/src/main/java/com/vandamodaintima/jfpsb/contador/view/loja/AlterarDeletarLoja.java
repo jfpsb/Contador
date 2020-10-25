@@ -17,6 +17,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.AlterarDeletarLojaController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 public class AlterarDeletarLoja extends TelaAlterarDeletar {
@@ -56,7 +57,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
         txtCnpj.setText(controller.getLoja().getCnpj());
         txtNome.setText(controller.getLoja().getNome());
-        ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());
+        ArrayAdapter<Loja> spinnerAdapter = new SpinnerLojaAdapter(getApplicationContext(), controller.getMatrizes());
         spinnerMatrizes.setAdapter(spinnerAdapter);
 
         if (controller.getLoja().getMatriz() != null)
@@ -117,7 +118,7 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
                 controller.getLoja().setEndereco(txtEndereco.getText().toString().trim());
                 controller.getLoja().setInscricaoEstadual(txtInscricaoEstadual.getText().toString().trim());
                 controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
-                controller.atualizar();
+                controller.salvar();
             } catch (Exception e) {
                 Toast.makeText(AlterarDeletarLoja.this, "Erro ao Atualizar Loja: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(LOG, e.getMessage(), e);

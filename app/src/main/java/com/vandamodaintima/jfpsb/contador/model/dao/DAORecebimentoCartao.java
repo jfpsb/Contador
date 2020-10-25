@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.RecebimentoCartao;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
@@ -113,7 +114,7 @@ public class DAORecebimentoCartao extends ADAO<RecebimentoCartao> {
     public List<RecebimentoCartao> listar() {
         ArrayList<RecebimentoCartao> recebimentos = new ArrayList<>();
 
-        Cursor cursor = listarCursor(RecebimentoCartao.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, RecebimentoCartao.getColunas(), null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

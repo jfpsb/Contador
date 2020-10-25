@@ -17,10 +17,10 @@ public class CadastrarMarcaController implements IController {
         marcaModel = new Marca(conexaoBanco);
     }
 
-    public Boolean cadastrar() {
+    public void salvar() {
         if (marcaModel.getNome().isEmpty()) {
             view.mensagemAoUsuario("Nome da Marca Não Pode Ser Vazio");
-            return false;
+            return;
         }
 
         Boolean result = marcaModel.salvar();
@@ -28,12 +28,9 @@ public class CadastrarMarcaController implements IController {
         if (result) {
             view.mensagemAoUsuario("Marca Cadastrada Com Sucesso");
             view.aposCadastro();
-            return true;
         } else {
             view.mensagemAoUsuario("Erro ao Cadastrar Marca");
         }
-
-        return false;
     }
 
     public Marca getMarca() {

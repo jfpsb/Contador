@@ -48,24 +48,41 @@
                     android:textSize="20sp" />
             </TableRow>
 
-            <TableRow>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+            <TableRow android:layout_marginTop="3sp">
+
+                <LinearLayout
                     android:layout_weight="1"
-                    android:text="@string/cod_barras_fornecedor_dois_pontos"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="@string/numero_de_grades"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/txtQuantidadeGrades"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="5sp"
+                        android:paddingEnd="5sp"
+                        android:text="0"
+                        android:textSize="20sp" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
 
-                <EditText
-                    android:id="@+id/txtCodBarraFornecedor"
+                <Button
+                    android:id="@+id/btnGerenciarGrades"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_margin="5sp"
                     android:layout_weight="1"
-                    android:textSize="20sp" />
+                    android:padding="15sp"
+                    android:text="@string/gerenciar_grades"
+                    android:textSize="22sp" />
             </TableRow>
 
             <TableRow>

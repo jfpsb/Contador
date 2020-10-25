@@ -21,10 +21,15 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.CadastrarProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
-import com.vandamodaintima.jfpsb.contador.view.produto.grade.GerenciarGrades;
+import com.vandamodaintima.jfpsb.contador.view.produto.grade.GerenciarProdutoGrades;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CadastrarProduto extends TelaCadastro {
     private Button btnCadastrar;
@@ -40,6 +45,8 @@ public class CadastrarProduto extends TelaCadastro {
     private EditText txtMarca;
     private EditText txtNcm;
     private TextView lblCodRepetido;
+    private TextView txtQuantidadeGrades;
+    private List<ProdutoGrade> produtoGrades;
 
     private Animation slidedown;
 
@@ -47,6 +54,7 @@ public class CadastrarProduto extends TelaCadastro {
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
+    private static final int GERENCIAR_GRADES = 3;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -69,10 +77,17 @@ public class CadastrarProduto extends TelaCadastro {
         txtNcm = telaCadastroView.findViewById(R.id.txtNcm);
         lblCodRepetido = telaCadastroView.findViewById(R.id.lblCodRepetido);
         slidedown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down);
+        txtQuantidadeGrades = telaCadastroView.findViewById(R.id.txtQuantidadeGrades);
+        produtoGrades = new ArrayList<>();
+
+        txtQuantidadeGrades.setText(String.valueOf(produtoGrades.size()));
 
         btnGerenciarGrades.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), GerenciarGrades.class);
-            startActivity(intent);
+            Intent intent = new Intent(getActivity(), GerenciarProdutoGrades.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("produtoGrades", (Serializable) produtoGrades);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, GERENCIAR_GRADES);
         });
 
         btnEscolherFornecedor.setOnClickListener(v -> {
@@ -101,12 +116,13 @@ public class CadastrarProduto extends TelaCadastro {
             controller.getProduto().setCodBarra(txtCodBarra.getText().toString());
             controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
             controller.getProduto().setNcm(txtNcm.getText().toString());
+            controller.getProduto().setProdutoGrades(produtoGrades);
             boolean precoResult = controller.setPreco(txtPreco.getText().toString());
 
             if (!precoResult)
                 txtPreco.setText("0.0");
 
-            controller.cadastrar();
+            controller.salvar();
         });
 
         txtCodBarra.addTextChangedListener(new TextWatcher() {
@@ -144,6 +160,15 @@ public class CadastrarProduto extends TelaCadastro {
                     Marca marca = (Marca) data.getSerializableExtra("marca");
                     controller.carregaMarca(marca);
                     txtMarca.setText(controller.getProduto().getMarca().getNome());
+                }
+                break;
+            case GERENCIAR_GRADES:
+                Bundle bundle = data.getExtras();
+                produtoGrades = (List<ProdutoGrade>) bundle.getSerializable("produtoGrades");
+                //produtoGrades = (ArrayList<ProdutoGrade>) data.getSerializableExtra("produtoGrades");
+                if (produtoGrades != null) {
+                    txtQuantidadeGrades.setText(String.valueOf(produtoGrades.size()));
+                    mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
                 }
                 break;
         }

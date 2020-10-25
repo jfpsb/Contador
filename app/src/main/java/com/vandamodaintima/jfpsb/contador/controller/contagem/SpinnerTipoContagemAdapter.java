@@ -16,8 +16,8 @@ public class SpinnerTipoContagemAdapter extends ArrayAdapter<TipoContagem> {
 
     private List<TipoContagem> objects;
 
-    public SpinnerTipoContagemAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<TipoContagem> objects) {
-        super(context, resource, textViewResourceId, objects);
+    public SpinnerTipoContagemAdapter(@NonNull Context context, List<TipoContagem> objects) {
+        super(context, 0, objects);
         this.objects = objects;
     }
 

@@ -27,7 +27,7 @@ public class InserirContagemController implements IController {
         tipoContagemModel = new TipoContagem(conexaoBanco);
     }
 
-    public void cadastrar() {
+    public void salvar() {
         if(contagemModel.getLoja() == null) {
             view.mensagemAoUsuario("Escolha Uma Loja!");
             return;

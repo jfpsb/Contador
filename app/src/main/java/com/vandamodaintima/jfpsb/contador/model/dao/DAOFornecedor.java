@@ -10,7 +10,6 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     public List<Fornecedor> listar() {
         ArrayList<Fornecedor> fornecedores = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Fornecedor.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

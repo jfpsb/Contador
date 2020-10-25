@@ -1,14 +1,23 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import com.vandamodaintima.jfpsb.contador.model.Grade;
-import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOSubGrade;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class SubGrade implements IModel<SubGrade>, Serializable {
+    private transient DAOSubGrade daoSubGrade;
+
     private ProdutoGrade produtoGrade;
     private Grade grade;
+
+    public SubGrade() {
+    }
+
+    public SubGrade(ConexaoBanco conexaoBanco) {
+        daoSubGrade = new DAOSubGrade(conexaoBanco);
+    }
 
     public ProdutoGrade getProdutoGrade() {
         return produtoGrade;

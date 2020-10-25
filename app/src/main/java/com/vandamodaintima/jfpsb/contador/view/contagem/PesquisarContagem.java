@@ -22,6 +22,7 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.PesquisarContagemController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaPesquisa;
 
 import org.threeten.bp.LocalDateTime;
@@ -85,7 +86,7 @@ public class PesquisarContagem extends TelaPesquisa {
             }
         });
 
-        ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
+        ArrayAdapter<Loja> spinnerAdapter = new SpinnerLojaAdapter(getContext(), controller.getLojas());
         spinnerLoja.setAdapter(spinnerAdapter);
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -93,14 +94,12 @@ public class PesquisarContagem extends TelaPesquisa {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case TELA_ALTERAR_DELETAR:
-                if (resultCode == Activity.RESULT_OK) {
-                    realizarPesquisa();
-                } else {
-                    mensagemAoUsuario("A Contagem Não Foi Alterada");
-                }
-                break;
+        if (requestCode == TELA_ALTERAR_DELETAR) {
+            if (resultCode == Activity.RESULT_OK) {
+                realizarPesquisa();
+            } else {
+                mensagemAoUsuario("A Contagem Não Foi Alterada");
+            }
         }
     }
 

@@ -6,31 +6,29 @@ import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
-import java.util.ArrayList;
-
 public class AlterarDeletarProdutoController {
     private AlterarDeletarView view;
     private ConexaoBanco conexaoBanco;
-    private Produto produtoModel;
+    private Produto model;
 
     public AlterarDeletarProdutoController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new Produto(conexaoBanco);
+        model = new Produto(conexaoBanco);
     }
 
     public void atualizar() {
-        if (produtoModel.getDescricao().trim().isEmpty()) {
+        if (model.getDescricao().trim().isEmpty()) {
             view.mensagemAoUsuario("Descrição do Produto Não Pode Ser Vazia");
             return;
         }
 
-        if (produtoModel.getPreco() == 0) {
+        if (model.getPreco() == 0) {
             view.mensagemAoUsuario("Preço do Produto Não Pode Ser Zero");
             return;
         }
 
-        Boolean result = produtoModel.atualizar();
+        Boolean result = model.atualizar();
 
         if (result) {
             view.mensagemAoUsuario("Produto Atualizado Com Sucesso");
@@ -41,7 +39,7 @@ public class AlterarDeletarProdutoController {
     }
 
     public void deletar() {
-        Boolean result = produtoModel.deletar();
+        Boolean result = model.deletar();
 
         if (result) {
             view.mensagemAoUsuario("Produto Deletado Com Sucesso");
@@ -52,35 +50,35 @@ public class AlterarDeletarProdutoController {
     }
 
     public void carregaProduto(String id) {
-        produtoModel.load(id);
+        model.load(id);
     }
 
     public void carregaFornecedor(Fornecedor fornecedor) {
-        produtoModel.setFornecedor(fornecedor);
+        model.setFornecedor(fornecedor);
     }
 
     public void carregaMarca(Marca marca) {
-        produtoModel.setMarca(marca);
+        model.setMarca(marca);
     }
 
     public void setFornecedorNull() {
-        produtoModel.setFornecedor(null);
+        model.setFornecedor(null);
     }
 
     public void setMarcaNull() {
-        produtoModel.setMarca(null);
+        model.setMarca(null);
     }
 
     public Produto getProduto() {
-        return produtoModel;
+        return model;
     }
 
     public boolean setPreco(String preco) {
         try {
-            produtoModel.setPreco(Double.valueOf(preco));
+            model.setPreco(Double.valueOf(preco));
             return true;
         } catch (NumberFormatException ne) {
-            produtoModel.setPreco(0.0);
+            model.setPreco(0.0);
             return false;
         }
     }

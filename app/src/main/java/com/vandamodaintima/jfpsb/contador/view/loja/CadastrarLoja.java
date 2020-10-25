@@ -15,7 +15,10 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.loja.CadastrarLojaController;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
+
+import java.util.Objects;
 
 public class CadastrarLoja extends TelaCadastro {
     private Button btnCadastrar;
@@ -51,10 +54,10 @@ public class CadastrarLoja extends TelaCadastro {
             controller.getLoja().setEndereco(txtEndereco.getText().toString().trim());
             controller.getLoja().setInscricaoEstadual(txtInscricaoEstadual.getText().toString().trim());
             controller.carregaMatriz(spinnerMatrizes.getSelectedItem());
-            controller.cadastrar();
+            controller.salvar();
         });
 
-        ArrayAdapter spinnerAdapter = new SpinnerLojaAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getMatrizes());
+        ArrayAdapter<Loja> spinnerAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), controller.getMatrizes());
         spinnerMatrizes.setAdapter(spinnerAdapter);
 
         return viewInflate;

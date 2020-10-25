@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -13,13 +14,17 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.produto.AlterarDeletarProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.TelaFornecedorForResult;
 import com.vandamodaintima.jfpsb.contador.view.marca.TelaMarcaForResult;
+import com.vandamodaintima.jfpsb.contador.view.produto.grade.GerenciarProdutoGrades;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private EditText txtCodBarra;
-    private EditText txtCodBarraFornecedor;
     private EditText txtDescricao;
     private EditText txtPreco;
     private EditText txtFornecedor;
@@ -29,11 +34,14 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
     private Button btnEscolherMarca;
     private Button btnRemoverFornecedor;
     private Button btnRemoverMarca;
+    private Button btnGerenciarGrades;
+    private TextView txtQuantidadeGrades;
 
     AlterarDeletarProdutoController controller;
 
     private static final int ESCOLHER_FORNECEDOR = 1;
     private static final int ESCOLHER_MARCA = 2;
+    private static final int GERENCIAR_GRADES = 3;
 
     private AlertDialog.Builder alertaRemoverFornecedor;
     private AlertDialog.Builder alertaRemoverMarca;
@@ -51,7 +59,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         setBtnAtualizar();
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
-        txtCodBarraFornecedor = findViewById(R.id.txtCodBarraFornecedor);
         txtDescricao = findViewById(R.id.txtDescricao);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
@@ -61,6 +68,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         btnEscolherMarca = findViewById(R.id.btnEscolherMarca);
         btnRemoverFornecedor = findViewById(R.id.btnRemoverFornecedor);
         btnRemoverMarca = findViewById(R.id.btnRemoverMarca);
+        btnGerenciarGrades = findViewById(R.id.btnGerenciarGrades);
+        txtQuantidadeGrades = findViewById(R.id.txtQuantidadeGrades);
 
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_produto);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_produto);
@@ -76,6 +85,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         txtCodBarra.setText(controller.getProduto().getCodBarra());
         txtDescricao.setText(controller.getProduto().getDescricao());
         txtPreco.setText(String.valueOf(controller.getProduto().getPreco()));
+        txtQuantidadeGrades.setText(String.valueOf(controller.getProduto().getProdutoGrades().size()));
 
         if (controller.getProduto().getFornecedor() != null) {
             txtFornecedor.setText(controller.getProduto().getFornecedor().getNome());
@@ -84,6 +94,14 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         if (controller.getProduto().getMarca() != null) {
             txtMarca.setText(controller.getProduto().getMarca().getNome());
         }
+
+        btnGerenciarGrades.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GerenciarProdutoGrades.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("produtoGrades", (Serializable) controller.getProduto().getProdutoGrades());
+            intent.putExtras(bundle);
+            startActivityForResult(intent, GERENCIAR_GRADES);
+        });
 
         btnEscolherFornecedor.setOnClickListener(v -> {
             Intent intent = new Intent(AlterarDeletarProduto.this, TelaFornecedorForResult.class);
@@ -152,6 +170,16 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                     mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                 } else {
                     mensagemAoUsuario("Marca Não Foi Escolhida");
+                }
+                break;
+            case GERENCIAR_GRADES:
+                Bundle bundle = data.getExtras();
+                controller.getProduto().getProdutoGrades().clear();
+                controller.getProduto().getProdutoGrades().addAll((List<ProdutoGrade>) bundle.getSerializable("produtoGrades"));
+                //produtoGrades = (ArrayList<ProdutoGrade>) data.getSerializableExtra("produtoGrades");
+                if (controller.getProduto().getProdutoGrades() != null) {
+                    txtQuantidadeGrades.setText(String.valueOf(controller.getProduto().getProdutoGrades().size()));
+                    mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
                 }
                 break;
         }

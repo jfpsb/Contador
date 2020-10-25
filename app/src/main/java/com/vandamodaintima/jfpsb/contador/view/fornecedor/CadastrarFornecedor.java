@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view.fornecedor;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -109,7 +108,7 @@ public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarF
             controller.getFornecedor().setFantasia(fornecedor.getFantasia());
             controller.getFornecedor().setEmail(fornecedor.getEmail());
             controller.getFornecedor().setTelefone(fornecedor.getTelefone());
-            controller.cadastrar();
+            controller.salvar();
         });
         alertaCadastro.setNegativeButton("Não", (dialog, which) -> mensagemAoUsuario("Fornecedor Não Foi Cadastrado"));
 

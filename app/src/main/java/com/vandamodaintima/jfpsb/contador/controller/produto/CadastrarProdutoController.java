@@ -11,38 +11,36 @@ import com.vandamodaintima.jfpsb.contador.view.produto.CadastrarProduto;
 public class CadastrarProdutoController implements IController {
 
     private CadastrarProduto view;
-    private Produto produtoModel;
+    private Produto model;
     ConexaoBanco conexaoBanco;
 
     public CadastrarProdutoController(CadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarProduto) view;
         this.conexaoBanco = conexaoBanco;
-        produtoModel = new Produto(conexaoBanco);
+        model = new Produto(conexaoBanco);
     }
 
-    public void cadastrar() {
-        Double p = 0.0;
-
-        if (produtoModel.getCodBarra().trim().isEmpty()) {
+    public void salvar() {
+        if (model.getCodBarra().trim().isEmpty()) {
             view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
             return;
         }
 
-        if (produtoModel.getDescricao().trim().isEmpty()) {
+        if (model.getDescricao().trim().isEmpty()) {
             view.mensagemAoUsuario("Descrição Não Pode Estar Vazio");
             return;
         }
 
-        if (produtoModel.getPreco() <= 0.0) {
+        if (model.getPreco() <= 0.0) {
             view.mensagemAoUsuario("Preço Não Pode Ser Zero ou Menor que Zero");
             return;
         }
 
-        Boolean result = produtoModel.salvar();
+        Boolean result = model.salvar();
 
         if (result) {
-            view.mensagemAoUsuario("Produto Cadastro Com Sucesso");
-            view.aposCadastro(produtoModel.getCodBarra());
+            view.mensagemAoUsuario("Produto Cadastrado Com Sucesso");
+            view.aposCadastro(model.getCodBarra());
         } else {
             view.mensagemAoUsuario("Produto Não Foi Cadastrado");
         }
@@ -50,7 +48,7 @@ public class CadastrarProdutoController implements IController {
 
     public void checaCodigoBarra(String codigo) {
         if (!codigo.isEmpty()) {
-            Produto produto = produtoModel.listarPorId(codigo);
+            Produto produto = model.listarPorId(codigo);
 
             if (produto != null) {
                 view.bloqueiaCampos();
@@ -61,31 +59,31 @@ public class CadastrarProdutoController implements IController {
     }
 
     public void carregaFornecedor(Fornecedor fornecedor) {
-        produtoModel.setFornecedor(fornecedor);
+        model.setFornecedor(fornecedor);
     }
 
     public void carregaMarca(Marca marca) {
-        produtoModel.setMarca(marca);
+        model.setMarca(marca);
     }
 
     public void setFornecedorNull() {
-        produtoModel.setFornecedor(null);
+        model.setFornecedor(null);
     }
 
     public void setMarcaNull() {
-        produtoModel.setMarca(null);
+        model.setMarca(null);
     }
 
     public Produto getProduto() {
-        return produtoModel;
+        return model;
     }
 
     public boolean setPreco(String preco) {
         try {
-            produtoModel.setPreco(Double.valueOf(preco));
+            model.setPreco(Double.valueOf(preco));
             return true;
         } catch (NumberFormatException ne) {
-            produtoModel.setPreco(0.0);
+            model.setPreco(0.0);
             return false;
         }
     }
@@ -101,6 +99,6 @@ public class CadastrarProdutoController implements IController {
 
     @Override
     public void reset() {
-        produtoModel = new Produto(conexaoBanco);
+        model = new Produto(conexaoBanco);
     }
 }

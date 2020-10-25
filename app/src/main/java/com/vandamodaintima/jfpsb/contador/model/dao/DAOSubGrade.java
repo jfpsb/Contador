@@ -16,7 +16,7 @@ public class DAOSubGrade extends ADAO<SubGrade> {
     private DAOProdutoGrade daoProdutoGrade;
     private DAOGrade daoGrade;
 
-    DAOSubGrade(ConexaoBanco conexaoBanco) {
+    public DAOSubGrade(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         daoGrade = new DAOGrade(conexaoBanco);

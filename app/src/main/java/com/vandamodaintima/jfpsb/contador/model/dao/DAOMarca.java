@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Marca;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
@@ -101,7 +102,7 @@ public class DAOMarca extends ADAO<Marca> {
     public List<Marca> listar() {
         ArrayList<Marca> marcas = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Marca.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Marca.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

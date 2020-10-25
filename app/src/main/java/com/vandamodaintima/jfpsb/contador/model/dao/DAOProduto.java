@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
-import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
@@ -24,15 +24,7 @@ public class DAOProduto extends ADAO<Produto> {
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
         TABELA = "produto";
-        daoProdutoGrade = new DAOProdutoGrade(conexaoBanco, this);
-    }
-
-    public DAOProduto(ConexaoBanco conexaoBanco, DAOProdutoGrade daoProdutoGrade) {
-        super(conexaoBanco);
-        daoMarca = new DAOMarca(conexaoBanco);
-        daoFornecedor = new DAOFornecedor(conexaoBanco);
-        this.daoProdutoGrade = daoProdutoGrade;
-        TABELA = "produto";
+        daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
     }
 
     @Override
@@ -61,20 +53,22 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
 
-            if (produto.getGrades().size() > 0) {
-                for (ProdutoGrade grade : produto.getGrades()) {
+            //Insere em produto_grade
+            if (produto.getProdutoGrades().size() > 0) {
+                for (ProdutoGrade produtoGrade : produto.getProdutoGrades()) {
                     ContentValues gradesValues = new ContentValues();
-                    gradesValues.put("cod_barra", grade.getCodBarra());
-                    gradesValues.put("produto", grade.getProduto().getCodBarra());
-                    gradesValues.put("preco", grade.getPreco());
+                    gradesValues.put("cod_barra", produtoGrade.getCodBarra());
+                    gradesValues.put("produto", produto.getCodBarra());
+                    gradesValues.put("preco", produtoGrade.getPreco());
 
                     conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
 
-                    if (grade.getSubGrades().size() > 0) {
-                        for (SubGrade subGrade : grade.getSubGrades()) {
+                    // Insere em sub_grade
+                    if (produtoGrade.getGrades().size() > 0) {
+                        for (Grade grade : produtoGrade.getGrades()) {
                             ContentValues subGradeValues = new ContentValues();
-                            subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
-                            subGradeValues.put("grade", subGrade.getGrade().getId());
+                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("grade", grade.getId());
                             conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                         }
                     }
@@ -98,44 +92,42 @@ public class DAOProduto extends ADAO<Produto> {
         try {
             conexaoBanco.conexao().beginTransaction();
 
-            for (Produto p : lista) {
+            for (Produto produto : lista) {
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("cod_barra", p.getCodBarra());
-                contentValues.put("descricao", p.getDescricao());
-                contentValues.put("preco", p.getPreco());
-                contentValues.put("ncm", p.getNcm());
+                contentValues.put("cod_barra", produto.getCodBarra());
+                contentValues.put("descricao", produto.getDescricao());
+                contentValues.put("preco", produto.getPreco());
+                contentValues.put("ncm", produto.getNcm());
 
-                if (p.getFornecedor() != null) {
-                    contentValues.put("fornecedor", p.getFornecedor().getCnpj());
+                if (produto.getFornecedor() != null) {
+                    contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
                 } else {
                     contentValues.putNull("fornecedor");
                 }
 
-                if (p.getMarca() != null) {
-                    contentValues.put("marca", p.getMarca().getNome());
+                if (produto.getMarca() != null) {
+                    contentValues.put("marca", produto.getMarca().getNome());
                 } else {
                     contentValues.putNull("marca");
                 }
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
-                if (p.getGrades().size() > 0) {
-                    for (ProdutoGrade grade : p.getGrades()) {
+                if (produto.getProdutoGrades().size() > 0) {
+                    for (ProdutoGrade produtoGrade : produto.getProdutoGrades()) {
                         ContentValues gradesValues = new ContentValues();
-                        gradesValues.put("cod_barra", grade.getCodBarra());
-                        gradesValues.put("produto", grade.getProduto().getCodBarra());
-                        gradesValues.put("preco", grade.getPreco());
+                        gradesValues.put("cod_barra", produtoGrade.getCodBarra());
+                        gradesValues.put("produto", produtoGrade.getProduto().getCodBarra());
+                        gradesValues.put("preco", produtoGrade.getPreco());
 
                         conexaoBanco.conexao().insertWithOnConflict("produto_grade", null, gradesValues, SQLiteDatabase.CONFLICT_IGNORE);
 
-                        if (grade.getSubGrades().size() > 0) {
-                            for (SubGrade subGrade : grade.getSubGrades()) {
-                                ContentValues subGradeValues = new ContentValues();
-                                subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
-                                subGradeValues.put("grade", subGrade.getGrade().getId());
-                                conexaoBanco.conexao().insertWithOnConflict("sub_grade", null, subGradeValues, SQLiteDatabase.CONFLICT_IGNORE);
-                            }
+                        for (Grade grade : produtoGrade.getGrades()) {
+                            ContentValues subGradeValues = new ContentValues();
+                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("grade", grade.getId());
+                            conexaoBanco.conexao().insertWithOnConflict("sub_grade", null, subGradeValues, SQLiteDatabase.CONFLICT_IGNORE);
                         }
                     }
                 }
@@ -182,20 +174,20 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().delete("produto_grade", "produto LIKE ?", new String[]{cod_barra});
 
-            if (produto.getGrades().size() > 0) {
-                for (ProdutoGrade grade : produto.getGrades()) {
+            if (produto.getProdutoGrades().size() > 0) {
+                for (ProdutoGrade produtoGrade : produto.getProdutoGrades()) {
                     ContentValues gradesValues = new ContentValues();
-                    gradesValues.put("cod_barra", grade.getCodBarra());
-                    gradesValues.put("produto", grade.getProduto().getCodBarra());
-                    gradesValues.put("preco", grade.getPreco());
+                    gradesValues.put("cod_barra", produtoGrade.getCodBarra());
+                    gradesValues.put("produto", produto.getCodBarra());
+                    gradesValues.put("preco", produtoGrade.getPreco());
 
                     conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
 
-                    if (grade.getSubGrades().size() > 0) {
-                        for (SubGrade subGrade : grade.getSubGrades()) {
+                    if (produtoGrade.getGrades().size() > 0) {
+                        for (Grade grade : produtoGrade.getGrades()) {
                             ContentValues subGradeValues = new ContentValues();
-                            subGradeValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
-                            subGradeValues.put("grade", subGrade.getGrade().getId());
+                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("grade", grade.getId());
                             conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                         }
                     }
@@ -203,7 +195,6 @@ public class DAOProduto extends ADAO<Produto> {
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
         } catch (Exception ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
@@ -217,7 +208,7 @@ public class DAOProduto extends ADAO<Produto> {
     public ArrayList<Produto> listar() {
         ArrayList<Produto> produtos = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Produto.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), null, null, null, null, "descricao", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -229,7 +220,7 @@ public class DAOProduto extends ADAO<Produto> {
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                p.setGrades(daoProdutoGrade.listarPorProduto(p));
+                p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }
@@ -256,7 +247,7 @@ public class DAOProduto extends ADAO<Produto> {
             p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
             p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
             p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-            p.setGrades(daoProdutoGrade.listarPorProduto(p));
+            p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
         }
 
         cursor.close();
@@ -281,7 +272,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
-        String sql = "SELECT p.cod_barra as _id, * FROM produto AS p LEFT JOIN produto_grade AS pg WHERE p.cod_barra LIKE ? OR pg.cod_barra LIKE ? ORDER BY cod_barra";
+        String sql = "SELECT p.cod_barra as _id, p.cod_barra as cod_barra, fornecedor, marca, descricao, p.preco, ncm FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto WHERE p.cod_barra LIKE ? OR pg.cod_barra LIKE ? GROUP BY p.cod_barra ORDER BY cod_barra;";
         String[] selection = new String[]{"%" + cod_barra + "%", "%" + cod_barra + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -301,7 +292,7 @@ public class DAOProduto extends ADAO<Produto> {
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                p.setGrades(daoProdutoGrade.listarPorProduto(p));
+                p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }
@@ -333,7 +324,7 @@ public class DAOProduto extends ADAO<Produto> {
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                p.setGrades(daoProdutoGrade.listarPorProduto(p));
+                p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
             }
         }
 
@@ -363,7 +354,7 @@ public class DAOProduto extends ADAO<Produto> {
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
-                p.setGrades(daoProdutoGrade.listarPorProduto(p));
+                p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
             }
         }
 
@@ -393,7 +384,7 @@ public class DAOProduto extends ADAO<Produto> {
                 p.setNcm(cursor.getString(cursor.getColumnIndexOrThrow("ncm")));
                 p.setFornecedor(daoFornecedor.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("fornecedor"))));
                 p.setMarca(daoMarca.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("marca"))));
-                p.setGrades(daoProdutoGrade.listarPorProduto(p));
+                p.setProdutoGrades(daoProdutoGrade.listarPorProduto(p));
 
                 produtos.add(p);
             }

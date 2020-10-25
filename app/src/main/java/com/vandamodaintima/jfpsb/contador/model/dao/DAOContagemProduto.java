@@ -111,7 +111,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     public List<ContagemProduto> listar() {
         ArrayList<ContagemProduto> contagem_produtos = new ArrayList<>();
 
-        Cursor cursor = listarCursor(ContagemProduto.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

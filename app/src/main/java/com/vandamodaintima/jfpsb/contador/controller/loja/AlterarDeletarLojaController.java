@@ -18,7 +18,7 @@ public class AlterarDeletarLojaController implements IController {
         lojaModel = new Loja(conexaoBanco);
     }
 
-    public void atualizar() {
+    public void salvar() {
         if (lojaModel.getNome().trim().isEmpty()) {
             view.mensagemAoUsuario("Nome Não Pode Ser Vazio");
             return;

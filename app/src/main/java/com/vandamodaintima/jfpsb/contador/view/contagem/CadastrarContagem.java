@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -15,6 +14,8 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemController;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.SpinnerTipoContagemAdapter;
 import com.vandamodaintima.jfpsb.contador.controller.loja.SpinnerLojaAdapter;
+import com.vandamodaintima.jfpsb.contador.model.Loja;
+import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
 import java.util.Objects;
@@ -40,13 +41,13 @@ public class CadastrarContagem extends TelaCadastro {
         btnCadastrar.setOnClickListener(view -> {
             controller.carregaLoja(spinnerLoja.getSelectedItem());
             controller.carregaTipoContagem(spinnerTipoContagem.getSelectedItem());
-            controller.cadastrar();
+            controller.salvar();
         });
 
-        ArrayAdapter spinnerLojaAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getLojas());
+        ArrayAdapter<Loja> spinnerLojaAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), controller.getLojas());
         spinnerLoja.setAdapter(spinnerLojaAdapter);
 
-        ArrayAdapter spinnerTipoContagemAdapter = new SpinnerTipoContagemAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, controller.getTipoContagens());
+        ArrayAdapter<TipoContagem> spinnerTipoContagemAdapter = new SpinnerTipoContagemAdapter(getContext(), controller.getTipoContagens());
         spinnerTipoContagem.setAdapter(spinnerTipoContagemAdapter);
 
         return telaCadastroView;

@@ -8,6 +8,8 @@ import android.util.Log;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+import com.vandamodaintima.jfpsb.contador.model.SubGrade;
+import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.List;
 public class DAOGrade extends ADAO<Grade> {
     DAOTipoGrade daoTipoGrade;
 
-    DAOGrade(ConexaoBanco conexaoBanco) {
+    public DAOGrade(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         daoTipoGrade = new DAOTipoGrade(conexaoBanco);
         TABELA = "grade";
@@ -100,11 +102,11 @@ public class DAOGrade extends ADAO<Grade> {
     public List<Grade> listar() {
         ArrayList<Grade> grades = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Grade.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), null, null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
-                Grade grade = new Grade();
+                Grade grade = new Grade(conexaoBanco);
 
                 grade.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 grade.setTipoGrade(daoTipoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("tipo"))));
@@ -119,11 +121,56 @@ public class DAOGrade extends ADAO<Grade> {
         return grades;
     }
 
+    public Cursor listarPorTipoGradeCursor(TipoGrade tipoGrade) {
+        String sql = "SELECT grade.id as _id, grade.nome AS nome, grade.tipo AS tipo FROM grade INNER JOIN tipo_grade AS tg ON grade.tipo = tg.id WHERE tg.id = ? ORDER BY grade.nome";
+        String[] selection = new String[]{String.valueOf(tipoGrade.getId())};
+        return conexaoBanco.conexao().rawQuery(sql, selection);
+    }
+
+    public List<Grade> listarPorTipoGrade(TipoGrade tipoGrade) {
+        ArrayList<Grade> grades = new ArrayList<>();
+
+        Cursor cursor = listarPorTipoGradeCursor(tipoGrade);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Grade grade = new Grade(conexaoBanco);
+
+                grade.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                grade.setTipoGrade(daoTipoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
+                grade.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
+
+                grades.add(grade);
+            }
+        }
+
+        cursor.close();
+
+        return grades;
+    }
+
+    public List<Grade> listarPorProdutoGrade(ProdutoGrade produtoGrade) {
+        ArrayList<Grade> grades = new ArrayList<>();
+
+        Cursor cursor = conexaoBanco.conexao().query("sub_grade", SubGrade.getColunas(), "produto_grade LIKE ?", new String[]{produtoGrade.getCodBarra()}, null, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Grade grade = listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("grade")));
+                grades.add(grade);
+            }
+        }
+
+        cursor.close();
+
+        return grades;
+    }
+
     @Override
     public Grade listarPorId(Object... ids) {
         Grade grade = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             grade = new Grade();

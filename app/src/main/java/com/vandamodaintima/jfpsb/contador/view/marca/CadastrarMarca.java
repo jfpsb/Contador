@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.view.marca;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -81,7 +80,7 @@ public class CadastrarMarca extends TelaCadastro {
 
         alertaCadastro.setPositiveButton("Sim", (dialog, which) -> {
             controller.getMarca().setNome(nome);
-            controller.cadastrar();
+            controller.salvar();
         });
 
         alertaCadastro.setNegativeButton("Não", (dialog, which) -> mensagemAoUsuario("Marca Não Foi Cadastrada"));

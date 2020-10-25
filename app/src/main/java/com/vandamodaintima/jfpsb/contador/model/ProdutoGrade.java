@@ -1,7 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import android.widget.ArrayAdapter;
-
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOProdutoGrade;
 
@@ -10,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
-    private DAOProdutoGrade daoProdutoGrade;
+    private transient DAOProdutoGrade daoProdutoGrade;
     private String codBarra;
     private Produto produto;
     private double preco;
-    private List<SubGrade> subGrades = new ArrayList<>();
+    private List<Grade> grades = new ArrayList<>();
 
     public ProdutoGrade() {
     }
@@ -47,12 +45,12 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
         this.preco = preco;
     }
 
-    public List<SubGrade> getSubGrades() {
-        return subGrades;
+    public List<Grade> getGrades() {
+        return grades;
     }
 
-    public void setSubGrades(List<SubGrade> subGrades) {
-        this.subGrades = subGrades;
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
     }
 
     public static String[] getColunas() {

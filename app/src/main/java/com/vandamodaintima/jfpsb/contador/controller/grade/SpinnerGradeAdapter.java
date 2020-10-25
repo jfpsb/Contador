@@ -1,22 +1,24 @@
-package com.vandamodaintima.jfpsb.contador.controller.loja;
+package com.vandamodaintima.jfpsb.contador.controller.grade;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 
 import java.util.List;
 
-public class SpinnerLojaAdapter extends ArrayAdapter<Loja> {
+public class SpinnerGradeAdapter extends ArrayAdapter<Grade> {
 
-    private List<Loja> objects;
+    private List<Grade> objects;
 
-    public SpinnerLojaAdapter(@NonNull Context context, @NonNull List<Loja> objects) {
+    public SpinnerGradeAdapter(@NonNull Context context, List<Grade> objects) {
         super(context, 0, objects);
         this.objects = objects;
     }
@@ -24,6 +26,12 @@ public class SpinnerLojaAdapter extends ArrayAdapter<Loja> {
     @Override
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         return getCustomView(position, convertView, parent);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        objects.clear();
     }
 
     @NonNull

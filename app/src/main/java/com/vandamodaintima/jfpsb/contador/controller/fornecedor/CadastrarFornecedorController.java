@@ -17,7 +17,7 @@ public class CadastrarFornecedorController implements IController {
         fornecedorModel = new Fornecedor(conexaoBanco);
     }
 
-    public void cadastrar() {
+    public void salvar() {
         if (fornecedorModel.getCnpj().isEmpty()) {
             view.mensagemAoUsuario("CNPJ Não Pode Ser Vazio");
             return;

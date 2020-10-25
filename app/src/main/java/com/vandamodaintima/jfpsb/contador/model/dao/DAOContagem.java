@@ -113,7 +113,7 @@ public class DAOContagem extends ADAO<Contagem> {
     public List<Contagem> listar() {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
-        Cursor cursor = listarCursor(Contagem.getColunas());
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), null, null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

@@ -33,7 +33,7 @@ public class Produto implements Serializable, IModel<Produto> {
     @SerializedName(value = "Ncm")
     private String ncm;
     @SerializedName(value = "Grades")
-    private List<ProdutoGrade> grades = new ArrayList<>();
+    private List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
     public static String[] getColunas() {
         return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca", "ncm"};
@@ -91,12 +91,12 @@ public class Produto implements Serializable, IModel<Produto> {
         this.ncm = ncm;
     }
 
-    public List<ProdutoGrade> getGrades() {
-        return grades;
+    public List<ProdutoGrade> getProdutoGrades() {
+        return produtoGrades;
     }
 
-    public void setGrades(List<ProdutoGrade> grades) {
-        this.grades = grades;
+    public void setProdutoGrades(List<ProdutoGrade> produtoGrades) {
+        this.produtoGrades = produtoGrades;
     }
 
     @Override
@@ -149,6 +149,7 @@ public class Produto implements Serializable, IModel<Produto> {
             descricao = produto.getDescricao();
             preco = produto.getPreco();
             ncm = produto.getNcm();
+            produtoGrades = produto.getProdutoGrades();
         }
     }
 

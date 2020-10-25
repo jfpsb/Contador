@@ -48,10 +48,6 @@ public abstract class ADAO<T extends IModel<T> & Serializable> {
         }
     }
 
-    public Cursor listarCursor(String[] colunas) {
-        return conexaoBanco.conexao().query(TABELA, colunas, null, null, null, null, null, null);
-    }
-
     public abstract List<T> listar();
 
     /**
