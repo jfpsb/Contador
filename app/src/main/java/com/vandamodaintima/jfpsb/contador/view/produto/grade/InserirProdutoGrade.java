@@ -23,7 +23,6 @@ import com.vandamodaintima.jfpsb.contador.controller.grade.SpinnerTipoGradeAdapt
 import com.vandamodaintima.jfpsb.contador.controller.produto.grade.InserirProdutoGradeController;
 import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
-import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 
@@ -83,6 +82,14 @@ public class InserirProdutoGrade extends TelaCadastro {
         gradeArrayAdapter = new GradeArrayAdapter(Objects.requireNonNull(getContext()), new ArrayList<>());
         listViewGradeFormacaoAtual.setAdapter(gradeArrayAdapter);
 
+        listViewGradeFormacaoAtual.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                gradeArrayAdapter.getObjects().remove(position);
+                gradeArrayAdapter.notifyDataSetChanged();
+            }
+        });
+
         SpinnerTipoGradeAdapter tipoGradeAdapter = new SpinnerTipoGradeAdapter(getContext(), controller.getTipoGrades());
         spinnerTipoGrade.setAdapter(tipoGradeAdapter);
 
@@ -93,8 +100,8 @@ public class InserirProdutoGrade extends TelaCadastro {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 TipoGrade tipoGrade = (TipoGrade) spinnerTipoGrade.getSelectedItem();
-                spinnerGradeAdapter.clear();
-                spinnerGradeAdapter.addAll(controller.getGradesPorTipo(tipoGrade));
+                spinnerGradeAdapter.getObjects().clear();
+                spinnerGradeAdapter.getObjects().addAll(controller.getGradesPorTipo(tipoGrade));
                 spinnerGradeAdapter.notifyDataSetChanged();
             }
 

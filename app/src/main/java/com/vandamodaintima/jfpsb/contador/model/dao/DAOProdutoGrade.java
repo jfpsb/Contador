@@ -63,7 +63,8 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
             while (cursor.moveToNext()) {
                 ProdutoGrade pg = new ProdutoGrade();
 
-                pg.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("_id")));
+                pg.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                pg.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
                 pg.setProduto(produto);
                 pg.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 pg.setGrades(daoGrade.listarPorProdutoGrade(pg));

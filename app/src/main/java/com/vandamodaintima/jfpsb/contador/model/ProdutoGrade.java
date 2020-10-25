@@ -9,6 +9,7 @@ import java.util.List;
 
 public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
     private transient DAOProdutoGrade daoProdutoGrade;
+    private long id;
     private String codBarra;
     private Produto produto;
     private double preco;
@@ -19,6 +20,14 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
 
     public ProdutoGrade(ConexaoBanco conexaoBanco) {
         daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCodBarra() {
@@ -54,7 +63,7 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{"cod_barra as _id", "produto", "preco"};
+        return new String[]{"id as _id", "cod_barra", "produto", "preco"};
     }
 
     public static String[] getHeaders() {
@@ -68,7 +77,7 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
 
     @Override
     public String getDeleteWhereClause() {
-        return null;
+        return "id = ?";
     }
 
     @Override

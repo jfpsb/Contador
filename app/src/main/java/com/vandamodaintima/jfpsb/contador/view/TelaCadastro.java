@@ -39,12 +39,12 @@ public abstract class TelaCadastro extends Fragment implements CadastrarView {
 
     @Override
     public void aposCadastro(Object... args) {
-        if (getActivity() != null) {
+        /*if (getActivity() != null) {
             for(Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
                 if (fragment instanceof PesquisarView)
                     ((PesquisarView) fragment).realizarPesquisa();
             }
-        }
+        }*/
 
         limparCampos();
         focoEmViewInicial();

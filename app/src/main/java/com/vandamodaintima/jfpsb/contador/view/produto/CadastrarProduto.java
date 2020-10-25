@@ -163,12 +163,14 @@ public class CadastrarProduto extends TelaCadastro {
                 }
                 break;
             case GERENCIAR_GRADES:
-                Bundle bundle = data.getExtras();
-                produtoGrades = (List<ProdutoGrade>) bundle.getSerializable("produtoGrades");
-                //produtoGrades = (ArrayList<ProdutoGrade>) data.getSerializableExtra("produtoGrades");
-                if (produtoGrades != null) {
-                    txtQuantidadeGrades.setText(String.valueOf(produtoGrades.size()));
-                    mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
+                if(data != null) {
+                    Bundle bundle = data.getExtras();
+                    produtoGrades = (List<ProdutoGrade>) bundle.getSerializable("produtoGrades");
+                    //produtoGrades = (ArrayList<ProdutoGrade>) data.getSerializableExtra("produtoGrades");
+                    if (produtoGrades != null) {
+                        txtQuantidadeGrades.setText(String.valueOf(produtoGrades.size()));
+                        mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
+                    }
                 }
                 break;
         }

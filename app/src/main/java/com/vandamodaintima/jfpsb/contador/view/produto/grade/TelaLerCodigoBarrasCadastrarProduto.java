@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.view.produto.grade;
 
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.TextureView;
 import android.widget.Toast;
@@ -31,7 +32,16 @@ public class TelaLerCodigoBarrasCadastrarProduto extends ActivityBaseView {
         textureView = findViewById(R.id.textureView);
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
         cameraHandler = new CameraHandler(this, textureView, PERMISSAO_CAMERA);
+
         iniciaBarcodeHandlerThread();
+    }
+
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
     @Override

@@ -4,24 +4,25 @@
     android:layout_height="match_parent"
     android:layout_margin="5dip">
 
-    <TableLayout
+    <TextView
+        android:id="@+id/txtInserirGradeProduto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="3sp"
+        android:background="@color/cardview_dark_background"
+        android:gravity="center_horizontal"
+        android:text="@string/inserir_produto_grade"
+        android:textColor="#fff"
+        android:textSize="26sp"
+        android:textStyle="bold" />
 
-        <TableRow>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7sp"
-                android:layout_weight="1"
-                android:background="@color/cardview_dark_background"
-                android:text="@string/inserir_produto_grade"
-                android:textAlignment="center"
-                android:textColor="#fff"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-        </TableRow>
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtInserirGradeProduto"
+        android:layout_margin="5sp">
 
         <TableRow>
 
@@ -39,11 +40,10 @@
                 android:id="@+id/txtCodBarra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="0sp"
+                android:layout_marginTop="5sp"
                 android:layout_weight="1"
-                android:inputType="text"
-                android:padding="15sp"
                 android:autofillHints="no"
+                android:inputType="text"
                 android:textSize="18sp" />
 
             <Button
@@ -83,13 +83,22 @@
                 android:textSize="20sp" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:layout_height="wrap_content">
 
             <Spinner
                 android:id="@+id/spinnerTipoGrade"
                 android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnAdicionarTipoGrade"
+                android:layout_margin="5sp"
+                android:layout_width="20sp"
+                android:layout_height="32sp"
+                android:background="@drawable/adicionar_icon" />
         </TableRow>
 
         <TableRow>
@@ -108,14 +117,26 @@
                 android:id="@+id/spinnerGrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"/>
+
+            <Button
+                android:id="@+id/btnAdicionarGrade"
+                android:layout_margin="5sp"
+                android:layout_width="20sp"
+                android:layout_height="32sp"
+                android:background="@drawable/adicionar_icon" />
         </TableRow>
 
         <TableRow>
 
             <Button
                 android:id="@+id/btnInserirFormacaoAtualGrade"
+                android:layout_height="wrap_content"
+                android:layout_margin="0sp"
                 android:layout_weight="1"
+                android:background="@drawable/botao_active"
                 android:text="@string/btn_inserir_em_formacao_atual_grade"
                 android:textSize="20sp" />
         </TableRow>
@@ -159,6 +180,8 @@
 
             <ListView
                 android:id="@+id/listViewGradeFormacaoAtual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1">
 
             </ListView>

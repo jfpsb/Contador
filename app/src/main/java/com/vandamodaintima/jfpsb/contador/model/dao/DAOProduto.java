@@ -61,13 +61,14 @@ public class DAOProduto extends ADAO<Produto> {
                     gradesValues.put("produto", produto.getCodBarra());
                     gradesValues.put("preco", produtoGrade.getPreco());
 
-                    conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+                    long id = conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+                    produtoGrade.setId(id);
 
                     // Insere em sub_grade
                     if (produtoGrade.getGrades().size() > 0) {
                         for (Grade grade : produtoGrade.getGrades()) {
                             ContentValues subGradeValues = new ContentValues();
-                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("produto_grade", produtoGrade.getId());
                             subGradeValues.put("grade", grade.getId());
                             conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                         }
@@ -121,11 +122,12 @@ public class DAOProduto extends ADAO<Produto> {
                         gradesValues.put("produto", produtoGrade.getProduto().getCodBarra());
                         gradesValues.put("preco", produtoGrade.getPreco());
 
-                        conexaoBanco.conexao().insertWithOnConflict("produto_grade", null, gradesValues, SQLiteDatabase.CONFLICT_IGNORE);
+                        long id = conexaoBanco.conexao().insertWithOnConflict("produto_grade", null, gradesValues, SQLiteDatabase.CONFLICT_IGNORE);
+                        produtoGrade.setId(id);
 
                         for (Grade grade : produtoGrade.getGrades()) {
                             ContentValues subGradeValues = new ContentValues();
-                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("produto_grade", produtoGrade.getId());
                             subGradeValues.put("grade", grade.getId());
                             conexaoBanco.conexao().insertWithOnConflict("sub_grade", null, subGradeValues, SQLiteDatabase.CONFLICT_IGNORE);
                         }
@@ -181,12 +183,13 @@ public class DAOProduto extends ADAO<Produto> {
                     gradesValues.put("produto", produto.getCodBarra());
                     gradesValues.put("preco", produtoGrade.getPreco());
 
-                    conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+                    long id = conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+                    produtoGrade.setId(id);
 
                     if (produtoGrade.getGrades().size() > 0) {
                         for (Grade grade : produtoGrade.getGrades()) {
                             ContentValues subGradeValues = new ContentValues();
-                            subGradeValues.put("produto_grade", produtoGrade.getCodBarra());
+                            subGradeValues.put("produto_grade", produtoGrade.getId());
                             subGradeValues.put("grade", grade.getId());
                             conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                         }

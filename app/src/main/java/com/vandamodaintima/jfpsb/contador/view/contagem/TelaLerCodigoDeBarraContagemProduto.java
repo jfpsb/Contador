@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
@@ -31,7 +30,6 @@ import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemFor
 public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITelaLerCodigoDeBarra {
     private TextureView textureView;
     private BarcodeHandlerThreadContagemProduto barcodeHandlerThread;
-    private BarcodeDetector barcodeDetector;
     private AlertDialog.Builder escolhaProdutoDialog;
     private AlertDialog.Builder produtoNaoEncontradoDialog;
     private MediaPlayer erroMediaPlayer;
@@ -53,7 +51,6 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
         Button btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
         IAdicionarContagemProduto ownerActivity = (IAdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
-        barcodeDetector = new BarcodeDetector.Builder(getContext()).build();
         erroMediaPlayer = MediaPlayer.create(getContext(), R.raw.erro_buzzer);
         codigoLidoMediaPlayer = MediaPlayer.create(getContext(), R.raw.barcode_beep);
 
@@ -172,8 +169,6 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
     public void onResume() {
         super.onResume();
 
-        super.onResume();
-
         if (cameraHandler.getTextureView().isAvailable()) {
             cameraHandler.openBackgroundThread();
             cameraHandler.setUpCamera();
@@ -196,7 +191,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
 
     private void iniciaBarcodeHandlerThread() {
         if (barcodeHandlerThread == null) {
-            barcodeHandlerThread = new BarcodeHandlerThreadContagemProduto(TelaLerCodigoDeBarraContagemProduto.this, cameraHandler.getTextureView(), controller, barcodeDetector);
+            barcodeHandlerThread = new BarcodeHandlerThreadContagemProduto(TelaLerCodigoDeBarraContagemProduto.this, cameraHandler.getTextureView(), controller);
             barcodeHandlerThread.start();
             barcodeHandlerThread.setCampoQuantChecked(isCampoQuantidadeMarcado);
         }

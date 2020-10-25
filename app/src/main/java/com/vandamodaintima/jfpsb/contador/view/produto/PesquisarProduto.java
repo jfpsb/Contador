@@ -155,4 +155,10 @@ public class PesquisarProduto extends TelaPesquisa {
 
         startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        realizarPesquisa();
+    }
 }

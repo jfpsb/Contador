@@ -22,14 +22,12 @@ import android.view.TextureView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.vandamodaintima.jfpsb.contador.view.produto.grade.BarcodeHandlerThreadCadastroProduto;
-import com.vandamodaintima.jfpsb.contador.view.produto.grade.TelaLerCodigoBarrasCadastrarProduto;
-
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 
 public class CameraHandler {
     private Activity activity;
-    private TextureView textureView;
+    private WeakReference<TextureView> textureView;
     private String cameraId;
     private Size previewSize;
     private CameraDevice.StateCallback cameraStateCallback;
@@ -47,7 +45,7 @@ public class CameraHandler {
     public CameraHandler(Activity activity, TextureView textureView, int PERMISSAO_CAMERA) {
         this.activity = activity;
         this.PERMISSAO_CAMERA = PERMISSAO_CAMERA;
-        this.textureView = textureView;
+        this.textureView = new WeakReference<>(textureView);
 
         cameraManager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
 
@@ -93,7 +91,7 @@ public class CameraHandler {
             }
         };
 
-        this.textureView.setSurfaceTextureListener(surfaceTextureListener);
+        this.textureView.get().setSurfaceTextureListener(surfaceTextureListener);
     }
 
     public void openBackgroundThread() {
@@ -158,7 +156,7 @@ public class CameraHandler {
 
     private void createPreviewSession() {
         try {
-            SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
+            SurfaceTexture surfaceTexture = textureView.get().getSurfaceTexture();
             surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
             Surface previewSurface = new Surface(surfaceTexture);
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
@@ -192,11 +190,11 @@ public class CameraHandler {
     }
 
     public TextureView getTextureView() {
-        return textureView;
+        return textureView.get();
     }
 
     public void setTextureView(TextureView textureView) {
-        this.textureView = textureView;
+        this.textureView = new WeakReference<>(textureView);
     }
 
     public String getCameraId() {

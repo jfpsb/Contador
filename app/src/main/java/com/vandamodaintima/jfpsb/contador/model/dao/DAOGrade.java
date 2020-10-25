@@ -152,7 +152,7 @@ public class DAOGrade extends ADAO<Grade> {
     public List<Grade> listarPorProdutoGrade(ProdutoGrade produtoGrade) {
         ArrayList<Grade> grades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query("sub_grade", SubGrade.getColunas(), "produto_grade LIKE ?", new String[]{produtoGrade.getCodBarra()}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query("sub_grade", SubGrade.getColunas(), "produto_grade LIKE ?", new String[]{String.valueOf(produtoGrade.getId())}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

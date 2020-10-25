@@ -25,18 +25,14 @@ public class GerenciarProdutoGrades extends TabLayoutBaseView {
         stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
-        ViewStub stub2 = findViewById(R.id.telaLayoutViewStub);
-        stub2.setLayoutResource(R.layout.activity_tela_tablayout);
-        stub2.inflate();
-
         inserirProdutoGrade = new InserirProdutoGrade();
         VisualizarProdutoGrades visualizarProdutoGrades = new VisualizarProdutoGrades();
 
         inserirProdutoGrade.setArguments(getIntent().getExtras());
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-
         setViewPagerTabLayout(inserirProdutoGrade, visualizarProdutoGrades);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
     }
 
     @Override

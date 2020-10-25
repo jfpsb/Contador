@@ -26,14 +26,14 @@ public class VisualizarProdutoGrades extends TelaPesquisa {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_visualizar_produto_grade, container, false);
+        telaPesquisaView = inflater.inflate(R.layout.fragment_visualizar_produto_grade, container, false);
 
-        listView = view.findViewById(R.id.listViewProdutoGrade);
+        listView = telaPesquisaView.findViewById(R.id.listViewProdutoGrade);
 
         arrayAdapter = new ProdutoGradeArrayAdapter(getContext(), new ArrayList<>());
         listView.setAdapter(arrayAdapter);
 
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -43,22 +43,22 @@ public class VisualizarProdutoGrades extends TelaPesquisa {
 
     @Override
     public void realizarPesquisa() {
-        arrayAdapter.clear();
         Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
         InserirProdutoGrade inserirProdutoGrade = (InserirProdutoGrade) fragment;
-        arrayAdapter.addAll(inserirProdutoGrade.getProdutoGrades());
+        arrayAdapter.getObjects().clear();
+        arrayAdapter.getObjects().addAll(inserirProdutoGrade.getProdutoGrades());
         arrayAdapter.notifyDataSetChanged();
-        listView.setAdapter(arrayAdapter);
     }
 
     @Override
     public void onResume() {
-        realizarPesquisa();
         super.onResume();
+        realizarPesquisa();
     }
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-
+        arrayAdapter.getObjects().remove(i);
+        arrayAdapter.notifyDataSetChanged();
     }
 }

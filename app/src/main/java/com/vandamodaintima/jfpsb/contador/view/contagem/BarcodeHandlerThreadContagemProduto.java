@@ -45,27 +45,26 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
     private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
     private boolean isCampoQuantChecked = false;
 
-    public BarcodeHandlerThreadContagemProduto(ITelaLerCodigoDeBarra view, TextureView textureView, TelaLerCodigoDeBarraController controller, BarcodeDetector barcodeDetector) {
+    public BarcodeHandlerThreadContagemProduto(ITelaLerCodigoDeBarra view, TextureView textureView, TelaLerCodigoDeBarraController controller) {
         super("BarcodeHandlerThreadContagemProduto");
 
+        barcodeDetector = new BarcodeDetector.Builder(view.getContext()).build();
         this.view = view;
         this.textureView = new WeakReference<>(textureView);
         this.controller = controller;
-        this.barcodeDetector = barcodeDetector;
         contagemModel = controller.getContagem();
-
         contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<>());
     }
 
     @SuppressLint("HandlerLeak")
     @Override
     protected void onLooperPrepared() {
-        handler = new Handler(Looper.getMainLooper()) {
+        handler = new Handler(getLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
-                        if (view.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && barcodeDetector.isOperational()) {
+                        if (view.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && barcodeDetector.isOperational() && textureView.get().isAvailable()) {
                             Bitmap bitmap = Bitmap.createBitmap(textureView.get().getWidth(), textureView.get().getHeight(), Bitmap.Config.ARGB_8888);
                             textureView.get().getBitmap(bitmap);
                             Frame frame = new Frame.Builder().setBitmap(bitmap).build();

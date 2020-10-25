@@ -26,22 +26,21 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
 
     @Override
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+        return getView(position, convertView, parent);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
-    }
+        if(convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_produto, parent, false);
+        }
 
-    private View getCustomView(final int position, View convertView, ViewGroup parent) {
         ProdutoGrade produtoGrade = objects.get(position);
 
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_produto, parent, false);
-        final TextView lblCodBarra = layout.findViewById(R.id.labelCodBarra);
-        TextView lblPreco = layout.findViewById(R.id.labelPreco);
-        TextView lblDescricao = layout.findViewById(R.id.labelDescricao);
+        final TextView lblCodBarra = convertView.findViewById(R.id.labelCodBarra);
+        TextView lblPreco = convertView.findViewById(R.id.labelPreco);
+        TextView lblDescricao = convertView.findViewById(R.id.labelDescricao);
 
         StringBuilder descricao = new StringBuilder();
 
@@ -58,10 +57,14 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
         lblPreco.setText(String.valueOf(produtoGrade.getPreco()));
         lblDescricao.setText(descricao);
 
-        return layout;
+        return convertView;
     }
 
     public List<ProdutoGrade> getObjects() {
         return objects;
+    }
+
+    public void setObjects(List<ProdutoGrade> objects) {
+        this.objects = objects;
     }
 }

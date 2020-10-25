@@ -27,22 +27,21 @@ public class GradeArrayAdapter extends ArrayAdapter<Grade> {
 
     @Override
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+        return getView(position, convertView, parent);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
-    }
+        if(convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_grade, parent, false);
+        }
 
-    private View getCustomView(final int position, View convertView, ViewGroup parent) {
-        View layout = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_grade, parent, false);
-        final TextView txtTipoGrade = layout.findViewById(R.id.txtTipoGrade);
-        final TextView txtNomeGrade = layout.findViewById(R.id.txtNomeGrade);
+        final TextView txtTipoGrade = convertView.findViewById(R.id.txtTipoGrade);
+        final TextView txtNomeGrade = convertView.findViewById(R.id.txtNomeGrade);
         txtTipoGrade.setText(objects.get(position).getTipoGrade().getNome());
         txtNomeGrade.setText(objects.get(position).getNome());
-        return layout;
+        return convertView;
     }
 
     public List<Grade> getObjects() {
