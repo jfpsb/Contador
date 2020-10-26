@@ -173,7 +173,6 @@ public class DAOProduto extends ADAO<Produto> {
             }
 
             conexaoBanco.conexao().update(TABELA, contentValues, "cod_barra LIKE ?", new String[]{cod_barra});
-
             conexaoBanco.conexao().delete("produto_grade", "produto LIKE ?", new String[]{cod_barra});
 
             if (produto.getProdutoGrades().size() > 0) {

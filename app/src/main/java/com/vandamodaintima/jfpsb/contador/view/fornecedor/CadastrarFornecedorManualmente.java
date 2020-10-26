@@ -75,9 +75,4 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     public void focoEmViewInicial() {
         txtCnpj.requestFocus();
     }
-
-    @Override
-    public Context getContext() {
-        return getApplicationContext();
-    }
 }

@@ -94,7 +94,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/btnAdicionarTipoGrade"
+                android:id="@+id/btnCadastrarTipoGrade"
                 android:layout_margin="5sp"
                 android:layout_width="20sp"
                 android:layout_height="32sp"
@@ -122,7 +122,7 @@
                 android:layout_gravity="center_vertical"/>
 
             <Button
-                android:id="@+id/btnAdicionarGrade"
+                android:id="@+id/btnCadastrarGrade"
                 android:layout_margin="5sp"
                 android:layout_width="20sp"
                 android:layout_height="32sp"

@@ -60,5 +60,9 @@ public class VisualizarProdutoGrades extends TelaPesquisa {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         arrayAdapter.getObjects().remove(i);
         arrayAdapter.notifyDataSetChanged();
+
+        Fragment fragment = getActivity().getSupportFragmentManager().getFragments().get(0);
+        InserirProdutoGrade inserirProdutoGrade = (InserirProdutoGrade) fragment;
+        inserirProdutoGrade.getProdutoGrades().remove(i);
     }
 }

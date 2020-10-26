@@ -115,6 +115,16 @@
             android:label="Produtos Encontrado(s)"
             android:theme="@style/TabAppTheme.NoActionBar" />
 
+        <activity
+            android:name=".view.grade.CadastrarTipoGrade"
+            android:label="Cadastro de Tipo de Grade"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.grade.CadastrarGrade"
+            android:label="Cadastro de Grade"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />

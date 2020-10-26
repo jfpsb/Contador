@@ -39,4 +39,8 @@ public class SpinnerTipoGradeAdapter extends ArrayAdapter<TipoGrade> {
         label.setText(objects.get(position).getNome());
         return convertView;
     }
+
+    public List<TipoGrade> getObjects() {
+        return objects;
+    }
 }
