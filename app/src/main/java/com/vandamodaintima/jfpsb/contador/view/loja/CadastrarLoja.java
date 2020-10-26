@@ -32,8 +32,7 @@ public class CadastrarLoja extends TelaCadastro {
     private CadastrarLojaController controller;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View viewInflate = inflater.inflate(R.layout.fragment_cadastrar_loja, container, false);
 
         conexaoBanco = new ConexaoBanco(getContext());
