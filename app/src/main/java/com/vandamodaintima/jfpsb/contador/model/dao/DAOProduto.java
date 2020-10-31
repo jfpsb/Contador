@@ -17,14 +17,12 @@ import java.util.List;
 public class DAOProduto extends ADAO<Produto> {
     private DAOMarca daoMarca;
     private DAOFornecedor daoFornecedor;
-    private DAOProdutoGrade daoProdutoGrade;
 
     public DAOProduto(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         daoMarca = new DAOMarca(conexaoBanco);
         daoFornecedor = new DAOFornecedor(conexaoBanco);
         TABELA = "produto";
-        daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
     }
 
     @Override
@@ -208,6 +206,8 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public ArrayList<Produto> listar() {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
+
         ArrayList<Produto> produtos = new ArrayList<>();
 
         Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), null, null, null, null, "descricao", null);
@@ -234,6 +234,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Produto listarPorId(Object... ids) {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         Produto p = null;
 
         Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), "cod_barra = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
@@ -280,6 +281,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public ArrayList<Produto> listarPorCodBarra(String cod_barra) {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         ArrayList<Produto> produtos = new ArrayList<>();
 
         Cursor cursor = listarPorCodBarraCursor(cod_barra);
@@ -312,6 +314,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public ArrayList<Produto> listarPorDescricao(String descricao) {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         ArrayList<Produto> produtos = new ArrayList<>();
 
         Cursor cursor = listarPorDescricaoCursor(descricao);
@@ -342,6 +345,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public ArrayList<Produto> listarPorMarca(String marca) {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         ArrayList<Produto> produtos = new ArrayList<>();
 
         Cursor cursor = listarPorMarcaCursor(marca);
@@ -372,6 +376,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public ArrayList<Produto> listarPorFornecedor(String fornecedor) {
+        DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         ArrayList<Produto> produtos = new ArrayList<>();
 
         Cursor cursor = listarPorFornecedorCursor(fornecedor);

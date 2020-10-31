@@ -4,29 +4,33 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TelaLerCodigoDeBarraController {
     private ITelaLerCodigoDeBarra view;
-    private Produto produtoManager;
+    private Produto produto;
+    private ProdutoGrade produtoGrade;
     private Contagem contagemManager;
-    private ContagemProduto contagemProdutoManager;
+    private ContagemProduto model;
 
     public TelaLerCodigoDeBarraController(ITelaLerCodigoDeBarra view, ConexaoBanco conexaoBanco) {
         this.view = view;
-        produtoManager = new Produto(conexaoBanco);
+        produto = new Produto(conexaoBanco);
         contagemManager = new Contagem(conexaoBanco);
-        contagemProdutoManager = new ContagemProduto(conexaoBanco);
+        model = new ContagemProduto(conexaoBanco);
+        produtoGrade = new ProdutoGrade(conexaoBanco);
     }
 
     public void cadastrar(int quantidade) {
-        contagemProdutoManager.setId(new Date().getTime());
-        contagemProdutoManager.setQuant(quantidade);
+        model.setId(new Date().getTime());
+        model.setQuant(quantidade);
 
-        Boolean result = contagemProdutoManager.salvar();
+        Boolean result = model.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
@@ -36,10 +40,10 @@ public class TelaLerCodigoDeBarraController {
     }
 
     public void cadastrar() {
-        contagemProdutoManager.setId(new Date().getTime());
-        contagemProdutoManager.setQuant(1);
+        model.setId(new Date().getTime());
+        model.setQuant(1);
 
-        Boolean result = contagemProdutoManager.salvar();
+        Boolean result = model.salvar();
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
@@ -48,30 +52,33 @@ public class TelaLerCodigoDeBarraController {
         }
     }
 
-    public ArrayList<Produto> pesquisarProduto(String cod_barra) {
-        ArrayList<Produto> produtos = new ArrayList<>();
+    public List<ProdutoGrade> pesquisarProdutoGrade(String cod_barra) {
+        List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
-        if (!cod_barra.isEmpty()) {
-            produtos = produtoManager.listarPorCodBarra(cod_barra);
+        if (!cod_barra.trim().isEmpty()) {
+            produtoGrades = produtoGrade.listarPorCodBarra(cod_barra);
         }
 
-        return produtos;
+        return produtoGrades;
+    }
+
+    public Produto pesquisarProduto(String codigo) {
+        return produto.listarPorId(codigo);
     }
 
     public void carregaContagem(String loja, String data) {
-        contagemProdutoManager.setContagem(contagemManager.listarPorId(loja, data));
+        model.setContagem(contagemManager.listarPorId(loja, data));
     }
 
-    public void carregaProduto(String id) {
-        contagemProdutoManager.setProduto(produtoManager.listarPorId(id));
+    public void carregaProdutoGrade(ProdutoGrade produtoGrade) {
+        model.setProdutoGrade(produtoGrade);
     }
 
-    public void carregaProduto(Object o) {
-        if (o instanceof Produto)
-            contagemProdutoManager.setProduto((Produto) o);
+    public void carregaProduto(Produto produto) {
+        model.setProduto(produto);
     }
 
     public Contagem getContagem() {
-        return contagemProdutoManager.getContagem();
+        return model.getContagem();
     }
 }

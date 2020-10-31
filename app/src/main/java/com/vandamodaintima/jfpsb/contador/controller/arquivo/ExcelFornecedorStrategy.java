@@ -16,11 +16,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
-    @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
+    /*@Override
+    public String escreveArquivoExcel(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
         CellStyle cellStyle = workbook.createCellStyle();
 
         Font fonte = workbook.createFont();
@@ -57,7 +58,7 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
         sheet.setColumnWidth(3, 40 * 256);
 
         return "Fornecedores.xlsx";
-    }
+    }*/
 
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
@@ -132,12 +133,7 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
     }
 
     @Override
-    public String[] getHeaders() {
-        return Fornecedor.getHeaders();
-    }
+    public void criaPlanilhas(XSSFWorkbook workbook, List<Fornecedor>... objetos) {
 
-    @Override
-    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
-        return 0;
     }
 }

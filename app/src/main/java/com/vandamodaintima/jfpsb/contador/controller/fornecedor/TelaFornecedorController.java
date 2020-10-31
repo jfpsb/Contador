@@ -6,7 +6,6 @@ import android.net.Uri;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.ExportarParaExcel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelFornecedorStrategy;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
@@ -22,7 +21,7 @@ public class TelaFornecedorController {
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<Fornecedor>(view.getApplicationContext(), new ExcelStrategy<>(new ExcelFornecedorStrategy())).execute(uri, fornecedorModel.listar());
+        new ExportarParaExcel<>(view.getApplicationContext(), new ExcelFornecedorStrategy()).execute(uri, fornecedorModel.listar());
     }
 
     public void importarFornecedoresDeExcel(Uri uri, ContentResolver contentResolver) {

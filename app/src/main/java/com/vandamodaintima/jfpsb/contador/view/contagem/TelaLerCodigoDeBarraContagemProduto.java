@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
@@ -30,7 +31,6 @@ import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemFor
 public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITelaLerCodigoDeBarra {
     private TextureView textureView;
     private BarcodeHandlerThreadContagemProduto barcodeHandlerThread;
-    private AlertDialog.Builder escolhaProdutoDialog;
     private AlertDialog.Builder produtoNaoEncontradoDialog;
     private MediaPlayer erroMediaPlayer;
     private MediaPlayer codigoLidoMediaPlayer;
@@ -69,7 +69,6 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
         cameraHandler = new CameraHandler(getActivity(), textureView, PERMISSAO_CAMERA);
         iniciaBarcodeHandlerThread();
 
-        setEscolhaProdutoDialog();
         setProdutoNaoEncontradoDialog();
 
         return view;
@@ -79,8 +78,16 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TELA_SELECIONAR_PRODUTO) {
             if (resultCode == Activity.RESULT_OK) {
+                ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
                 Produto produto = (Produto) data.getSerializableExtra("produto");
-                controller.carregaProduto(produto);
+
+                if (produtoGrade != null) {
+                    controller.carregaProdutoGrade(produtoGrade);
+                    controller.carregaProduto(produtoGrade.getProduto());
+                } else if (produto != null) {
+                    controller.carregaProduto(produto);
+                }
+
                 int quantidade = data.getIntExtra("quantidade", 1);
                 controller.cadastrar(quantidade);
             }
@@ -102,37 +109,6 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
         erroMediaPlayer.start();
         this.codigo_lido = codigo;
         produtoNaoEncontradoDialog.show();
-    }
-
-    public void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo) {
-        erroMediaPlayer.start();
-        codigo_lido = codigo;
-        escolhaProdutoDialog.setSingleChoiceItems(adapter, 0, null);
-        escolhaProdutoDialog.show();
-    }
-
-    private void setEscolhaProdutoDialog() {
-        escolhaProdutoDialog = new AlertDialog.Builder(getContext());
-        escolhaProdutoDialog.setTitle("Selecione Abaixo");
-
-        escolhaProdutoDialog.setNegativeButton("O Produto Não Está Lista", (dialogInterface, i) -> {
-            Intent intent = new Intent(getContext(), TelaProdutoForContagemForResult.class);
-            intent.putExtra("codigo", codigo_lido);
-            startActivityForResult(intent, TELA_SELECIONAR_PRODUTO);
-        });
-
-        escolhaProdutoDialog.setPositiveButton("Confirmar", (dialogInterface, i) -> {
-            ListView lw = ((AlertDialog) dialogInterface).getListView();
-            Object model = lw.getAdapter().getItem(lw.getCheckedItemPosition());
-            controller.carregaProduto(model);
-            controller.cadastrar();
-            barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 1500);
-        });
-
-        escolhaProdutoDialog.setNeutralButton("Cancelar", (dialogInterface, i) -> {
-            mensagemAoUsuario("Nenhuma Contagem De Produto Foi Adicionada");
-            barcodeHandlerThread.getHandler().sendEmptyMessageDelayed(1, 1500);
-        });
     }
 
     private void setProdutoNaoEncontradoDialog() {

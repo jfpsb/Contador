@@ -14,100 +14,119 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProduto> {
-    @Override
-    public String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
-        CellStyle estiloCelula = workbook.createCellStyle();
-
-        Font fonte = workbook.createFont();
-        fonte.setFontHeightInPoints((short) 12);
-
-        estiloCelula.setFont(fonte);
-        estiloCelula.setAlignment(HorizontalAlignment.CENTER);
-        estiloCelula.setVerticalAlignment(VerticalAlignment.CENTER);
-
-        ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
-
-        Row[] dataRows = new Row[contagensProduto.size()];
-
-        CellStyle estiloCelulaMonetario = workbook.createCellStyle();
-        estiloCelulaMonetario.cloneStyleFrom(estiloCelula);
-        estiloCelulaMonetario.setDataFormat((short) 8);
-
-        //Configurando os tipos de célula
-        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
-            dataRows[i - linhaConteudo] = sheet.createRow(i);
-            for (int j = 0; j < ContagemProduto.getHeaders().length; j++) {
-                Cell cell = dataRows[i - linhaConteudo].createCell(j);
-                if (j == 2) {
-                    cell.setCellStyle(estiloCelulaMonetario);
-                } else {
-                    cell.setCellStyle(estiloCelula);
-                }
-            }
-        }
-
-        //Configurando coluna de valor total
-        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
-            Cell cell = dataRows[i - linhaConteudo].createCell(4);
-            cell.setCellStyle(estiloCelulaMonetario);
-            cell.setCellType(CellType.FORMULA);
-            String output = String.format("%s*%s", "C" + (i + 1), "D" + (i + 1));
-            cell.setCellFormula(output);
-        }
-
-        linhaConteudo++;
-
-        //Colocando valores em células
-        for (int i = linhaConteudo; i < dataRows.length + linhaConteudo; i++) {
-            ContagemProduto contagemProduto = contagensProduto.get(i - linhaConteudo);
-
-            dataRows[i - linhaConteudo].getCell(0).setCellValue(contagemProduto.getProduto().getCodBarra());
-            dataRows[i - linhaConteudo].getCell(1).setCellValue(contagemProduto.getProduto().getDescricao());
-            dataRows[i - linhaConteudo].getCell(2).setCellValue(contagemProduto.getProduto().getPreco());
-            dataRows[i - linhaConteudo].getCell(3).setCellValue(contagemProduto.getQuant());
-        }
-
-        sheet.setColumnWidth(0, 25 * 256);
-        sheet.setColumnWidth(1, 70 * 256);
-        sheet.setColumnWidth(2, 20 * 256);
-        sheet.setColumnWidth(3, 20 * 256);
-        sheet.setColumnWidth(4, 30 * 256);
-
-        return "Contagem.xlsx";
-    }
-
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
         return null;
     }
 
+    @SafeVarargs
     @Override
-    public String[] getHeaders() {
-        return ContagemProduto.getHeaders();
-    }
+    public final void criaPlanilhas(XSSFWorkbook workbook, List<ContagemProduto>... objetos) {
+        CellStyle estiloCabecalho = workbook.createCellStyle();
+        CellStyle estiloItens = workbook.createCellStyle();
+        XSSFSheet sheet0 = workbook.createSheet("Contagem Por Produto");
+        XSSFSheet sheet1 = workbook.createSheet("Contagem Por Grade");
+        List<ContagemProduto> listagemPorProduto = objetos[0];
+        List<ContagemProduto> listagemPorGrade = objetos[1];
+        int linha = 1;
 
-    @Override
-    public int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        int linha = 0;
-        ArrayList<ContagemProduto> contagensProduto = (ArrayList<ContagemProduto>) lista;
+        Font fonteCabecalho = workbook.createFont();
+        fonteCabecalho.setFontName("Arial");
+        fonteCabecalho.setFontHeightInPoints((short) 16);
+        fonteCabecalho.setBold(true);
+        estiloCabecalho.setFont(fonteCabecalho);
+        estiloCabecalho.setAlignment(HorizontalAlignment.CENTER);
+        estiloCabecalho.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        Font fonte = workbook.createFont();
-        fonte.setFontName("Arial");
-        fonte.setFontHeightInPoints((short) 16);
-        fonte.setBold(true);
+        Font fonteItens = workbook.createFont();
+        fonteItens.setFontName("Arial");
+        fonteItens.setFontHeightInPoints((short) 12);
+        estiloItens.setFont(fonteItens);
+        estiloItens.setAlignment(HorizontalAlignment.CENTER);
+        estiloItens.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        cellStyle.setFont(fonte);
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        Row cabecalhoSheet0 = sheet0.createRow(linha++);
+        Cell CodProdutoCabecalhoSheet0 = cabecalhoSheet0.createCell(1);
+        Cell DescricaoCabecalhoSheet0 = cabecalhoSheet0.createCell(2);
+        Cell QuantidadeCabecalhoSheet0 = cabecalhoSheet0.createCell(3);
 
-        Row cabecalho = sheet.createRow(linha++);
-        Cell cellLoja = cabecalho.createCell(0);
-        cellLoja.setCellStyle(cellStyle);
-        cellLoja.setCellValue("Loja: " + contagensProduto.get(0).getContagem().getLoja().getNome());
+        CodProdutoCabecalhoSheet0.setCellStyle(estiloCabecalho);
+        DescricaoCabecalhoSheet0.setCellStyle(estiloCabecalho);
+        QuantidadeCabecalhoSheet0.setCellStyle(estiloCabecalho);
 
-        return linha;
+        CodProdutoCabecalhoSheet0.setCellValue("Código de Produto");
+        DescricaoCabecalhoSheet0.setCellValue("Descrição");
+        QuantidadeCabecalhoSheet0.setCellValue("Quantidade");
+
+        for (int i = linha; i < listagemPorProduto.size() + linha; i++) {
+            Row row = sheet0.createRow(i);
+            Cell CodProdutoCellSheet0 = row.createCell(1);
+            Cell DescricaoCellSheet0 = row.createCell(2);
+            Cell QuantidadeCellSheet0 = row.createCell(3);
+
+            CodProdutoCellSheet0.setCellStyle(estiloItens);
+            DescricaoCellSheet0.setCellStyle(estiloItens);
+            QuantidadeCellSheet0.setCellStyle(estiloItens);
+
+            CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
+            DescricaoCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getDescricao());
+            QuantidadeCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getQuant());
+        }
+
+        sheet0.setColumnWidth(0, 15 * 256);
+        sheet0.setColumnWidth(1, 15 * 256);
+        sheet0.setColumnWidth(2, 15 * 256);
+
+        linha = 1;
+
+        Row cabecalhoSheet1 = sheet1.createRow(linha++);
+        Cell CodProdutoCabecalhoSheet1 = cabecalhoSheet1.createCell(1);
+        Cell DescricaoCabecalhoSheet1 = cabecalhoSheet1.createCell(2);
+        Cell DescricaoGradeCabecalhoSheet1 = cabecalhoSheet1.createCell(3);
+        Cell CodBarraCabecalhoSheet1 = cabecalhoSheet1.createCell(4);
+        Cell QuantidadeCabecalhoSheet1 = cabecalhoSheet1.createCell(5);
+
+        CodProdutoCabecalhoSheet1.setCellStyle(estiloCabecalho);
+        DescricaoCabecalhoSheet1.setCellStyle(estiloCabecalho);
+        DescricaoGradeCabecalhoSheet1.setCellStyle(estiloCabecalho);
+        CodBarraCabecalhoSheet1.setCellStyle(estiloCabecalho);
+        QuantidadeCabecalhoSheet1.setCellStyle(estiloCabecalho);
+
+        CodProdutoCabecalhoSheet1.setCellValue("Código de Produto");
+        DescricaoCabecalhoSheet1.setCellValue("Descrição");
+        DescricaoGradeCabecalhoSheet1.setCellValue("Descrição da Grade");
+        CodBarraCabecalhoSheet1.setCellValue("Cód. de Barras");
+        QuantidadeCabecalhoSheet1.setCellValue("Quantidade");
+
+        for (int i = linha; i < listagemPorGrade.size() + linha; i++) {
+            Row row = sheet1.createRow(i);
+
+            Cell CodProdutoCellSheet1 = row.createCell(1);
+            Cell DescricaoCellSheet1 = row.createCell(2);
+            Cell DescricaoGradeCellSheet1 = row.createCell(3);
+            Cell CodBarraCellSheet1 = row.createCell(4);
+            Cell QuantidadeCellSheet1 = row.createCell(5);
+
+            CodProdutoCellSheet1.setCellStyle(estiloItens);
+            DescricaoCellSheet1.setCellStyle(estiloItens);
+            DescricaoGradeCellSheet1.setCellStyle(estiloItens);
+            CodBarraCellSheet1.setCellStyle(estiloItens);
+            QuantidadeCellSheet1.setCellStyle(estiloItens);
+
+            CodProdutoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
+            DescricaoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getDescricao());
+            DescricaoGradeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getGradesToString());
+            CodBarraCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getCodBarra());
+            QuantidadeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getQuant());
+        }
+
+        sheet1.setColumnWidth(0, 15 * 256);
+        sheet1.setColumnWidth(1, 15 * 256);
+        sheet1.setColumnWidth(2, 15 * 256);
+        sheet1.setColumnWidth(3, 15 * 256);
+        sheet1.setColumnWidth(4, 15 * 256);
     }
 }

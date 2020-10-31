@@ -5,9 +5,9 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.List;
+
 public interface IExcelStrategy<T> {
-    String escreveDados(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo);
     Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco);
-    String[] getHeaders();
-    int escreveAntesCabecalho(XSSFWorkbook workbook, XSSFSheet sheet, Object lista);
+    void criaPlanilhas(XSSFWorkbook workbook, List<T>... objetos);
 }

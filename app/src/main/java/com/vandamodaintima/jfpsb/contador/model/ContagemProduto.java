@@ -2,7 +2,6 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import android.database.Cursor;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
@@ -24,7 +23,8 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     private long id;
     @SerializedName(value = "Contagem")
     private Contagem contagem;
-    @SerializedName(value = "Produto")
+    @SerializedName(value = "ProdutoGrade")
+    private ProdutoGrade produtoGrade;
     private Produto produto;
     @SerializedName(value = "Quant")
     private int quant;
@@ -45,12 +45,12 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
         this.contagem = contagem;
     }
 
-    public Produto getProduto() {
-        return produto;
+    public ProdutoGrade getProdutoGrade() {
+        return produtoGrade;
     }
 
-    public void setProduto(Produto produto) {
-        this.produto = produto;
+    public void setProdutoGrade(ProdutoGrade produtoGrade) {
+        this.produtoGrade = produtoGrade;
     }
 
     public int getQuant() {
@@ -61,8 +61,16 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
         this.quant = quant;
     }
 
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
     public static String[] getColunas() {
-        return new String[]{"id as _id", "produto", "contagem_data", "contagem_loja", "quant"};
+        return new String[]{"id as _id", "produto", "produto_grade", "contagem_data", "contagem_loja", "quant"};
     }
 
     public static String[] getHeaders() {
@@ -115,7 +123,7 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
         if (contagemProduto != null) {
             id = contagemProduto.getId();
             contagem = contagemProduto.getContagem();
-            produto = contagemProduto.getProduto();
+            produtoGrade = contagemProduto.getProdutoGrade();
             quant = contagemProduto.getQuant();
         }
     }

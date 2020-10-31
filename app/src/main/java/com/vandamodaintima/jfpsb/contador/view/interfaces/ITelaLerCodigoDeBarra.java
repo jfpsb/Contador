@@ -10,8 +10,6 @@ public interface ITelaLerCodigoDeBarra {
 
     void abrirProdutoNaoEncontradoDialog(String codigo);
 
-    void abrirTelaEscolhaProdutoDialog(ListAdapter adapter, String codigo);
-
     void playBarcodeBeep();
 
     Context getContext();

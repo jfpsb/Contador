@@ -10,8 +10,6 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelFornecedorStrategy;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class ImportarFornecedorDeExcel extends AsyncTask<Object, Integer, Boolea
 
     @Override
     protected Boolean doInBackground(Object... objects) {
-        Uri uri = (Uri) objects[0];
+        /*Uri uri = (Uri) objects[0];
         ContentResolver contentResolver = (ContentResolver) objects[1];
 
         InputStream inputStream;
@@ -41,10 +39,12 @@ public class ImportarFornecedorDeExcel extends AsyncTask<Object, Integer, Boolea
         }
 
         try {
-            return new Excel(new ExcelStrategy(new ExcelFornecedorStrategy()), inputStream).importar(conexaoBanco);
+            return new Excel(inputStream, new ExcelFornecedorStrategy()).importar(conexaoBanco);
         } catch (IOException e) {
             Log.e("Contador", e.getMessage());
-        }
+        }*/
+
+        //TODO: arrumar
 
         return false;
     }

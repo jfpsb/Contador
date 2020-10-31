@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +19,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.MultiploCodigoBarraLidoController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
@@ -60,15 +63,16 @@ public class MultiploCodigoBarraLido extends ActivityBaseView {
             ItemCodigoBarraLido item = new ItemCodigoBarraLido();
 
             item.setCodigo(codigo);
-            ArrayList<Produto> produtos = controller.pesquisaProduto(codigo);
+            ArrayList<ProdutoGrade> produtos = controller.pesquisaProduto(codigo);
 
-            item.setProdutos(produtos);
+            //TODO: arrumar
+            //item.setProdutos(produtos);
 
             if (produtos.size() == 0) {
                 item.setStatus(ItemCodigoBarraLido.Status.NAO_ENCONTRADO);
             } else if (produtos.size() == 1) {
                 item.setStatus(ItemCodigoBarraLido.Status.ENCONTRADO);
-                controller.carregaProduto(produtos.get(0));
+                controller.carregaProdutoGrade(produtos.get(0));
                 controller.cadastrar();
             } else {
                 item.setStatus(ItemCodigoBarraLido.Status.VARIOS_ENCONTRADOS);
@@ -113,7 +117,7 @@ public class MultiploCodigoBarraLido extends ActivityBaseView {
             if (resultCode == Activity.RESULT_OK) {
                 Produto produto = (Produto) data.getSerializableExtra("produto");
                 int quantidade = data.getIntExtra("quantidade", 0);
-                controller.carregaProduto(produto);
+                controller.carregaProdutoGrade(produto);
 
                 if (quantidade == 0) {
                     if (controller.cadastrar()) {

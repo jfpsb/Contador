@@ -6,17 +6,17 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.Excel;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelProdutoStrategy;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
+import com.vandamodaintima.jfpsb.contador.controller.arquivo.IExcelStrategy;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class ExportarParaExcel <T> extends AsyncTask<Object, Integer, Boolean> {
     private Toast toast;
-    private ExcelStrategy<T> excelStrategy;
+    private IExcelStrategy<T> excelStrategy;
     private WeakReference<Context> context;
 
-    public ExportarParaExcel(Context context, ExcelStrategy<T> excelStrategy) {
+    public ExportarParaExcel(Context context, IExcelStrategy<T> excelStrategy) {
         this.context = new WeakReference<>(context);
         this.excelStrategy = excelStrategy;
         toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
@@ -25,8 +25,8 @@ public class ExportarParaExcel <T> extends AsyncTask<Object, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(Object... objects) {
         Uri uri = (Uri) objects[0];
-        Object lista = objects[1];
-        return new Excel(context.get().getContentResolver(), excelStrategy).exportar(uri, lista);
+        List<T> objetos = (List<T>) objects[1];
+        return new Excel(context.get().getContentResolver(), excelStrategy).exportar(uri, objetos);
     }
 
     @Override

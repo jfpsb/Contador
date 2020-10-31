@@ -5,7 +5,6 @@ import android.net.Uri;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.ExportarParaExcel;
 import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelContagemProdutoStrategy;
-import com.vandamodaintima.jfpsb.contador.controller.arquivo.ExcelStrategy;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
@@ -83,6 +82,6 @@ public class AlterarDeletarContagemController {
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<Contagem>(view.getContext(), new ExcelStrategy<>(new ExcelContagemProdutoStrategy())).execute(uri, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
+        new ExportarParaExcel<>(view.getContext(), new ExcelContagemProdutoStrategy()).execute(uri, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
     }
 }

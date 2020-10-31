@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
@@ -28,11 +27,13 @@ import com.vandamodaintima.jfpsb.contador.controller.contagem.ContagemProdutoDia
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
     private Handler handler;
@@ -80,14 +81,15 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                                 message.obj = barcodeSparseArray;
                                 sendMessage(message);
                             } else {
-                                Log.i(ActivityBaseView.LOG, "Vários Códigos de Barras Encontrados. Quant.: " + barcodeSparseArray.size());
+                                //TODO: Mostrar códigos lidos e se eles pertencem a algum produto. Ter opção de abrir lista de produtos caso o código lido pertença a mais de um produto
+                                /*Log.i(ActivityBaseView.LOG, "Vários Códigos de Barras Encontrados. Quant.: " + barcodeSparseArray.size());
                                 Intent intent = new Intent(view.getContext(), MultiploCodigoBarraLido.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSparseParcelableArray("barcodes", barcodeSparseArray);
                                 bundle.putString("loja", contagemModel.getLoja().getCnpj());
                                 bundle.putString("data", contagemModel.getDataParaSQLite());
                                 intent.putExtras(bundle);
-                                view.getContext().startActivity(intent);
+                                view.getContext().startActivity(intent);*/
                             }
                         } else {
                             sendEmptyMessage(1);
@@ -102,25 +104,30 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
 
                         Log.i("Contador", "Código Lido: " + barcode.rawValue);
 
-                        ArrayList<Produto> produtos = controller.pesquisarProduto(codigo);
+                        List<ProdutoGrade> produtoGrades = controller.pesquisarProdutoGrade(codigo);
+                        Produto produto = controller.pesquisarProduto(codigo);
 
-                        if (produtos.size() == 0) {
-                            view.abrirProdutoNaoEncontradoDialog(codigo);
-                        } else if (produtos.size() == 1) {
-                            controller.carregaProduto(produtos.get(0));
+                        if (produtoGrades.size() == 0) {
+                            if (produto != null) {
+                                controller.carregaProduto(produto);
+                                sendEmptyMessageDelayed(1, 1300);
+                                break;
+                            } else {
+                                view.abrirProdutoNaoEncontradoDialog(codigo);
+                            }
+                        } else if (produtoGrades.size() == 1) {
+                            controller.carregaProdutoGrade(produtoGrades.get(0));
+                            controller.carregaProduto(produtoGrades.get(0).getProduto());
 
                             if (isCampoQuantChecked) {
                                 showAlertaQuantidadeProduto();
                             } else {
                                 controller.cadastrar();
                                 view.playBarcodeBeep();
-                                sendEmptyMessageDelayed(1, 1500);
+                                sendEmptyMessageDelayed(1, 1300);
                             }
                         } else {
-                            contagemProdutoDialogArrayAdapter.clear();
-                            contagemProdutoDialogArrayAdapter.addAll(produtos);
-                            contagemProdutoDialogArrayAdapter.notifyDataSetChanged();
-                            view.abrirTelaEscolhaProdutoDialog(contagemProdutoDialogArrayAdapter, codigo);
+                            //TODO: tela mostrando as grades encontradas. Botão para cadastrar nova grade caso não exista lista
                         }
 
                         break;

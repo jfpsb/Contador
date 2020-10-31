@@ -16,12 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
-    private DAOGrade daoGrade;
-
     public DAOProdutoGrade(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
         TABELA = "produto_grade";
-        daoGrade = new DAOGrade(conexaoBanco);
     }
 
     @Override
@@ -55,6 +52,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
     }
 
     public List<ProdutoGrade> listarPorProduto(Produto produto) {
+        DAOGrade daoGrade = new DAOGrade(conexaoBanco);
         ArrayList<ProdutoGrade> produtoGrades = new ArrayList<>();
 
         Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "produto LIKE ?", new String[]{produto.getCodBarra()}, null, null, null, null);
@@ -66,6 +64,32 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
                 pg.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 pg.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
                 pg.setProduto(produto);
+                pg.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+                pg.setGrades(daoGrade.listarPorProdutoGrade(pg));
+
+                produtoGrades.add(pg);
+            }
+        }
+
+        cursor.close();
+
+        return produtoGrades;
+    }
+
+    public List<ProdutoGrade> listarPorCodBarra(String codBarra) {
+        DAOGrade daoGrade = new DAOGrade(conexaoBanco);
+        DAOProduto daoProduto = new DAOProduto(conexaoBanco);
+        ArrayList<ProdutoGrade> produtoGrades = new ArrayList<>();
+
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "cod_barra LIKE ?", new String[]{codBarra}, null, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                ProdutoGrade pg = new ProdutoGrade();
+
+                pg.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                pg.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
+                pg.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
                 pg.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
                 pg.setGrades(daoGrade.listarPorProdutoGrade(pg));
 
