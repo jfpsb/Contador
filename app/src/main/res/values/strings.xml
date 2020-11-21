@@ -92,4 +92,7 @@
     <string name="numero_de_grades">Nº de Grades:</string>
     <string name="inserir_tipo_grade">Inserir Tipo de Grade</string>
     <string name="cadastrar_nova_grade">Cadastrar Grade</string>
+    <string name="possui_grade">Possui Grades?</string>
+    <string name="grades_de_produto_encontradas">Grades Encontradas</string>
+    <string name="nao_encontrei_a_grade">Nâo Encontrei a Grade</string>
 </resources>

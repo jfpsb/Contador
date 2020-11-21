@@ -3,9 +3,7 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -16,6 +14,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.lifecycle.Lifecycle;
 
@@ -23,38 +22,30 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.ContagemProdutoDialogArrayAdapter;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
-import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
     private Handler handler;
 
-    private WeakReference<TextureView> textureView;
-    private BarcodeDetector barcodeDetector;
-    private TelaLerCodigoDeBarraController controller;
-    private ITelaLerCodigoDeBarra view;
-    private Contagem contagemModel;
-    private ContagemProdutoDialogArrayAdapter contagemProdutoDialogArrayAdapter;
+    private final WeakReference<TextureView> textureView;
+    private final BarcodeDetector barcodeDetector;
+    private final TelaLerCodigoDeBarraController controller;
+    private final TelaLerCodigoDeBarraContagemProduto view;
     private boolean isCampoQuantChecked = false;
 
-    public BarcodeHandlerThreadContagemProduto(ITelaLerCodigoDeBarra view, TextureView textureView, TelaLerCodigoDeBarraController controller) {
+    public BarcodeHandlerThreadContagemProduto(TelaLerCodigoDeBarraContagemProduto view, TextureView textureView, TelaLerCodigoDeBarraController controller) {
         super("BarcodeHandlerThreadContagemProduto");
 
         barcodeDetector = new BarcodeDetector.Builder(view.getContext()).build();
         this.view = view;
         this.textureView = new WeakReference<>(textureView);
         this.controller = controller;
-        contagemModel = controller.getContagem();
-        contagemProdutoDialogArrayAdapter = new ContagemProdutoDialogArrayAdapter(view.getContext(), R.layout.item_contagem_produto_dialog, new ArrayList<>());
     }
 
     @SuppressLint("HandlerLeak")
@@ -73,7 +64,7 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                             SparseArray<Barcode> barcodeSparseArray = barcodeDetector.detect(frame);
 
                             if (barcodeSparseArray.size() == 0) {
-                                sendEmptyMessageDelayed(1, 250);
+                                sendEmptyMessageDelayed(1, 200);
                             } else if (barcodeSparseArray.size() == 1) {
                                 Log.i(ActivityBaseView.LOG, "Um Código de Barras Encontrado");
                                 Message message = handler.obtainMessage();
@@ -81,15 +72,9 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                                 message.obj = barcodeSparseArray;
                                 sendMessage(message);
                             } else {
-                                //TODO: Mostrar códigos lidos e se eles pertencem a algum produto. Ter opção de abrir lista de produtos caso o código lido pertença a mais de um produto
-                                /*Log.i(ActivityBaseView.LOG, "Vários Códigos de Barras Encontrados. Quant.: " + barcodeSparseArray.size());
-                                Intent intent = new Intent(view.getContext(), MultiploCodigoBarraLido.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSparseParcelableArray("barcodes", barcodeSparseArray);
-                                bundle.putString("loja", contagemModel.getLoja().getCnpj());
-                                bundle.putString("data", contagemModel.getDataParaSQLite());
-                                intent.putExtras(bundle);
-                                view.getContext().startActivity(intent);*/
+                                view.mensagemAoUsuario("Mais De Um Código Lido. Leia Somente Um Código De Cada Vez");
+                                Log.i(ActivityBaseView.LOG, "Vários Códigos de Barras Encontrados. Quant.: " + barcodeSparseArray.size());
+                                sendEmptyMessageDelayed(1, 200);
                             }
                         } else {
                             sendEmptyMessage(1);
@@ -110,10 +95,18 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                         if (produtoGrades.size() == 0) {
                             if (produto != null) {
                                 controller.carregaProduto(produto);
-                                sendEmptyMessageDelayed(1, 1300);
+                                if (isCampoQuantChecked) {
+                                    showAlertaQuantidadeProduto();
+                                } else {
+                                    controller.cadastrar();
+                                    view.playBarcodeBeep();
+                                    sendEmptyMessageDelayed(1, 750);
+                                }
                                 break;
                             } else {
-                                view.abrirProdutoNaoEncontradoDialog(codigo);
+                                //TODO: Criar tela de pesquisa/cadastro de produto que mostre as grades do produto ao selecionar na lista. Lista deve ter opção de adicionar grade se não existir no produto e opção "sem grade"
+                                Toast.makeText(view.getContext(), "Produto Não Eencontrado. Cadastre Na Tela de Produto e Retorne", Toast.LENGTH_SHORT).show();
+                                //view.abrirProdutoNaoEncontradoDialog(codigo);
                             }
                         } else if (produtoGrades.size() == 1) {
                             controller.carregaProdutoGrade(produtoGrades.get(0));
@@ -124,10 +117,11 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                             } else {
                                 controller.cadastrar();
                                 view.playBarcodeBeep();
-                                sendEmptyMessageDelayed(1, 1300);
+                                sendEmptyMessageDelayed(1, 750);
                             }
                         } else {
-                            //TODO: tela mostrando as grades encontradas. Botão para cadastrar nova grade caso não exista lista
+                            view.mensagemAoUsuario("Mais De Uma Grade Foi Encontrada. Selecione Na Lista");
+                            view.abrirVisualizarProdutoGradeContagem(codigo);
                         }
 
                         break;

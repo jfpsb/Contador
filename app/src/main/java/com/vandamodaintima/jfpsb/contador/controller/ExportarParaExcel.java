@@ -11,22 +11,23 @@ import com.vandamodaintima.jfpsb.contador.controller.arquivo.IExcelStrategy;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class ExportarParaExcel <T> extends AsyncTask<Object, Integer, Boolean> {
+public class ExportarParaExcel<T> extends AsyncTask<Object, Integer, Boolean> {
     private Toast toast;
     private IExcelStrategy<T> excelStrategy;
     private WeakReference<Context> context;
+    private List<T>[] listas;
 
-    public ExportarParaExcel(Context context, IExcelStrategy<T> excelStrategy) {
+    public ExportarParaExcel(Context context, IExcelStrategy<T> excelStrategy, List<T>... listas) {
         this.context = new WeakReference<>(context);
         this.excelStrategy = excelStrategy;
+        this.listas = listas;
         toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
     }
 
     @Override
     protected Boolean doInBackground(Object... objects) {
         Uri uri = (Uri) objects[0];
-        List<T> objetos = (List<T>) objects[1];
-        return new Excel(context.get().getContentResolver(), excelStrategy).exportar(uri, objetos);
+        return new Excel<>(context.get().getContentResolver(), excelStrategy).exportar(uri, listas);
     }
 
     @Override

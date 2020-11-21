@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dip">
+
+    <TextView
+        android:id="@+id/txtGradeEncontrada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="3sp"
+        android:background="@color/cardview_dark_background"
+        android:text="@string/grades_de_produto_encontradas"
+        android:textAlignment="center"
+        android:textColor="#fff"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/listViewProdutoGrade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/txtGradeEncontrada"
+        android:layout_centerHorizontal="true">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/btnGradeNaoEncontrada"
+        style="@style/BtnGreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/listViewProdutoGrade"
+        android:text="@string/nao_encontrei_a_grade"
+        android:textSize="18sp"
+        android:textStyle="bold">
+
+    </Button>
+
+</RelativeLayout>
+

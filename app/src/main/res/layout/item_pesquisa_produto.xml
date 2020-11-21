@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/labelDescricao"
+        android:id="@+id/txtDescricao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -38,7 +38,7 @@
                 android:src="@drawable/barcode" />
 
             <TextView
-                android:id="@+id/labelCodBarra"
+                android:id="@+id/txtCodBarra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
@@ -62,7 +62,7 @@
                 android:src="@drawable/money_sign" />
 
             <TextView
-                android:id="@+id/labelPreco"
+                android:id="@+id/txtPreco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
@@ -72,6 +72,36 @@
                 android:textColor="#000"
                 android:textSize="18sp" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:minHeight="30sp"
+            android:padding="5sp"
+            android:text="@string/possui_grade"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtPossuiGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:minHeight="30sp"
+            android:padding="5sp"
+            android:text="@string/placeholder"
+            android:textColor="#000"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

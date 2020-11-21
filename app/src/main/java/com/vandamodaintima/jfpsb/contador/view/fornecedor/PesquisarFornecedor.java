@@ -36,12 +36,7 @@ public class PesquisarFornecedor extends TelaPesquisa {
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new PesquisarFornecedorController(this, conexaoBanco);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                cliqueEmItemLista(adapterView, i);
-            }
-        });
+        listView.setOnItemClickListener((adapterView, view, i, l) -> cliqueEmItemLista(adapterView, i));
 
         txtPesquisaFornecedor.addTextChangedListener(new TextWatcher() {
             @Override

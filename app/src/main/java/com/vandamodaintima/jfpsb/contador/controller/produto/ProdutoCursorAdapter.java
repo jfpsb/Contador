@@ -2,7 +2,9 @@ package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.content.Context;
 import android.database.Cursor;
+
 import androidx.cursoradapter.widget.CursorAdapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +24,24 @@ public class ProdutoCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView labelCodBarra = view.findViewById(R.id.labelCodBarra);
-        TextView labelDescricao = view.findViewById(R.id.labelDescricao);
-        TextView labelPreco = view.findViewById(R.id.labelPreco);
+        TextView txtCodBarra = view.findViewById(R.id.txtCodBarra);
+        TextView txtDescricao = view.findViewById(R.id.txtDescricao);
+        TextView txtPreco = view.findViewById(R.id.txtPreco);
+        TextView txtPossuiGrades = view.findViewById(R.id.txtPossuiGrade);
 
         String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
+        String cod_barra_grade = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_grade"));
 
-        labelCodBarra.setText(id);
-        labelDescricao.setText(descricao);
-        labelPreco.setText(String.valueOf(preco));
+        if (cod_barra_grade == null) {
+            txtPossuiGrades.setText("NÃO");
+        } else {
+            txtPossuiGrades.setText("SIM");
+        }
+
+        txtCodBarra.setText(id);
+        txtDescricao.setText(descricao);
+        txtPreco.setText(String.valueOf(preco));
     }
 }

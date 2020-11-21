@@ -106,11 +106,6 @@
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.contagem.MultiploCodigoBarraLido"
-            android:label="Múltiplos Códigos de Barras Lidos"
-            android:theme="@style/TabAppTheme.NoActionBar" />
-
-        <activity
             android:name=".view.contagem.ListagemProdutoMultiploCodigoBarraLido"
             android:label="Produtos Encontrado(s)"
             android:theme="@style/TabAppTheme.NoActionBar" />

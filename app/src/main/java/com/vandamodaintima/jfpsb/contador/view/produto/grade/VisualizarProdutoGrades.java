@@ -30,7 +30,7 @@ public class VisualizarProdutoGrades extends TelaPesquisa {
 
         listView = telaPesquisaView.findViewById(R.id.listViewProdutoGrade);
 
-        arrayAdapter = new ProdutoGradeArrayAdapter(getContext(), new ArrayList<>());
+        arrayAdapter = new ProdutoGradeArrayAdapter(getContext(), new ArrayList<>(), false);
         listView.setAdapter(arrayAdapter);
 
         return super.onCreateView(inflater, container, savedInstanceState);

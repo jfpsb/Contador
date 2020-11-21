@@ -10,8 +10,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,11 +22,11 @@ import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBar
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
+import com.vandamodaintima.jfpsb.contador.view.grade.ListarProdutoGradePorCodigoForResult;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
-public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITelaLerCodigoDeBarra {
+public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
     private TextureView textureView;
     private BarcodeHandlerThreadContagemProduto barcodeHandlerThread;
     private AlertDialog.Builder produtoNaoEncontradoDialog;
@@ -42,6 +40,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
 
     private static final int PERMISSAO_CAMERA = 1;
     private static final int TELA_SELECIONAR_PRODUTO = 2;
+    private static final int VISUALIZAR_PRODUTO_GRADE_CONTAGEM = 3;
 
     @Nullable
     @Override
@@ -67,8 +66,8 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
         });
 
         cameraHandler = new CameraHandler(getActivity(), textureView, PERMISSAO_CAMERA);
-        iniciaBarcodeHandlerThread();
 
+        iniciaBarcodeHandlerThread();
         setProdutoNaoEncontradoDialog();
 
         return view;
@@ -76,35 +75,42 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TELA_SELECIONAR_PRODUTO) {
-            if (resultCode == Activity.RESULT_OK) {
-                ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
-                Produto produto = (Produto) data.getSerializableExtra("produto");
+        switch (requestCode) {
+            case TELA_SELECIONAR_PRODUTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
+                    Produto produto = (Produto) data.getSerializableExtra("produto");
 
-                if (produtoGrade != null) {
+                    if (produtoGrade != null) {
+                        controller.carregaProdutoGrade(produtoGrade);
+                        controller.carregaProduto(produtoGrade.getProduto());
+                    } else if (produto != null) {
+                        controller.carregaProduto(produto);
+                    }
+
+                    int quantidade = data.getIntExtra("quantidade", 1);
+                    controller.cadastrar(quantidade);
+                }
+                break;
+            case VISUALIZAR_PRODUTO_GRADE_CONTAGEM:
+                if (resultCode == Activity.RESULT_OK) {
+                    ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
                     controller.carregaProdutoGrade(produtoGrade);
                     controller.carregaProduto(produtoGrade.getProduto());
-                } else if (produto != null) {
-                    controller.carregaProduto(produto);
+                    controller.cadastrar();
                 }
-
-                int quantidade = data.getIntExtra("quantidade", 1);
-                controller.cadastrar(quantidade);
-            }
+                break;
         }
     }
 
-    @Override
     public void playBarcodeBeep() {
         codigoLidoMediaPlayer.start();
     }
 
-    @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(getContext(), mensagem, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public void abrirProdutoNaoEncontradoDialog(String codigo) {
         erroMediaPlayer.start();
         this.codigo_lido = codigo;
@@ -139,6 +145,12 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment implements ITe
                 cameraHandler.openCamera();
             }
         }
+    }
+
+    public void abrirVisualizarProdutoGradeContagem(String codigo) {
+        Intent intent = new Intent(getContext(), ListarProdutoGradePorCodigoForResult.class);
+        intent.putExtra("codigo", codigo);
+        startActivityForResult(intent, VISUALIZAR_PRODUTO_GRADE_CONTAGEM);
     }
 
     @Override

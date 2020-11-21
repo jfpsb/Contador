@@ -37,15 +37,12 @@ public class ListagemProdutoMultiploCodigoBarraLido extends ActivityBaseView {
         //Senão o usuário poderá escolher qual produto na lista
         if (items.size() > 1) {
             Toast.makeText(getApplicationContext(), "Se Não Encontrar o Produto, Retorne Para a Tela Anterior", Toast.LENGTH_LONG).show();
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Produto produto = items.get(position);
-                    Intent intent = new Intent();
-                    intent.putExtra("produto", produto);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+                Produto produto = items.get(position);
+                Intent intent = new Intent();
+                intent.putExtra("produto", produto);
+                setResult(RESULT_OK, intent);
+                finish();
             });
         }
     }

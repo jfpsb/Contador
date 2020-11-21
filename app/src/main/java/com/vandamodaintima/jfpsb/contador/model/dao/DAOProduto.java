@@ -210,7 +210,8 @@ public class DAOProduto extends ADAO<Produto> {
 
         ArrayList<Produto> produtos = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), null, null, null, null, "descricao", null);
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto GROUP BY p.cod_barra ORDER BY descricao";
+        Cursor cursor = conexaoBanco.conexao().rawQuery(sql, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -237,7 +238,8 @@ public class DAOProduto extends ADAO<Produto> {
         DAOProdutoGrade daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         Produto p = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Produto.getColunas(), "cod_barra = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto WHERE p.cod_barra LIKE ? GROUP BY p.cod_barra ORDER BY descricao";
+        Cursor cursor = conexaoBanco.conexao().rawQuery(sql, new String[]{String.valueOf(ids[0])});
 
         if (cursor.getCount() > 0) {
             p = new Produto();
@@ -275,7 +277,8 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorCodBarraCursor(String cod_barra) {
-        String sql = "SELECT p.cod_barra as _id, p.cod_barra as cod_barra, fornecedor, marca, descricao, p.preco, ncm FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto WHERE p.cod_barra LIKE ? OR pg.cod_barra LIKE ? GROUP BY p.cod_barra ORDER BY cod_barra;";
+        // Se cod_barra_grade voltar nulo significa que o produto não tem grade, senão tem grade
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto WHERE p.cod_barra LIKE ? OR pg.cod_barra LIKE ? GROUP BY p.cod_barra ORDER BY p.cod_barra;";
         String[] selection = new String[]{"%" + cod_barra + "%", "%" + cod_barra + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -308,7 +311,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorDescricaoCursor(String descricao) {
-        String sql = "SELECT cod_barra as _id, * FROM produto WHERE descricao LIKE ? ORDER BY descricao";
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto WHERE descricao LIKE ? GROUP BY p.cod_barra ORDER BY p.descricao";
         String[] selection = new String[]{"%" + descricao + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -339,7 +342,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorMarcaCursor(String marca) {
-        String sql = "SELECT cod_barra as _id, * FROM produto AS p INNER JOIN marca AS m ON p.marca = m.nome WHERE marca = nome AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto INNER JOIN marca AS m ON p.marca = m.nome WHERE nome LIKE ? GROUP BY p.cod_barra ORDER BY p.descricao";
         String[] selection = new String[]{"%" + marca + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -370,7 +373,7 @@ public class DAOProduto extends ADAO<Produto> {
     }
 
     public Cursor listarPorFornecedorCursor(String fornecedor) {
-        String sql = "SELECT cod_barra as _id, * FROM produto AS p INNER JOIN fornecedor AS f ON produto.fornecedor = fornecedor.cnpj WHERE p.fornecedor = f.cnpj AND nome LIKE ? ORDER BY descricao";
+        String sql = "SELECT p.*, p.cod_barra AS _id, pg.cod_barra as cod_barra_grade FROM produto AS p LEFT JOIN produto_grade AS pg ON p.cod_barra = pg.produto INNER JOIN fornecedor AS f ON produto.fornecedor = f.cnpj WHERE f.nome LIKE ? GROUP BY p.cod_barra ORDER BY p.descricao";
         String[] selection = new String[]{"%" + fornecedor + "%"};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }

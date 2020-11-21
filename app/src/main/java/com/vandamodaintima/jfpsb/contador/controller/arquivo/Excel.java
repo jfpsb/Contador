@@ -31,7 +31,8 @@ public class Excel<T> {
         formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
     }
 
-    public Boolean exportar(Uri uri, List<T>... objetos) {
+    @SafeVarargs
+    public final Boolean exportar(Uri uri, List<T>... objetos) {
         OutputStream outputStream = null;
 
         excelStrategy.criaPlanilhas(workbook, objetos);

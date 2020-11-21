@@ -22,7 +22,7 @@ public class TelaProdutoController {
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<Produto>(view.getApplicationContext(), new ExcelProdutoStrategy()).execute(uri, produtoModel.listar());
+        new ExportarParaExcel<Produto>(view.getApplicationContext(), new ExcelProdutoStrategy(), produtoModel.listar()).execute(uri);
     }
 
     public void importarDeExcel(Uri uri, ContentResolver contentResolver) {

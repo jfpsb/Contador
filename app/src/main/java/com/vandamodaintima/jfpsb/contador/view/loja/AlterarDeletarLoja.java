@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.navigation.NavigationView;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -41,6 +44,9 @@ public class AlterarDeletarLoja extends TelaAlterarDeletar {
 
         txtCnpj = findViewById(R.id.txtCnpj);
         txtNome = findViewById(R.id.txtNome);
+        txtTelefone = findViewById(R.id.txtTelefone);
+        txtEndereco = findViewById(R.id.txtEndereco);
+        txtInscricaoEstadual = findViewById(R.id.txtInscricaoEstadual);
         spinnerMatrizes = findViewById(R.id.spinnerMatrizes);
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_loja);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_loja);

@@ -24,7 +24,7 @@
                 android:src="@drawable/barcode" />
 
             <TextView
-                android:id="@+id/labelCodBarra"
+                android:id="@+id/txtCodBarra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
@@ -35,7 +35,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/labelDescricao"
+            android:id="@+id/txtDescricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"

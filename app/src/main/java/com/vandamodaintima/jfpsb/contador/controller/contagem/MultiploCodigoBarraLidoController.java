@@ -8,29 +8,35 @@ import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MultiploCodigoBarraLidoController {
     private ConexaoBanco conexaoBanco;
-    private ProdutoGrade produtoGradeManager;
+    private ProdutoGrade produtoGrade;
+    private Produto produto;
     private Contagem contagemManager;
     private ContagemProduto contagemProdutoManager;
 
     public MultiploCodigoBarraLidoController(ConexaoBanco conexaoBanco) {
         this.conexaoBanco = conexaoBanco;
-        produtoGradeManager = new ProdutoGrade(conexaoBanco);
+        produto = new Produto(conexaoBanco);
+        produtoGrade = new ProdutoGrade(conexaoBanco);
         contagemManager = new Contagem(conexaoBanco);
         contagemProdutoManager = new ContagemProduto(conexaoBanco);
     }
 
-    public ArrayList<ProdutoGrade> pesquisaProduto(String codigo) {
-        ArrayList<ProdutoGrade> produtos = new ArrayList<>();
+    public List<ProdutoGrade> pesquisaProdutoGrade(String codigo) {
+        List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
-        //TODO: Arrumar
-        /*if (!codigo.isEmpty()) {
-            produtos = produtoGradeManager.listarPorId(codigo);
-        }*/
+        if (!codigo.isEmpty()) {
+            produtoGrades = produtoGrade.listarPorCodBarra(codigo);
+        }
 
-        return produtos;
+        return produtoGrades;
+    }
+
+    public Produto pesquisaProduto(String codigo) {
+        return produto.listarPorId(codigo);
     }
 
     public Boolean cadastrar() {
@@ -49,12 +55,12 @@ public class MultiploCodigoBarraLidoController {
         contagemProdutoManager.setContagem(contagemManager.listarPorId(loja, data));
     }
 
-    public void carregaProdutoGrade(String id) {
-        contagemProdutoManager.setProdutoGrade(produtoGradeManager.listarPorId(id));
+    public void carregaProdutoGrade(ProdutoGrade produtoGrade) {
+        contagemProdutoManager.setProdutoGrade(produtoGrade);
+        contagemProdutoManager.setProduto(produtoGrade.getProduto());
     }
 
-    public void carregaProdutoGrade(Object o) {
-        if (o instanceof ProdutoGrade)
-            contagemProdutoManager.setProdutoGrade((ProdutoGrade) o);
+    public void carregaProduto(Produto produto) {
+        contagemProdutoManager.setProduto(produto);
     }
 }

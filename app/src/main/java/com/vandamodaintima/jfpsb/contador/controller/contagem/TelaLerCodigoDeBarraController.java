@@ -5,20 +5,20 @@ import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaLerCodigoDeBarra;
+import com.vandamodaintima.jfpsb.contador.view.contagem.TelaLerCodigoDeBarraContagemProduto;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class TelaLerCodigoDeBarraController {
-    private ITelaLerCodigoDeBarra view;
+    private TelaLerCodigoDeBarraContagemProduto view;
     private Produto produto;
     private ProdutoGrade produtoGrade;
     private Contagem contagemManager;
     private ContagemProduto model;
 
-    public TelaLerCodigoDeBarraController(ITelaLerCodigoDeBarra view, ConexaoBanco conexaoBanco) {
+    public TelaLerCodigoDeBarraController(TelaLerCodigoDeBarraContagemProduto view, ConexaoBanco conexaoBanco) {
         this.view = view;
         produto = new Produto(conexaoBanco);
         contagemManager = new Contagem(conexaoBanco);

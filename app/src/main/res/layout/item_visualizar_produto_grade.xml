@@ -14,12 +14,12 @@
         <ImageView
             android:layout_width="32sp"
             android:layout_height="match_parent"
+            android:contentDescription="@string/imagem_barcode"
             android:maxHeight="30sp"
-            android:src="@drawable/barcode"
-            android:contentDescription="@string/imagem_barcode" />
+            android:src="@drawable/barcode" />
 
         <TextView
-            android:id="@+id/labelCodBarra"
+            android:id="@+id/txtCodBarra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="30sp"
@@ -30,14 +30,12 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/labelDescricao"
+        android:id="@+id/txtDescricao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:ellipsize="end"
         android:minHeight="30sp"
         android:padding="6sp"
-        android:singleLine="true"
         android:text="@string/placeholder"
         android:textAlignment="center"
         android:textColor="#000"
@@ -47,9 +45,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <ImageView
@@ -59,7 +57,7 @@
             android:src="@drawable/money_sign" />
 
         <TextView
-            android:id="@+id/labelPreco"
+            android:id="@+id/txtPreco"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="30sp"

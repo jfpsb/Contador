@@ -1,6 +1,7 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.ExportarParaExcel;
@@ -82,6 +83,9 @@ public class AlterarDeletarContagemController {
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<>(view.getContext(), new ExcelContagemProdutoStrategy()).execute(uri, contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel));
+        List<ContagemProduto> listagemPorProduto = contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel);
+        List<ContagemProduto> listagemPorGrade = contagemProdutoModel.listarPorContagemGroupByGrade(contagemModel);
+
+        new ExportarParaExcel<>(view.getContext(), new ExcelContagemProdutoStrategy(), listagemPorProduto, listagemPorGrade).execute(uri);
     }
 }

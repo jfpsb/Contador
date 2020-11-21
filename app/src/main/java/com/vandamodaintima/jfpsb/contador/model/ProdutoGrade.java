@@ -138,4 +138,15 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
         }
         return str.toString();
     }
+
+    public String getGradesToSmallString() {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < grades.size(); i++) {
+            str.append(grades.get(i).getNome());
+            if (i != grades.size() + 1) {
+                str.append(" ");
+            }
+        }
+        return str.toString();
+    }
 }

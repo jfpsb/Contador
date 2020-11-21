@@ -25,11 +25,11 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView lblCodBarra = view.findViewById(R.id.labelCodBarra);
-        TextView lblDescricao = view.findViewById(R.id.labelDescricao);
+        TextView lblCodBarra = view.findViewById(R.id.txtCodBarra);
+        TextView lblDescricao = view.findViewById(R.id.txtDescricao);
         TextView lblQuantidade = view.findViewById(R.id.lblQuantidade);
 
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("p_cod_barra"));
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow("quant"));
 

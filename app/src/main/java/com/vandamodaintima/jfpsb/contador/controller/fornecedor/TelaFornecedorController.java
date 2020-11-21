@@ -21,7 +21,7 @@ public class TelaFornecedorController {
     }
 
     public void exportarParaExcel(Uri uri) {
-        new ExportarParaExcel<>(view.getApplicationContext(), new ExcelFornecedorStrategy()).execute(uri, fornecedorModel.listar());
+        new ExportarParaExcel<>(view.getApplicationContext(), new ExcelFornecedorStrategy(), fornecedorModel.listar()).execute(uri);
     }
 
     public void importarFornecedoresDeExcel(Uri uri, ContentResolver contentResolver) {

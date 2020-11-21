@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,45 +21,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
-    /*@Override
-    public String escreveArquivoExcel(XSSFWorkbook workbook, XSSFSheet sheet, Object lista, int linhaConteudo) {
-        CellStyle cellStyle = workbook.createCellStyle();
-
-        Font fonte = workbook.createFont();
-        fonte.setFontHeightInPoints((short) 12);
-
-        cellStyle.setFont(fonte);
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
-        ArrayList<Fornecedor> fornecedores = (ArrayList<Fornecedor>) lista;
-
-        Row[] rows = new Row[fornecedores.size()];
-
-        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
-            rows[i - linhaConteudo] = sheet.createRow(i);
-            for (int j = 0; j < Fornecedor.getHeaders().length; j++) {
-                Cell cell = rows[i - linhaConteudo].createCell(j);
-                cell.setCellStyle(cellStyle);
-            }
-        }
-
-        for (int i = linhaConteudo; i < rows.length + linhaConteudo; i++) {
-            Fornecedor f = fornecedores.get(i);
-
-            rows[i - linhaConteudo].getCell(0).setCellValue(f.getCnpj());
-            rows[i - linhaConteudo].getCell(1).setCellValue(f.getNome());
-            rows[i - linhaConteudo].getCell(2).setCellValue(f.getFantasia());
-            rows[i - linhaConteudo].getCell(3).setCellValue(f.getEmail());
-        }
-
-        sheet.setColumnWidth(0, 30 * 256);
-        sheet.setColumnWidth(1, 60 * 256);
-        sheet.setColumnWidth(2, 60 * 256);
-        sheet.setColumnWidth(3, 40 * 256);
-
-        return "Fornecedores.xlsx";
-    }*/
 
     @Override
     public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
@@ -109,7 +71,7 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
                 }
             }
 
-            if(nome != null && nome.getCellTypeEnum() != CellType.BLANK) {
+            if (nome != null && nome.getCellTypeEnum() != CellType.BLANK) {
                 if (nome.getCellTypeEnum() == CellType.STRING) {
                     f.setNome(nome.getStringCellValue());
                 } else {
@@ -118,11 +80,11 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
                 }
             }
 
-            if(fantasia != null) {
+            if (fantasia != null) {
                 f.setFantasia(fantasia.getStringCellValue());
             }
 
-            if(email != null) {
+            if (email != null) {
                 f.setEmail(email.getStringCellValue());
             }
 
@@ -134,6 +96,73 @@ public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
 
     @Override
     public void criaPlanilhas(XSSFWorkbook workbook, List<Fornecedor>... objetos) {
+        CellStyle estiloCabecalho = workbook.createCellStyle();
+        CellStyle estiloItens = workbook.createCellStyle();
+        XSSFSheet sheet0 = workbook.createSheet("Fornecedores");
+        List<Fornecedor> listagem = objetos[0];
+        int linha = 0;
 
+        Font fonteCabecalho = workbook.createFont();
+        fonteCabecalho.setFontName("Arial");
+        fonteCabecalho.setFontHeightInPoints((short) 16);
+        fonteCabecalho.setBold(true);
+        estiloCabecalho.setFont(fonteCabecalho);
+        estiloCabecalho.setAlignment(HorizontalAlignment.CENTER);
+        estiloCabecalho.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        Font fonteItens = workbook.createFont();
+        fonteItens.setFontName("Arial");
+        fonteItens.setFontHeightInPoints((short) 12);
+        estiloItens.setFont(fonteItens);
+        estiloItens.setAlignment(HorizontalAlignment.CENTER);
+        estiloItens.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        Row cabecalhoRow = sheet0.createRow(linha++);
+
+        Cell CNPJCabecalho = cabecalhoRow.createCell(0);
+        Cell NomeCabecalho = cabecalhoRow.createCell(1);
+        Cell NomeFantasiaCabecalho = cabecalhoRow.createCell(2);
+        Cell EmailCabecalho = cabecalhoRow.createCell(3);
+        Cell TelefoneCabecalho = cabecalhoRow.createCell(4);
+
+        CNPJCabecalho.setCellStyle(estiloCabecalho);
+        NomeCabecalho.setCellStyle(estiloCabecalho);
+        NomeFantasiaCabecalho.setCellStyle(estiloCabecalho);
+        EmailCabecalho.setCellStyle(estiloCabecalho);
+        TelefoneCabecalho.setCellStyle(estiloCabecalho);
+
+        CNPJCabecalho.setCellValue("CNPJ");
+        NomeCabecalho.setCellValue("Nome");
+        NomeFantasiaCabecalho.setCellValue("Nome Fantasia");
+        EmailCabecalho.setCellValue("E-mail");
+        TelefoneCabecalho.setCellValue("Telefone");
+
+        for (int i = linha; i < listagem.size() + linha; i++) {
+            Row row = sheet0.createRow(linha);
+
+            Cell CNPJ = row.createCell(0);
+            Cell Nome = row.createCell(1);
+            Cell NomeFantasia = row.createCell(2);
+            Cell Email = row.createCell(3);
+            Cell Telefone = row.createCell(4);
+
+            CNPJ.setCellStyle(estiloItens);
+            Nome.setCellStyle(estiloItens);
+            NomeFantasia.setCellStyle(estiloItens);
+            Email.setCellStyle(estiloItens);
+            Telefone.setCellStyle(estiloItens);
+
+            CNPJ.setCellValue(listagem.get(i - linha).getCnpj());
+            Nome.setCellValue(listagem.get(i - linha).getNome());
+            NomeFantasia.setCellValue(listagem.get(i - linha).getFantasia());
+            Email.setCellValue(listagem.get(i - linha).getEmail());
+            Telefone.setCellValue(listagem.get(i - linha).getTelefone());
+        }
+
+        sheet0.setColumnWidth(0, 30 * 256);
+        sheet0.setColumnWidth(1, 60 * 256);
+        sheet0.setColumnWidth(2, 60 * 256);
+        sheet0.setColumnWidth(3, 30 * 256);
+        sheet0.setColumnWidth(4, 30 * 256);
     }
 }

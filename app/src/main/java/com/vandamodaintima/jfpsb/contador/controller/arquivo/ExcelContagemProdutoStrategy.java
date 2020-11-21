@@ -31,7 +31,7 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         XSSFSheet sheet1 = workbook.createSheet("Contagem Por Grade");
         List<ContagemProduto> listagemPorProduto = objetos[0];
         List<ContagemProduto> listagemPorGrade = objetos[1];
-        int linha = 1;
+        int linha = 0;
 
         Font fonteCabecalho = workbook.createFont();
         fonteCabecalho.setFontName("Arial");
@@ -49,9 +49,9 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         estiloItens.setVerticalAlignment(VerticalAlignment.CENTER);
 
         Row cabecalhoSheet0 = sheet0.createRow(linha++);
-        Cell CodProdutoCabecalhoSheet0 = cabecalhoSheet0.createCell(1);
-        Cell DescricaoCabecalhoSheet0 = cabecalhoSheet0.createCell(2);
-        Cell QuantidadeCabecalhoSheet0 = cabecalhoSheet0.createCell(3);
+        Cell CodProdutoCabecalhoSheet0 = cabecalhoSheet0.createCell(0);
+        Cell DescricaoCabecalhoSheet0 = cabecalhoSheet0.createCell(1);
+        Cell QuantidadeCabecalhoSheet0 = cabecalhoSheet0.createCell(2);
 
         CodProdutoCabecalhoSheet0.setCellStyle(estiloCabecalho);
         DescricaoCabecalhoSheet0.setCellStyle(estiloCabecalho);
@@ -63,31 +63,31 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
 
         for (int i = linha; i < listagemPorProduto.size() + linha; i++) {
             Row row = sheet0.createRow(i);
-            Cell CodProdutoCellSheet0 = row.createCell(1);
-            Cell DescricaoCellSheet0 = row.createCell(2);
-            Cell QuantidadeCellSheet0 = row.createCell(3);
+            Cell CodProdutoCellSheet0 = row.createCell(0);
+            Cell DescricaoCellSheet0 = row.createCell(1);
+            Cell QuantidadeCellSheet0 = row.createCell(2);
 
             CodProdutoCellSheet0.setCellStyle(estiloItens);
             DescricaoCellSheet0.setCellStyle(estiloItens);
             QuantidadeCellSheet0.setCellStyle(estiloItens);
 
-            CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
-            DescricaoCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getDescricao());
+            CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProduto().getCodBarra());
+            DescricaoCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getProduto().getDescricao());
             QuantidadeCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getQuant());
         }
 
-        sheet0.setColumnWidth(0, 15 * 256);
-        sheet0.setColumnWidth(1, 15 * 256);
-        sheet0.setColumnWidth(2, 15 * 256);
+        sheet0.setColumnWidth(0, 25 * 256);
+        sheet0.setColumnWidth(1, 60 * 256);
+        sheet0.setColumnWidth(2, 25 * 256);
 
-        linha = 1;
+        linha = 0;
 
         Row cabecalhoSheet1 = sheet1.createRow(linha++);
-        Cell CodProdutoCabecalhoSheet1 = cabecalhoSheet1.createCell(1);
-        Cell DescricaoCabecalhoSheet1 = cabecalhoSheet1.createCell(2);
-        Cell DescricaoGradeCabecalhoSheet1 = cabecalhoSheet1.createCell(3);
-        Cell CodBarraCabecalhoSheet1 = cabecalhoSheet1.createCell(4);
-        Cell QuantidadeCabecalhoSheet1 = cabecalhoSheet1.createCell(5);
+        Cell CodProdutoCabecalhoSheet1 = cabecalhoSheet1.createCell(0);
+        Cell DescricaoCabecalhoSheet1 = cabecalhoSheet1.createCell(1);
+        Cell DescricaoGradeCabecalhoSheet1 = cabecalhoSheet1.createCell(2);
+        Cell CodBarraCabecalhoSheet1 = cabecalhoSheet1.createCell(3);
+        Cell QuantidadeCabecalhoSheet1 = cabecalhoSheet1.createCell(4);
 
         CodProdutoCabecalhoSheet1.setCellStyle(estiloCabecalho);
         DescricaoCabecalhoSheet1.setCellStyle(estiloCabecalho);
@@ -104,11 +104,11 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
         for (int i = linha; i < listagemPorGrade.size() + linha; i++) {
             Row row = sheet1.createRow(i);
 
-            Cell CodProdutoCellSheet1 = row.createCell(1);
-            Cell DescricaoCellSheet1 = row.createCell(2);
-            Cell DescricaoGradeCellSheet1 = row.createCell(3);
-            Cell CodBarraCellSheet1 = row.createCell(4);
-            Cell QuantidadeCellSheet1 = row.createCell(5);
+            Cell CodProdutoCellSheet1 = row.createCell(0);
+            Cell DescricaoCellSheet1 = row.createCell(1);
+            Cell DescricaoGradeCellSheet1 = row.createCell(2);
+            Cell CodBarraCellSheet1 = row.createCell(3);
+            Cell QuantidadeCellSheet1 = row.createCell(4);
 
             CodProdutoCellSheet1.setCellStyle(estiloItens);
             DescricaoCellSheet1.setCellStyle(estiloItens);
@@ -116,17 +116,24 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
             CodBarraCellSheet1.setCellStyle(estiloItens);
             QuantidadeCellSheet1.setCellStyle(estiloItens);
 
-            CodProdutoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
-            DescricaoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getDescricao());
-            DescricaoGradeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getGradesToString());
-            CodBarraCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getCodBarra());
+            CodProdutoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProduto().getCodBarra());
+            DescricaoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProduto().getDescricao());
+
+            if (listagemPorGrade.get(i - linha).getProdutoGrade() != null) {
+                DescricaoGradeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getGradesToString());
+                CodBarraCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getCodBarra());
+            } else {
+                DescricaoGradeCellSheet1.setCellValue("INSERIDO SEM GRADE");
+                CodBarraCellSheet1.setCellValue("INSERIDO SEM GRADE");
+            }
+
             QuantidadeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getQuant());
         }
 
-        sheet1.setColumnWidth(0, 15 * 256);
-        sheet1.setColumnWidth(1, 15 * 256);
-        sheet1.setColumnWidth(2, 15 * 256);
-        sheet1.setColumnWidth(3, 15 * 256);
-        sheet1.setColumnWidth(4, 15 * 256);
+        sheet1.setColumnWidth(0, 25 * 256);
+        sheet1.setColumnWidth(1, 60 * 256);
+        sheet1.setColumnWidth(2, 30 * 256);
+        sheet1.setColumnWidth(3, 25 * 256);
+        sheet1.setColumnWidth(4, 25 * 256);
     }
 }

@@ -17,9 +17,11 @@ import java.util.List;
 
 public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
     private List<ProdutoGrade> objects;
+    private boolean mostrarProduto;
 
-    public ProdutoGradeArrayAdapter(@NonNull Context context, List<ProdutoGrade> objects) {
+    public ProdutoGradeArrayAdapter(@NonNull Context context, List<ProdutoGrade> objects, boolean mostrarProduto) {
         super(context, 0, objects);
+        this.mostrarProduto = mostrarProduto;
         setNotifyOnChange(true);
         this.objects = objects;
     }
@@ -32,29 +34,26 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_produto, parent, false);
         }
 
         ProdutoGrade produtoGrade = objects.get(position);
 
-        final TextView lblCodBarra = convertView.findViewById(R.id.labelCodBarra);
-        TextView lblPreco = convertView.findViewById(R.id.labelPreco);
-        TextView lblDescricao = convertView.findViewById(R.id.labelDescricao);
+        final TextView lblCodBarra = convertView.findViewById(R.id.txtCodBarra);
+        TextView lblPreco = convertView.findViewById(R.id.txtPreco);
+        TextView lblDescricao = convertView.findViewById(R.id.txtDescricao);
 
-        StringBuilder descricao = new StringBuilder();
+        String descricao = "";
 
-        for (int i = 0; i < produtoGrade.getGrades().size(); i++) {
-            Grade grade = produtoGrade.getGrades().get(i);
-            descricao.append(grade.getTipoGrade().getNome()).append(" ").append(grade.getNome());
-
-            if (i != (produtoGrade.getGrades().size() - 1)) {
-                descricao.append("/");
-            }
-        }
+        if (mostrarProduto)
+            descricao += produtoGrade.getProduto().getDescricao() + " - ";
 
         lblCodBarra.setText(produtoGrade.getCodBarra());
         lblPreco.setText(String.valueOf(produtoGrade.getPreco()));
+
+        descricao += produtoGrade.getGradesToSmallString();
+
         lblDescricao.setText(descricao);
 
         return convertView;

@@ -205,9 +205,49 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
+    public Cursor listarPorContagemGroupByGradeCursor(Contagem contagem) {
+        String loja = contagem.getLoja().getCnpj();
+        String data = contagem.getDataParaSQLite();
+
+        String sql = "SELECT cp.id as _id, cp.produto_grade AS produto_grade, cp.contagem_data AS contagem_data, cp.contagem_loja AS contagem_loja, SUM(cp.quant) AS quant, cp.produto AS produto, " +
+                "p.descricao AS descricao " +
+                "FROM contagem_produto AS cp " +
+                "LEFT JOIN produto_grade AS pg ON cp.produto_grade = pg.id " +
+                "INNER JOIN produto AS p ON cp.produto = p.cod_barra " +
+                "WHERE contagem_loja = ? AND contagem_data = ? GROUP BY cp.produto, cp.produto_grade ORDER BY p.descricao";
+
+        String[] selection = new String[]{loja, data};
+
+        return conexaoBanco.conexao().rawQuery(sql, selection);
+    }
+
     public ArrayList<ContagemProduto> listarPorContagemGroupByProduto(Contagem contagem) {
         ArrayList<ContagemProduto> contagemProdutos = new ArrayList<>();
         Cursor cursor = listarPorContagemGroupByProdutoCursor(contagem);
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                ContagemProduto contagemProduto = new ContagemProduto();
+
+                contagemProduto.setId(cursor.getLong(cursor.getColumnIndex("_id")));
+                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
+                contagemProduto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
+
+                String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
+                String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
+                contagemProduto.setContagem(daoContagem.listarPorId(loja, data));
+
+                contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
+                contagemProdutos.add(contagemProduto);
+            }
+        }
+
+        return contagemProdutos;
+    }
+
+    public ArrayList<ContagemProduto> listarPorContagemGroupByGrade(Contagem contagem) {
+        ArrayList<ContagemProduto> contagemProdutos = new ArrayList<>();
+        Cursor cursor = listarPorContagemGroupByGradeCursor(contagem);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
