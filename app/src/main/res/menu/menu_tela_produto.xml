@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Cadastrar Produtos Em Excel"
-        android:id="@+id/itemImportarProdutoExcel"/>
-
-    <item
         android:id="@+id/itemExportarProdutoExcel"
-        android:title="Exportar Produtos" />
+        android:title="@string/exportar_produtos" />
 </menu>

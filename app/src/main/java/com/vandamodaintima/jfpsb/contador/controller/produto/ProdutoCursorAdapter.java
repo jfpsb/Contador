@@ -25,7 +25,7 @@ public class ProdutoCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView txtCodBarra = view.findViewById(R.id.txtCodBarra);
-        TextView txtDescricao = view.findViewById(R.id.txtDescricao);
+        TextView txtDescricao = view.findViewById(R.id.txtDescricaoGrade);
         TextView txtPreco = view.findViewById(R.id.txtPreco);
         TextView txtPossuiGrades = view.findViewById(R.id.txtPossuiGrade);
 

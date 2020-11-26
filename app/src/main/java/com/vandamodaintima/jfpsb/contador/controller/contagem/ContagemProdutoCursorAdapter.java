@@ -20,13 +20,13 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.item_produto_contagem, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.item_produto_contagem_sem_grade, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView lblCodBarra = view.findViewById(R.id.txtCodBarra);
-        TextView lblDescricao = view.findViewById(R.id.txtDescricao);
+        TextView lblCodBarra = view.findViewById(R.id.txtCodigoProduto);
+        TextView lblDescricao = view.findViewById(R.id.txtDescricaoProduto);
         TextView lblQuantidade = view.findViewById(R.id.lblQuantidade);
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto"));

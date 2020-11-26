@@ -132,7 +132,7 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < grades.size(); i++) {
             str.append(grades.get(i).getTipoGrade().getNome()).append(" ").append(grades.get(i).getNome());
-            if (i != grades.size() + 1) {
+            if (i != grades.size() - 1) {
                 str.append("/");
             }
         }

@@ -70,11 +70,6 @@ public class TelaFornecedor extends TabLayoutBaseView {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.itemImportarFornecedorExcel:
-                Intent intentImportar = new Intent(Intent.ACTION_GET_CONTENT);
-                intentImportar.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                startActivityForResult(Intent.createChooser(intentImportar, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);
-                return true;
             case R.id.itemCadastrarFornecedorManualmente:
                 Intent intentCadastrarManualmente = new Intent(this, CadastrarFornecedorManualmente.class);
                 startActivityForResult(intentCadastrarManualmente, CADASTRAR_MANUALMENTE);
@@ -123,12 +118,6 @@ public class TelaFornecedor extends TabLayoutBaseView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case ESCOLHER_ARQUIVO:
-                if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    controller.importarFornecedoresDeExcel(uri, getContentResolver());
-                }
-                break;
             case ESCOLHER_DIRETORIO:
                 if (resultCode == Activity.RESULT_OK) {
                     if (data != null && data.getData() != null) {

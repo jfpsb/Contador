@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
 
         final TextView lblCodBarra = convertView.findViewById(R.id.txtCodBarra);
         TextView lblPreco = convertView.findViewById(R.id.txtPreco);
-        TextView lblDescricao = convertView.findViewById(R.id.txtDescricao);
+        TextView lblDescricao = convertView.findViewById(R.id.txtDescricaoGrade);
 
         String descricao = "";
 

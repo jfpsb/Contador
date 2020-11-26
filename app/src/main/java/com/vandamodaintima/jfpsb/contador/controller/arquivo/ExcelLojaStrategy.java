@@ -18,11 +18,6 @@ import java.util.List;
 
 public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
 
-    @Override
-    public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
-        return false;
-    }
-
     @SafeVarargs
     @Override
     public final void criaPlanilhas(XSSFWorkbook workbook, List<Loja>... objetos) {

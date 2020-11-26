@@ -74,7 +74,7 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                             } else {
                                 view.mensagemAoUsuario("Mais De Um Código Lido. Leia Somente Um Código De Cada Vez");
                                 Log.i(ActivityBaseView.LOG, "Vários Códigos de Barras Encontrados. Quant.: " + barcodeSparseArray.size());
-                                sendEmptyMessageDelayed(1, 200);
+                                sendEmptyMessageDelayed(1, 500);
                             }
                         } else {
                             sendEmptyMessage(1);
@@ -100,7 +100,7 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                                 } else {
                                     controller.cadastrar();
                                     view.playBarcodeBeep();
-                                    sendEmptyMessageDelayed(1, 750);
+                                    sendEmptyMessageDelayed(1, 1200);
                                 }
                                 break;
                             } else {
@@ -117,7 +117,7 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                             } else {
                                 controller.cadastrar();
                                 view.playBarcodeBeep();
-                                sendEmptyMessageDelayed(1, 750);
+                                sendEmptyMessageDelayed(1, 1200);
                             }
                         } else {
                             view.mensagemAoUsuario("Mais De Uma Grade Foi Encontrada. Selecione Na Lista");

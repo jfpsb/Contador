@@ -43,7 +43,24 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
 
     @Override
     public ProdutoGrade listarPorId(Object... ids) {
-        return null;
+        DAOGrade daoGrade = new DAOGrade(conexaoBanco);
+        DAOProduto daoProduto = new DAOProduto(conexaoBanco);
+        ProdutoGrade produtoGrade = null;
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            produtoGrade = new ProdutoGrade();
+            produtoGrade.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+            produtoGrade.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
+            produtoGrade.setCodBarra(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra")));
+            produtoGrade.setPreco(cursor.getDouble(cursor.getColumnIndexOrThrow("preco")));
+            produtoGrade.setGrades(daoGrade.listarPorProdutoGrade(produtoGrade));
+        }
+
+        cursor.close();
+
+        return produtoGrade;
     }
 
     @Override

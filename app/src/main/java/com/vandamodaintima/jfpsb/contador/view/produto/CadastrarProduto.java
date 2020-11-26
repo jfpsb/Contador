@@ -70,7 +70,7 @@ public class CadastrarProduto extends TelaCadastro {
         btnRemoverMarca = telaCadastroView.findViewById(R.id.btnRemoverMarca);
         btnGerenciarGrades = telaCadastroView.findViewById(R.id.btnGerenciarGrades);
         txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
-        txtDescricao = telaCadastroView.findViewById(R.id.txtDescricao);
+        txtDescricao = telaCadastroView.findViewById(R.id.txtDescricaoGrade);
         txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
         txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
         txtMarca = telaCadastroView.findViewById(R.id.txtMarca);

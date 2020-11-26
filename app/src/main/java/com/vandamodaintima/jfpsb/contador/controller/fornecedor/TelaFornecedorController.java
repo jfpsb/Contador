@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
@@ -22,9 +21,5 @@ public class TelaFornecedorController {
 
     public void exportarParaExcel(Uri uri) {
         new ExportarParaExcel<>(view.getApplicationContext(), new ExcelFornecedorStrategy(), fornecedorModel.listar()).execute(uri);
-    }
-
-    public void importarFornecedoresDeExcel(Uri uri, ContentResolver contentResolver) {
-        new ImportarFornecedorDeExcel(view.getApplicationContext(), conexaoBanco).execute(uri, contentResolver);
     }
 }

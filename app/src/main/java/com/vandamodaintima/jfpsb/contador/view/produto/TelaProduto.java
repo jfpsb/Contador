@@ -79,11 +79,6 @@ public class TelaProduto extends TabLayoutBaseView {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.itemImportarProdutoExcel:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                startActivityForResult(Intent.createChooser(intent, "Selecione o Arquivo Excel"), ESCOLHER_ARQUIVO);
-                return true;
             case R.id.itemExportarProdutoExcel:
                 Boolean permissaoRead = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
                 Boolean permissaoWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
@@ -127,20 +122,12 @@ public class TelaProduto extends TabLayoutBaseView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case ESCOLHER_ARQUIVO:
-                if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    controller.importarDeExcel(uri, getContentResolver());
+        if (requestCode == ESCOLHER_DIRETORIO) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null && data.getData() != null) {
+                    controller.exportarParaExcel(data.getData());
                 }
-                break;
-            case ESCOLHER_DIRETORIO:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null && data.getData() != null) {
-                        controller.exportarParaExcel(data.getData());
-                    }
-                }
-                break;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);

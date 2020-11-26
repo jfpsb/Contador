@@ -24,9 +24,4 @@ public class TelaProdutoController {
     public void exportarParaExcel(Uri uri) {
         new ExportarParaExcel<Produto>(view.getApplicationContext(), new ExcelProdutoStrategy(), produtoModel.listar()).execute(uri);
     }
-
-    public void importarDeExcel(Uri uri, ContentResolver contentResolver) {
-        //TODO: arrumar
-        //new ImportarExcel<Produto>(view.getApplicationContext(), new ExcelProdutoStrategy()), conexaoBanco).execute(uri, contentResolver);
-    }
 }

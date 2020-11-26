@@ -9,9 +9,8 @@ import android.widget.Toast;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 
-public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdicionarContagemProduto {
+public class AdicionarContagemProduto extends TabLayoutBaseView {
 
     private ConexaoBanco conexaoBanco;
 
@@ -69,12 +68,10 @@ public class AdicionarContagemProduto extends TabLayoutBaseView implements IAdic
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
     public ConexaoBanco getConexaoBanco() {
         return conexaoBanco;
     }
 
-    @Override
     public void mensagemAoUsuario(String mensagem) {
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
     }

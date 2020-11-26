@@ -1,7 +1,6 @@
 package com.vandamodaintima.jfpsb.contador.view.contagem;
 
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaVerProdutoContadoController;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaVerProdutoContado;
 
 public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoContado {
@@ -26,7 +24,7 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
     private AlertDialog.Builder deletarContagemProdutoDialog;
     private TelaVerProdutoContadoController controller;
 
-    private IAdicionarContagemProduto owner;
+    private AdicionarContagemProduto owner;
 
     @Nullable
     @Override
@@ -35,7 +33,7 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
 
         listViewContagemProduto = view.findViewById(R.id.listViewAdicionarContagem);
 
-        owner = (IAdicionarContagemProduto) getActivity();
+        owner = (AdicionarContagemProduto) getActivity();
         controller = new TelaVerProdutoContadoController(this, owner.getConexaoBanco());
 
         Bundle bundle = getArguments();
@@ -43,12 +41,7 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
         String data = bundle.getString("data");
         controller.carregaContagem(loja, data);
 
-        listViewContagemProduto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                cliqueEmItemLista(adapterView, i);
-            }
-        });
+        listViewContagemProduto.setOnItemClickListener((adapterView, view1, i, l) -> cliqueEmItemLista(adapterView, i));
 
         setDeletarContagemProdutoDialog();
 
@@ -83,10 +76,6 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
 
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
-        Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-        long id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
-        controller.carregaContagemProduto(id);
-        deletarContagemProdutoDialog.show();
     }
 
     @Override

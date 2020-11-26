@@ -14,8 +14,6 @@ import android.widget.TextView;
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +32,7 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_pesquisa_produto, parent, false);
         }
 
-        TextView labelDescricao = convertView.findViewById(R.id.txtDescricao);
+        TextView labelDescricao = convertView.findViewById(R.id.txtDescricaoGrade);
         TextView labelCodBarra = convertView.findViewById(R.id.txtCodBarra);
         TextView labelPreco = convertView.findViewById(R.id.txtPreco);
         TextView txtPossuiGrades = convertView.findViewById(R.id.txtPossuiGrade);

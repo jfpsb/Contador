@@ -25,12 +25,6 @@ public class Excel<T> {
         this.contentResolver = contentResolver;
     }
 
-    public Excel(InputStream inputStream, IExcelStrategy<T> excelStrategy) throws IOException {
-        workbook = new XSSFWorkbook(inputStream);
-        this.excelStrategy = excelStrategy;
-        formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
-    }
-
     @SafeVarargs
     public final Boolean exportar(Uri uri, List<T>... objetos) {
         OutputStream outputStream = null;
@@ -56,8 +50,4 @@ public class Excel<T> {
 
         return false;
     }
-
-    /*public Boolean importar(ConexaoBanco conexaoBanco) {
-        return excelStrategy.lerInserirDados(workbook, sheet, conexaoBanco);
-    }*/
 }

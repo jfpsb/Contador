@@ -59,7 +59,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         setBtnAtualizar();
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
-        txtDescricao = findViewById(R.id.txtDescricao);
+        txtDescricao = findViewById(R.id.txtDescricaoGrade);
         txtPreco = findViewById(R.id.txtPreco);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);

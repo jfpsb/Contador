@@ -23,7 +23,6 @@ import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
 import com.vandamodaintima.jfpsb.contador.view.grade.ListarProdutoGradePorCodigoForResult;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.IAdicionarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 
 public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
@@ -48,7 +47,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ler_codigo_de_barra_contagem_produto, container, false);
 
         Button btnInserirManualmente = view.findViewById(R.id.btnInserirManualmente);
-        IAdicionarContagemProduto ownerActivity = (IAdicionarContagemProduto) getActivity();
+        AdicionarContagemProduto ownerActivity = (AdicionarContagemProduto) getActivity();
         textureView = view.findViewById(R.id.textureView);
         erroMediaPlayer = MediaPlayer.create(getContext(), R.raw.erro_buzzer);
         codigoLidoMediaPlayer = MediaPlayer.create(getContext(), R.raw.barcode_beep);

@@ -13,41 +13,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:weightSum="2">
 
-            <ImageView
-                android:layout_width="32sp"
-                android:layout_height="match_parent"
-                android:maxHeight="30sp"
-                android:src="@drawable/barcode" />
-
             <TextView
-                android:id="@+id/txtCodBarra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
                 android:padding="5sp"
-                android:text="placeholder"
+                android:text="@string/codigo_dois_pontos"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtCodigoProduto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="30sp"
+                android:padding="5sp"
+                android:text="@string/placeholder"
                 android:textColor="#000"
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtDescricao"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:minHeight="30sp"
-            android:padding="6sp"
-            android:singleLine="true"
-            android:text="PLACEHOLDER"
-            android:textAlignment="center"
-            android:textColor="#000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
+            <TextView
+                android:id="@+id/txtDescricaoProduto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="30sp"
+                android:padding="5sp"
+                android:text="@string/placeholder"
+                android:textColor="#000"
+                android:textSize="18sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -65,7 +72,8 @@
             android:text="@string/quantidade_adicionada"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lblQuantidade"

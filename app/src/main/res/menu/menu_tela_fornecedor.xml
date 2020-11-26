@@ -2,13 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Importar Fornecedores de Excel"
-        android:id="@+id/itemImportarFornecedorExcel" />
-
-    <item
-        android:title="Cadastrar Fornecedor Manualmente"
+        android:title="@string/cadastrar_fornecedor_manualmente"
         android:id="@+id/itemCadastrarFornecedorManualmente" />
     <item
-        android:title="Exportar Fornecedores Para Excel"
+        android:title="@string/exportar_fornecedores_para_excel"
         android:id="@+id/itemExportarFornecedorExcel" />
 </menu>

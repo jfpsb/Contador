@@ -3,20 +3,21 @@ package com.vandamodaintima.jfpsb.contador.view.contagem;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.cursoradapter.widget.CursorAdapter;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.cursoradapter.widget.CursorAdapter;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.VisualizarProdutosContagemController;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
-import com.vandamodaintima.jfpsb.contador.view.produto.AlterarDeletarProduto;
 
+/**
+ * Tela que mostra a soma da contagem de produtos agrupados por produto
+ */
 public class VisualizarProdutosContagem extends ActivityBaseView {
     private ListView listViewProdutoContagem;
 
@@ -36,18 +37,8 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 
-        listViewProdutoContagem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-
-                String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
-
-                Intent alterarProduto = new Intent(VisualizarProdutosContagem.this, AlterarDeletarProduto.class);
-                alterarProduto.putExtra("produto", cod_barra);
-
-                startActivityForResult(alterarProduto, 1);
-            }
+        listViewProdutoContagem.setOnItemClickListener((parent, view, position, id) -> {
+            //TODO: abrir listagem das grades contadas do produto
         });
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());

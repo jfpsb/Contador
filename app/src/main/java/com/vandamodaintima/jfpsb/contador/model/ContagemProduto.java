@@ -144,6 +144,10 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
         return daoContagemProduto.listarPorContagemCursor(contagem);
     }
 
+    public List<ContagemProduto> listarPorContagem(Contagem contagem) {
+        return daoContagemProduto.listarPorContagem(contagem);
+    }
+
     public Cursor listarPorContagemGroupByProdutoCursor(Contagem contagemModel) {
         return daoContagemProduto.listarPorContagemGroupByProdutoCursor(contagemModel);
     }

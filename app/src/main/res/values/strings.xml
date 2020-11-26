@@ -95,4 +95,11 @@
     <string name="possui_grade">Possui Grades?</string>
     <string name="grades_de_produto_encontradas">Grades Encontradas</string>
     <string name="nao_encontrei_a_grade">Nâo Encontrei a Grade</string>
+    <string name="dados_do_produto">Dados do Produto</string>
+    <string name="dados_do_grade">Dados de Grade</string>
+    <string name="sem_grade">SEM GRADE</string>
+    <string name="cadastrar_fornecedor_manualmente">Cadastrar Fornecedor Manualmente</string>
+    <string name="exportar_fornecedores_para_excel">Exportar Fornecedores Para Excel</string>
+    <string name="exportar_produtos">Exportar Produtos</string>
+    <string name="codigo_dois_pontos">Código:</string>
 </resources>

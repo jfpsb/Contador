@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProduto> {
-    @Override
-    public Boolean lerInserirDados(XSSFWorkbook workbook, XSSFSheet sheet, ConexaoBanco conexaoBanco) {
-        return null;
-    }
 
     @SafeVarargs
     @Override
@@ -72,8 +68,8 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
             QuantidadeCellSheet0.setCellStyle(estiloItens);
 
             CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProduto().getCodBarra());
-            DescricaoCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getProduto().getDescricao());
-            QuantidadeCellSheet0.setCellValue(listagemPorGrade.get(i - linha).getQuant());
+            DescricaoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProduto().getDescricao());
+            QuantidadeCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getQuant());
         }
 
         sheet0.setColumnWidth(0, 25 * 256);
