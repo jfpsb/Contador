@@ -6,13 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import java.io.Serializable;
 
 /**
- * Created by jfpsb on 08/02/2018.
+ * Abre conexção com o banco de dados da aplicação.
  */
 
 public class ConexaoBanco implements Serializable {
     private SQLiteDatabase conn;
     private static final String NOME_BANCO = "contagem.db";
-    private static final int VERSAO_BANCO = 16;
+    private static final int VERSAO_BANCO = 17;
     private SQLiteHelper sqLiteHelper;
     private Context context;
 

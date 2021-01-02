@@ -10,6 +10,9 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.TabLayoutBaseView;
 
+/**
+ * Tela de adicionar contagem de produto. Possui tela para ler código de barras usando a câmera do dispositivo e outra tela para ver os produtos já contados.
+ */
 public class AdicionarContagemProduto extends TabLayoutBaseView {
 
     private ConexaoBanco conexaoBanco;

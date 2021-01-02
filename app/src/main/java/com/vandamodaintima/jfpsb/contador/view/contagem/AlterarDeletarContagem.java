@@ -34,6 +34,9 @@ import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 
 import java.util.List;
 
+/**
+ * Tela para alterar dados de contagem ou finalizar contagem. Também é possível deletar e exportar a contagem para Excel e abrir tela para adicionar contagem de produto.
+ */
 public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
     private EditText txtData;

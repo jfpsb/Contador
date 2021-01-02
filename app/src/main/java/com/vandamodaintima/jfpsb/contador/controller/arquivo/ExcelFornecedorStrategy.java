@@ -1,14 +1,9 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
-import android.util.Log;
-
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,10 +11,11 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ * Estratégia de exportação em Excel para Fornecedor
+ */
 public class ExcelFornecedorStrategy implements IExcelStrategy<Fornecedor> {
 
     @Override

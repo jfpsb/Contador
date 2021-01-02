@@ -12,23 +12,24 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+/**
+ * Classe responsável pela manipulação de tarefas relacionadas a Excel na aplicação
+ * @param <T> Tipo de entidade sendo exportada em Excel
+ */
 public class Excel<T> {
     private XSSFWorkbook workbook;
-    private FormulaEvaluator formulaEvaluator;
     private ContentResolver contentResolver;
     private IExcelStrategy<T> excelStrategy;
 
     public Excel(ContentResolver contentResolver, IExcelStrategy<T> excelStrategy) {
         workbook = new XSSFWorkbook();
         this.excelStrategy = excelStrategy;
-        formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
         this.contentResolver = contentResolver;
     }
 
     @SafeVarargs
     public final Boolean exportar(Uri uri, List<T>... objetos) {
         OutputStream outputStream = null;
-
         excelStrategy.criaPlanilhas(workbook, objetos);
 
         try {

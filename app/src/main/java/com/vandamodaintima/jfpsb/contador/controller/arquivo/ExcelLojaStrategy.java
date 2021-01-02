@@ -1,7 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.controller.arquivo;
 
-import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,9 +11,11 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Estratégia de exportação em Excel para Loja
+ */
 public class ExcelLojaStrategy implements IExcelStrategy<Loja> {
 
     @SafeVarargs
