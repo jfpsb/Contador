@@ -4,10 +4,12 @@ package com.vandamodaintima.jfpsb.contador.view.produto;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,10 +150,10 @@ public class PesquisarProduto extends TelaPesquisa {
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
 
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
 
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
-        alterarProduto.putExtra("produto", cod_barra);
+        alterarProduto.putExtra("produto", id);
 
         startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
     }

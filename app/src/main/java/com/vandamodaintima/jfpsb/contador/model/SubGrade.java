@@ -9,6 +9,7 @@ import java.util.List;
 public class SubGrade implements IModel<SubGrade>, Serializable {
     private transient DAOSubGrade daoSubGrade;
 
+    private long id;
     private ProdutoGrade produtoGrade;
     private Grade grade;
 
@@ -17,6 +18,14 @@ public class SubGrade implements IModel<SubGrade>, Serializable {
 
     public SubGrade(ConexaoBanco conexaoBanco) {
         daoSubGrade = new DAOSubGrade(conexaoBanco);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public ProdutoGrade getProdutoGrade() {

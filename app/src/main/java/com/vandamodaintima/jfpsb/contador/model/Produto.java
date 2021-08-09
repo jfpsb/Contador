@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Produto implements Serializable, IModel<Produto> {
+public class Produto extends AModel implements Serializable, IModel<Produto> {
     private transient DAOProduto daoProduto;
 
     public Produto() {
@@ -20,6 +20,8 @@ public class Produto implements Serializable, IModel<Produto> {
         daoProduto = new DAOProduto(conexaoBanco);
     }
 
+    @SerializedName(value = "Id")
+    private long id;
     @SerializedName(value = "CodBarra")
     private String codBarra;
     @SerializedName(value = "Marca")
@@ -30,17 +32,27 @@ public class Produto implements Serializable, IModel<Produto> {
     private String descricao;
     @SerializedName(value = "Preco")
     private Double preco;
+    @SerializedName(value = "PrecoCusto")
+    private Double precocusto;
     @SerializedName(value = "Ncm")
     private String ncm;
     @SerializedName(value = "Grades")
     private List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
     public static String[] getColunas() {
-        return new String[]{"cod_barra as _id", "descricao", "preco", "fornecedor", "marca", "ncm"};
+        return new String[]{"id as _id", "cod_barra", "descricao", "preco", "precocusto", "fornecedor", "marca", "ncm"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Fornecedor", "Marca", "NCM"};
+        return new String[]{"Cód. De Barra", "Descrição", "Preço", "Preço De Custo", "Fornecedor", "Marca", "NCM"};
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCodBarra() {
@@ -83,6 +95,14 @@ public class Produto implements Serializable, IModel<Produto> {
         this.preco = preco;
     }
 
+    public Double getPrecocusto() {
+        return precocusto;
+    }
+
+    public void setPrecocusto(Double precocusto) {
+        this.precocusto = precocusto;
+    }
+
     public String getNcm() {
         return ncm;
     }
@@ -101,12 +121,12 @@ public class Produto implements Serializable, IModel<Produto> {
 
     @Override
     public Object getIdentifier() {
-        return codBarra;
+        return id;
     }
 
     @Override
     public String getDeleteWhereClause() {
-        return "cod_barra = ?";
+        return "id = ?";
     }
 
     @Override
@@ -143,6 +163,7 @@ public class Produto implements Serializable, IModel<Produto> {
     public void load(Object... ids) {
         Produto produto = listarPorId(ids);
         if (produto != null) {
+            id = produto.getId();
             codBarra = produto.getCodBarra();
             marca = produto.getMarca();
             fornecedor = produto.getFornecedor();

@@ -1,6 +1,5 @@
 package com.vandamodaintima.jfpsb.contador.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagem;
@@ -15,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contagem implements Serializable, IModel<Contagem> {
+public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     private transient DAOContagem daoContagem;
 
     public Contagem() {
@@ -25,6 +24,8 @@ public class Contagem implements Serializable, IModel<Contagem> {
         daoContagem = new DAOContagem(conexaoBanco);
     }
 
+    @SerializedName(value = "Id")
+    private long id;
     @SerializedName(value = "Loja")
     private Loja loja;
     @SerializedName(value = "Data")
@@ -33,6 +34,14 @@ public class Contagem implements Serializable, IModel<Contagem> {
     private Boolean finalizada;
     @SerializedName(value = "TipoContagem")
     private TipoContagem tipoContagem;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Loja getLoja() {
         return loja;
@@ -88,7 +97,7 @@ public class Contagem implements Serializable, IModel<Contagem> {
     }
 
     public static String[] getColunas() {
-        return new String[]{"ROWID as _id", "loja", "data", "finalizada", "tipo"};
+        return new String[]{"id as _id", "loja", "data", "finalizada", "tipo"};
     }
 
     public static String[] getHeaders() {
@@ -101,12 +110,12 @@ public class Contagem implements Serializable, IModel<Contagem> {
 
     @Override
     public Object getIdentifier() {
-        return new String[]{loja.getCnpj(), getDataParaSQLite()};
+        return id;
     }
 
     @Override
     public String getDeleteWhereClause() {
-        return "loja = ? AND data = ?";
+        return "id = ?";
     }
 
     @Override
@@ -143,6 +152,7 @@ public class Contagem implements Serializable, IModel<Contagem> {
     public void load(Object... ids) {
         Contagem contagem = listarPorId(ids);
         if (contagem != null) {
+            id = contagem.getId();
             loja = contagem.getLoja();
             data = contagem.getData();
             finalizada = contagem.getFinalizada();

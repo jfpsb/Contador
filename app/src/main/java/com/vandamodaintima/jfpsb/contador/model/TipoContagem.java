@@ -7,7 +7,7 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 import java.io.Serializable;
 import java.util.List;
 
-public class TipoContagem implements Serializable, IModel<TipoContagem> {
+public class TipoContagem extends AModel implements Serializable, IModel<TipoContagem> {
     private transient DAOTipoContagem daoTipoContagem;
 
     @SerializedName(value = "Id")

@@ -52,8 +52,8 @@ public class AlterarDeletarContagemController {
         }
     }
 
-    public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
+    public void carregaContagem(long id) {
+        contagemModel.load(id);
     }
 
     public void carregaTipoContagem(Object o) {

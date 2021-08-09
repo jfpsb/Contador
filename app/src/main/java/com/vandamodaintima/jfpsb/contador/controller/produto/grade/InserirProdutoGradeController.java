@@ -39,7 +39,7 @@ public class InserirProdutoGradeController implements IController {
             return;
         }
 
-        if (model.getPreco() <= 0.0) {
+        if (model.getPreco_custo() <= 0.0) {
             view.mensagemAoUsuario("Preço Não Pode Ser Zero ou Menor que Zero");
             return;
         }
@@ -64,10 +64,10 @@ public class InserirProdutoGradeController implements IController {
 
     public Boolean setPreco(String preco) {
         try {
-            model.setPreco(Double.parseDouble(preco));
+            model.setPreco_custo(Double.parseDouble(preco));
             return true;
         } catch (NumberFormatException ne) {
-            model.setPreco(0.0);
+            model.setPreco_custo(0.0);
             return false;
         }
     }

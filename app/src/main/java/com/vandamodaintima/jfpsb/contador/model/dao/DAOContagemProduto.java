@@ -35,14 +35,19 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("id", contagemProduto.getId());
+
             if (contagemProduto.getProdutoGrade() != null) {
                 contentValues.put("produto_grade", contagemProduto.getProdutoGrade().getId());
             } else {
                 contentValues.putNull("produto_grade");
             }
-            contentValues.put("produto", contagemProduto.getProduto().getCodBarra());
-            contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
-            contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+            if(contagemProduto.getProduto() != null) {
+                contentValues.put("produto", contagemProduto.getProduto().getId());
+            } else {
+                contentValues.putNull("produto");
+            }
+
+            contentValues.put("contagem", contagemProduto.getContagem().getId());
             contentValues.put("quant", contagemProduto.getQuant());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
@@ -68,14 +73,14 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 ContentValues contentValues = new ContentValues();
 
                 contentValues.put("id", contagemProduto.getId());
+
                 if (contagemProduto.getProdutoGrade() != null) {
                     contentValues.put("produto_grade", contagemProduto.getProdutoGrade().getId());
                 } else {
                     contentValues.putNull("produto_grade");
                 }
-                contentValues.put("produto", contagemProduto.getProduto().getCodBarra());
-                contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
-                contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+                contentValues.put("produto", contagemProduto.getProduto().getId());
+                contentValues.put("contagem", contagemProduto.getContagem().getId());
                 contentValues.put("quant", contagemProduto.getQuant());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -107,8 +112,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 contentValues.putNull("produto_grade");
             }
             contentValues.put("produto", contagemProduto.getProduto().getCodBarra());
-            contentValues.put("contagem_data", contagemProduto.getContagem().getDataParaSQLite());
-            contentValues.put("contagem_loja", contagemProduto.getContagem().getLoja().getCnpj());
+            contentValues.put("contagem", contagemProduto.getContagem().getId());
             contentValues.put("quant", contagemProduto.getQuant());
 
             conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
@@ -137,9 +141,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 contagem_produto.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 contagem_produto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
                 contagem_produto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
-                String contagem_loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
-                String contagem_data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-                contagem_produto.setContagem(daoContagem.listarPorId(contagem_loja, contagem_data));
+                long contagem = cursor.getLong(cursor.getColumnIndexOrThrow("contagem"));
+                contagem_produto.setContagem(daoContagem.listarPorId(contagem));
 
                 contagem_produto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
 
@@ -164,9 +167,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             contagem_produto.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
             contagem_produto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
             contagem_produto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
-            String contagem_loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
-            String contagem_data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-            contagem_produto.setContagem(daoContagem.listarPorId(contagem_loja, contagem_data));
+            long contagem = cursor.getLong(cursor.getColumnIndexOrThrow("contagem"));
+            contagem_produto.setContagem(daoContagem.listarPorId(contagem));
             contagem_produto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
         }
 
@@ -180,43 +182,34 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     public Cursor listarPorContagemCursor(Contagem contagem) {
-        String loja = contagem.getLoja().getCnpj();
-        String data = contagem.getDataParaSQLite();
-
-        String sql = "SELECT cp.id as _id, * FROM contagem_produto AS cp INNER JOIN produto_grade AS pg ON pg.id = cp.produto_grade WHERE contagem_loja = ? AND contagem_data = ? ORDER BY cp.id";
-        String[] selection = new String[]{loja, data};
+        String sql = "SELECT cp.id as _id, * FROM contagem_produto AS cp INNER JOIN produto_grade AS pg ON pg.id = cp.produto_grade WHERE contagem = ? ORDER BY cp.id";
+        String[] selection = new String[]{String.valueOf(contagem.getId())};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
     public Cursor listarPorContagemGroupByProdutoCursor(Contagem contagem) {
-        String loja = contagem.getLoja().getCnpj();
-        String data = contagem.getDataParaSQLite();
-
-        String sql = "SELECT cp.id as _id, cp.produto_grade AS produto_grade, cp.contagem_data AS contagem_data, cp.contagem_loja AS contagem_loja, SUM(cp.quant) AS quant, cp.produto AS produto, " +
+        String sql = "SELECT cp.id as _id, cp.produto_grade AS produto_grade, cp.contagem AS contagem, SUM(cp.quant) AS quant, cp.produto AS produto, " +
                 "p.descricao AS descricao " +
                 "FROM contagem_produto AS cp " +
                 "LEFT JOIN produto_grade AS pg ON cp.produto_grade = pg.id " +
-                "INNER JOIN produto AS p ON cp.produto = p.cod_barra " +
-                "WHERE contagem_loja = ? AND contagem_data = ? GROUP BY cp.produto ORDER BY p.descricao";
+                "INNER JOIN produto AS p ON cp.produto = p.id " +
+                "WHERE contagem = ? GROUP BY cp.produto ORDER BY p.descricao";
 
-        String[] selection = new String[]{loja, data};
+        String[] selection = new String[]{String.valueOf(contagem.getId())};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
     public Cursor listarPorContagemGroupByGradeCursor(Contagem contagem) {
-        String loja = contagem.getLoja().getCnpj();
-        String data = contagem.getDataParaSQLite();
-
-        String sql = "SELECT cp.id as _id, cp.produto_grade AS produto_grade, cp.contagem_data AS contagem_data, cp.contagem_loja AS contagem_loja, SUM(cp.quant) AS quant, cp.produto AS produto, " +
+        String sql = "SELECT cp.id as _id, cp.produto_grade AS produto_grade, pg.cod_barra AS produto_grade_cod_barra, p.cod_barra AS produto_cod_barra, cp.contagem AS contagem, SUM(cp.quant) AS quant, cp.produto AS produto, " +
                 "p.descricao AS descricao " +
                 "FROM contagem_produto AS cp " +
                 "LEFT JOIN produto_grade AS pg ON cp.produto_grade = pg.id " +
-                "INNER JOIN produto AS p ON cp.produto = p.cod_barra " +
-                "WHERE contagem_loja = ? AND contagem_data = ? GROUP BY cp.produto, cp.produto_grade ORDER BY p.descricao";
+                "INNER JOIN produto AS p ON cp.produto = p.id " +
+                "WHERE contagem = ? GROUP BY cp.produto, cp.produto_grade ORDER BY p.descricao";
 
-        String[] selection = new String[]{loja, data};
+        String[] selection = new String[]{String.valueOf(contagem.getId())};
 
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -233,9 +226,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
                 contagemProduto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
 
-                String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
-                String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-                contagemProduto.setContagem(daoContagem.listarPorId(loja, data));
+                long contagemId = cursor.getLong(cursor.getColumnIndexOrThrow("contagem"));
+                contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
 
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
                 contagemProdutos.add(contagemProduto);
@@ -257,9 +249,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
                 contagemProduto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
 
-                String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
-                String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-                contagemProduto.setContagem(daoContagem.listarPorId(loja, data));
+                long contagemId = cursor.getLong(cursor.getColumnIndexOrThrow("contagem"));
+                contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
 
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
                 contagemProdutos.add(contagemProduto);
@@ -281,9 +272,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
                 contagemProduto.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
 
-                String loja = cursor.getString(cursor.getColumnIndexOrThrow("contagem_loja"));
-                String data = cursor.getString(cursor.getColumnIndexOrThrow("contagem_data"));
-                contagemProduto.setContagem(daoContagem.listarPorId(loja, data));
+                long contagemId = cursor.getLong(cursor.getColumnIndexOrThrow("contagem"));
+                contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
 
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
 

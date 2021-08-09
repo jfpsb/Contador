@@ -3,11 +3,20 @@ package com.vandamodaintima.jfpsb.contador.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class Estoque implements IModel<Estoque>, Serializable {
+public class Estoque extends AModel implements IModel<Estoque>, Serializable {
+    private long id;
     private ProdutoGrade produtoGrade;
     private Produto produto;
     private Loja loja;
     private int quantidade;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public ProdutoGrade getProdutoGrade() {
         return produtoGrade;
@@ -43,7 +52,7 @@ public class Estoque implements IModel<Estoque>, Serializable {
 
     @Override
     public Object getIdentifier() {
-        return null;
+        return id;
     }
 
     @Override

@@ -69,9 +69,8 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarContagemController(this, conexaoBanco);
 
-        String loja = getIntent().getStringExtra("loja");
-        String data = getIntent().getStringExtra("data");
-        controller.carregaContagem(loja, data);
+        long id = getIntent().getLongExtra("id", 0);
+        controller.carregaContagem(id);
 
         setAlertBuilderAtualizar();
         setAlertBuilderDeletar();
@@ -100,12 +99,11 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         spinnerTipoContagem.setSelection(controller.getTipoContagemIndex());
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
-            int id = menuItem.getItemId();
-            switch (id) {
+            int menuItemItemId = menuItem.getItemId();
+            switch (menuItemItemId) {
                 case R.id.menuItemVerProdutos:
                     Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-                    visualizarContagem.putExtra("loja", controller.getContagem().getLoja().getCnpj());
-                    visualizarContagem.putExtra("data", controller.getContagem().getDataParaSQLite());
+                    visualizarContagem.putExtra("id", controller.getContagem().getId());
                     startActivity(visualizarContagem);
                     break;
                 case R.id.menuItemExportarContagemExcel:
@@ -124,8 +122,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
                     break;
                 case R.id.menuItemAdicionarContagem:
                     Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-                    intent.putExtra("loja", controller.getContagem().getLoja().getCnpj());
-                    intent.putExtra("data", controller.getContagem().getDataParaSQLite());
+                    intent.putExtra("id", controller.getContagem().getId());
                     startActivity(intent);
                     break;
             }

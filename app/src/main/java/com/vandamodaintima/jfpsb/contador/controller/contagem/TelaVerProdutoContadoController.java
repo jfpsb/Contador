@@ -46,8 +46,8 @@ public class TelaVerProdutoContadoController {
         contagemProdutoArrayAdapter.notifyDataSetChanged();
     }
 
-    public void carregaContagem(String loja, String data) {
-        contagemProdutoModel.setContagem(contagemModel.listarPorId(loja, data));
+    public void carregaContagem(long id) {
+        contagemProdutoModel.setContagem(contagemModel.listarPorId(id));
     }
 
     public void carregaContagemProduto(long id) {

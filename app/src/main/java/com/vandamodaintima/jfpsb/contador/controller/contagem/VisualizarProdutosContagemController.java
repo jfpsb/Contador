@@ -22,7 +22,7 @@ public class VisualizarProdutosContagemController {
     }
 
     public void pesquisar() {
-        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByProdutoCursor(contagemModel);
+        Cursor cursor = contagemProdutoModel.listarPorContagemGroupByGradeCursor(contagemModel);
 
         if (cursor.getCount() == 0) {
             view.mensagemAoUsuario("Não Há Produtos Na Contagem");
@@ -32,7 +32,7 @@ public class VisualizarProdutosContagemController {
         contagemProdutoCursorAdapter.notifyDataSetChanged();
     }
 
-    public void carregaContagem(String loja, String data) {
-        contagemModel.load(loja, data);
+    public void carregaContagem(long id) {
+        contagemModel.load(id);
     }
 }

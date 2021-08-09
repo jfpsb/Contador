@@ -12,16 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.controller.grade.ProdutoGradeArrayAdapter;
 import com.vandamodaintima.jfpsb.contador.controller.produto.PesquisarProdutoForContagemForResultController;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+
+import java.util.Objects;
 
 public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     private String codigo;
     private AlertDialog.Builder alertaQuantidadeProduto;
+    private AlertDialog.Builder alertaProdutoGrade;
+    private ProdutoGradeArrayAdapter produtoGradeArrayAdapter;
 
     private static final int TELA_SELECIONAR_PRODUTO = 1;
 
@@ -37,10 +44,18 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
-        controller.carregaProduto(cod_barra);
-        setAlertaQuantidadeProduto();
-        alertaQuantidadeProduto.show();
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        controller.carregaProduto(id);
+        controller.setProdutoGradeModel(null);
+
+        if (controller.getProduto().getProdutoGrades().size() > 0) {
+            produtoGradeArrayAdapter = new ProdutoGradeArrayAdapter(Objects.requireNonNull(getContext()), controller.getProduto().getProdutoGrades(), false);
+            setAlertaProdutoGrade();
+            alertaProdutoGrade.show();
+        } else {
+            setAlertaQuantidadeProduto();
+            alertaQuantidadeProduto.show();
+        }
     }
 
     private void setAlertaQuantidadeProduto() {
@@ -66,20 +81,38 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                 return;
             }
 
-            ((PesquisarProdutoForContagemForResultController)controller).atualizar();
+            //((PesquisarProdutoForContagemForResultController) controller).atualizar();
 
             Intent intent = new Intent();
-            intent.putExtra("produto", controller.getProduto());
+
+            if (controller.getProdutoGradeModel() != null) {
+                intent.putExtra("produtograde", controller.getProdutoGradeModel());
+            } else {
+                intent.putExtra("produto", controller.getProduto());
+            }
+
             intent.putExtra("quantidade", quantidade);
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         });
 
-        alertaQuantidadeProduto.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada");
-            }
+        alertaQuantidadeProduto.setNegativeButton("Cancelar", (dialogInterface, i) -> mensagemAoUsuario("A Quantidade Não Foi Informada. A Contagem Não Foi Adicionada"));
+    }
+
+    private void setAlertaProdutoGrade() {
+        alertaProdutoGrade = new AlertDialog.Builder(getContext());
+        alertaProdutoGrade.setTitle("Selecione A Grade:");
+        alertaProdutoGrade.setAdapter(produtoGradeArrayAdapter, (dialog, which) -> {
+            ProdutoGrade pg = produtoGradeArrayAdapter.getItem(which);
+            Toast.makeText(getContext(), "Grade Selecionada: " + pg.getCodBarra(), Toast.LENGTH_LONG).show();
+            controller.setProdutoGradeModel(pg);
+            setAlertaQuantidadeProduto();
+            alertaQuantidadeProduto.show();
+        });
+        alertaProdutoGrade.setNegativeButton("Selecionar Produto E Não Grade", (dialog, which) -> {
+            controller.setProdutoGradeModel(null);
+            setAlertaQuantidadeProduto();
+            alertaQuantidadeProduto.show();
         });
     }
 
@@ -90,7 +123,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
                 Produto produto = (Produto) data.getSerializableExtra("produto");
                 controller.carregaProduto(produto);
                 int quantidade = data.getIntExtra("quantidade", 1);
-                ((PesquisarProdutoForContagemForResultController)controller).cadastrar(quantidade);
+                ((PesquisarProdutoForContagemForResultController) controller).cadastrar(quantidade);
             }
         }
     }

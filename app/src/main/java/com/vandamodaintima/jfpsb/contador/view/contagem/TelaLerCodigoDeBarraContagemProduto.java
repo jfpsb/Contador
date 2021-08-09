@@ -55,9 +55,8 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
         controller = new TelaLerCodigoDeBarraController(this, ownerActivity.getConexaoBanco());
 
         Bundle bundle = getArguments();
-        String loja = bundle.getString("loja");
-        String data = bundle.getString("data");
-        controller.carregaContagem(loja, data);
+        long id  = bundle.getLong("id");
+        controller.carregaContagem(id);
 
         btnInserirManualmente.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TelaProdutoForContagemForResult.class);
@@ -77,7 +76,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
         switch (requestCode) {
             case TELA_SELECIONAR_PRODUTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
+                    ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produtograde");
                     Produto produto = (Produto) data.getSerializableExtra("produto");
 
                     if (produtoGrade != null) {

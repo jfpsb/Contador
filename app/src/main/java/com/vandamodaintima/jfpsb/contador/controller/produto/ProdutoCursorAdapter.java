@@ -29,7 +29,7 @@ public class ProdutoCursorAdapter extends CursorAdapter {
         TextView txtPreco = view.findViewById(R.id.txtPreco);
         TextView txtPossuiGrades = view.findViewById(R.id.txtPossuiGrade);
 
-        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
         String cod_barra_grade = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_grade"));
@@ -40,7 +40,7 @@ public class ProdutoCursorAdapter extends CursorAdapter {
             txtPossuiGrades.setText("SIM");
         }
 
-        txtCodBarra.setText(id);
+        txtCodBarra.setText(cod_barra);
         txtDescricao.setText(descricao);
         txtPreco.setText(String.valueOf(preco));
     }

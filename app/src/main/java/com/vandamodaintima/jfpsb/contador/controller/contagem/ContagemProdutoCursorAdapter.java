@@ -29,7 +29,12 @@ public class ContagemProdutoCursorAdapter extends CursorAdapter {
         TextView lblDescricao = view.findViewById(R.id.txtDescricaoProduto);
         TextView lblQuantidade = view.findViewById(R.id.lblQuantidade);
 
-        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto"));
+        String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto_grade_cod_barra"));
+
+        if(cod_barra == null) {
+            cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("produto_cod_barra"));
+        }
+        
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
         int quantidade = cursor.getInt(cursor.getColumnIndexOrThrow("quant"));
 

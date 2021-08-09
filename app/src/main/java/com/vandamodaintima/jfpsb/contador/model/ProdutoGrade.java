@@ -7,13 +7,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
+public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serializable {
     private transient DAOProdutoGrade daoProdutoGrade;
     private long id;
     private String codBarra;
     private Produto produto;
     private ProdutoGrade produtoGrade;
-    private double preco;
+    private double preco_custo;
+    private double preco_venda;
     private List<Grade> grades = new ArrayList<>();
 
     public ProdutoGrade() {
@@ -47,12 +48,20 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
         this.produto = produto;
     }
 
-    public double getPreco() {
-        return preco;
+    public double getPreco_custo() {
+        return preco_custo;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
+    public void setPreco_custo(double preco_custo) {
+        this.preco_custo = preco_custo;
+    }
+
+    public double getPreco_venda() {
+        return preco_venda;
+    }
+
+    public void setPreco_venda(double preco_venda) {
+        this.preco_venda = preco_venda;
     }
 
     public List<Grade> getGrades() {
@@ -72,7 +81,7 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "cod_barra", "produto", "preco"};
+        return new String[]{"id as _id", "cod_barra", "produto", "preco_venda", "preco_custo"};
     }
 
     public static String[] getHeaders() {
@@ -81,7 +90,7 @@ public class ProdutoGrade implements IModel<ProdutoGrade>, Serializable {
 
     @Override
     public Object getIdentifier() {
-        return null;
+        return id;
     }
 
     @Override

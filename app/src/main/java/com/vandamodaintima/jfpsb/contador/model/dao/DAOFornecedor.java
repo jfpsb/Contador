@@ -32,6 +32,12 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             contentValues.put("email", fornecedor.getEmail());
             contentValues.put("telefone", fornecedor.getTelefone());
 
+            if(fornecedor.getRepresentante() != null) {
+                contentValues.put("representante", fornecedor.getRepresentante().getId());
+            } else {
+                contentValues.putNull("representante");
+            }
+
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
@@ -58,6 +64,12 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
                 contentValues.put("fantasia", f.getFantasia());
                 contentValues.put("email", f.getEmail());
                 contentValues.put("telefone", f.getTelefone());
+
+                if(f.getRepresentante() != null) {
+                    contentValues.put("representante", f.getRepresentante().getId());
+                } else {
+                    contentValues.putNull("representante");
+                }
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
@@ -87,6 +99,12 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             contentValues.put("fantasia", fornecedor.getFantasia());
             contentValues.put("email", fornecedor.getEmail());
             contentValues.put("telefone", fornecedor.getTelefone());
+
+            if(fornecedor.getRepresentante() != null) {
+                contentValues.put("representante", fornecedor.getRepresentante().getId());
+            } else {
+                contentValues.putNull("representante");
+            }
 
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();

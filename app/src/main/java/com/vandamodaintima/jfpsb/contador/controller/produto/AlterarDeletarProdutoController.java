@@ -49,7 +49,7 @@ public class AlterarDeletarProdutoController {
         }
     }
 
-    public void carregaProduto(String id) {
+    public void carregaProduto(long id) {
         model.load(id);
     }
 

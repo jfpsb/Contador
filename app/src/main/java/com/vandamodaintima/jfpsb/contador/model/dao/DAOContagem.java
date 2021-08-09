@@ -34,16 +34,16 @@ public class DAOContagem extends ADAO<Contagem> {
 
             ContentValues contentValues = new ContentValues();
 
+            contentValues.put("id", contagem.getId());
             contentValues.put("loja", contagem.getLoja().getCnpj());
             contentValues.put("data", contagem.getDataParaSQLite());
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
-
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
+
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
@@ -61,6 +61,7 @@ public class DAOContagem extends ADAO<Contagem> {
             for (Contagem contagem : lista) {
                 ContentValues contentValues = new ContentValues();
 
+                contentValues.put("id", contagem.getId());
                 contentValues.put("loja", contagem.getLoja().getCnpj());
                 contentValues.put("data", contagem.getDataParaSQLite());
                 contentValues.put("finalizada", contagem.getFinalizada());
@@ -84,10 +85,6 @@ public class DAOContagem extends ADAO<Contagem> {
     @Override
     public Boolean atualizar(Contagem contagem) {
         try {
-            Object[] chaves = (Object[]) contagem.getIdentifier();
-            String cnpj = (String) chaves[0];
-            String data = (String) chaves[1];
-
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
@@ -95,11 +92,10 @@ public class DAOContagem extends ADAO<Contagem> {
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "loja = ? AND data = ?", new String[]{cnpj, data});
-
+            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(contagem.getId())});
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
+
         } catch (SQLException ex) {
             Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
         } finally {
@@ -119,6 +115,7 @@ public class DAOContagem extends ADAO<Contagem> {
             while (cursor.moveToNext()) {
                 Contagem contagem = new Contagem();
 
+                contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
                 contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
@@ -139,12 +136,13 @@ public class DAOContagem extends ADAO<Contagem> {
     public Contagem listarPorId(Object... ids) {
         Contagem contagem = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "loja = ? AND data = ?", new String[]{String.valueOf(ids[0]), String.valueOf(ids[1])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             contagem = new Contagem();
 
+            contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
             contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
             contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
@@ -165,7 +163,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     public Cursor listarPorLojaPeriodoCursor(String loja, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        String sql = "SELECT contagem.ROWID as _id, loja, nome, data, finalizada, tipo FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
+        String sql = "SELECT contagem.id as _id, loja, nome, data, finalizada, tipo FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
 
         dataFinal = dataFinal.plusDays(1);
         dataFinal = dataFinal.minusMinutes(1);
@@ -184,6 +182,7 @@ public class DAOContagem extends ADAO<Contagem> {
             while (cursor.moveToNext()) {
                 Contagem contagem = new Contagem();
 
+                contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
                 contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 

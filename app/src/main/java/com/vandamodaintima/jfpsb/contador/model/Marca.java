@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Marca implements Serializable, IModel<Marca> {
+public class Marca extends AModel implements Serializable, IModel<Marca> {
     private transient DAOMarca daoMarca;
 
     public Marca() {

@@ -14,7 +14,7 @@ import java.util.List;
  * Created by jfpsb on 08/02/2018.
  */
 
-public class Fornecedor implements Serializable, IModel<Fornecedor> {
+public class Fornecedor extends AModel implements Serializable, IModel<Fornecedor> {
     private transient DAOFornecedor daoFornecedor;
 
     public Fornecedor() {
@@ -30,6 +30,7 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
 
     @SerializedName(value = "Cnpj")
     private String cnpj;
+    private Representante representante;
     @SerializedName(value = "Nome")
     private String nome;
     @SerializedName(value = "Fantasia")
@@ -45,6 +46,14 @@ public class Fornecedor implements Serializable, IModel<Fornecedor> {
 
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
+    }
+
+    public Representante getRepresentante() {
+        return representante;
+    }
+
+    public void setRepresentante(Representante representante) {
+        this.representante = representante;
     }
 
     public String getNome() {

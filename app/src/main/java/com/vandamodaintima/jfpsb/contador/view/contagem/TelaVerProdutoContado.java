@@ -37,9 +37,8 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
         controller = new TelaVerProdutoContadoController(this, owner.getConexaoBanco());
 
         Bundle bundle = getArguments();
-        String loja = bundle.getString("loja");
-        String data = bundle.getString("data");
-        controller.carregaContagem(loja, data);
+        long id = bundle.getLong("id");
+        controller.carregaContagem(id);
 
         listViewContagemProduto.setOnItemClickListener((adapterView, view1, i, l) -> cliqueEmItemLista(adapterView, i));
 

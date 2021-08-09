@@ -32,8 +32,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         stub.setLayoutResource(R.layout.activity_visualizar_produtos_contagem);
         stub.inflate();
 
-        String loja = getIntent().getStringExtra("loja");
-        String data = getIntent().getStringExtra("data");
+        long idContagem = getIntent().getLongExtra("id", 0);
 
         listViewProdutoContagem = findViewById(R.id.listViewProdutoContagem);
 
@@ -44,7 +43,7 @@ public class VisualizarProdutosContagem extends ActivityBaseView {
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new VisualizarProdutosContagemController(this, conexaoBanco);
 
-        controller.carregaContagem(loja, data);
+        controller.carregaContagem(idContagem);
         controller.pesquisar();
     }
 

@@ -34,7 +34,7 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_produto, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_pesquisa_produto_grade, parent, false);
         }
 
         ProdutoGrade produtoGrade = objects.get(position);
@@ -49,7 +49,7 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
             descricao += produtoGrade.getProduto().getDescricao() + " - ";
 
         lblCodBarra.setText(produtoGrade.getCodBarra());
-        lblPreco.setText(String.valueOf(produtoGrade.getPreco()));
+        lblPreco.setText(String.valueOf(produtoGrade.getPreco_venda()));
 
         descricao += produtoGrade.getGradesToSmallString();
 

@@ -10,6 +10,7 @@ import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 
+import java.util.Date;
 import java.util.List;
 
 public class InserirContagemController implements IController {
@@ -28,6 +29,8 @@ public class InserirContagemController implements IController {
     }
 
     public void salvar() {
+        contagemModel.setId(new Date().getTime());
+
         if(contagemModel.getLoja() == null) {
             view.mensagemAoUsuario("Escolha Uma Loja!");
             return;

@@ -17,9 +17,11 @@ public class TelaLerCodigoDeBarraController {
     private ProdutoGrade produtoGrade;
     private Contagem contagemManager;
     private ContagemProduto model;
+    private ConexaoBanco conexaoBanco;
 
     public TelaLerCodigoDeBarraController(TelaLerCodigoDeBarraContagemProduto view, ConexaoBanco conexaoBanco) {
         this.view = view;
+        this.conexaoBanco = conexaoBanco;
         produto = new Produto(conexaoBanco);
         contagemManager = new Contagem(conexaoBanco);
         model = new ContagemProduto(conexaoBanco);
@@ -34,6 +36,8 @@ public class TelaLerCodigoDeBarraController {
 
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            model = new ContagemProduto(conexaoBanco);
+            model.setContagem(contagemManager);
         } else {
             view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
         }
@@ -66,8 +70,9 @@ public class TelaLerCodigoDeBarraController {
         return produto.listarPorId(codigo);
     }
 
-    public void carregaContagem(String loja, String data) {
-        model.setContagem(contagemManager.listarPorId(loja, data));
+    public void carregaContagem(long id) {
+        contagemManager.load(id);
+        model.setContagem(contagemManager);
     }
 
     public void carregaProdutoGrade(ProdutoGrade produtoGrade) {

@@ -1,15 +1,19 @@
 package com.vandamodaintima.jfpsb.contador.controller.produto;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.PesquisarView;
 
 public class PesquisarProdutoController {
     protected PesquisarView view;
     private ProdutoCursorAdapter produtoAdapter;
     protected Produto produtoModel;
+    private ProdutoGrade produtoGradeModel; //Usado para guardar grade selecionada do produto
 
     public PesquisarProdutoController(PesquisarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
@@ -71,6 +75,14 @@ public class PesquisarProdutoController {
     public void carregaProduto(Object o) {
         if (o instanceof Produto)
             produtoModel = ((Produto) o);
+    }
+
+    public ProdutoGrade getProdutoGradeModel() {
+        return produtoGradeModel;
+    }
+
+    public void setProdutoGradeModel(ProdutoGrade produtoGradeModel) {
+        this.produtoGradeModel = produtoGradeModel;
     }
 
     public Produto getProduto() {

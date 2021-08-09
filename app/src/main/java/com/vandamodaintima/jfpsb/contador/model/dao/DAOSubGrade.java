@@ -102,6 +102,7 @@ public class DAOSubGrade extends ADAO<SubGrade> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 SubGrade subGrade = new SubGrade();
+                subGrade.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
                 subGrade.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
                 subGrade.setGrade(daoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
                 subGrades.add(subGrade);

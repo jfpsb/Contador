@@ -6,7 +6,7 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoGrade;
 import java.io.Serializable;
 import java.util.List;
 
-public class TipoGrade implements IModel<TipoGrade>, Serializable {
+public class TipoGrade extends AModel implements IModel<TipoGrade>, Serializable {
     private transient DAOTipoGrade daoTipoGrade;
 
     private int id;
