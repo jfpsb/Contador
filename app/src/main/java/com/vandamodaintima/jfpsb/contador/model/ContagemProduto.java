@@ -8,8 +8,9 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOContagemProduto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
-public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
+public class ContagemProduto extends AModel implements Serializable, IModel<ContagemProduto> {
     private transient DAOContagemProduto daoContagemProduto;
 
     public ContagemProduto() {
@@ -20,20 +21,19 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     }
 
     @SerializedName(value = "Id")
-    private long id;
+    private UUID id;
     @SerializedName(value = "Contagem")
     private Contagem contagem;
     @SerializedName(value = "ProdutoGrade")
     private ProdutoGrade produtoGrade;
-    private Produto produto;
     @SerializedName(value = "Quant")
     private int quant;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -59,14 +59,6 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
 
     public void setQuant(int quant) {
         this.quant = quant;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
     }
 
     public static String[] getColunas() {
@@ -137,7 +129,7 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     }
 
     public List<ContagemProduto> listarPorContagemGroupByGrade(Contagem contagemModel) {
-        return daoContagemProduto.listarPorContagemGroupByGrade(contagemModel);
+        return daoContagemProduto.listarPorContagemGroupByProdutoGrade(contagemModel);
     }
 
     public Cursor listarPorContagemCursor(Contagem contagem) {
@@ -153,6 +145,6 @@ public class ContagemProduto implements Serializable, IModel<ContagemProduto> {
     }
 
     public Cursor listarPorContagemGroupByGradeCursor(Contagem contagemModel) {
-        return daoContagemProduto.listarPorContagemGroupByGradeCursor(contagemModel);
+        return daoContagemProduto.listarPorContagemGroupByProdutoGradeCursor(contagemModel);
     }
 }

@@ -13,6 +13,7 @@ import org.threeten.bp.format.FormatStyle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     private transient DAOContagem daoContagem;
@@ -25,7 +26,7 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     }
 
     @SerializedName(value = "Id")
-    private long id;
+    private UUID id;
     @SerializedName(value = "Loja")
     private Loja loja;
     @SerializedName(value = "Data")
@@ -35,11 +36,11 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     @SerializedName(value = "TipoContagem")
     private TipoContagem tipoContagem;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

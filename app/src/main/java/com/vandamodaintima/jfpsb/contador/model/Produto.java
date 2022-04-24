@@ -9,6 +9,7 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Produto extends AModel implements Serializable, IModel<Produto> {
     private transient DAOProduto daoProduto;
@@ -21,7 +22,7 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
     }
 
     @SerializedName(value = "Id")
-    private long id;
+    private UUID id;
     @SerializedName(value = "CodBarra")
     private String codBarra;
     @SerializedName(value = "Marca")
@@ -30,10 +31,6 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
     private Fornecedor fornecedor;
     @SerializedName(value = "Descricao")
     private String descricao;
-    @SerializedName(value = "Preco")
-    private Double preco;
-    @SerializedName(value = "PrecoCusto")
-    private Double precocusto;
     @SerializedName(value = "Ncm")
     private String ncm;
     @SerializedName(value = "Grades")
@@ -47,11 +44,11 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
         return new String[]{"Cód. De Barra", "Descrição", "Preço", "Preço De Custo", "Fornecedor", "Marca", "NCM"};
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -85,22 +82,6 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
-
-    public Double getPrecocusto() {
-        return precocusto;
-    }
-
-    public void setPrecocusto(Double precocusto) {
-        this.precocusto = precocusto;
     }
 
     public String getNcm() {
@@ -168,7 +149,6 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
             marca = produto.getMarca();
             fornecedor = produto.getFornecedor();
             descricao = produto.getDescricao();
-            preco = produto.getPreco();
             ncm = produto.getNcm();
             produtoGrades = produto.getProdutoGrades();
         }

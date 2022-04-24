@@ -51,7 +51,7 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
         lblCodBarra.setText(produtoGrade.getCodBarra());
         lblPreco.setText(String.valueOf(produtoGrade.getPreco_venda()));
 
-        descricao += produtoGrade.getGradesToSmallString();
+        descricao += produtoGrade.getGradesToShortString();
 
         lblDescricao.setText(descricao);
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Loja implements Serializable, IModel<Loja> {
+public class Loja extends AModel implements Serializable, IModel<Loja> {
     private transient DAOLoja daoLoja;
 
     @SerializedName(value = "Cnpj")
@@ -27,6 +27,7 @@ public class Loja implements Serializable, IModel<Loja> {
     private String endereco;
     @SerializedName(value = "InscricaoEstadual")
     private String inscricaoEstadual;
+    private double aluguel;
 
     public Loja() {
     }
@@ -87,12 +88,20 @@ public class Loja implements Serializable, IModel<Loja> {
         this.inscricaoEstadual = inscricaoEstadual;
     }
 
+    public double getAluguel() {
+        return aluguel;
+    }
+
+    public void setAluguel(double aluguel) {
+        this.aluguel = aluguel;
+    }
+
     public static String[] getColunas() {
-        return new String[]{"cnpj as _id", "matriz", "nome", "telefone", "endereco", "inscricaoestadual"};
+        return new String[]{"cnpj as _id", "matriz", "nome", "telefone", "endereco", "inscricaoestadual", "aluguel"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"CNPJ", "Nome", "Matriz", "Telefone", "Endereço", "Inscrição Estadual"};
+        return new String[]{"CNPJ", "Nome", "Matriz", "Telefone", "Endereço", "Inscrição Estadual", "Aluguel"};
     }
 
     @Override

@@ -8,7 +8,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
-        versionName "1.2.1.1.1"
+        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -18,11 +18,9 @@ android {
         }
     }
     packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/LICENSE', 'META-INF/LICENSE.txt']
+        }
     }
     compileOptions {
         targetCompatibility = 1.8

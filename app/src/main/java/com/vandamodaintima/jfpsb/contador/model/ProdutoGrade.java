@@ -6,16 +6,17 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOProdutoGrade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serializable {
     private transient DAOProdutoGrade daoProdutoGrade;
-    private long id;
+    private UUID id;
     private String codBarra;
+    private String codBarraAlternativo;
     private Produto produto;
-    private ProdutoGrade produtoGrade;
     private double preco_custo;
     private double preco_venda;
-    private List<Grade> grades = new ArrayList<>();
+    private List<SubGrade> grades = new ArrayList<>();
 
     public ProdutoGrade() {
     }
@@ -24,11 +25,11 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
         daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -38,6 +39,14 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
 
     public void setCodBarra(String codBarra) {
         this.codBarra = codBarra;
+    }
+
+    public String getCodBarraAlternativo() {
+        return codBarraAlternativo;
+    }
+
+    public void setCodBarraAlternativo(String codBarraAlternativo) {
+        this.codBarraAlternativo = codBarraAlternativo;
     }
 
     public Produto getProduto() {
@@ -64,24 +73,16 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
         this.preco_venda = preco_venda;
     }
 
-    public List<Grade> getGrades() {
+    public List<SubGrade> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<Grade> grades) {
+    public void setGrades(List<SubGrade> grades) {
         this.grades = grades;
     }
 
-    public ProdutoGrade getProdutoGrade() {
-        return produtoGrade;
-    }
-
-    public void setProdutoGrade(ProdutoGrade produtoGrade) {
-        this.produtoGrade = produtoGrade;
-    }
-
     public static String[] getColunas() {
-        return new String[]{"id as _id", "cod_barra", "produto", "preco_venda", "preco_custo"};
+        return new String[]{"id as _id", "cod_barra", "cod_barra_alternativo", "produto", "preco_venda", "preco_custo"};
     }
 
     public static String[] getHeaders() {
@@ -140,7 +141,7 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
     public String getGradesToString() {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < grades.size(); i++) {
-            str.append(grades.get(i).getTipoGrade().getNome()).append(" ").append(grades.get(i).getNome());
+            str.append(grades.get(i).getGrade().getTipoGrade().getNome()).append(" ").append(grades.get(i).getGrade().getNome());
             if (i != grades.size() - 1) {
                 str.append("/");
             }
@@ -148,10 +149,10 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
         return str.toString();
     }
 
-    public String getGradesToSmallString() {
+    public String getGradesToShortString() {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < grades.size(); i++) {
-            str.append(grades.get(i).getNome());
+            str.append(grades.get(i).getGrade().getNome());
             if (i != grades.size() + 1) {
                 str.append(" ");
             }

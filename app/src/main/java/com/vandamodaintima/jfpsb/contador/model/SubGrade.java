@@ -5,11 +5,12 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOSubGrade;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
-public class SubGrade implements IModel<SubGrade>, Serializable {
+public class SubGrade extends AModel implements IModel<SubGrade>, Serializable {
     private transient DAOSubGrade daoSubGrade;
 
-    private long id;
+    private UUID id;
     private ProdutoGrade produtoGrade;
     private Grade grade;
 
@@ -20,11 +21,11 @@ public class SubGrade implements IModel<SubGrade>, Serializable {
         daoSubGrade = new DAOSubGrade(conexaoBanco);
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

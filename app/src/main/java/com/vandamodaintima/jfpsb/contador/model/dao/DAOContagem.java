@@ -15,6 +15,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DAOContagem extends ADAO<Contagem> {
     private DAOLoja daoLoja;
@@ -34,11 +35,11 @@ public class DAOContagem extends ADAO<Contagem> {
 
             ContentValues contentValues = new ContentValues();
 
-            contentValues.put("id", contagem.getId());
+            contentValues.put("id", contagem.getId().toString());
             contentValues.put("loja", contagem.getLoja().getCnpj());
             contentValues.put("data", contagem.getDataParaSQLite());
             contentValues.put("finalizada", contagem.getFinalizada());
-            contentValues.put("tipo", contagem.getTipoContagem().getId());
+            contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -61,11 +62,11 @@ public class DAOContagem extends ADAO<Contagem> {
             for (Contagem contagem : lista) {
                 ContentValues contentValues = new ContentValues();
 
-                contentValues.put("id", contagem.getId());
+                contentValues.put("id", contagem.getId().toString());
                 contentValues.put("loja", contagem.getLoja().getCnpj());
                 contentValues.put("data", contagem.getDataParaSQLite());
                 contentValues.put("finalizada", contagem.getFinalizada());
-                contentValues.put("tipo", contagem.getTipoContagem().getId());
+                contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
@@ -90,9 +91,9 @@ public class DAOContagem extends ADAO<Contagem> {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put("finalizada", contagem.getFinalizada());
-            contentValues.put("tipo", contagem.getTipoContagem().getId());
+            contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(contagem.getId())});
+            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{contagem.getId().toString()});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
 
@@ -115,7 +116,7 @@ public class DAOContagem extends ADAO<Contagem> {
             while (cursor.moveToNext()) {
                 Contagem contagem = new Contagem();
 
-                contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
                 contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
@@ -142,7 +143,7 @@ public class DAOContagem extends ADAO<Contagem> {
             cursor.moveToFirst();
             contagem = new Contagem();
 
-            contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("id")));
+            contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("id"))));
             contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
             contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 
@@ -182,7 +183,7 @@ public class DAOContagem extends ADAO<Contagem> {
             while (cursor.moveToNext()) {
                 Contagem contagem = new Contagem();
 
-                contagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
                 contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
 

@@ -6,12 +6,13 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoContagem;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 public class TipoContagem extends AModel implements Serializable, IModel<TipoContagem> {
     private transient DAOTipoContagem daoTipoContagem;
 
     @SerializedName(value = "Id")
-    private long id;
+    private UUID id;
     @SerializedName(value = "Nome")
     private String nome;
 
@@ -22,11 +23,11 @@ public class TipoContagem extends AModel implements Serializable, IModel<TipoCon
         daoTipoContagem = new DAOTipoContagem(conexaoBanco);
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

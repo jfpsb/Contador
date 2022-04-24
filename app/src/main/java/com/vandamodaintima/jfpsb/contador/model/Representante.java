@@ -2,19 +2,20 @@ package com.vandamodaintima.jfpsb.contador.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 public class Representante extends AModel implements Serializable, IModel<Representante> {
-    private long id;
+    private UUID id;
     private String nome;
     private String whatsapp;
     private String cidadeestado;
     private String email;
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

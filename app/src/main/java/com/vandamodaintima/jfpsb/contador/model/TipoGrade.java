@@ -5,11 +5,12 @@ import com.vandamodaintima.jfpsb.contador.model.dao.DAOTipoGrade;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 public class TipoGrade extends AModel implements IModel<TipoGrade>, Serializable {
     private transient DAOTipoGrade daoTipoGrade;
 
-    private int id;
+    private UUID id;
     private String nome;
 
     public TipoGrade() {
@@ -19,11 +20,11 @@ public class TipoGrade extends AModel implements IModel<TipoGrade>, Serializable
         daoTipoGrade = new DAOTipoGrade(conexaoBanco);
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

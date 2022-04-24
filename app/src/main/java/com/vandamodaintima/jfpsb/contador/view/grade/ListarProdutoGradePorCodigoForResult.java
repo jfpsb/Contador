@@ -67,7 +67,7 @@ public class ListarProdutoGradePorCodigoForResult extends ActivityBaseView {
     public void setAlertBuilderDeletar() {
         alertBuilderDeletar = new AlertDialog.Builder(this);
         alertBuilderDeletar.setTitle("Selecionar Grade");
-        alertBuilderDeletar.setMessage(String.format("Tem Certeza Que Deseja Escolher a Grade '%s'?", controller.getProdutoGrade().getGradesToSmallString()));
+        alertBuilderDeletar.setMessage(String.format("Tem Certeza Que Deseja Escolher a Grade '%s'?", controller.getProdutoGrade().getGradesToShortString()));
 
         alertBuilderDeletar.setPositiveButton("Sim", (dialogInterface, i) -> {
             Intent intent = new Intent();

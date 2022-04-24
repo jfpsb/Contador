@@ -33,7 +33,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             contentValues.put("telefone", fornecedor.getTelefone());
 
             if(fornecedor.getRepresentante() != null) {
-                contentValues.put("representante", fornecedor.getRepresentante().getId());
+                contentValues.put("representante", fornecedor.getRepresentante().getId().toString());
             } else {
                 contentValues.putNull("representante");
             }
@@ -66,7 +66,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
                 contentValues.put("telefone", f.getTelefone());
 
                 if(f.getRepresentante() != null) {
-                    contentValues.put("representante", f.getRepresentante().getId());
+                    contentValues.put("representante", f.getRepresentante().getId().toString());
                 } else {
                     contentValues.putNull("representante");
                 }
@@ -101,7 +101,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             contentValues.put("telefone", fornecedor.getTelefone());
 
             if(fornecedor.getRepresentante() != null) {
-                contentValues.put("representante", fornecedor.getRepresentante().getId());
+                contentValues.put("representante", fornecedor.getRepresentante().getId().toString());
             } else {
                 contentValues.putNull("representante");
             }
