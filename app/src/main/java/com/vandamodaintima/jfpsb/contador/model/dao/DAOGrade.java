@@ -31,7 +31,8 @@ public class DAOGrade extends ADAO<Grade> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-
+            grade.setId(UUID.randomUUID());
+            contentValues.put("uuid", grade.getId().toString());
             contentValues.put("tipo", grade.getTipoGrade().getId().toString());
             contentValues.put("nome", grade.getNome());
 
@@ -55,6 +56,8 @@ public class DAOGrade extends ADAO<Grade> {
 
             for (Grade grade : lista) {
                 ContentValues contentValues = new ContentValues();
+                grade.setId(UUID.randomUUID());
+                contentValues.put("uuid", grade.getId().toString());
                 contentValues.put("tipo", grade.getTipoGrade().getId().toString());
                 contentValues.put("nome", grade.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -74,12 +77,12 @@ public class DAOGrade extends ADAO<Grade> {
     @Override
     public Boolean atualizar(Grade grade) {
         try {
-            UUID id = (UUID) grade.getIdentifier();
+            String id = grade.getIdentifier().toString();
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
             contentValues.put("tipo", grade.getTipoGrade().getId().toString());
             contentValues.put("nome", grade.getNome());
-            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id.toString()});
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
         } catch (Exception ex) {

@@ -11,6 +11,7 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DAOSubGrade extends ADAO<SubGrade> {
     private DAOProdutoGrade daoProdutoGrade;
@@ -36,20 +37,19 @@ public class DAOSubGrade extends ADAO<SubGrade> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-
+            subGrade.setId(UUID.randomUUID());
+            contentValues.put("uuid", subGrade.getId().toString());
             contentValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
-            contentValues.put("grade", subGrade.getGrade().getId());
+            contentValues.put("grade", subGrade.getGrade().getId().toString());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
         } finally {
             conexaoBanco.conexao().endTransaction();
         }
-
         return false;
     }
 
@@ -61,14 +61,15 @@ public class DAOSubGrade extends ADAO<SubGrade> {
             for (SubGrade subGrade : lista) {
                 ContentValues contentValues = new ContentValues();
 
+                subGrade.setId(UUID.randomUUID());
+                contentValues.put("uuid", subGrade.getId().toString());
                 contentValues.put("produto_grade", subGrade.getProdutoGrade().getCodBarra());
-                contentValues.put("grade", subGrade.getGrade().getId());
+                contentValues.put("grade", subGrade.getGrade().getId().toString());
 
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
@@ -102,7 +103,7 @@ public class DAOSubGrade extends ADAO<SubGrade> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 SubGrade subGrade = new SubGrade();
-                subGrade.setId(cursor.getLong(cursor.getColumnIndexOrThrow("_id")));
+                subGrade.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
                 subGrade.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
                 subGrade.setGrade(daoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
                 subGrades.add(subGrade);
@@ -110,7 +111,6 @@ public class DAOSubGrade extends ADAO<SubGrade> {
         }
 
         cursor.close();
-
         return subGrades;
     }
 

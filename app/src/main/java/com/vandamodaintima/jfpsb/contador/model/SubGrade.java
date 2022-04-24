@@ -91,7 +91,7 @@ public class SubGrade extends AModel implements IModel<SubGrade>, Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{"produto_grade", "grade"};
+        return new String[]{"uuid as _id","produto_grade", "grade"};
     }
 
     public static String[] getHeaders() {

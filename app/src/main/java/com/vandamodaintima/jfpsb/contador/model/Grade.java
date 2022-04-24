@@ -52,7 +52,7 @@ public class Grade extends AModel implements IModel<Grade>, Serializable {
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Grade extends AModel implements IModel<Grade>, Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "nome", "tipo"};
+        return new String[]{"uuid as _id", "nome", "tipo"};
     }
 
     public static String[] getHeaders() {

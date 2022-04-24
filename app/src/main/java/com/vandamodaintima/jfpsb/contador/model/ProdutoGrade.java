@@ -82,7 +82,7 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "cod_barra", "cod_barra_alternativo", "produto", "preco_venda", "preco_custo"};
+        return new String[]{"uuid as _id", "cod_barra", "cod_barra_alternativo", "produto", "preco_venda", "preco_custo"};
     }
 
     public static String[] getHeaders() {
@@ -96,7 +96,7 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override

@@ -62,11 +62,11 @@ public class ContagemProduto extends AModel implements Serializable, IModel<Cont
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "produto", "produto_grade", "contagem_data", "contagem_loja", "quant"};
+        return new String[]{"uuid as _id", "produto_grade", "contagem", "quant"};
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Cód De Barra", "Descrição", "Preço", "Quantidade"};
+        return new String[]{"Cód. De Barra", "Cód. De Barra Alt.", "Descrição", "Preço De Custo", "Preço De Venda", "Quantidade"};
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ContagemProduto extends AModel implements Serializable, IModel<Cont
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override

@@ -98,7 +98,7 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "loja", "data", "finalizada", "tipo"};
+        return new String[]{"uuid as _id", "loja", "data", "finalizada", "tipo"};
     }
 
     public static String[] getHeaders() {
@@ -116,7 +116,7 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override
@@ -153,11 +153,11 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     public void load(Object... ids) {
         Contagem contagem = listarPorId(ids);
         if (contagem != null) {
-            id = contagem.getId();
-            loja = contagem.getLoja();
-            data = contagem.getData();
-            finalizada = contagem.getFinalizada();
-            tipoContagem = contagem.getTipoContagem();
+            setId(contagem.getId());
+            setLoja(contagem.getLoja());
+            setData(contagem.getData());
+            setFinalizada(contagem.getFinalizada());
+            setTipoContagem(contagem.getTipoContagem());
         }
     }
 

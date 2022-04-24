@@ -13,6 +13,7 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DAOTipoGrade extends ADAO<TipoGrade> {
     public DAOTipoGrade(ConexaoBanco conexaoBanco) {
@@ -26,6 +27,8 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
+            tipoGrade.setId(UUID.randomUUID());
+            contentValues.put("uuid", tipoGrade.getId().toString());
             contentValues.put("nome", tipoGrade.getNome());
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
@@ -48,9 +51,9 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
 
             for (TipoGrade tipoGrade : lista) {
                 ContentValues contentValues = new ContentValues();
-
+                tipoGrade.setId(UUID.randomUUID());
+                contentValues.put("uuid", tipoGrade.getId().toString());
                 contentValues.put("nome", tipoGrade.getNome());
-
                 conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             }
 
@@ -68,11 +71,11 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
     @Override
     public Boolean atualizar(TipoGrade tipoGrade) {
         try {
-            int id = (int) tipoGrade.getIdentifier();
+            String id = tipoGrade.getIdentifier().toString();
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
             contentValues.put("nome", tipoGrade.getNome());
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{String.valueOf(id)});
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
         } catch (Exception e) {
@@ -92,7 +95,7 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoGrade tipoGrade = new TipoGrade();
-                tipoGrade.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+                tipoGrade.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
                 tipoGrade.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoGrades.add(tipoGrade);
             }
@@ -107,12 +110,12 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
     public TipoGrade listarPorId(Object... ids) {
         TipoGrade tipoGrade = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             tipoGrade = new TipoGrade();
             cursor.moveToFirst();
-            tipoGrade.setId(cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
+            tipoGrade.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
             tipoGrade.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 

@@ -15,11 +15,13 @@ import com.vandamodaintima.jfpsb.contador.R;
 public class CadastrarProdutoForContagemForResult extends CadastrarProduto {
     private AlertDialog.Builder alertaQuantidadeProduto;
 
+    //TODO: mostrar lista de grades para que o usuário selecione após cadastro
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        //Se for informado o código de barras ao abrir a tela
+        //Se for informado o código ao abrir a tela
         String codigo = getArguments().getString("codigo");
         if (codigo != null) {
             txtCodBarra.setText(codigo);

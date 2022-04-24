@@ -13,7 +13,6 @@ import java.util.List;
 
 public class TelaLerCodigoDeBarraController {
     private TelaLerCodigoDeBarraContagemProduto view;
-    private Produto produto;
     private ProdutoGrade produtoGrade;
     private Contagem contagemManager;
     private ContagemProduto model;
@@ -22,18 +21,14 @@ public class TelaLerCodigoDeBarraController {
     public TelaLerCodigoDeBarraController(TelaLerCodigoDeBarraContagemProduto view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
-        produto = new Produto(conexaoBanco);
         contagemManager = new Contagem(conexaoBanco);
         model = new ContagemProduto(conexaoBanco);
         produtoGrade = new ProdutoGrade(conexaoBanco);
     }
 
     public void cadastrar(int quantidade) {
-        model.setId(new Date().getTime());
         model.setQuant(quantidade);
-
         Boolean result = model.salvar();
-
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
             model = new ContagemProduto(conexaoBanco);
@@ -44,11 +39,8 @@ public class TelaLerCodigoDeBarraController {
     }
 
     public void cadastrar() {
-        model.setId(new Date().getTime());
         model.setQuant(1);
-
         Boolean result = model.salvar();
-
         if (result) {
             view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
         } else {
@@ -66,21 +58,13 @@ public class TelaLerCodigoDeBarraController {
         return produtoGrades;
     }
 
-    public Produto pesquisarProduto(String codigo) {
-        return produto.listarPorId(codigo);
-    }
-
-    public void carregaContagem(long id) {
+    public void carregaContagem(String id) {
         contagemManager.load(id);
         model.setContagem(contagemManager);
     }
 
     public void carregaProdutoGrade(ProdutoGrade produtoGrade) {
         model.setProdutoGrade(produtoGrade);
-    }
-
-    public void carregaProduto(Produto produto) {
-        model.setProduto(produto);
     }
 
     public Contagem getContagem() {

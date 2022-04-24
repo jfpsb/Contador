@@ -69,7 +69,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
         conexaoBanco = new ConexaoBanco(getApplicationContext());
         controller = new AlterarDeletarContagemController(this, conexaoBanco);
 
-        long id = getIntent().getLongExtra("id", 0);
+        String id = getIntent().getStringExtra("id");
         controller.carregaContagem(id);
 
         setAlertBuilderAtualizar();
@@ -100,31 +100,26 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             int menuItemItemId = menuItem.getItemId();
-            switch (menuItemItemId) {
-                case R.id.menuItemVerProdutos:
-                    Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
-                    visualizarContagem.putExtra("id", controller.getContagem().getId());
-                    startActivity(visualizarContagem);
-                    break;
-                case R.id.menuItemExportarContagemExcel:
-                    Boolean permissaoRead = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
-                    Boolean permissaoWrite = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+            if (menuItemItemId == R.id.menuItemVerProdutos) {
+                Intent visualizarContagem = new Intent(AlterarDeletarContagem.this, VisualizarProdutosContagem.class);
+                visualizarContagem.putExtra("id", controller.getContagem().getId());
+                startActivity(visualizarContagem);
+            } else if (menuItemItemId == R.id.menuItemExportarContagemExcel) {
+                Boolean permissaoRead = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
+                Boolean permissaoWrite = ContextCompat.checkSelfPermission(AlterarDeletarContagem.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
 
-                    if (permissaoRead && permissaoWrite) {
-                        AbrirEscolhaDiretorioActivity();
-                    } else {
-                        ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
-                    }
-                    break;
-                case R.id.menuItemDeletar:
-                    AlertDialog alertDialog = alertBuilderDeletar.create();
-                    alertDialog.show();
-                    break;
-                case R.id.menuItemAdicionarContagem:
-                    Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-                    intent.putExtra("id", controller.getContagem().getId());
-                    startActivity(intent);
-                    break;
+                if (permissaoRead && permissaoWrite) {
+                    AbrirEscolhaDiretorioActivity();
+                } else {
+                    ActivityCompat.requestPermissions(AlterarDeletarContagem.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
+                }
+            } else if (menuItemItemId == R.id.menuItemDeletar) {
+                AlertDialog alertDialog = alertBuilderDeletar.create();
+                alertDialog.show();
+            } else if (menuItemItemId == R.id.menuItemAdicionarContagem) {
+                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
+                intent.putExtra("id", controller.getContagem().getId());
+                startActivity(intent);
             }
             return true;
         });

@@ -52,7 +52,7 @@ public class AlterarDeletarContagemController {
         }
     }
 
-    public void carregaContagem(long id) {
+    public void carregaContagem(String id) {
         contagemModel.load(id);
     }
 
@@ -85,7 +85,6 @@ public class AlterarDeletarContagemController {
     public void exportarParaExcel(Uri uri) {
         List<ContagemProduto> listagemPorProduto = contagemProdutoModel.listarPorContagemGroupByProduto(contagemModel);
         List<ContagemProduto> listagemPorGrade = contagemProdutoModel.listarPorContagemGroupByGrade(contagemModel);
-
         new ExportarParaExcel<>(view.getContext(), new ExcelContagemProdutoStrategy(), listagemPorProduto, listagemPorGrade).execute(uri);
     }
 }

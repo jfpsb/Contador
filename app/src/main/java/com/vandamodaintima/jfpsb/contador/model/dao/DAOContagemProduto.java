@@ -34,8 +34,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-
-            contentValues.put("id", contagemProduto.getId().toString());
+            contagemProduto.setId(UUID.randomUUID());
+            contentValues.put("uuid", contagemProduto.getId().toString());
 
             if (contagemProduto.getProdutoGrade() != null) {
                 contentValues.put("produto_grade", contagemProduto.getProdutoGrade().getId().toString());
@@ -67,8 +67,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             for (ContagemProduto contagemProduto : lista) {
 
                 ContentValues contentValues = new ContentValues();
-
-                contentValues.put("id", contagemProduto.getId().toString());
+                contagemProduto.setId(UUID.randomUUID());
+                contentValues.put("uuid", contagemProduto.getId().toString());
                 contentValues.put("produto_grade", contagemProduto.getProdutoGrade().getId().toString());
                 contentValues.put("contagem", contagemProduto.getContagem().getId().toString());
                 contentValues.put("quant", contagemProduto.getQuant());
@@ -99,7 +99,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             contentValues.put("contagem", contagemProduto.getContagem().getId().toString());
             contentValues.put("quant", contagemProduto.getQuant());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id.toString()});
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id.toString()});
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return true;
@@ -141,7 +141,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     public ContagemProduto listarPorId(Object... ids) {
         ContagemProduto contagem_produto = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();

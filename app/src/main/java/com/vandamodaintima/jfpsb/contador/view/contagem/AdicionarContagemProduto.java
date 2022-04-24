@@ -31,12 +31,12 @@ public class AdicionarContagemProduto extends TabLayoutBaseView {
         stub.setLayoutResource(R.layout.activity_tela_tablayout);
         stub.inflate();
 
-        long id = getIntent().getLongExtra("id", 0);
+        String id = getIntent().getStringExtra("id");
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
 
         Bundle bundle = new Bundle();
-        bundle.putLong("id", id);
+        bundle.putString("id", id);
 
         telaLerCodigo = new TelaLerCodigoDeBarraContagemProduto();
         telaVerProdutoContado = new TelaVerProdutoContado();

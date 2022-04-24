@@ -1,14 +1,19 @@
 package com.vandamodaintima.jfpsb.contador.model.dao;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.AModel;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
+import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class ADAO<T extends IModel<T> & Serializable> {
+public abstract class ADAO<T extends AModel & IModel<T> & Serializable> {
     protected String TABELA;
     protected ConexaoBanco conexaoBanco;
 
@@ -23,29 +28,38 @@ public abstract class ADAO<T extends IModel<T> & Serializable> {
     public abstract Boolean atualizar(T t);
 
     public Boolean deletar(T objeto) {
-        Object key = objeto.getIdentifier();
-
-        if (!(key instanceof String[])) {
-            key = new String[]{String.valueOf(key)};
+        try {
+            conexaoBanco.conexao().beginTransaction();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("deletado", true);
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{objeto.getIdentifier().toString()});
+            conexaoBanco.conexao().setTransactionSuccessful();
+            return true;
+        } catch (SQLException ex) {
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
         }
 
-        long result = conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
-
-        return result > 0;
+        return false;
     }
 
-    public void deletarLista(List<T> lista) {
-        if (lista.size() == 0)
-            return;
-
-        for (T objeto : lista) {
-            Object key = objeto.getIdentifier();
-
-            if (!(key instanceof String[])) {
-                key = new String[]{String.valueOf(key)};
+    public boolean deletarLista(List<T> lista) {
+        try {
+            conexaoBanco.conexao().beginTransaction();
+            for(T obj : lista) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("deletado", true);
+                conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{obj.getIdentifier().toString()});
             }
-            conexaoBanco.conexao().delete(TABELA, objeto.getDeleteWhereClause(), (String[]) key);
+            conexaoBanco.conexao().setTransactionSuccessful();
+            return true;
+        } catch (SQLException ex) {
+            Log.e(ActivityBaseView.LOG, ex.getMessage(), ex);
+        } finally {
+            conexaoBanco.conexao().endTransaction();
         }
+        return false;
     }
 
     public abstract List<T> listar();

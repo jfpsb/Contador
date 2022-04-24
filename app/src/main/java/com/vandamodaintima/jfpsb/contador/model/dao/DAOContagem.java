@@ -34,8 +34,8 @@ public class DAOContagem extends ADAO<Contagem> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-
-            contentValues.put("id", contagem.getId().toString());
+            contagem.setId(UUID.randomUUID());
+            contentValues.put("uuid", contagem.getId().toString());
             contentValues.put("loja", contagem.getLoja().getCnpj());
             contentValues.put("data", contagem.getDataParaSQLite());
             contentValues.put("finalizada", contagem.getFinalizada());
@@ -61,8 +61,8 @@ public class DAOContagem extends ADAO<Contagem> {
 
             for (Contagem contagem : lista) {
                 ContentValues contentValues = new ContentValues();
-
-                contentValues.put("id", contagem.getId().toString());
+                contagem.setId(UUID.randomUUID());
+                contentValues.put("uuid", contagem.getId().toString());
                 contentValues.put("loja", contagem.getLoja().getCnpj());
                 contentValues.put("data", contagem.getDataParaSQLite());
                 contentValues.put("finalizada", contagem.getFinalizada());
@@ -89,11 +89,10 @@ public class DAOContagem extends ADAO<Contagem> {
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{contagem.getId().toString()});
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{contagem.getId().toString()});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
 
@@ -164,7 +163,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     public Cursor listarPorLojaPeriodoCursor(String loja, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        String sql = "SELECT contagem.id as _id, loja, nome, data, finalizada, tipo FROM contagem, loja WHERE loja.cnpj = contagem.loja AND loja = ? AND data BETWEEN ? AND ? ORDER BY data";
+        String sql = "SELECT contagem.id as _id, loja, nome, data, finalizada, tipo FROM contagem INNER JOIN loja ON loja.cnpj = contagem.loja WHERE loja = ? AND data BETWEEN ? AND ? ORDER BY data";
 
         dataFinal = dataFinal.plusDays(1);
         dataFinal = dataFinal.minusMinutes(1);

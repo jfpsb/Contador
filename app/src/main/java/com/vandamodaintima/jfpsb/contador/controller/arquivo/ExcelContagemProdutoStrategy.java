@@ -67,8 +67,8 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
             DescricaoCellSheet0.setCellStyle(estiloItens);
             QuantidadeCellSheet0.setCellStyle(estiloItens);
 
-            CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProduto().getCodBarra());
-            DescricaoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProduto().getDescricao());
+            CodProdutoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
+            DescricaoCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getProdutoGrade().getProduto().getDescricao());
             QuantidadeCellSheet0.setCellValue(listagemPorProduto.get(i - linha).getQuant());
         }
 
@@ -112,16 +112,11 @@ public class ExcelContagemProdutoStrategy implements IExcelStrategy<ContagemProd
             CodBarraCellSheet1.setCellStyle(estiloItens);
             QuantidadeCellSheet1.setCellStyle(estiloItens);
 
-            CodProdutoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProduto().getCodBarra());
-            DescricaoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProduto().getDescricao());
+            CodProdutoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getCodBarra());
+            DescricaoCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getProduto().getDescricao());
 
-            if (listagemPorGrade.get(i - linha).getProdutoGrade() != null) {
-                DescricaoGradeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getGradesToString());
-                CodBarraCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getCodBarra());
-            } else {
-                DescricaoGradeCellSheet1.setCellValue("INSERIDO SEM GRADE");
-                CodBarraCellSheet1.setCellValue("INSERIDO SEM GRADE");
-            }
+            DescricaoGradeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getGradesToString());
+            CodBarraCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getProdutoGrade().getCodBarra());
 
             QuantidadeCellSheet1.setCellValue(listagemPorGrade.get(i - linha).getQuant());
         }

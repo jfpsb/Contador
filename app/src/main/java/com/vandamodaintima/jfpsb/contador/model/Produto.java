@@ -37,7 +37,7 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
     private List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "cod_barra", "descricao", "preco", "precocusto", "fornecedor", "marca", "ncm"};
+        return new String[]{"uuid as _id", "cod_barra", "descricao", "preco", "precocusto", "fornecedor", "marca", "ncm"};
     }
 
     public static String[] getHeaders() {
@@ -107,7 +107,7 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override

@@ -46,16 +46,10 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaProduto(id);
-        controller.setProdutoGradeModel(null);
 
-        if (controller.getProduto().getProdutoGrades().size() > 0) {
-            produtoGradeArrayAdapter = new ProdutoGradeArrayAdapter(Objects.requireNonNull(getContext()), controller.getProduto().getProdutoGrades(), false);
-            setAlertaProdutoGrade();
-            alertaProdutoGrade.show();
-        } else {
-            setAlertaQuantidadeProduto();
-            alertaQuantidadeProduto.show();
-        }
+        produtoGradeArrayAdapter = new ProdutoGradeArrayAdapter(Objects.requireNonNull(getContext()), controller.getProduto().getProdutoGrades(), false);
+        setAlertaProdutoGrade();
+        alertaProdutoGrade.show();
     }
 
     private void setAlertaQuantidadeProduto() {
@@ -84,13 +78,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
             //((PesquisarProdutoForContagemForResultController) controller).atualizar();
 
             Intent intent = new Intent();
-
-            if (controller.getProdutoGradeModel() != null) {
-                intent.putExtra("produtograde", controller.getProdutoGradeModel());
-            } else {
-                intent.putExtra("produto", controller.getProduto());
-            }
-
+            intent.putExtra("produtograde", controller.getProdutoGradeModel());
             intent.putExtra("quantidade", quantidade);
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
@@ -106,11 +94,6 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
             ProdutoGrade pg = produtoGradeArrayAdapter.getItem(which);
             Toast.makeText(getContext(), "Grade Selecionada: " + pg.getCodBarra(), Toast.LENGTH_LONG).show();
             controller.setProdutoGradeModel(pg);
-            setAlertaQuantidadeProduto();
-            alertaQuantidadeProduto.show();
-        });
-        alertaProdutoGrade.setNegativeButton("Selecionar Produto E Não Grade", (dialog, which) -> {
-            controller.setProdutoGradeModel(null);
             setAlertaQuantidadeProduto();
             alertaQuantidadeProduto.show();
         });

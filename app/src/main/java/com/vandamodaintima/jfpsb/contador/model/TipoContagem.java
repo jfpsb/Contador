@@ -40,7 +40,7 @@ public class TipoContagem extends AModel implements Serializable, IModel<TipoCon
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "nome"};
+        return new String[]{"uuid as _id", "nome"};
     }
 
     public static String[] getHeaders() {
@@ -54,7 +54,7 @@ public class TipoContagem extends AModel implements Serializable, IModel<TipoCon
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override

@@ -29,8 +29,6 @@ public class InserirContagemController implements IController {
     }
 
     public void salvar() {
-        contagemModel.setId(new Date().getTime());
-
         if(contagemModel.getLoja() == null) {
             view.mensagemAoUsuario("Escolha Uma Loja!");
             return;

@@ -14,6 +14,7 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class DAOTipoContagem extends ADAO<TipoContagem> {
     public DAOTipoContagem(ConexaoBanco conexaoBanco) {
@@ -26,7 +27,8 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("id", new Date().getTime());
+            tipoContagem.setId(UUID.randomUUID());
+            contentValues.put("uuid", tipoContagem.getId().toString());
             contentValues.put("nome", tipoContagem.getNome());
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -48,13 +50,13 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             for (TipoContagem tipoContagem : lista) {
                 ContentValues contentValues = new ContentValues();
-                contentValues.put("id", new Date().getTime());
+                tipoContagem.setId(UUID.randomUUID());
+                contentValues.put("uuid", tipoContagem.getId().toString());
                 contentValues.put("nome", tipoContagem.getNome());
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
             conexaoBanco.conexao().setTransactionSuccessful();
-
             return true;
         } catch (Exception e) {
             Log.e(ActivityBaseView.LOG, e.getMessage(), e);
@@ -68,15 +70,14 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     @Override
     public Boolean atualizar(TipoContagem tipoContagem) {
         try {
-            String id = String.valueOf(tipoContagem.getIdentifier());
+            String id = tipoContagem.getIdentifier().toString();
 
             conexaoBanco.conexao().beginTransaction();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put("id", tipoContagem.getId());
             contentValues.put("nome", tipoContagem.getNome());
 
-            conexaoBanco.conexao().update(TABELA, contentValues, "id = ?", new String[]{id});
+            conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
 
             return true;
@@ -98,7 +99,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(("_id")))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }
@@ -111,12 +112,12 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     public TipoContagem listarPorId(Object... ids) {
         TipoContagem tipoContagem = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             tipoContagem = new TipoContagem();
-            tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
+            tipoContagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(("_id")))));
             tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
         }
 
@@ -127,18 +128,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
     @Override
     public int getMaxId() {
-        int maxId = 0;
-        String sql = "SELECT max(id) as maxId from tipocontagem";
-        Cursor cursor = conexaoBanco.conexao().rawQuery(sql, null);
-
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            maxId = cursor.getInt(0);
-        }
-
-        cursor.close();
-
-        return maxId;
+        return 0;
     }
 
     public Cursor listarPorNomeCursor(String nome) {
@@ -153,7 +143,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 TipoContagem tipoContagem = new TipoContagem();
-                tipoContagem.setId(cursor.getLong(cursor.getColumnIndexOrThrow(("_id"))));
+                tipoContagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(("_id")))));
                 tipoContagem.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 tipoContagems.add(tipoContagem);
             }

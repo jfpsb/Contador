@@ -58,7 +58,7 @@ public class Representante extends AModel implements Serializable, IModel<Repres
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override

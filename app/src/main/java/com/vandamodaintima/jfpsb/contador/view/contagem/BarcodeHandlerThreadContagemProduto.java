@@ -90,27 +90,14 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
                         Log.i("Contador", "Código Lido: " + barcode.rawValue);
 
                         List<ProdutoGrade> produtoGrades = controller.pesquisarProdutoGrade(codigo);
-                        Produto produto = controller.pesquisarProduto(codigo);
 
                         if (produtoGrades.size() == 0) {
-                            if (produto != null) {
-                                controller.carregaProduto(produto);
-                                if (isCampoQuantChecked) {
-                                    showAlertaQuantidadeProduto();
-                                } else {
-                                    controller.cadastrar();
-                                    view.playBarcodeBeep();
-                                    sendEmptyMessageDelayed(1, 1200);
-                                }
-                                break;
-                            } else {
-                                //TODO: Criar tela de pesquisa/cadastro de produto que mostre as grades do produto ao selecionar na lista. Lista deve ter opção de adicionar grade se não existir no produto e opção "sem grade"
-                                Toast.makeText(view.getContext(), "Produto Não Eencontrado. Cadastre Na Tela de Produto e Retorne", Toast.LENGTH_SHORT).show();
-                                //view.abrirProdutoNaoEncontradoDialog(codigo);
-                            }
+                            //TODO: Criar tela de pesquisa/cadastro de produto que mostre as grades do produto ao selecionar na lista. Lista deve ter opção de adicionar grade se não existir no produto e opção "sem grade"
+                            Toast.makeText(view.getContext(), "Produto Não Encontrado. Cadastre Na Tela de Produto e Retorne", Toast.LENGTH_SHORT).show();
+                            break;
+                            //view.abrirProdutoNaoEncontradoDialog(codigo);
                         } else if (produtoGrades.size() == 1) {
                             controller.carregaProdutoGrade(produtoGrades.get(0));
-                            controller.carregaProduto(produtoGrades.get(0).getProduto());
 
                             if (isCampoQuantChecked) {
                                 showAlertaQuantidadeProduto();

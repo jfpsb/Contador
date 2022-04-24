@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
 import com.vandamodaintima.jfpsb.contador.view.grade.ListarProdutoGradePorCodigoForResult;
@@ -55,7 +54,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
         controller = new TelaLerCodigoDeBarraController(this, ownerActivity.getConexaoBanco());
 
         Bundle bundle = getArguments();
-        long id  = bundle.getLong("id");
+        String id  = bundle.getString("id");
         controller.carregaContagem(id);
 
         btnInserirManualmente.setOnClickListener(v -> {
@@ -77,15 +76,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
             case TELA_SELECIONAR_PRODUTO:
                 if (resultCode == Activity.RESULT_OK) {
                     ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produtograde");
-                    Produto produto = (Produto) data.getSerializableExtra("produto");
-
-                    if (produtoGrade != null) {
-                        controller.carregaProdutoGrade(produtoGrade);
-                        controller.carregaProduto(produtoGrade.getProduto());
-                    } else if (produto != null) {
-                        controller.carregaProduto(produto);
-                    }
-
+                    controller.carregaProdutoGrade(produtoGrade);
                     int quantidade = data.getIntExtra("quantidade", 1);
                     controller.cadastrar(quantidade);
                 }
@@ -94,7 +85,6 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     ProdutoGrade produtoGrade = (ProdutoGrade) data.getSerializableExtra("produto_grade");
                     controller.carregaProdutoGrade(produtoGrade);
-                    controller.carregaProduto(produtoGrade.getProduto());
                     controller.cadastrar();
                 }
                 break;

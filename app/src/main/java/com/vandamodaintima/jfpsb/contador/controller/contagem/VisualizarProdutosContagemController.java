@@ -32,7 +32,7 @@ public class VisualizarProdutosContagemController {
         contagemProdutoCursorAdapter.notifyDataSetChanged();
     }
 
-    public void carregaContagem(long id) {
+    public void carregaContagem(String id) {
         contagemModel.load(id);
     }
 }

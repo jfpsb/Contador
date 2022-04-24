@@ -43,7 +43,7 @@ public class TipoGrade extends AModel implements IModel<TipoGrade>, Serializable
 
     @Override
     public String getDeleteWhereClause() {
-        return "id = ?";
+        return "uuid = ?";
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TipoGrade extends AModel implements IModel<TipoGrade>, Serializable
     }
 
     public static String[] getColunas() {
-        return new String[]{"id as _id", "nome"};
+        return new String[]{"uuid as _id", "nome"};
     }
 
     public static String[] getHeaders() {
