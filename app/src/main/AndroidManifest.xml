@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/TabAppTheme"
         tools:replace="android:theme">
-        <activity android:name=".Contador">
+        <activity android:name=".Contador"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

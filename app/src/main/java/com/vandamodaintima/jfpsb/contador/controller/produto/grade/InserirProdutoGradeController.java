@@ -62,7 +62,17 @@ public class InserirProdutoGradeController implements IController {
         return grade.listarPorTipoGrade(tipoGrade);
     }
 
-    public Boolean setPreco(String preco) {
+    public Boolean setPrecoVenda(String preco) {
+        try {
+            model.setPreco_venda(Double.parseDouble(preco));
+            return true;
+        } catch (NumberFormatException ne) {
+            model.setPreco_venda(0.0);
+            return false;
+        }
+    }
+
+    public Boolean setPrecoCusto(String preco) {
         try {
             model.setPreco_custo(Double.parseDouble(preco));
             return true;

@@ -98,7 +98,7 @@ public class DAOGrade extends ADAO<Grade> {
     public List<Grade> listar() {
         ArrayList<Grade> grades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -116,7 +116,7 @@ public class DAOGrade extends ADAO<Grade> {
     }
 
     public Cursor listarPorTipoGradeCursor(TipoGrade tipoGrade) {
-        String sql = "SELECT grade.uuid as _id, grade.nome AS nome, grade.tipo AS tipo FROM grade INNER JOIN tipo_grade AS tg ON grade.tipo = tg.id WHERE tg.id = ? ORDER BY grade.nome";
+        String sql = "SELECT grade.uuid as _id, grade.nome AS nome, grade.tipo AS tipo FROM grade INNER JOIN tipo_grade AS tg ON grade.tipo = tg.uuid WHERE tg.uuid = ? AND grade.deletado = false ORDER BY grade.nome";
         String[] selection = new String[]{tipoGrade.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -130,7 +130,7 @@ public class DAOGrade extends ADAO<Grade> {
             while (cursor.moveToNext()) {
                 Grade grade = new Grade(conexaoBanco);
                 grade.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
-                grade.setTipoGrade(daoTipoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
+                grade.setTipoGrade(daoTipoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("tipo"))));
                 grade.setNome(cursor.getString(cursor.getColumnIndexOrThrow("nome")));
                 grades.add(grade);
             }
@@ -145,7 +145,7 @@ public class DAOGrade extends ADAO<Grade> {
     public Grade listarPorId(Object... ids) {
         Grade grade = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Grade.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             grade = new Grade();

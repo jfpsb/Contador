@@ -20,86 +20,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32sp"
-                android:layout_height="match_parent"
-                android:maxHeight="30sp"
-                android:src="@drawable/barcode" />
-
-            <TextView
-                android:id="@+id/txtCodBarra"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="30sp"
-                android:padding="5sp"
-                android:text="placeholder"
-                android:textColor="#000"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32sp"
-                android:layout_height="match_parent"
-                android:maxHeight="30sp"
-                android:src="@drawable/money_sign" />
-
-            <TextView
-                android:id="@+id/txtPreco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minHeight="30sp"
-                android:padding="5sp"
-                android:text="placeholder"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:minHeight="30sp"
-            android:padding="5sp"
-            android:text="@string/possui_grade"
-            android:textColor="#000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <ImageView
+            android:layout_width="32sp"
+            android:layout_height="match_parent"
+            android:maxHeight="30sp"
+            android:src="@drawable/barcode" />
 
         <TextView
-            android:id="@+id/txtPossuiGrade"
+            android:id="@+id/txtCodBarra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
             android:minHeight="30sp"
             android:padding="5sp"
-            android:text="@string/placeholder"
+            android:text="placeholder"
             android:textColor="#000"
             android:textSize="18sp" />
     </LinearLayout>

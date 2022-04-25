@@ -49,8 +49,8 @@ public class ContagemProdutoArrayAdapter extends ArrayAdapter<ContagemProduto> {
             TextView txtDescricaoGrade = view.findViewById(R.id.txtDescricaoGrade);
             TextView txtQuantidade = view.findViewById(R.id.lblQuantidade);
 
-            txtCodProduto.setText(cp.getProduto().getCodBarra());
-            txtDescricaoProduto.setText(cp.getProduto().getDescricao());
+            txtCodProduto.setText(cp.getProdutoGrade().getProduto().getCodBarra());
+            txtDescricaoProduto.setText(cp.getProdutoGrade().getProduto().getDescricao());
             txtQuantidade.setText(String.valueOf(cp.getQuant()));
 
             if (cp.getProdutoGrade() != null) {

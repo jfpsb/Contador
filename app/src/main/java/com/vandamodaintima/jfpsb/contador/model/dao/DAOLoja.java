@@ -119,7 +119,7 @@ public class DAOLoja extends ADAO<Loja> {
     public List<Loja> listar() {
         ArrayList<Loja> lojas = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -148,7 +148,7 @@ public class DAOLoja extends ADAO<Loja> {
     public Loja listarPorId(Object... ids) {
         Loja loja = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "cnpj = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "cnpj = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -175,7 +175,7 @@ public class DAOLoja extends ADAO<Loja> {
     }
 
     public Cursor listarPorNomeCnpjCursor(String termo) {
-        return conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "cnpj LIKE ? OR nome LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+        return conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "(cnpj LIKE ? OR nome LIKE ?) AND deletado = false", new String[]{"%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
     }
 
     public ArrayList<Loja> listarPorNomeCnpj(String termo) {
@@ -208,7 +208,7 @@ public class DAOLoja extends ADAO<Loja> {
     public ArrayList<Loja> listarMatrizes() {
         ArrayList<Loja> lojas = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "matriz IS NULL", null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Loja.getColunas(), "matriz IS NULL AND deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

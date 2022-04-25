@@ -78,21 +78,19 @@ public class TelaProduto extends TabLayoutBaseView {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.itemExportarProdutoExcel:
-                Boolean permissaoRead = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                Boolean permissaoWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (id == R.id.itemExportarProdutoExcel) {
+            Boolean permissaoRead = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            Boolean permissaoWrite = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
-                if(permissaoRead && permissaoWrite) {
-                    AbrirEscolhaDiretorioActivity();
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
-                }
+            if (permissaoRead && permissaoWrite) {
+                AbrirEscolhaDiretorioActivity();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSAO_WRITE_READ);
+            }
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -109,14 +107,10 @@ public class TelaProduto extends TabLayoutBaseView {
 
     private void AbrirEscolhaDiretorioActivity() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
         String fileName = String.format("Produtos em %s.xlsx", Instant.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss")));
-
         intent.putExtra(Intent.EXTRA_TITLE, fileName);
-
         startActivityForResult(intent, ESCOLHER_DIRETORIO);
     }
 
@@ -129,7 +123,6 @@ public class TelaProduto extends TabLayoutBaseView {
                 }
             }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 

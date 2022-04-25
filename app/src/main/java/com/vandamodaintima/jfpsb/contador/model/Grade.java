@@ -100,7 +100,7 @@ public class Grade extends AModel implements IModel<Grade>, Serializable {
     }
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "nome", "tipo"};
+        return new String[]{"uuid as _id", "nome", "tipo", "deletado"};
     }
 
     public static String[] getHeaders() {

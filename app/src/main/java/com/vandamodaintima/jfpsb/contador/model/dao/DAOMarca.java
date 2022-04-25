@@ -102,7 +102,7 @@ public class DAOMarca extends ADAO<Marca> {
     public List<Marca> listar() {
         ArrayList<Marca> marcas = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Marca.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Marca.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -120,7 +120,7 @@ public class DAOMarca extends ADAO<Marca> {
     public Marca listarPorId(Object... ids) {
         Marca marca = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Marca.getColunas(), "nome = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Marca.getColunas(), "nome = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -139,7 +139,7 @@ public class DAOMarca extends ADAO<Marca> {
     }
 
     public Cursor listarPorNomeCursor(String nome) {
-        return conexaoBanco.conexao().query(TABELA, Marca.getColunas(), "nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, null, null);
+        return conexaoBanco.conexao().query(TABELA, Marca.getColunas(), "nome LIKE ? AND deletado = false", new String[]{"%" + nome + "%"}, null, null, null, null);
     }
 
     public ArrayList<Marca> listarPorNome(String nome) {

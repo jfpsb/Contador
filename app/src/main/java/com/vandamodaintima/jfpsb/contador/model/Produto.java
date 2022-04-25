@@ -37,7 +37,7 @@ public class Produto extends AModel implements Serializable, IModel<Produto> {
     private List<ProdutoGrade> produtoGrades = new ArrayList<>();
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "cod_barra", "descricao", "preco", "precocusto", "fornecedor", "marca", "ncm"};
+        return new String[]{"uuid as _id", "cod_barra", "descricao", "preco", "precocusto", "fornecedor", "marca", "ncm", "deletado"};
     }
 
     public static String[] getHeaders() {

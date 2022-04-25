@@ -41,7 +41,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
         DAOSubGrade daoSubGrade = new DAOSubGrade(conexaoBanco);
         DAOProduto daoProduto = new DAOProduto(conexaoBanco);
         ProdutoGrade produtoGrade = null;
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -52,7 +52,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
             produtoGrade.setCodBarraAlternativo(cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_alternativo")));
             produtoGrade.setPreco_custo(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_custo")));
             produtoGrade.setPreco_venda(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_venda")));
-            produtoGrade.setGrades(daoSubGrade.listarPorProdutoGrade(produtoGrade.getId().toString()));
+            produtoGrade.setSubGrades(daoSubGrade.listarPorProdutoGrade(produtoGrade));
         }
 
         cursor.close();
@@ -69,7 +69,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
         DAOSubGrade daoSubGrade = new DAOSubGrade(conexaoBanco);
         ArrayList<ProdutoGrade> produtoGrades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "produto = ?", new String[]{String.valueOf(produto.getId())}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "produto = ? AND deletado = false", new String[]{String.valueOf(produto.getId())}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -81,7 +81,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
                 pg.setProduto(produto);
                 pg.setPreco_custo(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_custo")));
                 pg.setPreco_venda(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_venda")));
-                pg.setGrades(daoSubGrade.listarPorProdutoGrade(pg.getId().toString()));
+                pg.setSubGrades(daoSubGrade.listarPorProdutoGrade(pg));
 
                 produtoGrades.add(pg);
             }
@@ -97,7 +97,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
         DAOProduto daoProduto = new DAOProduto(conexaoBanco);
         ArrayList<ProdutoGrade> produtoGrades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "cod_barra LIKE ? OR cod_barra_alternativo LIKE ?", new String[]{codBarra, codBarra}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "(cod_barra LIKE ? OR cod_barra_alternativo LIKE ?) AND deletado = false", new String[]{codBarra, codBarra}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -109,7 +109,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
                 pg.setProduto(daoProduto.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
                 pg.setPreco_custo(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_custo")));
                 pg.setPreco_venda(cursor.getDouble(cursor.getColumnIndexOrThrow("preco_venda")));
-                pg.setGrades(daoSubGrade.listarPorProdutoGrade(pg.getId().toString()));
+                pg.setSubGrades(daoSubGrade.listarPorProdutoGrade(pg));
 
                 produtoGrades.add(pg);
             }

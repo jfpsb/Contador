@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
@@ -95,17 +96,17 @@ public class DAOSubGrade extends ADAO<SubGrade> {
         return null;
     }
 
-    public List<SubGrade> listarPorProdutoGrade(String produto_grade) {
+    public List<SubGrade> listarPorProdutoGrade(ProdutoGrade produto_grade) {
         ArrayList<SubGrade> subGrades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, SubGrade.getColunas(), "produto_grade LIKE ?", new String[]{produto_grade}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, SubGrade.getColunas(), "produto_grade LIKE ? AND deletado = false", new String[]{produto_grade.getId().toString()}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 SubGrade subGrade = new SubGrade();
                 subGrade.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
-                subGrade.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
-                subGrade.setGrade(daoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto"))));
+                subGrade.setProdutoGrade(produto_grade);
+                subGrade.setGrade(daoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("grade"))));
                 subGrades.add(subGrade);
             }
         }

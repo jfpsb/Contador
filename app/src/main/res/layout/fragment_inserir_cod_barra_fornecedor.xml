@@ -55,7 +55,7 @@
 
         <Button
             android:id="@+id/btnInserir"
-            style="@style/BtnGreen"
+            style="@style/BtnEstilo1"
             android:text="Inserir"/>
 
     </RelativeLayout>

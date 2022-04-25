@@ -120,7 +120,7 @@ public class PesquisarContagem extends TelaPesquisa {
         Contagem contagem = (Contagem) adapterView.getItemAtPosition(i);
 
         Intent alterarContagem = new Intent(getContext(), AlterarDeletarContagem.class);
-        alterarContagem.putExtra("id", contagem.getId());
+        alterarContagem.putExtra("id", contagem.getId().toString());
         startActivityForResult(alterarContagem, TELA_ALTERAR_DELETAR);
     }
 }

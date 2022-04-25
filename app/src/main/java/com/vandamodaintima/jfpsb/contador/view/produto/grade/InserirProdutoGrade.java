@@ -23,6 +23,7 @@ import com.vandamodaintima.jfpsb.contador.controller.grade.SpinnerTipoGradeAdapt
 import com.vandamodaintima.jfpsb.contador.controller.produto.grade.InserirProdutoGradeController;
 import com.vandamodaintima.jfpsb.contador.model.Grade;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
 import com.vandamodaintima.jfpsb.contador.view.grade.CadastrarGrade;
@@ -30,7 +31,6 @@ import com.vandamodaintima.jfpsb.contador.view.grade.CadastrarTipoGrade;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class InserirProdutoGrade extends TelaCadastro {
     private Button btnInserirFormacaoAtual;
@@ -39,13 +39,14 @@ public class InserirProdutoGrade extends TelaCadastro {
     private Button btnCadastrarGrade;
     private Button btnCadastrarTipoGrade;
     private EditText txtCodBarra;
-    private EditText txtPreco;
+    private EditText txtPrecoVenda;
+    private EditText txtPrecoCusto;
     private Spinner spinnerTipoGrade;
     private Spinner spinnerGrade;
     private ListView listViewGradeFormacaoAtual;
-    private GradeArrayAdapter gradeArrayAdapter;
+    private GradeArrayAdapter gradeFormacaoAtualAdapter;
     private SpinnerGradeAdapter spinnerGradeAdapter;
-    private SpinnerTipoGradeAdapter spinnertipoGradeAdapter;
+    private SpinnerTipoGradeAdapter spinnerTipoGradeAdapter;
 
     private InserirProdutoGradeController controller;
 
@@ -63,7 +64,8 @@ public class InserirProdutoGrade extends TelaCadastro {
         btnInserirFormacaoAtual = telaCadastroView.findViewById(R.id.btnInserirFormacaoAtualGrade);
         btnCadastrarGrade = telaCadastroView.findViewById(R.id.btnCadastrarGrade);
         btnCadastrarTipoGrade = telaCadastroView.findViewById(R.id.btnCadastrarTipoGrade);
-        txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
+        txtPrecoVenda = telaCadastroView.findViewById(R.id.txtPrecoVenda);
+        txtPrecoCusto = telaCadastroView.findViewById(R.id.txtPrecoCusto);
         spinnerGrade = telaCadastroView.findViewById(R.id.spinnerGrade);
         spinnerTipoGrade = telaCadastroView.findViewById(R.id.spinnerTipoGrade);
         txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
@@ -76,11 +78,25 @@ public class InserirProdutoGrade extends TelaCadastro {
 
         btnInserir.setOnClickListener(v -> {
             controller.getModel().setCodBarra(txtCodBarra.getText().toString());
-            controller.getModel().setGrades(new ArrayList<>(gradeArrayAdapter.getObjects()));
 
-            Boolean precoRes = controller.setPreco(txtPreco.getText().toString());
-            if (!precoRes) {
-                txtPreco.setText("0.0");
+            List<SubGrade> subGrades = new ArrayList<>();
+            for(Grade g : gradeFormacaoAtualAdapter.getObjects()) {
+                SubGrade subGrade = new SubGrade(conexaoBanco);
+                subGrade.setGrade(g);
+                subGrade.setProdutoGrade(controller.getModel());
+                subGrades.add(subGrade);
+            }
+
+            controller.getModel().setSubGrades(new ArrayList<>(subGrades));
+
+            Boolean precoVenda = controller.setPrecoVenda(txtPrecoVenda.getText().toString());
+            if (!precoVenda) {
+                txtPrecoVenda.setText("0.0");
+            }
+
+            Boolean precoCusto = controller.setPrecoCusto(txtPrecoCusto.getText().toString());
+            if (!precoCusto) {
+                txtPrecoVenda.setText("0.0");
             }
 
             controller.salvar();
@@ -99,18 +115,18 @@ public class InserirProdutoGrade extends TelaCadastro {
         conexaoBanco = new ConexaoBanco(getContext());
         controller = new InserirProdutoGradeController(this, conexaoBanco, (ArrayList<ProdutoGrade>) getArguments().getSerializable("produtoGrades"));
 
-        gradeArrayAdapter = new GradeArrayAdapter(Objects.requireNonNull(getContext()), new ArrayList<>());
-        listViewGradeFormacaoAtual.setAdapter(gradeArrayAdapter);
+        gradeFormacaoAtualAdapter = new GradeArrayAdapter(requireContext(), new ArrayList<Grade>());
+        listViewGradeFormacaoAtual.setAdapter(gradeFormacaoAtualAdapter);
 
         listViewGradeFormacaoAtual.setOnItemClickListener((parent, view, position, id) -> {
-            gradeArrayAdapter.getObjects().remove(position);
-            gradeArrayAdapter.notifyDataSetChanged();
+            gradeFormacaoAtualAdapter.getObjects().remove(position);
+            gradeFormacaoAtualAdapter.notifyDataSetChanged();
         });
 
-        spinnertipoGradeAdapter = new SpinnerTipoGradeAdapter(getContext(), controller.getTipoGrades());
-        spinnerTipoGrade.setAdapter(spinnertipoGradeAdapter);
+        spinnerTipoGradeAdapter = new SpinnerTipoGradeAdapter(requireContext(), controller.getTipoGrades());
+        spinnerTipoGrade.setAdapter(spinnerTipoGradeAdapter);
 
-        spinnerGradeAdapter = new SpinnerGradeAdapter(getContext(), controller.getGradesPorTipo(spinnertipoGradeAdapter.getItem(0)));
+        spinnerGradeAdapter = new SpinnerGradeAdapter(requireContext(), controller.getGradesPorTipo(spinnerTipoGradeAdapter.getItem(0)));
         spinnerGrade.setAdapter(spinnerGradeAdapter);
 
         spinnerTipoGrade.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -130,7 +146,7 @@ public class InserirProdutoGrade extends TelaCadastro {
 
         btnInserirFormacaoAtual.setOnClickListener(v -> {
             Grade g = (Grade) spinnerGrade.getSelectedItem();
-            gradeArrayAdapter.add(g);
+            gradeFormacaoAtualAdapter.add(g);
         });
 
         return telaCadastroView;
@@ -139,9 +155,9 @@ public class InserirProdutoGrade extends TelaCadastro {
     @Override
     public void limparCampos() {
         txtCodBarra.getText().clear();
-        txtPreco.getText().clear();
-        gradeArrayAdapter.clear();
-        gradeArrayAdapter.notifyDataSetChanged();
+        txtPrecoVenda.getText().clear();
+        gradeFormacaoAtualAdapter.clear();
+        gradeFormacaoAtualAdapter.notifyDataSetChanged();
         controller.reset();
     }
 
@@ -170,9 +186,9 @@ public class InserirProdutoGrade extends TelaCadastro {
                 break;
             case CADASTRAR_TIPO_GRADE:
                 if(resultCode == Activity.RESULT_OK) {
-                    spinnertipoGradeAdapter.getObjects().clear();
-                    spinnertipoGradeAdapter.getObjects().addAll(controller.getTipoGrades());
-                    spinnertipoGradeAdapter.notifyDataSetChanged();
+                    spinnerTipoGradeAdapter.getObjects().clear();
+                    spinnerTipoGradeAdapter.getObjects().addAll(controller.getTipoGrades());
+                    spinnerTipoGradeAdapter.notifyDataSetChanged();
                 }
                 break;
         }

@@ -60,7 +60,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         txtCodBarra = findViewById(R.id.txtCodBarra);
         txtDescricao = findViewById(R.id.txtDescricaoGrade);
-        txtPreco = findViewById(R.id.txtPreco);
+        txtPreco = findViewById(R.id.txtPrecoVenda);
         txtFornecedor = findViewById(R.id.txtFornecedor);
         txtMarca = findViewById(R.id.txtMarca);
         txtNcm = findViewById(R.id.txtNcm);
@@ -74,7 +74,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_produto);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_produto);
 
-        long id = getIntent().getLongExtra("produto",0);
+        String id = getIntent().getStringExtra("produto");
         controller.carregaProduto(id);
 
         setAlertaRemoverFornecedor();
@@ -84,7 +84,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
 
         txtCodBarra.setText(controller.getProduto().getCodBarra());
         txtDescricao.setText(controller.getProduto().getDescricao());
-        txtPreco.setText(String.valueOf(controller.getProduto().getPreco()));
+        txtNcm.setText(controller.getProduto().getNcm());
         txtQuantidadeGrades.setText(String.valueOf(controller.getProduto().getProdutoGrades().size()));
 
         if (controller.getProduto().getFornecedor() != null) {
@@ -132,11 +132,9 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             int id1 = menuItem.getItemId();
 
-            switch (id1) {
-                case R.id.menuItemDeletar:
-                    AlertDialog alertDialog = alertBuilderDeletar.create();
-                    alertDialog.show();
-                    break;
+            if (id1 == R.id.menuItemDeletar) {
+                AlertDialog alertDialog = alertBuilderDeletar.create();
+                alertDialog.show();
             }
 
             return true;
@@ -176,11 +174,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
                 Bundle bundle = data.getExtras();
                 controller.getProduto().getProdutoGrades().clear();
                 controller.getProduto().getProdutoGrades().addAll((List<ProdutoGrade>) bundle.getSerializable("produtoGrades"));
-                //produtoGrades = (ArrayList<ProdutoGrade>) data.getSerializableExtra("produtoGrades");
-                if (controller.getProduto().getProdutoGrades() != null) {
-                    txtQuantidadeGrades.setText(String.valueOf(controller.getProduto().getProdutoGrades().size()));
-                    mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
-                }
+                txtQuantidadeGrades.setText(String.valueOf(controller.getProduto().getProdutoGrades().size()));
+                mensagemAoUsuario("Grades Serão Salvas ao Salvar Produto");
                 break;
         }
     }
@@ -203,11 +198,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         alertBuilderAtualizar.setPositiveButton("Sim", (dialog, which) -> {
             controller.getProduto().setDescricao(txtDescricao.getText().toString());
             controller.getProduto().setNcm(txtNcm.getText().toString());
-            boolean precoResult = controller.setPreco(txtPreco.getText().toString());
-
-            if (!precoResult)
-                txtPreco.setText("0.0");
-
             controller.atualizar();
         });
 

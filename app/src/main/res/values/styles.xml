@@ -29,27 +29,39 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="BtnGreen" parent="TextAppearance.AppCompat.Button">
+    <style name="BtnEstilo1" parent="TextAppearance.AppCompat.Button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:fontFamily">@font/century_gothic</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">10sp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:height">60sp</item>
-        <item name="android:background">@drawable/botao_active</item>
+        <item name="android:background">@drawable/botao_15_radius</item>
+        <item name="android:textColor">@color/Branco</item>
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="BtnCadastrar" parent="BtnGreen">
+    <style name="BtnEstilo2" parent="TextAppearance.AppCompat.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/century_gothic</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5sp</item>
+        <item name="android:background">@drawable/botao_3_radius</item>
+        <item name="android:textColor">@color/Branco</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="BtnCadastrar" parent="BtnEstilo1">
         <item name="android:text">Cadastrar</item>
     </style>
 
-    <style name="BtnAtualizar" parent="BtnGreen">
+    <style name="BtnAtualizar" parent="BtnEstilo1">
         <item name="android:text">Atualizar</item>
     </style>
 
-    <style name="BtnPesquisar" parent="BtnGreen">
+    <style name="BtnPesquisar" parent="BtnEstilo1">
         <item name="android:text">Pesquisar</item>
     </style>
 

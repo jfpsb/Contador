@@ -23,11 +23,6 @@ public class AlterarDeletarProdutoController {
             return;
         }
 
-        if (model.getPreco() == 0) {
-            view.mensagemAoUsuario("Preço do Produto Não Pode Ser Zero");
-            return;
-        }
-
         Boolean result = model.atualizar();
 
         if (result) {
@@ -49,7 +44,7 @@ public class AlterarDeletarProdutoController {
         }
     }
 
-    public void carregaProduto(long id) {
+    public void carregaProduto(String id) {
         model.load(id);
     }
 
@@ -71,15 +66,5 @@ public class AlterarDeletarProdutoController {
 
     public Produto getProduto() {
         return model;
-    }
-
-    public boolean setPreco(String preco) {
-        try {
-            model.setPreco(Double.valueOf(preco));
-            return true;
-        } catch (NumberFormatException ne) {
-            model.setPreco(0.0);
-            return false;
-        }
     }
 }

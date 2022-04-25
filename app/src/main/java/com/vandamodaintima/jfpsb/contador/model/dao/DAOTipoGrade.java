@@ -90,7 +90,7 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
     @Override
     public List<TipoGrade> listar() {
         ArrayList<TipoGrade> tipoGrades = new ArrayList<>();
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -110,7 +110,7 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
     public TipoGrade listarPorId(Object... ids) {
         TipoGrade tipoGrade = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoGrade.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             tipoGrade = new TipoGrade();

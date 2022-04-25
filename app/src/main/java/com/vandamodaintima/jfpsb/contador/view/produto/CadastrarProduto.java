@@ -40,7 +40,6 @@ public class CadastrarProduto extends TelaCadastro {
     private Button btnGerenciarGrades;
     protected EditText txtCodBarra;
     private EditText txtDescricao;
-    private EditText txtPreco;
     private EditText txtFornecedor;
     private EditText txtMarca;
     private EditText txtNcm;
@@ -71,7 +70,6 @@ public class CadastrarProduto extends TelaCadastro {
         btnGerenciarGrades = telaCadastroView.findViewById(R.id.btnGerenciarGrades);
         txtCodBarra = telaCadastroView.findViewById(R.id.txtCodBarra);
         txtDescricao = telaCadastroView.findViewById(R.id.txtDescricaoGrade);
-        txtPreco = telaCadastroView.findViewById(R.id.txtPreco);
         txtFornecedor = telaCadastroView.findViewById(R.id.txtFornecedor);
         txtMarca = telaCadastroView.findViewById(R.id.txtMarca);
         txtNcm = telaCadastroView.findViewById(R.id.txtNcm);
@@ -117,11 +115,6 @@ public class CadastrarProduto extends TelaCadastro {
             controller.getProduto().setDescricao(txtDescricao.getText().toString().toUpperCase());
             controller.getProduto().setNcm(txtNcm.getText().toString());
             controller.getProduto().setProdutoGrades(produtoGrades);
-            boolean precoResult = controller.setPreco(txtPreco.getText().toString());
-
-            if (!precoResult)
-                txtPreco.setText("0.0");
-
             controller.salvar();
         });
 
@@ -180,7 +173,6 @@ public class CadastrarProduto extends TelaCadastro {
     public void limparCampos() {
         txtCodBarra.getText().clear();
         txtDescricao.getText().clear();
-        txtPreco.getText().clear();
         txtMarca.getText().clear();
         txtFornecedor.getText().clear();
         controller.reset();
@@ -198,7 +190,6 @@ public class CadastrarProduto extends TelaCadastro {
 
     public void bloqueiaCampos() {
         txtDescricao.setEnabled(false);
-        txtPreco.setEnabled(false);
         btnCadastrar.setEnabled(false);
         btnEscolherFornecedor.setEnabled(false);
         lblCodRepetido.setVisibility(View.VISIBLE);
@@ -207,7 +198,6 @@ public class CadastrarProduto extends TelaCadastro {
 
     public void liberaCampos() {
         txtDescricao.setEnabled(true);
-        txtPreco.setEnabled(true);
         btnCadastrar.setEnabled(true);
         btnEscolherFornecedor.setEnabled(true);
         lblCodRepetido.setVisibility(View.GONE);

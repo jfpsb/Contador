@@ -77,12 +77,12 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
         return grades;
     }
 
-    public void setGrades(List<SubGrade> grades) {
+    public void setSubGrades(List<SubGrade> grades) {
         this.grades = grades;
     }
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "cod_barra", "cod_barra_alternativo", "produto", "preco_venda", "preco_custo"};
+        return new String[]{"uuid as _id", "cod_barra", "cod_barra_alternativo", "produto", "preco_venda", "preco_custo", "deletado"};
     }
 
     public static String[] getHeaders() {

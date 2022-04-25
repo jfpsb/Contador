@@ -62,7 +62,7 @@ public class ContagemProduto extends AModel implements Serializable, IModel<Cont
     }
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "produto_grade", "contagem", "quant"};
+        return new String[]{"uuid as _id", "produto_grade", "contagem", "quant", "deletado"};
     }
 
     public static String[] getHeaders() {

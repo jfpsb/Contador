@@ -59,14 +59,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/preco_dois_pontos"
+                android:text="@string/preco_custo_dois_pontos"
                 android:textSize="20sp" />
         </TableRow>
 
         <TableRow>
 
             <EditText
-                android:id="@+id/txtPreco"
+                android:id="@+id/txtPrecoCusto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/preco_venda_dois_pontos"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/txtPrecoVenda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -130,19 +150,17 @@
         </TableRow>
 
         <TableRow>
-
             <Button
                 android:id="@+id/btnInserirFormacaoAtualGrade"
                 android:layout_height="wrap_content"
                 android:layout_margin="0sp"
                 android:layout_weight="1"
-                android:background="@drawable/botao_active"
+                android:background="@drawable/botao_15_radius"
                 android:text="@string/btn_inserir_em_formacao_atual_grade"
                 android:textSize="20sp" />
         </TableRow>
 
         <TableRow>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,7 +174,6 @@
         </TableRow>
 
         <TableRow>
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -177,7 +194,6 @@
         </TableRow>
 
         <TableRow>
-
             <ListView
                 android:id="@+id/listViewGradeFormacaoAtual"
                 android:layout_width="match_parent"
@@ -196,7 +212,7 @@
 
         <Button
             android:id="@+id/btnInserir"
-            style="@style/BtnGreen"
+            style="@style/BtnEstilo1"
             android:text="@string/inserir_grade" />
 
     </RelativeLayout>

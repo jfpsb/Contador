@@ -149,12 +149,9 @@ public class PesquisarProduto extends TelaPesquisa {
     @Override
     public void cliqueEmItemLista(AdapterView<?> adapterView, int i) {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
-
-        long id = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
-
+        String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         Intent alterarProduto = new Intent(getContext(), AlterarDeletarProduto.class);
         alterarProduto.putExtra("produto", id);
-
         startActivityForResult(alterarProduto, TELA_ALTERAR_DELETAR);
     }
 

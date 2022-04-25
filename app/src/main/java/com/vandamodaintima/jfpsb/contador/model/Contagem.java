@@ -98,7 +98,7 @@ public class Contagem extends AModel implements Serializable, IModel<Contagem> {
     }
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "loja", "data", "finalizada", "tipo"};
+        return new String[]{"uuid as _id", "loja", "data", "finalizada", "tipo", "deletado"};
     }
 
     public static String[] getHeaders() {

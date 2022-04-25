@@ -39,8 +39,9 @@ public class GradeArrayAdapter extends ArrayAdapter<Grade> {
 
         final TextView txtTipoGrade = convertView.findViewById(R.id.txtTipoGrade);
         final TextView txtNomeGrade = convertView.findViewById(R.id.txtNomeGrade);
-        txtTipoGrade.setText(objects.get(position).getTipoGrade().getNome());
-        txtNomeGrade.setText(objects.get(position).getNome());
+        Grade grade = objects.get(position);
+        txtTipoGrade.setText(grade.getTipoGrade().getNome());
+        txtNomeGrade.setText(grade.getNome());
         return convertView;
     }
 

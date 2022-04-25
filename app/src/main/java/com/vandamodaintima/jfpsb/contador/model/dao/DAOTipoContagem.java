@@ -19,7 +19,7 @@ import java.util.UUID;
 public class DAOTipoContagem extends ADAO<TipoContagem> {
     public DAOTipoContagem(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
-        TABELA = "tipo_contagem";
+        TABELA = "tipocontagem";
     }
 
     @Override
@@ -94,7 +94,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     public List<TipoContagem> listar() {
         ArrayList<TipoContagem> tipoContagems = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -112,7 +112,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     public TipoContagem listarPorId(Object... ids) {
         TipoContagem tipoContagem = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -132,7 +132,7 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
     }
 
     public Cursor listarPorNomeCursor(String nome) {
-        return conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "nome LIKE ?", new String[]{"%" + nome + "%"}, null, null, null, null);
+        return conexaoBanco.conexao().query(TABELA, TipoContagem.getColunas(), "nome LIKE ? AND deletado = false", new String[]{"%" + nome + "%"}, null, null, null, null);
     }
 
     public ArrayList<TipoContagem> listarPorNome(String nome) {

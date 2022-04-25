@@ -116,7 +116,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     public List<ContagemProduto> listar() {
         ArrayList<ContagemProduto> contagem_produtos = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), null, null, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), "deletado = false", null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -141,7 +141,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     public ContagemProduto listarPorId(Object... ids) {
         ContagemProduto contagem_produto = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), "uuid = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ContagemProduto.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -163,7 +163,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     public Cursor listarPorContagemCursor(Contagem contagem) {
-        String sql = "SELECT cp.uuid as _id, * FROM contagem_produto AS cp INNER JOIN produto_grade AS pg ON pg.uuid = cp.produto_grade WHERE contagem = ? ORDER BY cp.uuid";
+        String sql = "SELECT cp.uuid as _id, * FROM contagem_produto AS cp INNER JOIN produto_grade AS pg ON pg.uuid = cp.produto_grade WHERE contagem = ? AND cp.deletado = false ORDER BY cp.uuid";
         String[] selection = new String[]{contagem.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -174,14 +174,14 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
                 "FROM contagem_produto AS cp " +
                 "INNER JOIN produto_grade AS pg ON cp.produto_grade = pg.uuid " +
                 "INNER JOIN produto AS p ON pg.produto = p.uuid " +
-                "WHERE contagem = ? GROUP BY pg.produto ORDER BY p.descricao";
+                "WHERE contagem = ? AND cp.deletado = false GROUP BY pg.produto ORDER BY p.descricao";
 
         String[] selection = new String[]{contagem.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
 
     public Cursor listarPorContagemGroupByProdutoGradeCursor(Contagem contagem) {
-        String sql = "SELECT cp.uuid as _id, produto_grade, contagem, SUM(cp.quant) AS quant FROM contagem_produto WHERE contagem = ? GROUP BY produto_grade";
+        String sql = "SELECT cp.uuid as _id, produto_grade, contagem, SUM(cp.quant) AS quant FROM contagem_produto WHERE contagem = ? AND deletado = false GROUP BY produto_grade";
         String[] selection = new String[]{contagem.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -193,8 +193,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 ContagemProduto contagemProduto = new ContagemProduto();
-                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex("_id"))));
-                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
+                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
+                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("produto_grade"))));
                 String contagemId = cursor.getString(cursor.getColumnIndexOrThrow("contagem"));
                 contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
@@ -212,8 +212,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 ContagemProduto contagemProduto = new ContagemProduto();
-                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex("_id"))));
-                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
+                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
+                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("produto_grade"))));
                 String contagemId = cursor.getString(cursor.getColumnIndexOrThrow("contagem"));
                 contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));
@@ -231,8 +231,8 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 ContagemProduto contagemProduto = new ContagemProduto();
-                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndex("_id"))));
-                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndex("produto_grade"))));
+                contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
+                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("produto_grade"))));
                 String contagemId = cursor.getString(cursor.getColumnIndexOrThrow("contagem"));
                 contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));

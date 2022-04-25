@@ -24,7 +24,8 @@
     <string name="dados_de_produto">Dados de Produto</string>
     <string name="cod_de_barras_dois_pontos">Cód. de Barras:</string>
     <string name="fornecedor_atual_dois_pontos">Fornecedor Atual:</string>
-    <string name="preco_dois_pontos">Preço:</string>
+    <string name="preco_venda_dois_pontos">Preço De Venda:</string>
+    <string name="preco_custo_dois_pontos">Preço De Custo:</string>
     <string name="cnpj_ja_existe_no_sistema">CNPJ Já Existe No Sistema</string>
     <string name="nome_fantasia_dois_pontos">Nome Fantasia:</string>
     <string name="cadastrar">Cadastrar</string>
@@ -102,4 +103,5 @@
     <string name="exportar_fornecedores_para_excel">Exportar Fornecedores Para Excel</string>
     <string name="exportar_produtos">Exportar Produtos</string>
     <string name="codigo_dois_pontos">Código:</string>
+    <string name="fab_inserir_contagem_de_produto">Inserir Contagem De Produto</string>
 </resources>

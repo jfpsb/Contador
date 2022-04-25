@@ -97,7 +97,7 @@ public class Loja extends AModel implements Serializable, IModel<Loja> {
     }
 
     public static String[] getColunas() {
-        return new String[]{"cnpj as _id", "matriz", "nome", "telefone", "endereco", "inscricaoestadual", "aluguel"};
+        return new String[]{"cnpj as _id", "matriz", "nome", "telefone", "endereco", "inscricaoestadual", "aluguel", "deletado"};
     }
 
     public static String[] getHeaders() {

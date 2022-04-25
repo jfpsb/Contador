@@ -22,17 +22,17 @@ public class CadastrarProdutoController implements IController {
 
     public void salvar() {
         if (model.getCodBarra().trim().isEmpty()) {
-            view.mensagemAoUsuario("Código de Barra Não Pode Estar Vazio");
+            view.mensagemAoUsuario("Código de produto não pode estar vazio");
+            return;
+        }
+
+        if(model.getProdutoGrades().size() == 0) {
+            view.mensagemAoUsuario("É necessário criar ao menos uma grade para cadastrar o produto");
             return;
         }
 
         if (model.getDescricao().trim().isEmpty()) {
-            view.mensagemAoUsuario("Descrição Não Pode Estar Vazio");
-            return;
-        }
-
-        if (model.getPreco() <= 0.0) {
-            view.mensagemAoUsuario("Preço Não Pode Ser Zero ou Menor que Zero");
+            view.mensagemAoUsuario("Descrição de produto não pode estar vazia");
             return;
         }
 
@@ -76,16 +76,6 @@ public class CadastrarProdutoController implements IController {
 
     public Produto getProduto() {
         return model;
-    }
-
-    public boolean setPreco(String preco) {
-        try {
-            model.setPreco(Double.valueOf(preco));
-            return true;
-        } catch (NumberFormatException ne) {
-            model.setPreco(0.0);
-            return false;
-        }
     }
 
     public boolean isDouble(String d) {

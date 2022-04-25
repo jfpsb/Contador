@@ -89,7 +89,7 @@ public class Fornecedor extends AModel implements Serializable, IModel<Fornecedo
     }
 
     public static String[] getColunas() {
-        return new String[]{"cnpj as _id", "nome", "fantasia", "email", "telefone"};
+        return new String[]{"cnpj as _id", "nome", "fantasia", "email", "telefone", "deletado"};
     }
 
     public static String[] getHeaders() {

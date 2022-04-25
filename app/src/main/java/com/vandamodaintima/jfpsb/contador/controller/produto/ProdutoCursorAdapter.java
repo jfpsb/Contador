@@ -5,14 +5,22 @@ import android.database.Cursor;
 
 import androidx.cursoradapter.widget.CursorAdapter;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vandamodaintima.jfpsb.contador.R;
+import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOProduto;
+import com.vandamodaintima.jfpsb.contador.model.dao.DAOProdutoGrade;
+
+import java.util.List;
 
 public class ProdutoCursorAdapter extends CursorAdapter {
+
     ProdutoCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
@@ -26,22 +34,11 @@ public class ProdutoCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         TextView txtCodBarra = view.findViewById(R.id.txtCodBarra);
         TextView txtDescricao = view.findViewById(R.id.txtDescricaoGrade);
-        TextView txtPreco = view.findViewById(R.id.txtPreco);
-        TextView txtPossuiGrades = view.findViewById(R.id.txtPossuiGrade);
 
         String cod_barra = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra"));
         String descricao = cursor.getString(cursor.getColumnIndexOrThrow("descricao"));
-        Double preco = cursor.getDouble(cursor.getColumnIndexOrThrow("preco"));
-        String cod_barra_grade = cursor.getString(cursor.getColumnIndexOrThrow("cod_barra_grade"));
-
-        if (cod_barra_grade == null) {
-            txtPossuiGrades.setText("NÃO");
-        } else {
-            txtPossuiGrades.setText("SIM");
-        }
 
         txtCodBarra.setText(cod_barra);
         txtDescricao.setText(descricao);
-        txtPreco.setText(String.valueOf(preco));
     }
 }

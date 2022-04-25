@@ -65,14 +65,11 @@ public class AlterarDeletarFornecedor extends TelaAlterarDeletar implements IApo
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
 
-                switch (id) {
-                    case R.id.menuItemDeletar:
-                        AlertDialog alertDialog = alertBuilderDeletar.create();
-                        alertDialog.show();
-                        break;
-                    case R.id.menuItemAtualizarDados:
-                        controller.pesquisarNaReceita(controller.getFornecedor().getCnpj());
-                        break;
+                if (id == R.id.menuItemDeletar) {
+                    AlertDialog alertDialog = alertBuilderDeletar.create();
+                    alertDialog.show();
+                } else if (id == R.id.menuItemAtualizarDados) {
+                    controller.pesquisarNaReceita(controller.getFornecedor().getCnpj());
                 }
 
                 return true;

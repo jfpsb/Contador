@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="VMIRosa">#d93b65</color>
+    <color name="VMIVermelho">#ce1f25</color>
+    <color name="VMILaranja">#e15b23</color>
+    <color name="VMIAmarelo">#f2b705</color>
+    <color name="Branco">#ffffff</color>
+</resources>

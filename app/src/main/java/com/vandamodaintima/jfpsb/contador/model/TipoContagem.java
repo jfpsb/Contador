@@ -40,7 +40,7 @@ public class TipoContagem extends AModel implements Serializable, IModel<TipoCon
     }
 
     public static String[] getColunas() {
-        return new String[]{"uuid as _id", "nome"};
+        return new String[]{"uuid as _id", "nome", "deletado"};
     }
 
     public static String[] getHeaders() {

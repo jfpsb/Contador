@@ -25,9 +25,7 @@ public class PesquisarProdutoForContagemForResultController extends PesquisarPro
     }
 
     public void cadastrar(int quantidade) {
-        contagemProdutoModel.setId(new Date().getTime());
         contagemProdutoModel.setQuant(quantidade);
-
         Boolean result = contagemProdutoModel.salvar();
 
         if (result) {

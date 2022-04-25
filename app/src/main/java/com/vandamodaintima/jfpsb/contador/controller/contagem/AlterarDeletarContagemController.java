@@ -69,7 +69,7 @@ public class AlterarDeletarContagemController {
         int index = 0;
 
         for (TipoContagem tipo : getTipoContagens()) {
-            if (contagemModel.getTipoContagem().getId() == tipo.getId()) {
+            if (contagemModel.getTipoContagem().getId().toString().equals(tipo.getId().toString())) {
                 break;
             }
             index++;

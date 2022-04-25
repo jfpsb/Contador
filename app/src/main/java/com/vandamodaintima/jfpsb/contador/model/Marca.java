@@ -43,7 +43,7 @@ public class Marca extends AModel implements Serializable, IModel<Marca> {
     }
 
     public static String[] getColunas() {
-        return new String[]{"nome as _id", "fornecedor"};
+        return new String[]{"nome as _id", "fornecedor", "deletado"};
     }
 
     public static String[] getHeaders() {

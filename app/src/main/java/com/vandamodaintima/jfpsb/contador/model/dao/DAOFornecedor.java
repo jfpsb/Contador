@@ -123,7 +123,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     public List<Fornecedor> listar() {
         ArrayList<Fornecedor> fornecedores = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), null, null, null, null, "nome", null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "deletado = false", null, null, null, "nome", null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -145,7 +145,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     public Fornecedor listarPorId(Object... ids) {
         Fornecedor fornecedor = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "cnpj = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "cnpj = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -169,7 +169,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     public Fornecedor listarPorIdOuNome(String termo) {
         Fornecedor fornecedor = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "cnpj = ? OR nome = ?", new String[]{termo, termo}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "(cnpj = ? OR nome = ?) AND deletado = false", new String[]{termo, termo}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -188,7 +188,7 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
     }
 
     public Cursor listarPorCnpjNomeFantasiaCursor(String termo) {
-        return conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "cnpj LIKE ? OR nome LIKE ? OR fantasia LIKE ?", new String[]{"%" + termo + "%", "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
+        return conexaoBanco.conexao().query(TABELA, Fornecedor.getColunas(), "(cnpj LIKE ? OR nome LIKE ? OR fantasia LIKE ?) AND deletado = false", new String[]{"%" + termo + "%", "%" + termo + "%", "%" + termo + "%"}, null, null, "nome", null);
     }
 
     public ArrayList<Fornecedor> listarPorCnpjNomeFantasia(String termo) {

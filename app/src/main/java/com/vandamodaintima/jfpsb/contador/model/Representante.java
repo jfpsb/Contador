@@ -11,6 +11,10 @@ public class Representante extends AModel implements Serializable, IModel<Repres
     private String cidadeestado;
     private String email;
 
+    public static String[] getColunas() {
+        return new String[]{"uuid as _id", "nome", "whatsapp", "cidadeestado", "email", "deletado"};
+    }
+
     public UUID getId() {
         return id;
     }

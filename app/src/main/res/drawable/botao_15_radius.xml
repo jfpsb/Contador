@@ -6,8 +6,8 @@
             <corners android:radius="15sp" />
             <stroke
                 android:width="1dip"
-                android:color="#b4eeb4" />
-            <solid android:color="#7fffd4" />
+                android:color="@color/VMIVermelho" />
+            <solid android:color="@color/VMIVermelho" />
         </shape>
     </item>
     <item>
@@ -15,8 +15,8 @@
             <corners android:radius="15sp" />
             <stroke
                 android:width="1sp"
-                android:color="#b4eeb4" />
-            <solid android:color="#00ff7f" />
+                android:color="@color/VMIVermelho" />
+            <solid android:color="@color/VMIVermelho" />
         </shape>
     </item>
 </ripple>

@@ -40,7 +40,7 @@ public class ProdutoGradeArrayAdapter extends ArrayAdapter<ProdutoGrade> {
         ProdutoGrade produtoGrade = objects.get(position);
 
         final TextView lblCodBarra = convertView.findViewById(R.id.txtCodBarra);
-        TextView lblPreco = convertView.findViewById(R.id.txtPreco);
+        TextView lblPreco = convertView.findViewById(R.id.txtPrecoVenda);
         TextView lblDescricao = convertView.findViewById(R.id.txtDescricaoGrade);
 
         String descricao = "";

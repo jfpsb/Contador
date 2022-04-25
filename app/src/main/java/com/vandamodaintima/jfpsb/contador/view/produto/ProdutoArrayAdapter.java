@@ -34,20 +34,10 @@ public class ProdutoArrayAdapter extends ArrayAdapter<Produto> {
 
         TextView labelDescricao = convertView.findViewById(R.id.txtDescricaoGrade);
         TextView labelCodBarra = convertView.findViewById(R.id.txtCodBarra);
-        TextView labelPreco = convertView.findViewById(R.id.txtPreco);
-        TextView txtPossuiGrades = convertView.findViewById(R.id.txtPossuiGrade);
 
         Produto produto = produtos.get(position);
-
-        if (produto.getProdutoGrades().size() == 0) {
-            txtPossuiGrades.setText("NÃO");
-        } else {
-            txtPossuiGrades.setText("SIM");
-        }
-
         labelDescricao.setText(produto.getDescricao());
         labelCodBarra.setText(produto.getCodBarra());
-        labelPreco.setText(String.format(produto.getPreco().toString(), Locale.getDefault()));
 
         return convertView;
     }

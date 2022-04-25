@@ -109,7 +109,7 @@ public class DAOContagem extends ADAO<Contagem> {
     public List<Contagem> listar() {
         ArrayList<Contagem> contagens = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), null, null, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), "deletado = false", null, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -136,15 +136,15 @@ public class DAOContagem extends ADAO<Contagem> {
     public Contagem listarPorId(Object... ids) {
         Contagem contagem = null;
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, null, "id = ?", new String[]{String.valueOf(ids[0])}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, Contagem.getColunas(), "uuid = ? AND deletado = false", new String[]{String.valueOf(ids[0])}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             contagem = new Contagem();
 
-            contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("id"))));
+            contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
             contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
-            contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
+            contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("tipo"))));
 
             String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
             contagem.setData(Contagem.convertStringToDate(d));
@@ -163,7 +163,7 @@ public class DAOContagem extends ADAO<Contagem> {
     }
 
     public Cursor listarPorLojaPeriodoCursor(String loja, LocalDateTime dataInicial, LocalDateTime dataFinal) {
-        String sql = "SELECT contagem.id as _id, loja, nome, data, finalizada, tipo FROM contagem INNER JOIN loja ON loja.cnpj = contagem.loja WHERE loja = ? AND data BETWEEN ? AND ? ORDER BY data";
+        String sql = "SELECT contagem.uuid as _id, loja, nome, data, finalizada, tipo FROM contagem INNER JOIN loja ON loja.cnpj = contagem.loja WHERE loja = ? AND contagem.deletado = false AND data BETWEEN ? AND ? ORDER BY data";
 
         dataFinal = dataFinal.plusDays(1);
         dataFinal = dataFinal.minusMinutes(1);
@@ -184,7 +184,7 @@ public class DAOContagem extends ADAO<Contagem> {
 
                 contagem.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
                 contagem.setLoja(daoLoja.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("loja"))));
-                contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("tipo"))));
+                contagem.setTipoContagem(daoTipoContagem.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("tipo"))));
 
                 String d = cursor.getString(cursor.getColumnIndexOrThrow("data"));
                 contagem.setData(Contagem.convertStringToDate(d));

@@ -40,13 +40,11 @@ public class MultiploCodigoBarraLidoController {
     }
 
     public Boolean cadastrar() {
-        contagemProdutoManager.setId(new Date().getTime());
         contagemProdutoManager.setQuant(1);
         return contagemProdutoManager.salvar();
     }
 
     public Boolean cadastrar(int quantidade) {
-        contagemProdutoManager.setId(new Date().getTime());
         contagemProdutoManager.setQuant(quantidade);
         return contagemProdutoManager.salvar();
     }
@@ -57,10 +55,5 @@ public class MultiploCodigoBarraLidoController {
 
     public void carregaProdutoGrade(ProdutoGrade produtoGrade) {
         contagemProdutoManager.setProdutoGrade(produtoGrade);
-        contagemProdutoManager.setProduto(produtoGrade.getProduto());
-    }
-
-    public void carregaProduto(Produto produto) {
-        contagemProdutoManager.setProduto(produto);
     }
 }

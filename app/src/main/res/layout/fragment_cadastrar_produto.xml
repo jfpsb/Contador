@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/cod_de_barras_dois_pontos"
+                    android:text="@string/codigo_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </TableRow>
@@ -217,28 +217,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/preco_dois_pontos"
-                    android:textColor="#000"
-                    android:textSize="22sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <EditText
-                    android:id="@+id/txtPreco"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:textSize="20sp" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="@string/ncm_dois_pontos"
                     android:textColor="#000"
                     android:textSize="22sp" />
@@ -267,7 +245,7 @@
 
         <Button
             android:id="@+id/btnCadastrar"
-            style="@style/BtnGreen"
+            style="@style/BtnEstilo1"
             android:text="@string/cadastrar" />
     </LinearLayout>
 </RelativeLayout>
