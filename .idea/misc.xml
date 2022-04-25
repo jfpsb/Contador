@@ -6,6 +6,7 @@
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/drawable/botao_active.xml" value="0.231" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/drawable/botao_no_radius.xml" value="0.231" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/drawable/ic_launcher_background.xml" value="0.231" />
+        <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/acitivity_alterar_deletar_contagem_produto.xml" value="0.5" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/activity_alterar_deletar_contagem.xml" value="0.24635416666666668" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/activity_alterar_deletar_produto.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/activity_cadastrar_fornecedor_manualmente.xml" value="0.22447916666666667" />
@@ -24,6 +25,9 @@
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/fragment_visualizar_produto_grade.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/item_pesquisa_grade.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/item_pesquisa_produto.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/item_produto_contagem_com_grade.xml" value="0.24270833333333333" />
+        <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/item_produto_contagem_sem_grade.xml" value="0.24270833333333333" />
+        <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/layout/item_visualizar_produto_grade.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2445" />
         <entry key="..\:/Users/jfpsb/StudioProjects/Contador/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2445" />
       </map>

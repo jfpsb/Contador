@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
 import com.vandamodaintima.jfpsb.contador.view.grade.ListarProdutoGradePorCodigoForResult;
@@ -31,7 +31,7 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
     private MediaPlayer erroMediaPlayer;
     private MediaPlayer codigoLidoMediaPlayer;
     private String codigo_lido;
-    private TelaLerCodigoDeBarraController controller;
+    private InserirContagemProdutoController controller;
     private CameraHandler cameraHandler;
 
     private boolean isCampoQuantidadeMarcado;
@@ -51,11 +51,11 @@ public class TelaLerCodigoDeBarraContagemProduto extends Fragment {
         erroMediaPlayer = MediaPlayer.create(getContext(), R.raw.erro_buzzer);
         codigoLidoMediaPlayer = MediaPlayer.create(getContext(), R.raw.barcode_beep);
 
-        controller = new TelaLerCodigoDeBarraController(this, ownerActivity.getConexaoBanco());
+        //controller = new InserirContagemProdutoController(this, ownerActivity.getConexaoBanco());
 
         Bundle bundle = getArguments();
         String id  = bundle.getString("id");
-        controller.carregaContagem(id);
+        //controller.carregaContagem(id);
 
         btnInserirManualmente.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TelaProdutoForContagemForResult.class);

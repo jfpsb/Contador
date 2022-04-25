@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -72,5 +73,15 @@ public class CadastrarGrade extends ActivityBaseView implements CadastrarView {
     @Override
     public void focoEmViewInicial() {
         txtNome.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

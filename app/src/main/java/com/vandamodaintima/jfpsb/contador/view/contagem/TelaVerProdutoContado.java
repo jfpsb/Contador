@@ -62,7 +62,6 @@ public class TelaVerProdutoContado extends Fragment implements ITelaVerProdutoCo
                 listViewContagemProduto.smoothScrollToPosition(lastIndex);
             }
         });
-
         listViewContagemProduto.setAdapter(adapter);
     }
 

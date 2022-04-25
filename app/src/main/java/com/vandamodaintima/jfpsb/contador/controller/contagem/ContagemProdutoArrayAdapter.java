@@ -52,11 +52,8 @@ public class ContagemProdutoArrayAdapter extends ArrayAdapter<ContagemProduto> {
             txtCodProduto.setText(cp.getProdutoGrade().getProduto().getCodBarra());
             txtDescricaoProduto.setText(cp.getProdutoGrade().getProduto().getDescricao());
             txtQuantidade.setText(String.valueOf(cp.getQuant()));
-
-            if (cp.getProdutoGrade() != null) {
-                txtCodBarra.setText(cp.getProdutoGrade().getCodBarra());
-                txtDescricaoGrade.setText(cp.getProdutoGrade().getGradesToShortString());
-            }
+            txtCodBarra.setText(cp.getProdutoGrade().getCodBarra());
+            txtDescricaoGrade.setText(cp.getProdutoGrade().getGradesToShortString());
         }
 
         return view;

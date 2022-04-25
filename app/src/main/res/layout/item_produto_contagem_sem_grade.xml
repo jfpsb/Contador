@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:minHeight="30sp"
             android:padding="5sp"
-            android:text="@string/quantidade_adicionada"
+            android:text="@string/quantidade_adicionada_dois_pontos"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="20sp"

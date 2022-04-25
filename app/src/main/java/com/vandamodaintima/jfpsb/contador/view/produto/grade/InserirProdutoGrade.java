@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -164,6 +165,11 @@ public class InserirProdutoGrade extends TelaCadastro {
     @Override
     public void focoEmViewInicial() {
         txtCodBarra.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 
     @Override

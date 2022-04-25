@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -186,6 +187,11 @@ public class CadastrarProduto extends TelaCadastro {
     @Override
     public void focoEmViewInicial() {
         txtCodBarra.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 
     public void bloqueiaCampos() {

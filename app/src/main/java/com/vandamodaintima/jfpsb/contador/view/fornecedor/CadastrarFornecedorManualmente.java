@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -74,5 +75,15 @@ public class CadastrarFornecedorManualmente extends ActivityBaseView implements 
     @Override
     public void focoEmViewInicial() {
         txtCnpj.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

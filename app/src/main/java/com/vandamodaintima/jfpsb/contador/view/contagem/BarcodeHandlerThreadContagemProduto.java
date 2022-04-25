@@ -22,8 +22,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.vandamodaintima.jfpsb.contador.R;
-import com.vandamodaintima.jfpsb.contador.controller.contagem.TelaLerCodigoDeBarraController;
-import com.vandamodaintima.jfpsb.contador.model.Produto;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
@@ -35,11 +34,11 @@ public class BarcodeHandlerThreadContagemProduto extends HandlerThread {
 
     private final WeakReference<TextureView> textureView;
     private final BarcodeDetector barcodeDetector;
-    private final TelaLerCodigoDeBarraController controller;
+    private final InserirContagemProdutoController controller;
     private final TelaLerCodigoDeBarraContagemProduto view;
     private boolean isCampoQuantChecked = false;
 
-    public BarcodeHandlerThreadContagemProduto(TelaLerCodigoDeBarraContagemProduto view, TextureView textureView, TelaLerCodigoDeBarraController controller) {
+    public BarcodeHandlerThreadContagemProduto(TelaLerCodigoDeBarraContagemProduto view, TextureView textureView, InserirContagemProdutoController controller) {
         super("BarcodeHandlerThreadContagemProduto");
 
         barcodeDetector = new BarcodeDetector.Builder(view.getContext()).build();

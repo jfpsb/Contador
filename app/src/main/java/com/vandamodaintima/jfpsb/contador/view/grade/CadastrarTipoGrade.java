@@ -1,10 +1,12 @@
 package com.vandamodaintima.jfpsb.contador.view.grade;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -59,5 +61,15 @@ public class CadastrarTipoGrade extends ActivityBaseView implements CadastrarVie
     @Override
     public void focoEmViewInicial() {
         txtNome.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }
