@@ -1,59 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:orientation="vertical">
 
-    <TextView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/codigo_dois_pontos"/>
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/txtCodigo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:minHeight="48dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cod_de_barras_dois_pontos"
+            android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/descricao_dois_pontos"/>
+        <EditText
+            android:id="@+id/txtCodigoBarra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/txtDescricaoProduto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:minHeight="48dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cod_de_barras_alt_dois_pontos"
+            android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/grade_dois_pontos"/>
+        <EditText
+            android:id="@+id/txtCodigoBarraAlt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/txtDescricaoGrade"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:minHeight="48dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/descricao_dois_pontos"
+            android:textSize="20sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/quantidade_adicionada_dois_pontos"/>
+        <EditText
+            android:id="@+id/txtDescricaoProduto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
 
-    <EditText
-        android:id="@+id/txtQuantidade"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/grade_dois_pontos"
+            android:textSize="20sp" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/txtDescricaoGrade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/preco_custo_dois_pontos"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/txtPrecoCusto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/preco_venda_dois_pontos"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/txtPrecoVenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:minHeight="48dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/quantidade_adicionada_dois_pontos"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/txtQuantidade"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp" />
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/btnAtualizar"
+        style="@style/BtnAtualizar"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

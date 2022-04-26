@@ -11,6 +11,9 @@ import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +33,8 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
             tipoContagem.setId(UUID.randomUUID());
             contentValues.put("uuid", tipoContagem.getId().toString());
             contentValues.put("nome", tipoContagem.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
 
@@ -53,6 +58,8 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
                 tipoContagem.setId(UUID.randomUUID());
                 contentValues.put("uuid", tipoContagem.getId().toString());
                 contentValues.put("nome", tipoContagem.getNome());
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
@@ -76,6 +83,8 @@ public class DAOTipoContagem extends ADAO<TipoContagem> {
 
             ContentValues contentValues = new ContentValues();
             contentValues.put("nome", tipoContagem.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();

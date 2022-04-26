@@ -10,6 +10,9 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             contentValues.put("fantasia", fornecedor.getFantasia());
             contentValues.put("email", fornecedor.getEmail());
             contentValues.put("telefone", fornecedor.getTelefone());
+
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             if(fornecedor.getRepresentante() != null) {
                 contentValues.put("representante", fornecedor.getRepresentante().getId().toString());
@@ -71,6 +77,9 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
                     contentValues.putNull("representante");
                 }
 
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
@@ -105,6 +114,9 @@ public class DAOFornecedor extends ADAO<Fornecedor> {
             } else {
                 contentValues.putNull("representante");
             }
+
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             conexaoBanco.conexao().update(TABELA, contentValues, "cnpj = ?", new String[]{cnpj});
             conexaoBanco.conexao().setTransactionSuccessful();

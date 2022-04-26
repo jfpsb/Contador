@@ -18,6 +18,7 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.contagem.InserirContagemProdutoController;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
+import com.vandamodaintima.jfpsb.contador.view.contagem.contagemproduto.AlterarDeletarContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
 import com.vandamodaintima.jfpsb.contador.view.produto.TelaProdutoForContagemForResult;
 import com.vandamodaintima.jfpsb.contador.view.produto.grade.TelaLerCodigoBarrasCadastrarProduto;
@@ -32,6 +33,7 @@ public class InserirContagemProduto extends ActivityBaseView implements Cadastra
 
     private static final int TELA_SELECIONAR_PRODUTO = 1;
     private static final int TELA_LER_CODIGO_BARRAS = 2;
+    private static final int ALTERAR_DELETAR_CONTAGEM_PRODUTO = 3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,12 +67,27 @@ public class InserirContagemProduto extends ActivityBaseView implements Cadastra
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ContagemProduto contagemProduto = (ContagemProduto) adapterView.getItemAtPosition(i);
-
+                Intent intent = new Intent(getContext(), AlterarDeletarContagemProduto.class);
+                intent.putExtra("contagemproduto", contagemProduto.getId().toString());
+                startActivityForResult(intent, ALTERAR_DELETAR_CONTAGEM_PRODUTO);
             }
         });
 
-        String contagem = getIntent().getStringExtra("contagem");
-        controller = new InserirContagemProdutoController(this, conexaoBanco, contagem);
+        String idContagem = getIntent().getStringExtra("contagem");
+        controller = new InserirContagemProdutoController(this, conexaoBanco, idContagem);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case TELA_LER_CODIGO_BARRAS:
+                break;
+            case TELA_SELECIONAR_PRODUTO:
+                break;
+            case ALTERAR_DELETAR_CONTAGEM_PRODUTO:
+                break;
+        }
     }
 
     @Override

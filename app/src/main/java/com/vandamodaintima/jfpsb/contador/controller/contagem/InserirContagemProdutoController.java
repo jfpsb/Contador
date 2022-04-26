@@ -38,11 +38,12 @@ public class InserirContagemProdutoController {
         Boolean result = model.salvar();
         if (result) {
             contagemProdutoArrayAdapter.add(model);
-            view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            contagemProdutoArrayAdapter.notifyDataSetChanged();
             model = new ContagemProduto(conexaoBanco);
             model.setContagem(contagem);
+            view.mensagemAoUsuario("Contagem de produto adicionada com sucesso");
         } else {
-            view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
+            view.mensagemAoUsuario("Erro ao adicionar contagem de produto");
         }
     }
 
@@ -51,11 +52,12 @@ public class InserirContagemProdutoController {
         Boolean result = model.salvar();
         if (result) {
             contagemProdutoArrayAdapter.add(model);
-            view.mensagemAoUsuario("Contagem de Produto Adicionada Com Sucesso");
+            contagemProdutoArrayAdapter.notifyDataSetChanged();
             model = new ContagemProduto(conexaoBanco);
             model.setContagem(contagem);
+            view.mensagemAoUsuario("Contagem de produto adicionada com sucesso");
         } else {
-            view.mensagemAoUsuario("Erro Ao Adicionar Contagem de Produto");
+            view.mensagemAoUsuario("Erro ao adicionar contagem de produto");
         }
     }
 
@@ -67,6 +69,12 @@ public class InserirContagemProdutoController {
         }
 
         return produtoGrades;
+    }
+
+    public void pesquisar() {
+        contagemProdutoArrayAdapter.clear();
+        contagemProdutoArrayAdapter.addAll(model.listarPorContagem(contagem));
+        contagemProdutoArrayAdapter.notifyDataSetChanged();
     }
 
     public void carregaProdutoGrade(ProdutoGrade produtoGrade) {

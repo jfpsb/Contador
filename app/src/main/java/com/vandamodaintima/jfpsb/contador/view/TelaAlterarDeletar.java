@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.navigation.NavigationView;
@@ -92,5 +93,10 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

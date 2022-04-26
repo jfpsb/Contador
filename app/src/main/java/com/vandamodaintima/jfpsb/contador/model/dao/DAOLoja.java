@@ -10,6 +10,9 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,8 @@ public class DAOLoja extends ADAO<Loja> {
             contentValues.put("telefone", loja.getTelefone());
             contentValues.put("endereco", loja.getEndereco());
             contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             if (loja.getMatriz() != null)
                 contentValues.put("matriz", loja.getMatriz().getCnpj());
@@ -63,6 +68,8 @@ public class DAOLoja extends ADAO<Loja> {
                 contentValues.put("telefone", loja.getTelefone());
                 contentValues.put("endereco", loja.getEndereco());
                 contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                 if (loja.getMatriz() != null)
                     contentValues.put("matriz", loja.getMatriz().getCnpj());
@@ -96,6 +103,8 @@ public class DAOLoja extends ADAO<Loja> {
             contentValues.put("telefone", loja.getTelefone());
             contentValues.put("endereco", loja.getEndereco());
             contentValues.put("inscricaoestadual", loja.getInscricaoEstadual());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             if (loja.getMatriz() != null)
                 contentValues.put("matriz", loja.getMatriz().getCnpj());

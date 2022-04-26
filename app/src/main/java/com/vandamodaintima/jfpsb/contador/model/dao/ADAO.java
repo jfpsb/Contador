@@ -10,6 +10,9 @@ import com.vandamodaintima.jfpsb.contador.model.AModel;
 import com.vandamodaintima.jfpsb.contador.model.IModel;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public abstract class ADAO<T extends AModel & IModel<T> & Serializable> {
         try {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            contentValues.put("deletadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             contentValues.put("deletado", true);
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{objeto.getIdentifier().toString()});
             conexaoBanco.conexao().setTransactionSuccessful();

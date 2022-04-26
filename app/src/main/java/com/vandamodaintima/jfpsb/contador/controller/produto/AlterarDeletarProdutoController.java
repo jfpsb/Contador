@@ -11,10 +11,11 @@ public class AlterarDeletarProdutoController {
     private ConexaoBanco conexaoBanco;
     private Produto model;
 
-    public AlterarDeletarProdutoController(AlterarDeletarView view, ConexaoBanco conexaoBanco) {
+    public AlterarDeletarProdutoController(AlterarDeletarView view, ConexaoBanco conexaoBanco, String idProduto) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         model = new Produto(conexaoBanco);
+        model.load(idProduto);
     }
 
     public void atualizar() {
@@ -35,7 +36,6 @@ public class AlterarDeletarProdutoController {
 
     public void deletar() {
         Boolean result = model.deletar();
-
         if (result) {
             view.mensagemAoUsuario("Produto Deletado Com Sucesso");
             view.fecharTela();
@@ -44,15 +44,11 @@ public class AlterarDeletarProdutoController {
         }
     }
 
-    public void carregaProduto(String id) {
-        model.load(id);
-    }
-
-    public void carregaFornecedor(Fornecedor fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor) {
         model.setFornecedor(fornecedor);
     }
 
-    public void carregaMarca(Marca marca) {
+    public void setMarca(Marca marca) {
         model.setMarca(marca);
     }
 

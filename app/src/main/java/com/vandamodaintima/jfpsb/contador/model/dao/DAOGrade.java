@@ -12,6 +12,9 @@ import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +38,8 @@ public class DAOGrade extends ADAO<Grade> {
             contentValues.put("uuid", grade.getId().toString());
             contentValues.put("tipo", grade.getTipoGrade().getId().toString());
             contentValues.put("nome", grade.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -60,6 +65,8 @@ public class DAOGrade extends ADAO<Grade> {
                 contentValues.put("uuid", grade.getId().toString());
                 contentValues.put("tipo", grade.getTipoGrade().getId().toString());
                 contentValues.put("nome", grade.getNome());
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
@@ -82,6 +89,8 @@ public class DAOGrade extends ADAO<Grade> {
             ContentValues contentValues = new ContentValues();
             contentValues.put("tipo", grade.getTipoGrade().getId().toString());
             contentValues.put("nome", grade.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;

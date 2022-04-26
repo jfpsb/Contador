@@ -11,6 +11,9 @@ import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +33,8 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
             tipoGrade.setId(UUID.randomUUID());
             contentValues.put("uuid", tipoGrade.getId().toString());
             contentValues.put("nome", tipoGrade.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
@@ -54,6 +59,8 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
                 tipoGrade.setId(UUID.randomUUID());
                 contentValues.put("uuid", tipoGrade.getId().toString());
                 contentValues.put("nome", tipoGrade.getNome());
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             }
 
@@ -75,6 +82,8 @@ public class DAOTipoGrade extends ADAO<TipoGrade> {
             conexaoBanco.conexao().beginTransaction();
             ContentValues contentValues = new ContentValues();
             contentValues.put("nome", tipoGrade.getNome());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{id});
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;

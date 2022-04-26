@@ -41,6 +41,9 @@ public class DAOContagem extends ADAO<Contagem> {
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
             conexaoBanco.conexao().insertOrThrow(TABELA, null, contentValues);
             conexaoBanco.conexao().setTransactionSuccessful();
             return true;
@@ -68,6 +71,9 @@ public class DAOContagem extends ADAO<Contagem> {
                 contentValues.put("finalizada", contagem.getFinalizada());
                 contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
 
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
                 conexaoBanco.conexao().insertWithOnConflict(TABELA, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             }
 
@@ -91,6 +97,9 @@ public class DAOContagem extends ADAO<Contagem> {
             ContentValues contentValues = new ContentValues();
             contentValues.put("finalizada", contagem.getFinalizada());
             contentValues.put("tipo", contagem.getTipoContagem().getId().toString());
+
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{contagem.getId().toString()});
             conexaoBanco.conexao().setTransactionSuccessful();

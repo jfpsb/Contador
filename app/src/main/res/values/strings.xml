@@ -104,4 +104,5 @@
     <string name="exportar_produtos">Exportar Produtos</string>
     <string name="codigo_dois_pontos">Código:</string>
     <string name="fab_inserir_contagem_de_produto">Inserir Contagem De Produto</string>
+    <string name="cod_de_barras_alt_dois_pontos">Cód. De Barras Alt.:</string>
 </resources>

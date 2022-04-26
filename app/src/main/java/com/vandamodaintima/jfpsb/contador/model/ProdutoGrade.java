@@ -153,8 +153,8 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < grades.size(); i++) {
             str.append(grades.get(i).getGrade().getNome());
-            if (i != grades.size() + 1) {
-                str.append(" ");
+            if (i != 0 && i != grades.size() - 1) {
+                str.append("/");
             }
         }
         return str.toString();

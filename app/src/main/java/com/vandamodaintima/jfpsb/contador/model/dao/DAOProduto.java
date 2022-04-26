@@ -12,6 +12,9 @@ import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +43,9 @@ public class DAOProduto extends ADAO<Produto> {
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("ncm", produto.getNcm());
 
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
             if (produto.getFornecedor() != null) {
                 contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
             } else {
@@ -66,6 +72,7 @@ public class DAOProduto extends ADAO<Produto> {
                     gradesValues.put("produto", produto.getId().toString());
                     gradesValues.put("preco_custo", produtoGrade.getPreco_custo());
                     gradesValues.put("preco_venda", produtoGrade.getPreco_venda());
+                    gradesValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                     conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
 
@@ -78,6 +85,7 @@ public class DAOProduto extends ADAO<Produto> {
                             subGradeValues.put("uuid", subGrade.getId().toString());
                             subGradeValues.put("produto_grade", produtoGrade.getId().toString());
                             subGradeValues.put("grade", subGrade.getGrade().getId().toString());
+                            subGradeValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                             conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                         }
                     }
@@ -108,6 +116,8 @@ public class DAOProduto extends ADAO<Produto> {
                 contentValues.put("cod_barra", produto.getCodBarra());
                 contentValues.put("descricao", produto.getDescricao());
                 contentValues.put("ncm", produto.getNcm());
+                LocalDateTime now = LocalDateTime.now();
+                contentValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                 if (produto.getFornecedor() != null) {
                     contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
@@ -135,6 +145,7 @@ public class DAOProduto extends ADAO<Produto> {
                         gradesValues.put("produto", produto.getId().toString());
                         gradesValues.put("preco_custo", produtoGrade.getPreco_custo());
                         gradesValues.put("preco_venda", produtoGrade.getPreco_venda());
+                        gradesValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
                         conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
 
@@ -142,11 +153,11 @@ public class DAOProduto extends ADAO<Produto> {
                         if (produtoGrade.getGrades().size() > 0) {
                             for (SubGrade subGrade : produtoGrade.getGrades()) {
                                 ContentValues subGradeValues = new ContentValues();
-
                                 subGrade.setId(UUID.randomUUID());
                                 subGradeValues.put("uuid", subGrade.getId().toString());
                                 subGradeValues.put("produto_grade", produtoGrade.getId().toString());
                                 subGradeValues.put("grade", subGrade.getGrade().getId().toString());
+                                subGradeValues.put("criadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                                 conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
                             }
                         }
@@ -175,6 +186,8 @@ public class DAOProduto extends ADAO<Produto> {
 
             contentValues.put("descricao", produto.getDescricao());
             contentValues.put("ncm", produto.getNcm());
+            LocalDateTime now = LocalDateTime.now();
+            contentValues.put("modificadoem", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             if (produto.getFornecedor() != null) {
                 contentValues.put("fornecedor", produto.getFornecedor().getCnpj());
@@ -190,11 +203,13 @@ public class DAOProduto extends ADAO<Produto> {
 
             conexaoBanco.conexao().update(TABELA, contentValues, "uuid = ?", new String[]{produto.getId().toString()});
             //No banco de dados está configurado na tabela sub_grade o cascade para quando apagar produto_grade, então não é necessário apagar as subgrades desse produto_grade
-            conexaoBanco.conexao().delete("produto_grade", "produto = ?", new String[]{produto.getId().toString()});
+            //conexaoBanco.conexao().delete("produto_grade", "produto = ?", new String[]{produto.getId().toString()});
 
             for (ProdutoGrade produtoGrade : produto.getProdutoGrades()) {
                 ContentValues gradesValues = new ContentValues();
-                produtoGrade.setId(UUID.randomUUID());
+                if(produtoGrade.getId() == null) {
+                    produtoGrade.setId(UUID.randomUUID());
+                }
                 gradesValues.put("uuid", produtoGrade.getId().toString());
                 gradesValues.put("cod_barra", produtoGrade.getCodBarra());
                 gradesValues.put("cod_barra_alternativo", produtoGrade.getCodBarraAlternativo());
@@ -202,15 +217,17 @@ public class DAOProduto extends ADAO<Produto> {
                 gradesValues.put("preco_custo", produtoGrade.getPreco_custo());
                 gradesValues.put("preco_venda", produtoGrade.getPreco_venda());
 
-                conexaoBanco.conexao().insertOrThrow("produto_grade", null, gradesValues);
+                conexaoBanco.conexao().insertWithOnConflict("produto_grade", null, gradesValues, SQLiteDatabase.CONFLICT_IGNORE);
 
                 for (SubGrade subGrade : produtoGrade.getGrades()) {
                     ContentValues subGradeValues = new ContentValues();
-                    subGrade.setId(UUID.randomUUID());
+                    if(subGrade.getId() == null) {
+                        subGrade.setId(UUID.randomUUID());
+                    }
                     subGradeValues.put("uuid", subGrade.getId().toString());
                     subGradeValues.put("produto_grade", produtoGrade.getId().toString());
                     subGradeValues.put("grade", subGrade.getGrade().getId().toString());
-                    conexaoBanco.conexao().insertOrThrow("sub_grade", null, subGradeValues);
+                    conexaoBanco.conexao().insertWithOnConflict("sub_grade", null, subGradeValues, SQLiteDatabase.CONFLICT_IGNORE);
                 }
             }
 

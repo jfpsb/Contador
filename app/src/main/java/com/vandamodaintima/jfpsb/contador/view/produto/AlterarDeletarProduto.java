@@ -51,7 +51,6 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         super.onCreate(savedInstanceState);
 
         conexaoBanco = new ConexaoBanco(getApplicationContext());
-        controller = new AlterarDeletarProdutoController(this, conexaoBanco);
 
         stub.setLayoutResource(R.layout.activity_alterar_deletar_produto);
         stub.inflate();
@@ -74,8 +73,8 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
         navigationView.inflateMenu(R.menu.menu_alterar_deletar_produto);
         navigationView.inflateHeaderView(R.layout.nav_alterar_deletar_produto);
 
-        String id = getIntent().getStringExtra("produto");
-        controller.carregaProduto(id);
+        String idProduto = getIntent().getStringExtra("produto");
+        controller = new AlterarDeletarProdutoController(this, conexaoBanco, idProduto);
 
         setAlertaRemoverFornecedor();
         setAlertaRemoverMarca();
@@ -153,7 +152,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             case ESCOLHER_FORNECEDOR:
                 if (resultCode == RESULT_OK) {
                     Fornecedor fornecedor = (Fornecedor) data.getSerializableExtra("fornecedor");
-                    controller.carregaFornecedor(fornecedor);
+                    controller.setFornecedor(fornecedor);
                     txtFornecedor.setText(controller.getProduto().getFornecedor().getNome());
                     mensagemAoUsuario("Fornecedor Escolhido. Aperte em \"Atualizar\" para Salvar.");
                 } else {
@@ -163,7 +162,7 @@ public class AlterarDeletarProduto extends TelaAlterarDeletar {
             case ESCOLHER_MARCA:
                 if (resultCode == RESULT_OK) {
                     Marca marca = (Marca) data.getSerializableExtra("marca");
-                    controller.carregaMarca(marca);
+                    controller.setMarca(marca);
                     txtMarca.setText(controller.getProduto().getMarca().getNome());
                     mensagemAoUsuario("Marca Escolhida. Aperte em \"Atualizar\" para Salvar");
                 } else {
