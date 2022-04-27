@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.view.produto.grade;
+package com.vandamodaintima.jfpsb.contador.view.codigodebarra;
 
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -14,9 +14,9 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 import com.vandamodaintima.jfpsb.contador.view.CameraHandler;
 
-public class TelaLerCodigoBarrasCadastrarProduto extends ActivityBaseView {
+public class TelaLerCodigoDeBarra extends ActivityBaseView {
     private TextureView textureView;
-    private BarcodeHandlerThreadCadastroProduto barcodeHandlerThread;
+    private BarcodeHandlerThread barcodeHandlerThread;
     private BarcodeDetector barcodeDetector;
     private CameraHandler cameraHandler;
 
@@ -81,7 +81,7 @@ public class TelaLerCodigoBarrasCadastrarProduto extends ActivityBaseView {
 
     private void iniciaBarcodeHandlerThread() {
         if (barcodeHandlerThread == null) {
-            barcodeHandlerThread = new BarcodeHandlerThreadCadastroProduto(this, cameraHandler.getTextureView(), barcodeDetector);
+            barcodeHandlerThread = new BarcodeHandlerThread(this, cameraHandler.getTextureView(), barcodeDetector);
             barcodeHandlerThread.start();
         }
     }

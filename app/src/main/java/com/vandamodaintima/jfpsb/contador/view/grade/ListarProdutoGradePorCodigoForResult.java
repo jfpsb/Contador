@@ -91,4 +91,10 @@ public class ListarProdutoGradePorCodigoForResult extends ActivityBaseView {
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        conexaoBanco.close();
+        super.onDestroy();
+    }
 }

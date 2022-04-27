@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +86,11 @@ public class CadastrarFornecedor extends TelaCadastro implements IAposPesquisarF
     @Override
     public void focoEmViewInicial() {
         txtCnpj.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 
     private void setAlertaCadastro(final Fornecedor fornecedor) {

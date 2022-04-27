@@ -46,8 +46,7 @@ public class PesquisarProdutoForContagemForResult extends PesquisarProduto {
         Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
         String id = cursor.getString(cursor.getColumnIndexOrThrow("_id"));
         controller.carregaProduto(id);
-
-        produtoGradeArrayAdapter = new ProdutoGradeArrayAdapter(Objects.requireNonNull(getContext()), controller.getProduto().getProdutoGrades(), false);
+        produtoGradeArrayAdapter = new ProdutoGradeArrayAdapter(requireContext(), controller.getProduto().getProdutoGrades(), false);
         setAlertaProdutoGrade();
         alertaProdutoGrade.show();
     }

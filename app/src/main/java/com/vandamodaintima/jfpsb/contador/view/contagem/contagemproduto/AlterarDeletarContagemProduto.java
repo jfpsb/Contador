@@ -21,7 +21,6 @@ import com.vandamodaintima.jfpsb.contador.view.TelaAlterarDeletar;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
 public class AlterarDeletarContagemProduto extends TelaAlterarDeletar {
-    private ConexaoBanco conexaoBanco;
     private EditText txtCodigoBarra;
     private EditText txtCodigoBarraAlt;
     private EditText txtDescricaoProduto;
@@ -35,9 +34,8 @@ public class AlterarDeletarContagemProduto extends TelaAlterarDeletar {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        conexaoBanco = new ConexaoBanco(this);
 
-        stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem);
+        stub.setLayoutResource(R.layout.activity_alterar_deletar_contagem_produto);
         stub.inflate();
 
         txtCodigoBarra = findViewById(R.id.txtCodigoBarra);
@@ -72,12 +70,16 @@ public class AlterarDeletarContagemProduto extends TelaAlterarDeletar {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                if(charSequence.length() > 0) {
+                    controller.getModel().setQuant(Integer.parseInt(charSequence.toString()));
+                } else {
+                    controller.getModel().setQuant(0);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                controller.getModel().setQuant(Integer.parseInt(editable.toString()));
+
             }
         });
     }
@@ -95,8 +97,13 @@ public class AlterarDeletarContagemProduto extends TelaAlterarDeletar {
     public void setAlertBuilderAtualizar() {
         alertBuilderAtualizar = new AlertDialog.Builder(this);
         alertBuilderAtualizar.setTitle("Atualizar Contagem de Produto");
-        alertBuilderAtualizar.setMessage("Tem certeza que deseja atualizar a quantidade desta contagem de produto para " + controller.getModel().getQuant() + "?");
         alertBuilderAtualizar.setPositiveButton("Sim", (dialogInterface, i) -> controller.atualizar());
         alertBuilderAtualizar.setNegativeButton("Não", (dialogInterface, i) -> mensagemAoUsuario("Contagem de produto não foi alterada"));
+    }
+
+    @Override
+    public void onClick(View view) {
+        alertBuilderAtualizar.setMessage("Tem certeza que deseja atualizar a quantidade desta contagem de produto para " + controller.getModel().getQuant() + "?");
+        super.onClick(view);
     }
 }

@@ -151,12 +151,10 @@ public class ProdutoGrade extends AModel implements IModel<ProdutoGrade>, Serial
 
     public String getGradesToShortString() {
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < grades.size(); i++) {
-            str.append(grades.get(i).getGrade().getNome());
-            if (i != 0 && i != grades.size() - 1) {
-                str.append("/");
-            }
+        for(SubGrade subGrade : grades) {
+            str.append(subGrade.getGrade().getNome()).append("/");
         }
+        str.deleteCharAt(str.lastIndexOf("/"));
         return str.toString();
     }
 }

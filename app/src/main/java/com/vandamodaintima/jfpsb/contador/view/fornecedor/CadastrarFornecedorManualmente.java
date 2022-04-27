@@ -13,9 +13,9 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.fornecedor.CadastrarFornecedorManualmenteController;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
-public class CadastrarFornecedorManualmente extends ActivityBaseView implements CadastrarView {
+public class CadastrarFornecedorManualmente extends ActivityBaseView implements ICadastrarView {
     private EditText txtCnpj;
     private EditText txtNome;
     private EditText txtFantasia;

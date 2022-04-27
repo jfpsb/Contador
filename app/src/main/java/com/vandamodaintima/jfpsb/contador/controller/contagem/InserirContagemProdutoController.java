@@ -1,26 +1,27 @@
 package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
-import android.database.DataSetObserver;
-
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.contagemproduto.ContagemProdutoArrayAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.IProcessaCodigoBarraLido;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InserirContagemProdutoController {
-    private CadastrarView view;
+    private ICadastrarView view;
     private ProdutoGrade produtoGrade;
     private Contagem contagem;
     private ContagemProduto model;
     private ConexaoBanco conexaoBanco;
     private ContagemProdutoArrayAdapter contagemProdutoArrayAdapter;
+    private boolean isCampoQuantHabilitado;
 
-    public InserirContagemProdutoController(CadastrarView view, ConexaoBanco conexaoBanco, String contagemId) {
+    public InserirContagemProdutoController(ICadastrarView view, ConexaoBanco conexaoBanco, String contagemId) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         contagem = new Contagem(conexaoBanco);
@@ -71,6 +72,34 @@ public class InserirContagemProdutoController {
         return produtoGrades;
     }
 
+    public void processaCodigoLido(String codigo_lido) {
+        List<ProdutoGrade> produtoGrades = new ArrayList<>();
+
+        if (!codigo_lido.trim().isEmpty()) {
+            produtoGrades = produtoGrade.listarPorCodBarra(codigo_lido);
+        }
+
+        if(produtoGrades.size() == 0) {
+            ((IProcessaCodigoBarraLido)view).showAlertaProdutoGradeNaoEncontrado();
+        }
+        else if (produtoGrades.size() == 1) {
+            model.setProdutoGrade(produtoGrades.get(0));
+            executaCadastro();
+        } else {
+            view.mensagemAoUsuario("Mais De Uma Grade Foi Encontrada. Selecione Na Lista");
+            ((IProcessaCodigoBarraLido)view).abrirVisualizarProdutoGradeContagem(codigo_lido);
+        }
+    }
+
+    public void executaCadastro() {
+        if(isCampoQuantHabilitado) {
+            ((IProcessaCodigoBarraLido)view).showAlertaQuantidadeProduto();
+        }
+        else {
+            cadastrar();
+        }
+    }
+
     public void pesquisar() {
         contagemProdutoArrayAdapter.clear();
         contagemProdutoArrayAdapter.addAll(model.listarPorContagem(contagem));
@@ -83,5 +112,18 @@ public class InserirContagemProdutoController {
 
     public Contagem getContagem() {
         return model.getContagem();
+    }
+
+    public void setCampoQuantHabilitado(boolean campoQuantHabilitado) {
+        isCampoQuantHabilitado = campoQuantHabilitado;
+    }
+
+    /**
+     * Atualiza listagem de contagens de produto na view InserirContagemProduto
+     */
+    public void atualizarProdutoGrades() {
+        contagemProdutoArrayAdapter.clear();
+        contagemProdutoArrayAdapter.addAll(model.listarPorContagem(contagem));
+        contagemProdutoArrayAdapter.notifyDataSetChanged();
     }
 }

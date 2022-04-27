@@ -5,22 +5,21 @@ import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
 import com.vandamodaintima.jfpsb.contador.model.TipoContagem;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 
-import java.util.Date;
 import java.util.List;
 
 public class InserirContagemController implements IController {
     private ConexaoBanco conexaoBanco;
-    private CadastrarView view;
+    private ICadastrarView view;
     private Contagem contagemModel;
     private Loja lojaModel;
     private TipoContagem tipoContagemModel;
 
-    public InserirContagemController(CadastrarView view, ConexaoBanco conexaoBanco) {
+    public InserirContagemController(ICadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         contagemModel = new Contagem(conexaoBanco);

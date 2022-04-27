@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.contagem;
+package com.vandamodaintima.jfpsb.contador.controller.contagem.contagemproduto;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -43,13 +43,11 @@ public class ContagemProdutoArrayAdapter extends ArrayAdapter<ContagemProduto> {
         ContagemProduto cp = getItem(position);
 
         if (cp != null) {
-            TextView txtCodProduto = view.findViewById(R.id.txtCodigoProduto);
             TextView txtDescricaoProduto = view.findViewById(R.id.txtDescricaoProduto);
             TextView txtCodBarra = view.findViewById(R.id.txtCodBarra);
             TextView txtDescricaoGrade = view.findViewById(R.id.txtDescricaoGrade);
             TextView txtQuantidade = view.findViewById(R.id.lblQuantidade);
 
-            txtCodProduto.setText(cp.getProdutoGrade().getProduto().getCodBarra());
             txtDescricaoProduto.setText(cp.getProdutoGrade().getProduto().getDescricao());
             txtQuantidade.setText(String.valueOf(cp.getQuant()));
             txtCodBarra.setText(cp.getProdutoGrade().getCodBarra());

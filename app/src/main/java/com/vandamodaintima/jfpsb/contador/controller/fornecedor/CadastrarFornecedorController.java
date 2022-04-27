@@ -4,14 +4,14 @@ import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
 import com.vandamodaintima.jfpsb.contador.view.fornecedor.CadastrarFornecedor;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
 public class CadastrarFornecedorController implements IController {
     protected CadastrarFornecedor view;
     private Fornecedor fornecedorModel;
     private ConexaoBanco conexaoBanco;
 
-    public CadastrarFornecedorController(CadastrarView view, ConexaoBanco conexaoBanco) {
+    public CadastrarFornecedorController(ICadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = (CadastrarFornecedor) view;
         this.conexaoBanco = conexaoBanco;
         fornecedorModel = new Fornecedor(conexaoBanco);

@@ -27,6 +27,7 @@ import com.vandamodaintima.jfpsb.contador.model.ProdutoGrade;
 import com.vandamodaintima.jfpsb.contador.model.SubGrade;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.TelaCadastro;
+import com.vandamodaintima.jfpsb.contador.view.codigodebarra.TelaLerCodigoDeBarra;
 import com.vandamodaintima.jfpsb.contador.view.grade.CadastrarGrade;
 import com.vandamodaintima.jfpsb.contador.view.grade.CadastrarTipoGrade;
 
@@ -73,7 +74,7 @@ public class InserirProdutoGrade extends TelaCadastro {
         listViewGradeFormacaoAtual = telaCadastroView.findViewById(R.id.listViewGradeFormacaoAtual);
 
         btnLerCodigoBarras.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), TelaLerCodigoBarrasCadastrarProduto.class);
+            Intent intent = new Intent(getContext(), TelaLerCodigoDeBarra.class);
             startActivityForResult(intent, TELA_LER_CODIGO_BARRAS);
         });
 

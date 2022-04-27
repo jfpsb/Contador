@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
                 android:padding="5sp"
-                android:text="@string/placeholder"
+                android:text="@string/placeholder_maisculo"
                 android:textColor="#000"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="30sp"
                 android:padding="5sp"
-                android:text="@string/placeholder"
+                android:text="@string/placeholder_maisculo"
                 android:textColor="#000"
                 android:textSize="18sp" />
         </LinearLayout>

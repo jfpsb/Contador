@@ -1,17 +1,16 @@
 package com.vandamodaintima.jfpsb.contador.controller.fornecedor;
 
-import com.google.gson.internal.$Gson$Preconditions;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Fornecedor;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
 public class CadastrarFornecedorManualmenteController implements IController {
     private ConexaoBanco conexaoBanco;
     private Fornecedor fornecedorModel;
-    private CadastrarView view;
+    private ICadastrarView view;
 
-    public CadastrarFornecedorManualmenteController(CadastrarView view, ConexaoBanco conexaoBanco) {
+    public CadastrarFornecedorManualmenteController(ICadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         fornecedorModel = new Fornecedor(conexaoBanco);

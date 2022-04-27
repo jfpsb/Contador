@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -56,7 +57,7 @@ public class CadastrarLoja extends TelaCadastro {
             controller.salvar();
         });
 
-        ArrayAdapter<Loja> spinnerAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), controller.getMatrizes());
+        ArrayAdapter<Loja> spinnerAdapter = new SpinnerLojaAdapter(requireContext(), controller.getMatrizes());
         spinnerMatrizes.setAdapter(spinnerAdapter);
 
         return viewInflate;
@@ -78,5 +79,10 @@ public class CadastrarLoja extends TelaCadastro {
     @Override
     public void focoEmViewInicial() {
         txtCnpj.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 }

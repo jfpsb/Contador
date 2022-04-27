@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.view.produto.grade;
+package com.vandamodaintima.jfpsb.contador.view.codigodebarra;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,13 +21,13 @@ import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
 
 import java.lang.ref.WeakReference;
 
-public class BarcodeHandlerThreadCadastroProduto extends HandlerThread {
+public class BarcodeHandlerThread extends HandlerThread {
     private Handler handler;
     private WeakReference<TextureView> textureView;
     private BarcodeDetector barcodeDetector;
     private Activity view;
 
-    public BarcodeHandlerThreadCadastroProduto(Activity view, TextureView textureView, BarcodeDetector barcodeDetector) {
+    public BarcodeHandlerThread(Activity view, TextureView textureView, BarcodeDetector barcodeDetector) {
         super("BarcodeHandlerThreadCadastroProduto");
         this.view = view;
         this.textureView = new WeakReference<>(textureView);

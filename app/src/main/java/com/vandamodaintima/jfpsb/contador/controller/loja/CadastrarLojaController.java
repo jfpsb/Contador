@@ -3,16 +3,16 @@ package com.vandamodaintima.jfpsb.contador.controller.loja;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.IController;
 import com.vandamodaintima.jfpsb.contador.model.Loja;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
 import java.util.ArrayList;
 
 public class CadastrarLojaController implements IController {
-    private CadastrarView view;
+    private ICadastrarView view;
     private Loja lojaModel;
     private ConexaoBanco conexaoBanco;
 
-    public CadastrarLojaController(CadastrarView view, ConexaoBanco conexaoBanco) {
+    public CadastrarLojaController(ICadastrarView view, ConexaoBanco conexaoBanco) {
         this.view = view;
         this.conexaoBanco = conexaoBanco;
         lojaModel = new Loja(conexaoBanco);

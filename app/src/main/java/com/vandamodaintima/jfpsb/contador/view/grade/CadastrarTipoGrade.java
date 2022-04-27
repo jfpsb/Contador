@@ -3,7 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.grade;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -15,9 +14,9 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.controller.grade.CadastrarTipoGradeController;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
-public class CadastrarTipoGrade extends ActivityBaseView implements CadastrarView {
+public class CadastrarTipoGrade extends ActivityBaseView implements ICadastrarView {
     private EditText txtNome;
     private Button btnCadastrar;
     private ConexaoBanco conexaoBanco;

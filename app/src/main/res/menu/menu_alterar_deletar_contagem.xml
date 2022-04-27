@@ -9,7 +9,7 @@
             android:title="Exportar Para Excel" />
 
         <item
-            android:id="@+id/menuItemAdicionarContagem"
+            android:id="@+id/menuItemInserirContagemProduto"
             android:title="Adicionar Contagem de Produto" />
 
         <item

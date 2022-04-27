@@ -97,7 +97,7 @@ public class DAOProdutoGrade extends ADAO<ProdutoGrade> {
         DAOProduto daoProduto = new DAOProduto(conexaoBanco);
         ArrayList<ProdutoGrade> produtoGrades = new ArrayList<>();
 
-        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "(cod_barra LIKE ? OR cod_barra_alternativo LIKE ?) AND deletado = false", new String[]{codBarra, codBarra}, null, null, null, null);
+        Cursor cursor = conexaoBanco.conexao().query(TABELA, ProdutoGrade.getColunas(), "cod_barra LIKE ? AND deletado = false", new String[]{codBarra}, null, null, null, null);
 
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {

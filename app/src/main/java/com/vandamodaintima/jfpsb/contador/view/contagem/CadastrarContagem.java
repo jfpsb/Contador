@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -44,7 +45,7 @@ public class CadastrarContagem extends TelaCadastro {
             controller.salvar();
         });
 
-        ArrayAdapter<Loja> spinnerLojaAdapter = new SpinnerLojaAdapter(Objects.requireNonNull(getContext()), controller.getLojas());
+        ArrayAdapter<Loja> spinnerLojaAdapter = new SpinnerLojaAdapter(requireContext(), controller.getLojas());
         spinnerLoja.setAdapter(spinnerLojaAdapter);
 
         ArrayAdapter<TipoContagem> spinnerTipoContagemAdapter = new SpinnerTipoContagemAdapter(getContext(), controller.getTipoContagens());
@@ -63,5 +64,10 @@ public class CadastrarContagem extends TelaCadastro {
     @Override
     public void focoEmViewInicial() {
         spinnerLoja.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 }

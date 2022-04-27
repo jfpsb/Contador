@@ -3,9 +3,6 @@ package com.vandamodaintima.jfpsb.contador.view.grade;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -20,9 +17,9 @@ import com.vandamodaintima.jfpsb.contador.controller.grade.CadastrarGradeControl
 import com.vandamodaintima.jfpsb.contador.controller.grade.SpinnerTipoGradeAdapter;
 import com.vandamodaintima.jfpsb.contador.model.TipoGrade;
 import com.vandamodaintima.jfpsb.contador.view.ActivityBaseView;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
-public class CadastrarGrade extends ActivityBaseView implements CadastrarView {
+public class CadastrarGrade extends ActivityBaseView implements ICadastrarView {
     private EditText txtNome;
     private Spinner spinnerTipoGrade;
     private Button btnCadastrar;

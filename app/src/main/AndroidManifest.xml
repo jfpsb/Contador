@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/TabAppTheme"
         tools:replace="android:theme">
-        <activity android:name=".Contador"
+        <activity
+            android:name=".Contador"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,8 +37,8 @@
             android:label="@string/title_activity_alterar_deletar_contagem"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
-            android:name=".view.contagem.AdicionarContagemProduto"
-            android:label="@string/title_activity_adicionar_contagem_produto"
+            android:name=".view.contagem.InserirContagemProduto"
+            android:label="Inserir Contagem de Produto"
             android:theme="@style/TabAppTheme.NoActionBar" />
         <activity
             android:name=".view.TabLayoutBaseView"
@@ -45,7 +46,12 @@
             android:theme="@style/TabAppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.produto.grade.TelaLerCodigoBarrasCadastrarProduto"
+            android:name=".view.contagem.contagemproduto.AlterarDeletarContagemProduto"
+            android:label="Alterar Deletar Contagem De Produto"
+            android:theme="@style/TabAppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.codigodebarra.TelaLerCodigoDeBarra"
             android:label="@string/leitura_de_codigo_de_barras"
             android:theme="@style/TabAppTheme.NoActionBar" />
 

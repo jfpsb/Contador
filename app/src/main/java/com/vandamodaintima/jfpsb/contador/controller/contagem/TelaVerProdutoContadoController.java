@@ -2,6 +2,7 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 
 import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.contagemproduto.ContagemProdutoArrayAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.ITelaVerProdutoContado;

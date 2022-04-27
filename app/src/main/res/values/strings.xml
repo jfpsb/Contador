@@ -7,7 +7,7 @@
     <string name="title_activity_adicionar_contagem_produto">Contagem e Produto: adicionar</string>
     <string name="title_activity_base">ActivityBase</string>
     <string name="menu_item_habilitar_campo_quant">Campo De Quantidade</string>
-    <string name="leitura_codigo">Use a Câmera Para Ler o Código De Barras</string>
+    <string name="leitura_codigo">Aponte sua câmera para o QR Code</string>
     <string name="descricao">Descrição</string>
     <string name="descricao_dois_pontos">Descrição:</string>
     <string name="dados_de_contagem">Dados de Contagem</string>
@@ -85,7 +85,7 @@
     <string name="grade_formacao_atual_dois_pontos">Formação Atual:</string>
     <string name="inserir_grade">Inserir Grade</string>
     <string name="grades_de_produto">Grades de Produto</string>
-    <string name="placeholder">PLACEHOLDER</string>
+    <string name="placeholder_maisculo">PLACEHOLDER</string>
     <string name="imagem_barcode">Imagem Representando um Código de Barras</string>
     <string name="leitura_de_codigo_de_barras">Leitura de Cód. De Barras</string>
     <string name="grade">Grade</string>
@@ -105,4 +105,6 @@
     <string name="codigo_dois_pontos">Código:</string>
     <string name="fab_inserir_contagem_de_produto">Inserir Contagem De Produto</string>
     <string name="cod_de_barras_alt_dois_pontos">Cód. De Barras Alt.:</string>
+    <string name="produto_minusculo">produto</string>
+    <string name="placeholder_minusculo">placeholder</string>
 </resources>

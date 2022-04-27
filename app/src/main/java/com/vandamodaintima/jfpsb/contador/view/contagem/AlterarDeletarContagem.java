@@ -11,12 +11,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -116,9 +113,9 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
             } else if (menuItemItemId == R.id.menuItemDeletar) {
                 AlertDialog alertDialog = alertBuilderDeletar.create();
                 alertDialog.show();
-            } else if (menuItemItemId == R.id.menuItemAdicionarContagem) {
-                Intent intent = new Intent(AlterarDeletarContagem.this, AdicionarContagemProduto.class);
-                intent.putExtra("id", controller.getContagem().getId());
+            } else if (menuItemItemId == R.id.menuItemInserirContagemProduto) {
+                Intent intent = new Intent(AlterarDeletarContagem.this, InserirContagemProduto.class);
+                intent.putExtra("contagem", controller.getContagem().getId().toString());
                 startActivity(intent);
             }
             return true;
@@ -132,6 +129,7 @@ public class AlterarDeletarContagem extends TelaAlterarDeletar {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSAO_WRITE_READ) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permissão Concedida para Ler e Gravar na Memória Interna", Toast.LENGTH_SHORT).show();

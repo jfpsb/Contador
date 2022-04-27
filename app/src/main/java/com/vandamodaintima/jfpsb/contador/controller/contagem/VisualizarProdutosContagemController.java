@@ -3,6 +3,7 @@ package com.vandamodaintima.jfpsb.contador.controller.contagem;
 import android.database.Cursor;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
+import com.vandamodaintima.jfpsb.contador.controller.contagem.contagemproduto.ContagemProdutoCursorAdapter;
 import com.vandamodaintima.jfpsb.contador.model.Contagem;
 import com.vandamodaintima.jfpsb.contador.model.ContagemProduto;
 import com.vandamodaintima.jfpsb.contador.view.contagem.VisualizarProdutosContagem;

@@ -25,7 +25,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
 
     public DAOContagemProduto(ConexaoBanco conexaoBanco) {
         super(conexaoBanco);
-        TABELA = "contagem_produto";
+        TABELA = "contagemproduto";
         daoProdutoGrade = new DAOProdutoGrade(conexaoBanco);
         daoContagem = new DAOContagem(conexaoBanco);
         daoProduto = new DAOProduto(conexaoBanco);
@@ -175,7 +175,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     public Cursor listarPorContagemCursor(Contagem contagem) {
-        String sql = "SELECT cp.uuid as _id, * FROM contagem_produto AS cp INNER JOIN produto_grade AS pg ON pg.uuid = cp.produto_grade WHERE contagem = ? AND cp.deletado = false ORDER BY cp.uuid";
+        String sql = "SELECT cp.uuid as _id, * FROM contagemproduto AS cp INNER JOIN produto_grade AS pg ON pg.uuid = cp.produto_grade WHERE contagem = ? AND cp.deletado = false ORDER BY cp.uuid";
         String[] selection = new String[]{contagem.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -183,7 +183,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     public Cursor listarPorContagemGroupByProdutoCursor(Contagem contagem) {
         String sql = "SELECT cp.uuid as _id, cp.produto_grade AS produto_grade, cp.contagem AS contagem, SUM(cp.quant) AS quant, " +
                 "p.descricao AS descricao " +
-                "FROM contagem_produto AS cp " +
+                "FROM contagemproduto AS cp " +
                 "INNER JOIN produto_grade AS pg ON cp.produto_grade = pg.uuid " +
                 "INNER JOIN produto AS p ON pg.produto = p.uuid " +
                 "WHERE contagem = ? AND cp.deletado = false GROUP BY pg.produto ORDER BY p.descricao";
@@ -193,7 +193,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
     }
 
     public Cursor listarPorContagemGroupByProdutoGradeCursor(Contagem contagem) {
-        String sql = "SELECT cp.uuid as _id, produto_grade, contagem, SUM(cp.quant) AS quant FROM contagem_produto WHERE contagem = ? AND deletado = false GROUP BY produto_grade";
+        String sql = "SELECT cp.uuid as _id, produto_grade, contagem, SUM(cp.quant) AS quant FROM contagemproduto WHERE contagem = ? AND deletado = false GROUP BY produto_grade";
         String[] selection = new String[]{contagem.getId().toString()};
         return conexaoBanco.conexao().rawQuery(sql, selection);
     }
@@ -244,7 +244,7 @@ public class DAOContagemProduto extends ADAO<ContagemProduto> {
             while (cursor.moveToNext()) {
                 ContagemProduto contagemProduto = new ContagemProduto();
                 contagemProduto.setId(UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("_id"))));
-                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getInt(cursor.getColumnIndexOrThrow("produto_grade"))));
+                contagemProduto.setProdutoGrade(daoProdutoGrade.listarPorId(cursor.getString(cursor.getColumnIndexOrThrow("produto_grade"))));
                 String contagemId = cursor.getString(cursor.getColumnIndexOrThrow("contagem"));
                 contagemProduto.setContagem(daoContagem.listarPorId(contagemId));
                 contagemProduto.setQuant(cursor.getInt(cursor.getColumnIndexOrThrow("quant")));

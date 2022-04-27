@@ -22,7 +22,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
 import com.vandamodaintima.jfpsb.contador.view.interfaces.AlterarDeletarView;
 
-public abstract class TelaAlterarDeletar extends AppCompatActivity implements AlterarDeletarView {
+public abstract class TelaAlterarDeletar extends AppCompatActivity implements AlterarDeletarView, View.OnClickListener {
     protected Button btnAtualizar;
     protected AlertDialog.Builder alertBuilderDeletar;
     protected AlertDialog.Builder alertBuilderAtualizar;
@@ -40,7 +40,6 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_alterar_deletar_drawer_layout);
-
         stub = findViewById(R.id.alterarDeletarStub);
 
         drawerLayout = findViewById(R.id.alterarDeletarDrawerLayout);
@@ -56,6 +55,8 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
         actionBarDrawerToggle.syncState();
 
         AndroidThreeTen.init(getContext());
+
+        conexaoBanco = new ConexaoBanco(getContext());
     }
 
     /**
@@ -63,10 +64,13 @@ public abstract class TelaAlterarDeletar extends AppCompatActivity implements Al
      */
     protected void setBtnAtualizar() {
         btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnAtualizar.setOnClickListener(view -> {
-            AlertDialog alertDialog = alertBuilderAtualizar.create();
-            alertDialog.show();
-        });
+        btnAtualizar.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        AlertDialog alertDialog = alertBuilderAtualizar.create();
+        alertDialog.show();
     }
 
     @Override

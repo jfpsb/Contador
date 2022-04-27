@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import com.vandamodaintima.jfpsb.contador.R;
@@ -111,5 +112,10 @@ public class CadastrarMarca extends TelaCadastro {
     @Override
     public void focoEmViewInicial() {
         txtNome.requestFocus();
+    }
+
+    @Override
+    public void setListViewAdapter(ListAdapter adapter) {
+
     }
 }

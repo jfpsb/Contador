@@ -1,4 +1,4 @@
-package com.vandamodaintima.jfpsb.contador.controller.contagem;
+package com.vandamodaintima.jfpsb.contador.controller.contagem.contagemproduto;
 
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.vandamodaintima.jfpsb.contador.R;
 
 public class ContagemProdutoCursorAdapter extends CursorAdapter {
 
-    ContagemProdutoCursorAdapter(Context context, Cursor c) {
+    public ContagemProdutoCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
     }
 

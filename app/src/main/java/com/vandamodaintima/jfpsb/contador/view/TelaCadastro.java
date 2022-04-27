@@ -6,9 +6,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.vandamodaintima.jfpsb.contador.banco.ConexaoBanco;
-import com.vandamodaintima.jfpsb.contador.view.interfaces.CadastrarView;
+import com.vandamodaintima.jfpsb.contador.view.interfaces.ICadastrarView;
 
-public abstract class TelaCadastro extends Fragment implements CadastrarView {
+public abstract class TelaCadastro extends Fragment implements ICadastrarView {
     protected View telaCadastroView;
     protected ConexaoBanco conexaoBanco;
 
